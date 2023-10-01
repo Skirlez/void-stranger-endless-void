@@ -1,0 +1,122 @@
+using UndertaleModLib.Models;
+using UndertaleModLib.Util;
+using UndertaleModLib.Decompiler;
+
+// A script to merge Void Stranger and the level editor, Endless Void.
+// Scripts used for reference:
+// ImportGraphics.csx
+
+EnsureDataLoaded();
+//SyncBinding("Strings, Code, CodeLocals, Scripts, GlobalInitScripts, GameObjects, Functions, Variables", true);
+
+
+// Replace with your own
+string endlessVoidDataPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void/merge/endless_void.win";
+int stringListLength = Data.Strings.Count;
+
+UndertaleData endlessVoidData = UndertaleIO.Read(new FileStream(endlessVoidDataPath, FileMode.Open, FileAccess.Read));
+
+uint addInstanceId = Data.GeneralInfo.LastObj - 100000;
+Data.GeneralInfo.LastObj += endlessVoidData.GeneralInfo.LastObj - 100000;
+
+int lastTexturePage = Data.EmbeddedTextures.Count - 1;
+int lastTexturePageItem = Data.TexturePageItems.Count - 1;
+
+Dictionary<UndertaleEmbeddedTexture, int> dict = new Dictionary<UndertaleEmbeddedTexture, int>();
+foreach (UndertaleEmbeddedTexture embeddedTexture in endlessVoidData.EmbeddedTextures) {
+    if (embeddedTexture.TextureInfo.Name.Content == "VoidStrangerGroup" || 
+            embeddedTexture.TextureInfo.Name.Content == "__YY__0fallbacktexture.png_YYG_AUTO_GEN_TEX_GROUP_NAME_")
+        continue;
+
+    UndertaleEmbeddedTexture newTexture = new UndertaleEmbeddedTexture();
+    lastTexturePage++;
+    newTexture.Name = new UndertaleString("Texture " + lastTexturePage);
+    newTexture.TextureData.TextureBlob = (byte[])embeddedTexture.TextureData.TextureBlob.Clone();
+    Data.EmbeddedTextures.Add(newTexture);
+
+    dict.Add(embeddedTexture, lastTexturePage);
+}
+
+foreach (UndertaleSprite sprite in endlessVoidData.Sprites) {
+    if (sprite.Textures[0].Texture.TexturePage.TextureInfo.Name.Content == "VoidStrangerGroup")
+        continue;
+    Data.Sprites.Add(sprite);
+    Data.Strings.Add(sprite.Name);
+    foreach (UndertaleSprite.TextureEntry textureEntry in sprite.Textures) {
+        int newIndex = dict[textureEntry.Texture.TexturePage];
+        textureEntry.Texture.TexturePage = Data.EmbeddedTextures[newIndex];
+        lastTexturePageItem++;
+        textureEntry.Texture.Name = new UndertaleString("PageItem " + lastTexturePageItem);
+        Data.TexturePageItems.Add(textureEntry.Texture);
+    }
+}
+
+
+
+foreach (UndertaleCode code in endlessVoidData.Code) {
+    Data.Code.Add(code);
+}
+
+foreach (UndertaleFunction function in endlessVoidData.Functions) {
+    Data.Functions.Add(function);
+    function.NameStringID += stringListLength;
+}
+
+foreach (UndertaleVariable variable in endlessVoidData.Variables) {
+    Data.Variables.Add(variable);
+
+    if (variable.VarID == variable.NameStringID && variable.VarID != 0)
+        variable.VarID += stringListLength;
+    
+    variable.NameStringID += stringListLength;
+    
+}
+Data.InstanceVarCount += endlessVoidData.InstanceVarCount;
+Data.InstanceVarCountAgain += endlessVoidData.InstanceVarCountAgain;
+Data.MaxLocalVarCount = Math.Max(Data.MaxLocalVarCount, endlessVoidData.MaxLocalVarCount);
+
+foreach (UndertaleCodeLocals locals in endlessVoidData.CodeLocals) {
+    Data.CodeLocals.Add(locals);
+}
+foreach (UndertaleScript script in endlessVoidData.Scripts) {
+    Data.Scripts.Add(script);
+}
+
+foreach (UndertaleGameObject gameObject in endlessVoidData.GameObjects) {
+    Data.GameObjects.Add(gameObject);
+}
+foreach (UndertaleRoom room in endlessVoidData.Rooms) {
+    Data.Rooms.Add(room);
+    foreach (UndertaleRoom.Layer layer in room.Layers) {
+        if (layer.LayerType == UndertaleRoom.LayerType.Instances) {
+            foreach (UndertaleRoom.GameObject gameObject in layer.InstancesData.Instances)
+                gameObject.InstanceID += addInstanceId;
+
+     
+        }
+    }
+}
+foreach (UndertaleAnimationCurve curve in endlessVoidData.AnimationCurves) {
+    Data.AnimationCurves.Add(curve);
+}
+
+foreach (UndertaleResourceById<UndertaleRoom, UndertaleChunkROOM> room in endlessVoidData.GeneralInfo.RoomOrder)
+    Data.GeneralInfo.RoomOrder.Add(room);
+
+Data.GeneralInfo.FunctionClassifications |= endlessVoidData.GeneralInfo.FunctionClassifications;
+
+foreach (UndertaleGlobalInit script in endlessVoidData.GlobalInitScripts) {
+    Data.GlobalInitScripts.Add(script);
+}
+
+foreach (UndertaleString str in endlessVoidData.Strings) {
+    Data.Strings.Add(str);
+}
+
+
+Data.GeneralInfo.Info |= UndertaleGeneralInfo.InfoFlags.ShowCursor;
+
+
+
+DisableAllSyncBindings();
+ScriptMessage("i'm done");
