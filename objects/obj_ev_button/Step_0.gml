@@ -2,11 +2,17 @@
 var scale = 1;
 var mouse_on_me = ev_is_mouse_on_me();
 
+if (selected && hover_state != 1) {
+	hover_state = 1;	
+}
+
 if hover_state == 0 {
 	if mouse_on_me
 		hover_state = 1;	
 	
 }
+
+
 else if hover_state == 1 {
 	if hover_time < 100 {
 		hover_time += 5
@@ -14,7 +20,7 @@ else if hover_state == 1 {
 	}
 	else
 		scale = 1.2
-	if !ev_is_mouse_on_me() {
+	if !ev_is_mouse_on_me() && !selected {
 		hover_time = 100
 		hover_state = 2	
 	}

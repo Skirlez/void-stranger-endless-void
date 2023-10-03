@@ -1,9 +1,6 @@
-var tile_j = floor((mouse_x - x) / (16 * image_xscale))
-var tile_i = floor((mouse_y - y) / (16 * image_yscale))
-
-mouse_on_me = tile_i <= 7 && ev_is_mouse_on_me()
-
-if (mouse_on_me) {
+if (ev_is_mouse_on_me()) {
+	var tile_j = floor((mouse_x - x) / (16 * image_xscale))
+	var tile_i = floor((mouse_y - y) / (16 * image_yscale))
 
 	if (mouse_check_button(mb_left)) {
 		handle_click(tile_i, tile_j)

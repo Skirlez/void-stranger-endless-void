@@ -15,8 +15,8 @@ function switch_held_tile(tile_state) {
 
 
 
-place_placeable = function(tile_i, tile_j, new_tile, properties) {
-	var arr = (global.tile_mode) ? global.editor_object.level_tiles : global.editor_object.level_objects
+function place_placeable(tile_i, tile_j, new_tile, properties = noone) {
+	var arr = global.editor_object.current_placeables
 	var tile_state = arr[tile_i][tile_j]
 			
 	if (tile_state != noone && tile_state.tile != new_tile) {
@@ -31,20 +31,9 @@ place_placeable = function(tile_i, tile_j, new_tile, properties) {
 function handle_click(tile_i, tile_j) {
 	switch (global.selected_thing) {
 		case thing_eraser:
-			var arr = (global.tile_mode) ? global.editor_object.level_tiles : global.editor_object.level_objects
-			var tile_state = arr[tile_i][tile_j]
-			if (tile_state != noone) {
-				if !(tile_state.tile.flags & flag_unremovable)
-					arr[@tile_i][tile_j] = noone
-			}
+			place_placeable(tile_i, tile_j, global.editor_object.current_empty_tile)
 			break;
-		
 		case thing_placeable:
-			/*
-			var list = (global.tile_mode) ? global.editor_object.tiles_list : global.editor_object.objects_list
-			var tile = list[global.selected_placeable_num]
-			*/
-			
 			place_placeable(tile_i, tile_j, held_tile_state.tile, struct_copy(held_tile_state.properties))
 		default:
 			break;
@@ -58,5 +47,3 @@ function handle_click_after(tile_i, tile_j) {
 			break;
 	}
 }
-
-mouse_on_me = false

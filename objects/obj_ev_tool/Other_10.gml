@@ -8,7 +8,7 @@ switch (image_index) {
 		break;
 	case 2: // tile mode on
 	case 3: // object mode on
-		global.tile_mode = !global.tile_mode;
+		obj_ev_editor.switch_tile_modes();
 		image_index = global.tile_mode ? 2 : 3
 		if (global.selected_thing == 2) {
 			global.selected_thing = -1

@@ -1,0 +1,1 @@
+ds_map_destroy(global.placeable_name_map)

@@ -1,11 +1,8 @@
-draw_set_color(c_white)
-
-if !(image_index == 0 || image_index == 1) {
-	draw_self()
-	exit
+if (selected) {
+	gpu_set_fog(true, c_white, 0, 1)
+	var increase = dsin(global.editor_time) / 8 + 0.25;
+	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale + increase, image_yscale + increase, 0, c_white, 1)
+	gpu_set_fog(false, c_white, 0, 1)
 }
 
-if image_index == global.selected_thing {
-	ev_draw_selected_circle(x, y)
-}
 draw_self()
