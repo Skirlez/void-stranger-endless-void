@@ -1,0 +1,1 @@
+These are patches to Void Stranger's code that are applied when the script is ran. I'd recommend GMEdit for editing these.

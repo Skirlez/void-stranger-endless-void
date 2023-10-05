@@ -1,5 +1,5 @@
 # Endless Void
-This repository contains the project file of the Endless Void level editor for Void Stranger, as well as the UndertaleModTool script to merge it into the game.
+This repository contains the project file of the Endless Void level editor for Void Stranger, the UndertaleModTool script to merge it into the game (merger.csx), and patches applied to the game on-merge (/patches).
 Very much a work-in-progress. Will eventually send data to a [Voyager](https://github.com/hexfae/voyager) server.
 
 The project is set up like this, as opposed to just a plain UndertaleModTool mod, for several reasons:

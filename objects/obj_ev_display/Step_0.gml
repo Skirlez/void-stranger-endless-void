@@ -6,7 +6,10 @@ if (ev_is_mouse_on_me()) {
 		handle_click(tile_i, tile_j)
 	}
 
-	if (!dragging && mouse_check_button_pressed(mb_right)) {
+	if (!dragging && mouse_check_button_pressed(mb_right)
+			&& !(global.selected_thing == thing_placeable 
+				&& held_tile_state != noone 
+				&& held_tile_state.tile.flags & flag_only_one)) {
 		dragging = true
 		drag_box_i = tile_i
 		drag_box_j = tile_j

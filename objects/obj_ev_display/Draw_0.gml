@@ -13,13 +13,13 @@ function draw_tile_state(i, j, tile_state) {
 
 for (var i = 0; i < 9; i++)	{
 	for (var j = 0; j < 14; j++) {
-		var tile_state = global.editor_object.level_tiles[i][j]
+		var tile_state = global.level_tiles[i][j]
 		draw_tile_state(i, j, tile_state)
 		
 	
 		if (global.tile_mode)
 			draw_set_alpha(0.4)
-		var object_state = global.editor_object.level_objects[i][j]
+		var object_state = global.level_objects[i][j]
 		draw_tile_state(i, j, object_state)
 		if (global.tile_mode)
 			draw_set_alpha(1)

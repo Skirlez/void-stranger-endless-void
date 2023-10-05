@@ -19,7 +19,7 @@ function export_level() {
 	for (var i = 0; i < 9; i++)	{
 		for (var j = 0; j < 14; j++) {
 			if (i != 8) {
-				tile_state = global.editor_object.level_tiles[i][j]
+				tile_state = global.level_tiles[i][j]
 				var tile_id = tile_state.tile.tile_id
 				tile_string += tile_id
 				switch (tile_id) {
@@ -28,7 +28,7 @@ function export_level() {
 				}
 			}
 			
-			object_state = global.editor_object.level_objects[i][j]
+			object_state = global.level_objects[i][j]
 			var object_id = object_state == noone ? "em" : object_state.tile.tile_id
 			
 			object_string += object_id
@@ -65,12 +65,12 @@ function import_level(tile_string, object_string) {
 		
 			switch (tile_id) {
 				default:
-					global.editor_object.level_tiles[@ i][j] = new tile_with_state(tile);
+					global.level_tiles[@ i][j] = new tile_with_state(tile);
 					break;
 			}
 		}
 		else
-			global.editor_object.level_tiles[@ i][j] = new tile_with_state(global.editor_object.tile_unremovable_white);
+			global.level_tiles[@ i][j] = new tile_with_state(global.editor_object.tile_unremovable_white);
 		
 		
 		var object_id = string_copy(object_string, object_pointer, 2)
@@ -84,12 +84,12 @@ function import_level(tile_string, object_string) {
 			case maggot_id:
 				var read_dir = string_copy(object_string, object_pointer, 1)
 				object_pointer++
-				global.editor_object.level_objects[@ i][j] = new tile_with_state(object, { dir: bool(int64(read_dir)) });
+				global.level_objects[@ i][j] = new tile_with_state(object, { dir: bool(int64(read_dir)) });
 				break;
 			default:
 				if (object == global.editor_object.object_player)
 					show_debug_message("here")
-				global.editor_object.level_objects[@ i][j] = new tile_with_state(object)
+				global.level_objects[@ i][j] = new tile_with_state(object)
 				break;
 		}
 		

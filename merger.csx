@@ -11,7 +11,9 @@ EnsureDataLoaded();
 
 
 // Replace with your own
-string endlessVoidDataPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void/merge/endless_void.win";
+string endlessVoidDataPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void/merge/data.win";
+string endlessVoidPatchesPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void/patches";
+
 int stringListLength = Data.Strings.Count;
 
 UndertaleData endlessVoidData = UndertaleIO.Read(new FileStream(endlessVoidDataPath, FileMode.Open, FileAccess.Read));
@@ -53,9 +55,8 @@ foreach (UndertaleSprite sprite in endlessVoidData.Sprites) {
 
 
 
-foreach (UndertaleCode code in endlessVoidData.Code) {
+foreach (UndertaleCode code in endlessVoidData.Code)
     Data.Code.Add(code);
-}
 
 foreach (UndertaleFunction function in endlessVoidData.Functions) {
     Data.Functions.Add(function);
@@ -75,12 +76,11 @@ Data.InstanceVarCount += endlessVoidData.InstanceVarCount;
 Data.InstanceVarCountAgain += endlessVoidData.InstanceVarCountAgain;
 Data.MaxLocalVarCount = Math.Max(Data.MaxLocalVarCount, endlessVoidData.MaxLocalVarCount);
 
-foreach (UndertaleCodeLocals locals in endlessVoidData.CodeLocals) {
+foreach (UndertaleCodeLocals locals in endlessVoidData.CodeLocals) 
     Data.CodeLocals.Add(locals);
-}
-foreach (UndertaleScript script in endlessVoidData.Scripts) {
+foreach (UndertaleScript script in endlessVoidData.Scripts) 
     Data.Scripts.Add(script);
-}
+
 
 foreach (UndertaleGameObject gameObject in endlessVoidData.GameObjects) {
     Data.GameObjects.Add(gameObject);
@@ -96,27 +96,57 @@ foreach (UndertaleRoom room in endlessVoidData.Rooms) {
         }
     }
 }
-foreach (UndertaleAnimationCurve curve in endlessVoidData.AnimationCurves) {
+foreach (UndertaleAnimationCurve curve in endlessVoidData.AnimationCurves)
     Data.AnimationCurves.Add(curve);
-}
+
 
 foreach (UndertaleResourceById<UndertaleRoom, UndertaleChunkROOM> room in endlessVoidData.GeneralInfo.RoomOrder)
     Data.GeneralInfo.RoomOrder.Add(room);
 
 Data.GeneralInfo.FunctionClassifications |= endlessVoidData.GeneralInfo.FunctionClassifications;
 
-foreach (UndertaleGlobalInit script in endlessVoidData.GlobalInitScripts) {
+foreach (UndertaleGlobalInit script in endlessVoidData.GlobalInitScripts)
     Data.GlobalInitScripts.Add(script);
-}
 
-foreach (UndertaleString str in endlessVoidData.Strings) {
+foreach (UndertaleString str in endlessVoidData.Strings)
     Data.Strings.Add(str);
-}
-
 
 Data.GeneralInfo.Info |= UndertaleGeneralInfo.InfoFlags.ShowCursor;
 
 
+// Apply the patches
 
-DisableAllSyncBindings();
+string[] files = Directory.GetFiles(endlessVoidPatchesPath);
+
+foreach (string file in files) {
+    if (Path.GetExtension(file) == ".gml") {
+        string codeEntryName = Path.GetFileNameWithoutExtension(file);
+        string patches = File.ReadAllText(file);
+        applyPatches(codeEntryName, patches);
+    }
+}
+
+void applyPatches(string codeEntryName, string patches) {
+    UndertaleCode entry = Data.Code.ByName(codeEntryName);
+    string code = GetDecompiledText(entry);
+    string pattern = @"// TARGET: ([^\n\r]+)";
+    string[] sections = Regex.Split(patches, pattern);
+    for (int i = 1; i < sections.Length; i += 2) {
+        string target = sections[i];
+        string patch = sections[i + 1].Trim();
+        string finalResult = target switch {
+            "TAIL" => code + "\n" + patch,
+            "HEAD" => patch + "\n" + code,
+            "REPLACE" => patch,
+            _ => code
+        };
+
+        ImportGMLString(codeEntryName, finalResult);
+    }
+
+}
+
+
+//DisableAllSyncBindings();
+
 ScriptMessage("i'm done");

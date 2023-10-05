@@ -1,23 +1,22 @@
 
-#macro compiled_for_merge false
-
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
-	surface_resize(application_surface, 244 * ratio, 144 * ratio)
+	surface_resize(application_surface, 224 * ratio, 144 * ratio)
 }
 
 window_set_cursor(cr_default)
 
 global.editor_time = 0
 
-#macro thing_cursor 0
 #macro thing_eraser 1
 #macro thing_placeable 2
 
-global.selected_thing = thing_cursor // cursor
+global.selected_thing = -1 // cursor
 global.selected_placeable_num = 0
 
 #macro flag_unremovable 1
+#macro flag_only_one 2
 
 global.editor_object = asset_get_index("obj_ev_editor");
 global.display_object = asset_get_index("obj_ev_display");
@@ -42,15 +41,9 @@ function editor_placeable(spr_ind, tile_id, flags = 0) constructor {
 	self.draw_function = global.editor_object.default_draw_function
 	self.zed_function = noone
 	self.tile_id = tile_id;
-	if (tile_id == pit_id)
-		show_debug_message("AAAAAAAAAAAAAAAAAAAAAA")
 	self.properties_generator = global.editor_object.return_noone
 	global.placeable_name_map[? tile_id] = self;
 } 
-
-
-
-
 
 #macro pit_id "pt"
 #macro glass_id "gl"
@@ -64,7 +57,7 @@ function editor_placeable(spr_ind, tile_id, flags = 0) constructor {
 #macro leech_id "cl"
 #macro maggot_id "cc"
 #macro bull_id "cg"
-#macro gobbler_id "cg"
+#macro gobbler_id "cs"
 
 
 floor_sprite = asset_get_index("spr_floor");
@@ -73,7 +66,7 @@ tile_pit = new editor_placeable(noone, pit_id)
 tile_pit.draw_function = function(tile_state, i, j) {
 	if (i == 0)
 		return;
-	var above_tile_state = level_tiles[i - 1][j];
+	var above_tile_state = global.level_tiles[i - 1][j];
 	
 	if above_tile_state.tile != tile_pit && above_tile_state.tile != tile_glass
 		draw_sprite(floor_sprite, 1, j * 16 + 8, i * 16 + 8)
@@ -96,7 +89,7 @@ tile_unremovable_white = new editor_placeable(asset_get_index("spr_floor_white")
 object_empty = new editor_placeable(noone, empty_id)
 object_empty.draw_function = function(tile_state, i, j) { };
 
-object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, flag_unremovable)
+object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, flag_unremovable|flag_only_one)
 
 
 
@@ -105,7 +98,6 @@ object_leech.draw_function = function(tile_state, i, j) {
 	var xscale = tile_state.properties.dir == true ? 1 : -1
 	draw_sprite_ext(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8, xscale, 1, 0, c_white, draw_get_alpha())
 }
-
 
 maggot_sprite_down = asset_get_index("spr_cc_down");
 maggot_sprite_up = asset_get_index("spr_cc_up");
@@ -132,28 +124,26 @@ object_gobbler = new editor_placeable(asset_get_index("spr_cs_right"), gobbler_i
 
 
 tiles_list = [tile_default, tile_glass, tile_mine, tile_exit]
-objects_list = [object_leech, object_maggot, object_bull, object_gobbler]
+objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler]
 
 
 
 
 
+global.level_tiles = array_create(9)
+for (var i = 0; i < array_length(global.level_tiles) - 1; i++)
+	global.level_tiles[i] = array_create(14, new tile_with_state(tile_default))	
+global.level_tiles[8] = array_create(14, new tile_with_state(tile_unremovable_white))	
 
-level_tiles = array_create(9)
-for (var i = 0; i < array_length(level_tiles) - 1; i++)
-	level_tiles[i] = array_create(14, new tile_with_state(tile_default))	
-level_tiles[8] = array_create(14, new tile_with_state(tile_unremovable_white))	
 
+global.level_objects = array_create(9)
+for (var i = 0; i < array_length(global.level_objects); i++)
+	global.level_objects[i] = array_create(14, new tile_with_state(object_empty))	
 
-level_objects = array_create(9)
-for (var i = 0; i < array_length(level_objects); i++)
-	level_objects[i] = array_create(14, noone)	
-
-level_objects[5][5] = new tile_with_state(object_player)
-
+global.level_objects[5][5] = new tile_with_state(object_player)
 
 current_list = tiles_list;
-current_placeables = level_tiles
+current_placeables = global.level_tiles
 current_empty_tile = tile_pit
 
 
@@ -162,12 +152,16 @@ function switch_tile_modes() {
 	global.tile_mode = !global.tile_mode;
 	if (global.tile_mode) {
 		current_list = tiles_list
-		current_placeables = level_tiles
+		current_placeables = global.level_tiles
 		current_empty_tile = tile_pit
 	}
 	else {
 		current_list = objects_list
-		current_placeables = level_objects
+		current_placeables = global.level_objects
 		current_empty_tile = object_empty
 	}
 }
+
+global.erasing = -1;
+erasing_surface = surface_create(224, 144)
+global.goes_sound = asset_get_index("snd_ex_vacuumgoes")
