@@ -128,22 +128,36 @@ foreach (string file in files) {
 
 void applyPatches(string codeEntryName, string patches) {
     UndertaleCode entry = Data.Code.ByName(codeEntryName);
-    string code = GetDecompiledText(entry);
-    string pattern = @"// TARGET: ([^\n\r]+)";
-    string[] sections = Regex.Split(patches, pattern);
+    string targetPattern = @"// TARGET: ([^\n\r]+)";
+    string[] sections = Regex.Split(patches, targetPattern);
     for (int i = 1; i < sections.Length; i += 2) {
+        string code = GetDecompiledText(entry);
         string target = sections[i];
         string patch = sections[i + 1].Trim();
-        string finalResult = target switch {
-            "TAIL" => code + "\n" + patch,
-            "HEAD" => patch + "\n" + code,
-            "REPLACE" => patch,
-            _ => code
+        string finalResult;
+        switch (target) {
+            case "TAIL":
+                finalResult = code + "\n" + patch;
+                break;
+            case "HEAD": 
+                finalResult = patch + "\n" + code;
+                break;
+            case "REPLACE":
+                finalResult = patch;
+                break;
+            case "LINENUMBER": 
+                int firstNewline = patch.IndexOf("\n");
+                int insertPosition = int.Parse(patch.Substring(2, firstNewline - 1));
+                string[] lines = code.Split('\n');
+                lines[insertPosition - 1] = patch.Substring(firstNewline) + "\n" + lines[insertPosition - 1];
+                finalResult = string.Join("\n", lines);
+                break;
+            default:
+                finalResult = code;
+                break;
         };
-
         ImportGMLString(codeEntryName, finalResult);
     }
-
 }
 
 

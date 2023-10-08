@@ -4,13 +4,20 @@ placeable_object_map[? pit_id] = "obj_pit"
 placeable_object_map[? glass_id] = "obj_glassfloor"
 placeable_object_map[? mine_id] = "obj_bombfloor"
 placeable_object_map[? default_tile_id] = "obj_floor"
+placeable_object_map[? floorswitch_id] = "obj_floorswitch"
+placeable_object_map[? copyfloor_id] = "obj_copyfloor"
 placeable_object_map[? exit_id] = "obj_exit"
+placeable_object_map[? deathfloor_id] = "obj_deathfloor"
 
 placeable_object_map[? player_id] = "obj_spawnpoint"
 placeable_object_map[? leech_id] = "obj_enemy_cl"
 placeable_object_map[? maggot_id] = "obj_enemy_cc"
-placeable_object_map[? bull_id] = "obj_enemy_cg"
 placeable_object_map[? gobbler_id] = "obj_enemy_cs"
+placeable_object_map[? bull_id] = "obj_enemy_cg"
+placeable_object_map[? hand_id] = "obj_enemy_ch"
+placeable_object_map[? mimic_id] = "obj_enemy_cm"
+placeable_object_map[? diamond_id] = "obj_enemy_co"
+
 
 
 if (!instance_exists(asset_get_index("obj_ev_editor"))) {
@@ -36,10 +43,10 @@ for (var i = 0; i < 9; i++) {
 			var layerr = ""
 			switch (tile.tile_id) {
 				default:
-					layerr = "Floor_INS"
-					break;
-				case default_tile_id:
 					layerr = "Floor"
+					break;
+				case glass_id:
+					layerr = "Floor_INS"
 					break;
 				case pit_id:
 					layerr = "Pit"
@@ -67,6 +74,9 @@ for (var i = 0; i < 9; i++) {
 				case leech_id:
 				case maggot_id:
 					inst.set_e_direction = object_state.properties.dir;
+					break;
+				default:
+					break;
 			}
 		}
 	}

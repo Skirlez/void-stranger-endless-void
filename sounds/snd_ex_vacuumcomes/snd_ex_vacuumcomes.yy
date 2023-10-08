@@ -4,7 +4,7 @@
   "name": "snd_ex_vacuumcomes",
   "conversionMode": 0,
   "compression": 0,
-  "volume": 0.5,
+  "volume": 1.0,
   "preload": false,
   "bitRate": 128,
   "sampleRate": 44100,

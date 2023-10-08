@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "level_management",
+  "name": "ev_level_management",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {

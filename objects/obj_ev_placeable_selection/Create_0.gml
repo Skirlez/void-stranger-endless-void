@@ -1,10 +1,16 @@
 event_inherited();
 
-tile = noone;
-object = noone;
-
-tile = global.editor_object.tiles_list[num]
-object = global.editor_object.objects_list[num]
+function update() {
+	if !direct {
+		tile_ind = global.player_tiles[num]
+		object_ind = global.player_objects[num]
+	}
+	else {
+		tile_ind = num;
+		object_ind = num;
+	}
+}
+update()
 
 x += 8
 y += 8

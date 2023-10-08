@@ -40,5 +40,5 @@ image_xscale = scale
 image_yscale = scale
 
 
-if mouse_check_button_pressed(mb_left) && mouse_on_me
+if ev_mouse_pressed() && mouse_on_me
 	event_user(0)

@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge true
+#macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -8,12 +8,10 @@ if (!compiled_for_merge) {
 window_set_cursor(cr_default)
 
 global.editor_time = 0
-
+global.mouse_pressed = false;
 #macro thing_eraser 1
 #macro thing_placeable 2
 
-global.selected_thing = -1 // cursor
-global.selected_placeable_num = 0
 
 #macro flag_unremovable 1
 #macro flag_only_one 2
@@ -27,6 +25,9 @@ global.white_floor_sprite = asset_get_index("spr_floor_white")
 return_noone = function() {
 	return noone;
 }
+
+empty_draw_function = function(tile_state, i, j) { };
+
 
 default_draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
@@ -49,16 +50,22 @@ function editor_placeable(spr_ind, tile_id, flags = 0) constructor {
 #macro glass_id "gl"
 #macro mine_id "mn"
 #macro default_tile_id "fl"
+#macro floorswitch_id "fs"
+#macro copyfloor_id "cr"
 #macro exit_id "ex"
 #macro white_id "wh"
+#macro unremovable_id "ur"
+#macro deathfloor_id "df"
 
 #macro empty_id "em"
 #macro player_id "pl"
 #macro leech_id "cl"
 #macro maggot_id "cc"
-#macro bull_id "cg"
 #macro gobbler_id "cs"
-
+#macro bull_id "cg"
+#macro hand_id "ch"
+#macro mimic_id "cm"
+#macro diamond_id "co"
 
 floor_sprite = asset_get_index("spr_floor");
 
@@ -80,14 +87,22 @@ tile_glass.draw_function = function(tile_state, i, j) {
 
 tile_mine = new editor_placeable(asset_get_index("spr_bombfloor"), mine_id)
 tile_default = new editor_placeable(floor_sprite, default_tile_id)
-tile_exit = new editor_placeable(asset_get_index("spr_stairs"), exit_id)
-tile_unremovable_white = new editor_placeable(asset_get_index("spr_floor_white"), white_id, flag_unremovable)
+tile_floorswitch = new editor_placeable(asset_get_index("spr_floorswitch"), floorswitch_id)
+tile_floorswitch.draw_function = function(tile_state, i, j) {
+	var ind = global.level_objects[i][j].tile == object_empty ? 0 : 1
+	draw_sprite(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8)
+}
+tile_copyfloor = new editor_placeable(asset_get_index("spr_copyfloor"), copyfloor_id)
+tile_deathfloor = new editor_placeable(asset_get_index("spr_deathfloor"), deathfloor_id)
 
+tile_exit = new editor_placeable(asset_get_index("spr_stairs"), exit_id)
+tile_unremovable = new editor_placeable(asset_get_index("spr_floor_white"), unremovable_id, flag_unremovable)
+tile_unremovable.draw_function = empty_draw_function;
 
 // even though it does nothing, we do need an object parallel to tile_empty as opposed to having it be noone
 // as to not be inconsistent
 object_empty = new editor_placeable(noone, empty_id)
-object_empty.draw_function = function(tile_state, i, j) { };
+object_empty.draw_function = empty_draw_function;
 
 object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, flag_unremovable|flag_only_one)
 
@@ -121,30 +136,48 @@ object_maggot.properties_generator = directioned_properties
 
 object_bull = new editor_placeable(asset_get_index("spr_cg_idle"), bull_id, 0)
 object_gobbler = new editor_placeable(asset_get_index("spr_cs_right"), gobbler_id, 0)
-
-
-tiles_list = [tile_default, tile_glass, tile_mine, tile_exit]
-objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler]
-
-
+object_hand = new editor_placeable(asset_get_index("spr_ch"), hand_id, 0)
+object_mimic = new editor_placeable(asset_get_index("spr_cm_down"), mimic_id)
+object_diamond = new editor_placeable(asset_get_index("spr_co_move"), diamond_id)
 
 
 
-global.level_tiles = array_create(9)
-for (var i = 0; i < array_length(global.level_tiles) - 1; i++)
-	global.level_tiles[i] = array_create(14, new tile_with_state(tile_default))	
-global.level_tiles[8] = array_create(14, new tile_with_state(tile_unremovable_white))	
+global.player_tiles = array_create(6)
+global.player_objects = array_create(6)
+for (var i = 0; i < 6; i++) {
+	global.player_tiles[i] = i	
+	global.player_objects[i] = i	
+}
+
+tiles_list = [tile_default, tile_glass, tile_mine, tile_floorswitch, tile_copyfloor, tile_exit, 
+	tile_deathfloor]
+objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
+	object_mimic, object_diamond]
+
+function reset_everything() {
+	
+	global.mouse_layer = 0
+	global.selected_thing = -1 
+	global.selected_placeable_num = 0
+	
+	global.level_tiles = array_create(9)
+	for (var i = 0; i < array_length(global.level_tiles) - 1; i++)
+		global.level_tiles[i] = array_create(14, new tile_with_state(tile_default))	
+	global.level_tiles[8] = array_create(14, new tile_with_state(tile_unremovable))	
 
 
-global.level_objects = array_create(9)
-for (var i = 0; i < array_length(global.level_objects); i++)
-	global.level_objects[i] = array_create(14, new tile_with_state(object_empty))	
+	global.level_objects = array_create(9)
+	for (var i = 0; i < array_length(global.level_objects); i++)
+		global.level_objects[i] = array_create(14, new tile_with_state(object_empty))	
 
-global.level_objects[5][5] = new tile_with_state(object_player)
+	global.level_objects[5][5] = new tile_with_state(object_player)
 
-current_list = tiles_list;
-current_placeables = global.level_tiles
-current_empty_tile = tile_pit
+	current_list = tiles_list;
+	current_placeables = global.level_tiles
+	current_empty_tile = tile_pit
+}
+
+reset_everything()
 
 
 
@@ -165,3 +198,7 @@ function switch_tile_modes() {
 global.erasing = -1;
 erasing_surface = surface_create(224, 144)
 global.goes_sound = asset_get_index("snd_ex_vacuumgoes")
+
+
+global.play_transition = -1
+global.max_play_transition = 20

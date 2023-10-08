@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "obj_ev_main_menu_button",
   "spriteId": {
-    "name": "spr_white_button",
-    "path": "sprites/spr_white_button/spr_white_button.yy",
+    "name": "spr_ev_white_button",
+    "path": "sprites/spr_ev_white_button/spr_ev_white_button.yy",
   },
   "solid": false,
   "visible": true,
@@ -27,7 +27,9 @@
   "physicsStartAwake": true,
   "physicsKinematic": false,
   "physicsShapePoints": [],
-  "eventList": [],
+  "eventList": [
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":10,"eventType":7,"collisionObjectId":null,},
+  ],
   "properties": [],
   "overriddenProperties": [],
   "parent": {

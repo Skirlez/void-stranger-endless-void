@@ -57,3 +57,10 @@ function handle_click_after(tile_i, tile_j) {
 			break;
 	}
 }
+
+move_curve = animcurve_get_channel(ac_play_transition, "move")
+grow_curve = animcurve_get_channel(ac_play_transition, "grow")
+scale_x_start = image_xscale
+scale_y_start = image_yscale
+
+base_ui = asset_get_index("spr_ev_base_ui")

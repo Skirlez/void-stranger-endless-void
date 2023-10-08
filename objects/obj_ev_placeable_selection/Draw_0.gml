@@ -1,13 +1,9 @@
-
-
 if (global.tile_mode) {
-	if (tile == noone)
-		exit
+	var tile = global.editor_object.tiles_list[tile_ind]
 	sprite_index = tile.spr_ind
 }
 else {
-	if (object == noone)
-		exit
+	var object = global.editor_object.objects_list[object_ind]
 	sprite_index = object.spr_ind
 }
 

@@ -1,6 +1,9 @@
+event_inherited()
 switch (image_index) {
 	case 0: // play
-		room_goto(asset_get_index("rm_ev_level"))
+		global.mouse_layer = -1
+		global.play_transition = global.max_play_transition
+		
 		break;
 	case 1: // eraser
 		if (global.selected_thing != 1)

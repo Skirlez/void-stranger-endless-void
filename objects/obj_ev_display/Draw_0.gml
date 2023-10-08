@@ -4,6 +4,22 @@ if !surface_exists(game_surface)
 surface_set_target(game_surface)
 draw_clear_alpha(c_black, 1)
 
+
+
+if (global.play_transition != -1) {
+	var t = (global.max_play_transition - global.play_transition) / global.max_play_transition
+	var move = animcurve_channel_evaluate(move_curve, t)	
+	var grow = animcurve_channel_evaluate(grow_curve, t)	
+	image_xscale = lerp(scale_x_start, 1, grow)
+	image_yscale = lerp(scale_y_start, 1, grow)
+	x = xstart - move * 16 - grow * 16
+	y = ystart - move * 16 - grow * 16
+	
+}
+
+
+
+
 function draw_tile_state(i, j, tile_state) {
 	if (tile_state != noone) {
 		var tile = tile_state.tile
@@ -25,6 +41,8 @@ for (var i = 0; i < 9; i++)	{
 			draw_set_alpha(1)
 	}
 }
+draw_sprite(base_ui, 0, 0, 128)
+
 
 if (ev_is_mouse_on_me()) {
 	var tile_j = floor((mouse_x - x) / (16 * image_xscale))
@@ -60,3 +78,4 @@ if (ev_is_mouse_on_me()) {
 surface_reset_target()
 
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
+

@@ -7,8 +7,8 @@ if (selected) {
 }
 
 if image_index == 5 && global.erasing != -1 {
-	var offset_x = dcos(global.editor_time * 4) * (350-global.erasing) / 50
-	var offset_y = dsin(global.editor_time * 4) * (350-global.erasing) / 50
+	var offset_x = dcos(global.editor_time * 4) * (350-global.erasing) / 40
+	var offset_y = dsin(global.editor_time * 4) * (350-global.erasing) / 40
 }
 else {
 	offset_x = 0
