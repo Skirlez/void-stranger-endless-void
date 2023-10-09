@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -9,18 +9,20 @@ window_set_cursor(cr_default)
 
 global.editor_time = 0
 global.mouse_pressed = false;
+global.mouse_held = false;
 #macro thing_eraser 1
 #macro thing_placeable 2
-
-
 #macro flag_unremovable 1
 #macro flag_only_one 2
+#macro flag_no_objects 4
 
 global.editor_object = asset_get_index("obj_ev_editor");
 global.display_object = asset_get_index("obj_ev_display");
 
 global.selection_sprite = asset_get_index("spr_ev_selection")
 global.white_floor_sprite = asset_get_index("spr_floor_white")
+
+global.tileset_1 = asset_get_index("tile_bg_1")
 
 return_noone = function() {
 	return noone;
@@ -56,6 +58,7 @@ function editor_placeable(spr_ind, tile_id, flags = 0) constructor {
 #macro white_id "wh"
 #macro unremovable_id "ur"
 #macro deathfloor_id "df"
+#macro wall_id "wa"
 
 #macro empty_id "em"
 #macro player_id "pl"
@@ -93,9 +96,26 @@ tile_floorswitch.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8)
 }
 tile_copyfloor = new editor_placeable(asset_get_index("spr_copyfloor"), copyfloor_id)
-tile_deathfloor = new editor_placeable(asset_get_index("spr_deathfloor"), deathfloor_id)
+
 
 tile_exit = new editor_placeable(asset_get_index("spr_stairs"), exit_id)
+tile_white = new editor_placeable(asset_get_index("spr_floor_white"), white_id)
+tile_deathfloor = new editor_placeable(asset_get_index("spr_deathfloor"), deathfloor_id)
+tile_wall = new editor_placeable(asset_get_index("spr_ev_wall"), wall_id, flag_no_objects)
+tile_wall.properties_generator = function() {
+	return { ind : 4 }
+}	
+tile_wall.draw_function = function(tile_state, i, j) {
+	draw_set_color(c_white)
+	draw_tile(global.tileset_1, tile_state.properties.ind, 0, j * 16, i * 16)	
+}
+tile_wall.zed_function = function() {
+	new_window(10, 6, asset_get_index("obj_ev_wall_window"))	
+	global.mouse_layer = 1
+}
+
+
+
 tile_unremovable = new editor_placeable(asset_get_index("spr_floor_white"), unremovable_id, flag_unremovable)
 tile_unremovable.draw_function = empty_draw_function;
 
@@ -150,7 +170,7 @@ for (var i = 0; i < 6; i++) {
 }
 
 tiles_list = [tile_default, tile_glass, tile_mine, tile_floorswitch, tile_copyfloor, tile_exit, 
-	tile_deathfloor]
+	tile_deathfloor, tile_white, tile_wall]
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond]
 

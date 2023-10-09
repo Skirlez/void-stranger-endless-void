@@ -74,7 +74,7 @@ if (ev_is_mouse_on_me()) {
 	}
 }
 		
-
+draw_tilemap(graphics_tilemap, 0, 0)
 surface_reset_target()
 
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)

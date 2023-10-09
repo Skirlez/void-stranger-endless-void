@@ -1,3 +1,4 @@
+ev_prepare_level()
 placeable_object_map = ds_map_create()
 
 placeable_object_map[? pit_id] = "obj_pit"
@@ -8,6 +9,8 @@ placeable_object_map[? floorswitch_id] = "obj_floorswitch"
 placeable_object_map[? copyfloor_id] = "obj_copyfloor"
 placeable_object_map[? exit_id] = "obj_exit"
 placeable_object_map[? deathfloor_id] = "obj_deathfloor"
+placeable_object_map[? white_id] = "obj_floor_blank"
+placeable_object_map[? wall_id] = noone
 
 placeable_object_map[? player_id] = "obj_spawnpoint"
 placeable_object_map[? leech_id] = "obj_enemy_cl"
@@ -20,17 +23,13 @@ placeable_object_map[? diamond_id] = "obj_enemy_co"
 
 
 
-if (!instance_exists(asset_get_index("obj_ev_editor"))) {
-	room_goto(asset_get_index("rm_ev_editor"))
-	exit
-}
-	
-
-
 function create(i, j, layerr, name) {
 	var game_object = asset_get_index(name)
 	return instance_create_layer(j * 16 + 8, i * 16 + 8, layerr, game_object)
 }
+
+
+wall_tilemap = layer_tilemap_create("Tiles_1", 0, 0, global.tileset_1, 224, 144)
 
 for (var i = 0; i < 9; i++) {
 	for (var j = 0; j < 14; j++) {
@@ -41,6 +40,7 @@ for (var i = 0; i < 9; i++) {
 			if is_undefined(game_object)
 				show_message(tile.tile_id)
 			var layerr = ""
+			var abort = false;
 			switch (tile.tile_id) {
 				default:
 					layerr = "Floor"
@@ -51,9 +51,14 @@ for (var i = 0; i < 9; i++) {
 				case pit_id:
 					layerr = "Pit"
 					break;
+				case wall_id:
+					abort = true;
+					tilemap_set(wall_tilemap, tile_state.properties.ind, j, i)
+					break;
 				
 			}
-			create(i, j, layerr, game_object)
+			if !abort
+				create(i, j, layerr, game_object)
 		}
 		
 		var object_state = global.level_objects[i][j];
@@ -81,6 +86,14 @@ for (var i = 0; i < 9; i++) {
 		}
 	}
 }
+
+// second pass for graphic tiles
+for (var i = 1; i < 8; i++) {
+	for (var j = 1; j < 13; j++) {
+		
+	}
+}
+
 
 
 ds_map_destroy(placeable_object_map)

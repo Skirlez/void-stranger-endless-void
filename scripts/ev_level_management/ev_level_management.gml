@@ -1,4 +1,7 @@
 
+function num_to_string(num, length) {
+	return string_replace(string_format(num, length, 0), " ", 0)	
+}
 
 function string_copy_boundless(str, index, count) {
 	newstr = ""
@@ -23,6 +26,9 @@ function export_level() {
 				var tile_id = tile_state.tile.tile_id
 				tile_string += tile_id
 				switch (tile_id) {
+					case wall_id:
+						tile_string += num_to_string(object_state.properties.ind, 2)
+						break;
 					default:
 						break;
 				}
@@ -70,7 +76,7 @@ function import_level(tile_string, object_string) {
 			}
 		}
 		else
-			global.level_tiles[@ i][j] = new tile_with_state(global.editor_object.tile_unremovable_white);
+			global.level_tiles[@ i][j] = new tile_with_state(global.editor_object.tile_unremovable);
 		
 		
 		var object_id = string_copy(object_string, object_pointer, 2)
@@ -86,6 +92,10 @@ function import_level(tile_string, object_string) {
 				object_pointer++
 				global.level_objects[@ i][j] = new tile_with_state(object, { dir: bool(int64(read_dir)) });
 				break;
+			case wall_id:
+				var read_ind = string_copy(object_string, object_pointer, 2)
+				object_pointer += 2;
+				global.level_objects[@ i][j] = new tile_with_state(object, { ind: int64(read_ind) });
 			default:
 				if (object == global.editor_object.object_player)
 					show_debug_message("here")

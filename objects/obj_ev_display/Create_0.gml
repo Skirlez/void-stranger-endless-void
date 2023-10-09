@@ -64,3 +64,11 @@ scale_x_start = image_xscale
 scale_y_start = image_yscale
 
 base_ui = asset_get_index("spr_ev_base_ui")
+
+invisible_tiles_layer = layer_get_id("InvisibleTiles")
+graphics_tilemap = layer_tilemap_create(invisible_tiles_layer, 0, 0, global.tileset_1, 14, 8)
+
+//wall_state_img = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+//wall_state_img = [ 0,48,48,5,48,9,12,9,48,3,14,4,10,6,11,1 ]
+
+ind = 0

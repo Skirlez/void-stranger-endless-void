@@ -43,7 +43,6 @@ foreach (UndertaleSprite sprite in endlessVoidData.Sprites) {
     if (sprite.Textures[0].Texture.TexturePage.TextureInfo.Name.Content == "VoidStrangerGroup")
         continue;
     Data.Sprites.Add(sprite);
-    Data.Strings.Add(sprite.Name);
     foreach (UndertaleSprite.TextureEntry textureEntry in sprite.Textures) {
         int newIndex = dict[textureEntry.Texture.TexturePage];
         textureEntry.Texture.TexturePage = Data.EmbeddedTextures[newIndex];
@@ -112,7 +111,7 @@ foreach (UndertaleString str in endlessVoidData.Strings)
     Data.Strings.Add(str);
 
 Data.GeneralInfo.Info |= UndertaleGeneralInfo.InfoFlags.ShowCursor;
-
+Data.Options.Info |= UndertaleOptions.OptionsFlags.ShowCursor;
 
 // Apply the patches
 

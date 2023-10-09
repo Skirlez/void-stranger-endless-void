@@ -8,7 +8,6 @@ var top_edge = y - (image_yscale * 8) + margin_y
 for (var i = 0; i < 6; i++) {
 	var inst = instance_create_layer(left_edge + i * step, top_edge, "WindowElements", asset_get_index("obj_ev_placeable_drag"), {
 		num : i,
-		layer_num : 1
 	}) 
 	add_child(inst)
 }
@@ -20,7 +19,6 @@ repeat (array_length(list)) {
 	var inst = instance_create_layer(left_edge + i * step, top_edge + 40 + j * step, "WindowElements", asset_get_index("obj_ev_placeable_selection"), {
 		num : i + j * 6,
 		direct: true,
-		layer_num : 1
 	}) 
 	add_child(inst)
 	i++;

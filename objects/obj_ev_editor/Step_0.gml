@@ -22,5 +22,12 @@ if global.play_transition != -1 {
 	}
 }
 
-
-global.mouse_pressed = mouse_check_button_pressed(mb_left);
+if mouse_check_button_pressed(mb_left) {
+	global.mouse_pressed = true;
+	global.mouse_held = true;
+}
+else
+	global.mouse_pressed = false;
+if mouse_check_button_released(mb_left) {
+	global.mouse_held = false;	
+}

@@ -1,3 +1,7 @@
+function ev_mouse_held() {
+	return global.mouse_held
+}
+
 function ev_mouse_pressed() {
 	return global.mouse_pressed
 }
