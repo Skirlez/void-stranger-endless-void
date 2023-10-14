@@ -15,7 +15,6 @@ for (var i = 0; i < 6; i++) {
 var list = global.editor_object.current_list
 var i = 0, j = 0;
 repeat (array_length(list)) {
-	
 	var inst = instance_create_layer(left_edge + i * step, top_edge + 40 + j * step, "WindowElements", asset_get_index("obj_ev_placeable_selection"), {
 		num : i + j * 6,
 		direct: true,

@@ -27,11 +27,14 @@ function draw_tile_state(i, j, tile_state) {
 	}
 }
 
+draw_sprite(base_ui, 0, 0, 128)
+
 for (var i = 0; i < 9; i++)	{
 	for (var j = 0; j < 14; j++) {
-		var tile_state = global.level_tiles[i][j]
-		draw_tile_state(i, j, tile_state)
-		
+		if i != 8 {
+			var tile_state = global.level_tiles[i][j]
+			draw_tile_state(i, j, tile_state)
+		}
 	
 		if (global.tile_mode)
 			draw_set_alpha(0.4)
@@ -41,7 +44,7 @@ for (var i = 0; i < 9; i++)	{
 			draw_set_alpha(1)
 	}
 }
-draw_sprite(base_ui, 0, 0, 128)
+
 
 
 if (ev_is_mouse_on_me()) {
@@ -74,7 +77,6 @@ if (ev_is_mouse_on_me()) {
 	}
 }
 		
-draw_tilemap(graphics_tilemap, 0, 0)
 surface_reset_target()
 
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)

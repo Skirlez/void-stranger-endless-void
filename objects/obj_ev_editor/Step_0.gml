@@ -22,6 +22,10 @@ if global.play_transition != -1 {
 	}
 }
 
+if keyboard_check(vk_control) && keyboard_check_pressed(ord("Z"))
+	undo();
+
+
 if mouse_check_button_pressed(mb_left) {
 	global.mouse_pressed = true;
 	global.mouse_held = true;

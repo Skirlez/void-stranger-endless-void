@@ -6,7 +6,10 @@
   "solid": false,
   "visible": true,
   "managed": true,
-  "spriteMaskId": null,
+  "spriteMaskId": {
+    "name": "spr_ev_tile_hitbox",
+    "path": "sprites/spr_ev_tile_hitbox/spr_ev_tile_hitbox.yy",
+  },
   "persistent": false,
   "parentObjectId": {
     "name": "obj_ev_button",

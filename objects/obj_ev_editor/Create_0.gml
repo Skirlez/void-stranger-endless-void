@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge true
+#macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -16,6 +16,8 @@ global.mouse_held = false;
 #macro flag_only_one 2
 #macro flag_no_objects 4
 
+global.tile_mode = true
+
 global.editor_object = asset_get_index("obj_ev_editor");
 global.display_object = asset_get_index("obj_ev_display");
 
@@ -23,6 +25,7 @@ global.selection_sprite = asset_get_index("spr_ev_selection")
 global.white_floor_sprite = asset_get_index("spr_floor_white")
 
 global.tileset_1 = asset_get_index("tile_bg_1")
+global.tileset_edge = asset_get_index("tile_edges")
 
 return_noone = function() {
 	return noone;
@@ -59,6 +62,7 @@ function editor_placeable(spr_ind, tile_id, flags = 0) constructor {
 #macro unremovable_id "ur"
 #macro deathfloor_id "df"
 #macro wall_id "wa"
+#macro edge_id "ed"
 
 #macro empty_id "em"
 #macro player_id "pl"
@@ -77,8 +81,9 @@ tile_pit.draw_function = function(tile_state, i, j) {
 	if (i == 0)
 		return;
 	var above_tile_state = global.level_tiles[i - 1][j];
-	
+
 	if above_tile_state.tile != tile_pit && above_tile_state.tile != tile_glass
+			&& above_tile_state.tile != tile_edge
 		draw_sprite(floor_sprite, 1, j * 16 + 8, i * 16 + 8)
 }
 
@@ -87,7 +92,6 @@ tile_glass.draw_function = function(tile_state, i, j) {
 	tile_pit.draw_function(tile_state, i, j)
 	default_draw_function(tile_state, i, j)
 }
-
 tile_mine = new editor_placeable(asset_get_index("spr_bombfloor"), mine_id)
 tile_default = new editor_placeable(floor_sprite, default_tile_id)
 tile_floorswitch = new editor_placeable(asset_get_index("spr_floorswitch"), floorswitch_id)
@@ -104,7 +108,17 @@ tile_deathfloor = new editor_placeable(asset_get_index("spr_deathfloor"), deathf
 tile_wall = new editor_placeable(asset_get_index("spr_ev_wall"), wall_id, flag_no_objects)
 tile_wall.properties_generator = function() {
 	return { ind : 4 }
-}	
+}
+
+tile_edge = new editor_placeable(asset_get_index("spr_ev_edge"), edge_id, flag_no_objects)
+tile_edge.properties_generator = function() {
+	return { ind : 4 }	
+}
+tile_edge.draw_function = function(tile_state, i, j) {
+	draw_set_color(c_white)
+	draw_tile(global.tileset_edge, runtile_fetch_blob(j, i), 0, j * 16, i * 16)
+}
+
 tile_wall.draw_function = function(tile_state, i, j) {
 	draw_set_color(c_white)
 	draw_tile(global.tileset_1, tile_state.properties.ind, 0, j * 16, i * 16)	
@@ -130,7 +144,7 @@ object_player = new editor_placeable(asset_get_index("spr_player_down"), player_
 
 object_leech = new editor_placeable(asset_get_index("spr_cl_right"), leech_id, 0)
 object_leech.draw_function = function(tile_state, i, j) {
-	var xscale = tile_state.properties.dir == true ? 1 : -1
+	var xscale = tile_state.properties.dir == true ? -1 : 1
 	draw_sprite_ext(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8, xscale, 1, 0, c_white, draw_get_alpha())
 }
 
@@ -139,14 +153,14 @@ maggot_sprite_up = asset_get_index("spr_cc_up");
 
 object_maggot = new editor_placeable(maggot_sprite_down, maggot_id, 0)
 object_maggot.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_down : maggot_sprite_up, 0, j * 16 + 8, i * 16 + 8)
+	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_up : maggot_sprite_down, 0, j * 16 + 8, i * 16 + 8)
 }
 
 var directioned_zed_function = function(tile_state) {
 	tile_state.properties.dir = !tile_state.properties.dir
 }
 var directioned_properties = function() {
-	return { dir : true	}
+	return { dir : false }
 }
 
 object_leech.zed_function = directioned_zed_function
@@ -169,8 +183,10 @@ for (var i = 0; i < 6; i++) {
 	global.player_objects[i] = i	
 }
 
+
 tiles_list = [tile_default, tile_glass, tile_mine, tile_floorswitch, tile_copyfloor, tile_exit, 
-	tile_deathfloor, tile_white, tile_wall]
+	tile_deathfloor, tile_white, tile_wall, tile_edge]
+	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond]
 
@@ -182,7 +198,7 @@ function reset_everything() {
 	
 	global.level_tiles = array_create(9)
 	for (var i = 0; i < array_length(global.level_tiles) - 1; i++)
-		global.level_tiles[i] = array_create(14, new tile_with_state(tile_default))	
+		global.level_tiles[i] = array_create(14, new tile_with_state(tile_pit))	
 	global.level_tiles[8] = array_create(14, new tile_with_state(tile_unremovable))	
 
 
@@ -190,8 +206,13 @@ function reset_everything() {
 	for (var i = 0; i < array_length(global.level_objects); i++)
 		global.level_objects[i] = array_create(14, new tile_with_state(object_empty))	
 
-	global.level_objects[5][5] = new tile_with_state(object_player)
-
+	global.level_objects[4][6] = new tile_with_state(object_player)
+	global.level_tiles[2][6] = new tile_with_state(tile_exit)
+	for (var i = 0; i < 3; i++) {
+		for (var j = 0; j < 3; j++)
+			global.level_tiles[3 + i][5 + j] = new tile_with_state(tile_default)
+	}
+	
 	current_list = tiles_list;
 	current_placeables = global.level_tiles
 	current_empty_tile = tile_pit
@@ -222,3 +243,45 @@ global.goes_sound = asset_get_index("snd_ex_vacuumgoes")
 
 global.play_transition = -1
 global.max_play_transition = 20
+
+history = []
+
+function copy_array(arr) {
+	arr[0] = arr[0]
+	return arr;
+}
+
+function copy_tile_data(tiles) {
+	for (var i = 0; i < array_length(tiles); i++) {
+		tiles[i] = copy_array(tiles[i])
+		for (var j = 0; j < array_length(tiles[i]); j++) {
+			var tile_state = tiles[i][j]
+			tiles[i][j] = new tile_with_state(tile_state.tile, struct_copy(tile_state.properties))
+			
+		}
+	}
+	
+	return tiles;
+}
+
+// computers have infinite memory.
+function add_undo() {
+	
+	array_push(history, copy_tile_data(global.level_tiles), copy_tile_data(global.level_objects))
+	show_debug_message(array_length(history))
+	if array_length(history) > 500
+		array_delete(history, 0, 2)
+}
+
+
+
+function undo() {
+	if array_length(history) != 0 {
+		array_copy(global.level_objects, 0, array_pop(history), 0, array_length(global.level_objects))
+		array_copy(global.level_tiles, 0, array_pop(history), 0, array_length(global.level_tiles))
+		show_debug_message(array_length(history))
+	}
+	
+
+}
+

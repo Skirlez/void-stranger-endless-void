@@ -27,7 +27,7 @@ function export_level() {
 				tile_string += tile_id
 				switch (tile_id) {
 					case wall_id:
-						tile_string += num_to_string(object_state.properties.ind, 2)
+						tile_string += num_to_string(tile_state.properties.ind, 2)
 						break;
 					default:
 						break;

@@ -1,9 +1,12 @@
 game_surface = -1;
-global.tile_mode = true
 
+last_clicked_i = -1;
+last_clicked_j = -1;
 drag_box_i = -1
 drag_box_j = -1
 dragging = false
+
+painting = false;
 
 held_tile_state = noone
 
@@ -21,13 +24,14 @@ function place_placeable(tile_i, tile_j, new_tile, properties = noone) {
 		//audio_play_sound(snd_reveal, 10, false)
 	}
 
-	arr[@tile_i][tile_j] = new tile_with_state(new_tile, properties)
+	arr[@ tile_i][tile_j] = new tile_with_state(new_tile, properties)
 }
 
 function handle_click(tile_i, tile_j) {
 	switch (global.selected_thing) {
 		case thing_eraser:
 			place_placeable(tile_i, tile_j, global.editor_object.current_empty_tile)
+			runtile_autotile_blob(tile_j, tile_i)
 			break;
 		case thing_placeable:
 			if (held_tile_state == noone)
@@ -42,8 +46,8 @@ function handle_click(tile_i, tile_j) {
 					}
 				}
 			}
-				
 			place_placeable(tile_i, tile_j, held_tile_state.tile, struct_copy(held_tile_state.properties))
+			runtile_autotile_blob(tile_j, tile_i)
 			break;
 		default:
 			break;
@@ -51,9 +55,12 @@ function handle_click(tile_i, tile_j) {
 	}
 }
 
-function handle_click_after(tile_i, tile_j) {
+function handle_click_before(tile_i, tile_j) {
 	switch (global.selected_thing) {
+		case thing_placeable:
+		case thing_eraser:
 		default:
+			
 			break;
 	}
 }
@@ -65,10 +72,5 @@ scale_y_start = image_yscale
 
 base_ui = asset_get_index("spr_ev_base_ui")
 
-invisible_tiles_layer = layer_get_id("InvisibleTiles")
-graphics_tilemap = layer_tilemap_create(invisible_tiles_layer, 0, 0, global.tileset_1, 14, 8)
-
-//wall_state_img = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-//wall_state_img = [ 0,48,48,5,48,9,12,9,48,3,14,4,10,6,11,1 ]
 
 ind = 0

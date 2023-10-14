@@ -11,6 +11,7 @@ placeable_object_map[? exit_id] = "obj_exit"
 placeable_object_map[? deathfloor_id] = "obj_deathfloor"
 placeable_object_map[? white_id] = "obj_floor_blank"
 placeable_object_map[? wall_id] = noone
+placeable_object_map[? edge_id] = noone
 
 placeable_object_map[? player_id] = "obj_spawnpoint"
 placeable_object_map[? leech_id] = "obj_enemy_cl"
@@ -30,6 +31,7 @@ function create(i, j, layerr, name) {
 
 
 wall_tilemap = layer_tilemap_create("Tiles_1", 0, 0, global.tileset_1, 224, 144)
+edge_tilemap = layer_tilemap_create("Tiles_2", 0, 0, global.tileset_edge, 224, 144)
 
 for (var i = 0; i < 9; i++) {
 	for (var j = 0; j < 14; j++) {
@@ -55,6 +57,10 @@ for (var i = 0; i < 9; i++) {
 					abort = true;
 					tilemap_set(wall_tilemap, tile_state.properties.ind, j, i)
 					break;
+				case edge_id:
+					abort = true
+					runtile_update_blob(edge_tilemap, j, i, false)
+					break;
 				
 			}
 			if !abort
@@ -78,7 +84,7 @@ for (var i = 0; i < 9; i++) {
 			switch (object.tile_id) {
 				case leech_id:
 				case maggot_id:
-					inst.set_e_direction = object_state.properties.dir;
+					inst.editor_dir = object_state.properties.dir;
 					break;
 				default:
 					break;
