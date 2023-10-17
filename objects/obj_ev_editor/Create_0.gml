@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -26,6 +26,8 @@ global.white_floor_sprite = asset_get_index("spr_floor_white")
 
 global.tileset_1 = asset_get_index("tile_bg_1")
 global.tileset_edge = asset_get_index("tile_edges")
+
+global.select_sound = asset_get_index("snd_ev_select")
 
 return_noone = function() {
 	return noone;
@@ -172,6 +174,21 @@ object_bull = new editor_placeable(asset_get_index("spr_cg_idle"), bull_id, 0)
 object_gobbler = new editor_placeable(asset_get_index("spr_cs_right"), gobbler_id, 0)
 object_hand = new editor_placeable(asset_get_index("spr_ch"), hand_id, 0)
 object_mimic = new editor_placeable(asset_get_index("spr_cm_down"), mimic_id)
+object_mimic.properties_generator = function() {
+	return { typ : 0 } 	
+}
+object_mimic.zed_function = function(tile_state) {
+	tile_state.properties.typ++;
+	if tile_state.properties.typ > 2
+		tile_state.properties.typ = 0
+}
+
+mimic_sprite_arr = [asset_get_index("spr_cm_down"), asset_get_index("spr_cm_up1"), asset_get_index("spr_cm_up2")]
+object_mimic.draw_function = function(tile_state, i, j) {
+	draw_sprite(mimic_sprite_arr[tile_state.properties.typ], 0, j * 16 + 8, i * 16 + 8)
+}
+
+
 object_diamond = new editor_placeable(asset_get_index("spr_co_move"), diamond_id)
 
 
@@ -257,7 +274,6 @@ function copy_tile_data(tiles) {
 		for (var j = 0; j < array_length(tiles[i]); j++) {
 			var tile_state = tiles[i][j]
 			tiles[i][j] = new tile_with_state(tile_state.tile, struct_copy(tile_state.properties))
-			
 		}
 	}
 	
@@ -266,22 +282,21 @@ function copy_tile_data(tiles) {
 
 // computers have infinite memory.
 function add_undo() {
-	
 	array_push(history, copy_tile_data(global.level_tiles), copy_tile_data(global.level_objects))
 	show_debug_message(array_length(history))
-	if array_length(history) > 500
+	if array_length(history) > 500 // will remember 250 changes before removing
 		array_delete(history, 0, 2)
 }
 
 
 
 function undo() {
+	static undo_sound = asset_get_index("snd_voidrod_place")
 	if array_length(history) != 0 {
 		array_copy(global.level_objects, 0, array_pop(history), 0, array_length(global.level_objects))
 		array_copy(global.level_tiles, 0, array_pop(history), 0, array_length(global.level_tiles))
 		show_debug_message(array_length(history))
+		audio_play_sound(undo_sound, 10, false)
 	}
-	
-
 }
 

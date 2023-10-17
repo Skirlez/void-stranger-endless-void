@@ -59,7 +59,7 @@ for (var i = 0; i < 9; i++) {
 					break;
 				case edge_id:
 					abort = true
-					runtile_update_blob(edge_tilemap, j, i, false)
+					tilemap_set(edge_tilemap, tile_state.properties.ind, j, i)
 					break;
 				
 			}
@@ -85,6 +85,9 @@ for (var i = 0; i < 9; i++) {
 				case leech_id:
 				case maggot_id:
 					inst.editor_dir = object_state.properties.dir;
+					break;
+				case mimic_id:
+					inst.editor_type = object_state.properties.typ;
 					break;
 				default:
 					break;

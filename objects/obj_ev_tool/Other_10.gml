@@ -24,6 +24,6 @@ switch (image_index) {
 		break;
 	case 5: // trash bin
 		global.erasing = 350;
-		audio_play_sound(comes_sound, 10, false)
+		audio_play_sound(comes_sound, 10, false, 1, 0, 1)
 		break;
 }

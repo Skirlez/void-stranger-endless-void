@@ -1,4 +1,9 @@
 event_inherited()
+if selected and window == noone {
+	global.selected_placeable_num = -1
+	global.selected_thing = -1
+	exit
+}
 global.selected_thing = 2
 var ind = global.tile_mode ? tile_ind : object_ind
 global.selected_placeable_num = ind

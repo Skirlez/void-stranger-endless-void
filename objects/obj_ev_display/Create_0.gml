@@ -2,6 +2,8 @@ game_surface = -1;
 
 last_clicked_i = -1;
 last_clicked_j = -1;
+last_i = -1;
+last_j = -1;
 drag_box_i = -1
 drag_box_j = -1
 dragging = false
@@ -9,6 +11,11 @@ dragging = false
 painting = false;
 
 held_tile_state = noone
+
+place_sound = asset_get_index("snd_ev_place")
+drag_sound = asset_get_index("snd_ev_drag")
+erase_sound = asset_get_index("snd_ev_erase")
+zed_sound = asset_get_index("snd_ev_zed")
 
 function switch_held_tile(tile_state) {
 	held_tile_state = tile_state
@@ -27,6 +34,8 @@ function place_placeable(tile_i, tile_j, new_tile, properties = noone) {
 	arr[@ tile_i][tile_j] = new tile_with_state(new_tile, properties)
 }
 
+
+
 function handle_click(tile_i, tile_j) {
 	switch (global.selected_thing) {
 		case thing_eraser:
@@ -34,6 +43,7 @@ function handle_click(tile_i, tile_j) {
 			runtile_autotile_blob(tile_j, tile_i)
 			break;
 		case thing_placeable:
+			
 			if (held_tile_state == noone)
 				break;
 			if (held_tile_state.tile.flags & flag_only_one) {
@@ -55,10 +65,23 @@ function handle_click(tile_i, tile_j) {
 	}
 }
 
+
+
 function handle_click_before(tile_i, tile_j) {
+	var tile_state = global.editor_object.current_placeables[tile_i][tile_j];
 	switch (global.selected_thing) {
 		case thing_placeable:
+			if tile_state.tile != held_tile_state.tile || dragging {
+				audio_stop_sound(place_sound)
+				audio_play_sound(place_sound, 10, false, 1, 0, random_range(0.8, 1.2))	
+			}
+			else {
+				audio_play_sound(drag_sound, 10, false, 1.2, 0, 3.5)	
+			}
+			break;
 		case thing_eraser:
+			if tile_state.tile != global.editor_object.current_empty_tile || dragging
+				audio_play_sound(erase_sound, 10, false, 1, 0, random_range(0.7, 1))	
 		default:
 			
 			break;

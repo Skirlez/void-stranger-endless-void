@@ -52,7 +52,23 @@ foreach (UndertaleSprite sprite in endlessVoidData.Sprites) {
     }
 }
 
+/*
+foreach (UndertaleAudioGroup group in endlessVoidData.AudioGroups) {
+    if (group.Name.Content == "VoidStrangerAudio")
+        continue;
 
+    Data.AudioGroups.Add(group);
+}
+*/
+
+foreach (UndertaleSound sound in endlessVoidData.Sounds) {
+    if (sound.AudioGroup.Name.Content == "VoidStrangerAudio")
+        continue;
+
+    sound.AudioGroup = Data.AudioGroups[0];
+    Data.Sounds.Add(sound);
+    Data.EmbeddedAudio.Add(sound.AudioFile);
+}
 
 foreach (UndertaleCode code in endlessVoidData.Code)
     Data.Code.Add(code);
