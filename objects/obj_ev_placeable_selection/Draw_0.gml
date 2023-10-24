@@ -7,6 +7,8 @@ else {
 	sprite_index = object.spr_ind
 }
 
+
+
 if (selected) {
 	if (global.tile_mode) {
 		var color = c_black

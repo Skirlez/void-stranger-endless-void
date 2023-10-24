@@ -1,8 +1,9 @@
 
-#macro compiled_for_merge true
+#macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
+	audio_group_load(VoidStrangerAudio)
 }
 
 window_set_cursor(cr_default)
@@ -16,8 +17,7 @@ global.mouse_held = false;
 #macro flag_only_one 2
 #macro flag_no_objects 4
 
-global.tile_mode = true
-
+global.editor_room = asset_get_index("rm_ev_editor");
 global.editor_object = asset_get_index("obj_ev_editor");
 global.display_object = asset_get_index("obj_ev_display");
 
@@ -75,6 +75,7 @@ function editor_placeable(spr_ind, tile_id, flags = 0) constructor {
 #macro hand_id "ch"
 #macro mimic_id "cm"
 #macro diamond_id "co"
+#macro egg_id "eg"
 
 floor_sprite = asset_get_index("spr_floor");
 
@@ -126,7 +127,7 @@ tile_wall.draw_function = function(tile_state, i, j) {
 	draw_tile(global.tileset_1, tile_state.properties.ind, 0, j * 16, i * 16)	
 }
 tile_wall.zed_function = function() {
-	new_window(10, 6, asset_get_index("obj_ev_wall_window"))	
+	new_window(10, 4.5, asset_get_index("obj_ev_wall_window"))	
 	global.mouse_layer = 1
 }
 
@@ -189,9 +190,17 @@ object_mimic.draw_function = function(tile_state, i, j) {
 }
 
 
-object_diamond = new editor_placeable(asset_get_index("spr_co_move"), diamond_id)
+object_diamond = new editor_placeable(asset_get_index("spr_co_idle"), diamond_id)
 
-
+object_egg = new editor_placeable(asset_get_index("spr_boulder"), egg_id)
+object_egg.properties_generator = function() {
+	return { txt : "" }	
+}
+object_egg.zed_function = function(tile_state) {
+	new_window(10, 6, asset_get_index("obj_ev_egg_window"), 
+	{ egg_properties : tile_state.properties })	
+	global.mouse_layer = 1
+}
 
 global.player_tiles = array_create(6)
 global.player_objects = array_create(6)
@@ -205,10 +214,10 @@ tiles_list = [tile_default, tile_glass, tile_mine, tile_floorswitch, tile_copyfl
 	tile_deathfloor, tile_white, tile_wall, tile_edge]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
-	object_mimic, object_diamond]
+	object_mimic, object_diamond, object_egg]
 
 function reset_everything() {
-	
+	global.tile_mode = true
 	global.mouse_layer = 0
 	global.selected_thing = -1 
 	global.selected_placeable_num = 0

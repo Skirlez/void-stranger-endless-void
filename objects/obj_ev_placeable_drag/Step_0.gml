@@ -11,5 +11,6 @@ if selected && mouse_check_button_released(mb_left)	 {
 		global.player_tiles[num] = inst.num;	
 	else 
 		global.player_objects[num] = inst.num;
+	audio_play_sound(asset_get_index("snd_ev_select_favorite"), 10, false)
 	
 }

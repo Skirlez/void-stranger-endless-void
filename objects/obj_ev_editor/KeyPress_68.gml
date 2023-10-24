@@ -1,3 +1,5 @@
+if global.mouse_layer != 0
+	exit
 var level = get_string("", "");
 var splitter_pos = string_pos("|", level)
 

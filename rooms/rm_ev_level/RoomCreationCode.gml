@@ -21,7 +21,7 @@ placeable_object_map[? bull_id] = "obj_enemy_cg"
 placeable_object_map[? hand_id] = "obj_enemy_ch"
 placeable_object_map[? mimic_id] = "obj_enemy_cm"
 placeable_object_map[? diamond_id] = "obj_enemy_co"
-
+placeable_object_map[? egg_id] = "obj_boulder"
 
 
 function create(i, j, layerr, name) {
@@ -89,17 +89,23 @@ for (var i = 0; i < 9; i++) {
 				case mimic_id:
 					inst.editor_type = object_state.properties.typ;
 					break;
+				case egg_id:
+					/*
+					with (inst) {
+						if object_state.properties.txt[0] != "" {
+							text[0] = object_state.properties.txt;
+							special_message = -1
+							voice = b_voice
+				            moods = [neutral]
+				            speakers = [id]
+						}
+					}
+					*/
+					break;
 				default:
 					break;
 			}
 		}
-	}
-}
-
-// second pass for graphic tiles
-for (var i = 1; i < 8; i++) {
-	for (var j = 1; j < 13; j++) {
-		
 	}
 }
 

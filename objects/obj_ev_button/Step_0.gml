@@ -35,9 +35,11 @@ else if hover_state == 2 {
 
 
 hover_time = clamp(hover_time, 0, 100)
-	
-image_xscale = scale
-image_yscale = scale
+
+if animated {
+	image_xscale = scale
+	image_yscale = scale
+}
 
 
 if ev_mouse_pressed() && mouse_on_me

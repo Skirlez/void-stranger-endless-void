@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ev_mouse_functions",
+  "name": "ev_input",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {

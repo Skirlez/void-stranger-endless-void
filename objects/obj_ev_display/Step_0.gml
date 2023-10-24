@@ -36,9 +36,9 @@ if (ev_is_mouse_on_me()) {
 		
 		if (last_i != tile_i || last_j != tile_j) {
 			audio_stop_sound(drag_sound)
-			var pitch_i = abs(tile_i - drag_box_i) / 8 + 0.75
-			var pitch_j = abs(tile_j - drag_box_j) / 13 + 0.75
-			audio_play_sound(drag_sound, 10, false, 1, 0, (pitch_i + pitch_j) / 2)	
+			var pitch_i = abs(tile_i - drag_box_i) / 16 + 1
+			var pitch_j = abs(tile_j - drag_box_j) / 26 + 1
+			audio_play_sound(drag_sound, 10, false, 1, 0, pitch_i * pitch_j)	
 		}
 		
 		if mouse_check_button_released(mb_right) {
@@ -69,8 +69,15 @@ if (ev_is_mouse_on_me()) {
 
 	}
 	
-	if global.selected_thing == 2 && keyboard_check_pressed(ord("Z"))
-			&& held_tile_state != noone && held_tile_state.tile.zed_function != noone {
+	// we need to check if ctrl is held if Z is also the action key,
+	// as to avoid undoing and at the same time performing the zed function
+	var ctrl_held = (ev_get_action_key() == ord("Z") && keyboard_check(vk_control)) 
+	
+	if global.selected_thing == thing_placeable 
+		&& ev_is_action_pressed()
+		&& held_tile_state.tile.zed_function != noone 
+		&& !ctrl_held
+	{
 		audio_play_sound(zed_sound, 10, false)
 		held_tile_state.tile.zed_function(held_tile_state)
 	}
