@@ -160,6 +160,17 @@ void applyPatches(string codeEntryName, string patches) {
             case "REPLACE":
                 finalResult = patch;
                 break;
+            case "STRING":
+                string[] parts = patch.Split('>');
+                finalResult = code.Replace(parts[0], parts[1]);
+                break;
+			case "LINENUMBER_REPLACE": 
+                int firstNewline = patch.IndexOf("\n");
+                int insertPosition = int.Parse(patch.Substring(2, firstNewline - 1));
+                string[] lines = code.Split('\n');
+                lines[insertPosition - 1] = patch.Substring(firstNewline);
+                finalResult = string.Join("\n", lines);
+                break;
             case "LINENUMBER": 
                 int firstNewline = patch.IndexOf("\n");
                 int insertPosition = int.Parse(patch.Substring(2, firstNewline - 1));

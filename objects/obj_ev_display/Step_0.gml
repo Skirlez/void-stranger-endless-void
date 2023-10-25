@@ -16,10 +16,15 @@ if (ev_is_mouse_on_me()) {
 			last_clicked_j = tile_j;
 		}
 	}
-	
 	else if painting == true
 		painting = false;	
-
+		
+	if ev_mouse_released() {
+		last_clicked_i = -1;
+		last_clicked_j = -1;
+	}
+	
+	
 	 
 
 	if (!dragging && mouse_check_button_pressed(mb_right)
@@ -42,8 +47,8 @@ if (ev_is_mouse_on_me()) {
 		}
 		
 		if mouse_check_button_released(mb_right) {
-			var small_tile_i = drag_box_i
-			var small_tile_j = drag_box_j
+			small_tile_i = drag_box_i
+			small_tile_j = drag_box_j
 		
 			if (tile_i < drag_box_i) {
 				small_tile_i = tile_i
@@ -60,6 +65,7 @@ if (ev_is_mouse_on_me()) {
 					handle_click(i, j)
 
 			}
+			handle_click_after(tile_i, tile_j)
 			
 			dragging = false		
 			drag_box_i = -1

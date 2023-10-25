@@ -70,9 +70,28 @@ if (ev_is_mouse_on_me()) {
 			0, c_white, 1)
 	}
 	
-	else if global.selected_thing == 2 {
+	else if global.selected_thing == thing_placeable 
+	&& held_tile_state.tile != global.editor_object.object_empty {
 		draw_set_alpha((dsin(global.editor_time * 3) / 4) + 0.75)
 		draw_tile_state(tile_i, tile_j, held_tile_state)
+		draw_set_alpha(1)
+	}
+	else if global.selected_thing == thing_multiplaceable {
+		draw_set_alpha((dsin(global.editor_time * 3) / 4) + 0.75)
+		for (var i = 0; i < array_length(held_tile_array); i++) {
+			for (var j = 0; j < array_length(held_tile_array[i]); j++) {
+				var tile_state = held_tile_array[i][j]
+				if (tile_state.tile == global.editor_object.current_empty_tile)
+					continue;
+				var new_tile_i = tile_i + i;
+				if new_tile_i >= 9
+					continue;
+				var new_tile_j = tile_j + j
+				if new_tile_j >= 14
+					continue;
+				draw_tile_state(tile_i + i, tile_j + j, tile_state)
+			}
+		}
 		draw_set_alpha(1)
 	}
 }
@@ -80,4 +99,3 @@ if (ev_is_mouse_on_me()) {
 surface_reset_target()
 
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
-

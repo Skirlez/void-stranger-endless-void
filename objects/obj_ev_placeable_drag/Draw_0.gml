@@ -26,11 +26,11 @@ if selected {
 
 	
 	draw_set_color(c_white)
-	draw_circle(x, y, dsin(global.editor_time) / 2 + 2.5, false)
+	draw_circle(x - 0.5, y - 0.5, dsin(global.editor_time) / 2 + 2.5, false)
 
 	draw_set_color(c_black)
-	draw_line_width(x, y, mouse_x, mouse_y, 1)	
-	draw_circle(x, y, dsin(global.editor_time) / 2 + 2, false)
+	draw_line_width(x - 0.5, y - 0.5, mouse_x, mouse_y, 1)	
+	draw_circle(x - 0.5, y - 0.5, dsin(global.editor_time) / 2 + 2, false)
 
 	
 

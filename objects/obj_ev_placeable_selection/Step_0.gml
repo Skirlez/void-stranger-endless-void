@@ -1,4 +1,5 @@
 update()
 var ind = global.tile_mode ? tile_ind : object_ind
-selected = (global.selected_thing == 2 && ind == global.selected_placeable_num)
+var tile = global.editor_object.current_list[ind]
+selected = (global.selected_thing == 2 && tile == global.display_object.held_tile_state.tile)
 event_inherited()

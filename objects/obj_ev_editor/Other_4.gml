@@ -6,4 +6,5 @@ if room == rm_ev_editor {
 	if quill != -1
 		instance_destroy(quill)
 	draw_set_circle_precision(48)
+	global.selected_thing = -1
 }

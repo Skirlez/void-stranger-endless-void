@@ -1,21 +1,22 @@
 event_inherited()
 switch (image_index) {
-	case 0: // play
-		global.mouse_layer = -1
-		global.play_transition = global.max_play_transition
-		
+	case 0: // plucker
+		if (global.selected_thing != thing_plucker)
+			global.selected_thing = thing_plucker
+		else
+			global.selected_thing = -1
 		break;
 	case 1: // eraser
-		if (global.selected_thing != 1)
-			global.selected_thing = 1
+		if (global.selected_thing != thing_eraser)
+			global.selected_thing = thing_eraser
 		else
 			global.selected_thing = -1
 		break;
 	case 2: // tile mode on
 	case 3: // object mode on
-		global.editor_object.switch_tile_modes();
+		global.editor_object.switch_tile_mode(!global.tile_mode);
 		image_index = global.tile_mode ? 2 : 3
-		if (global.selected_thing == 2) {
+		if (global.selected_thing == thing_placeable || global.selected_thing == thing_multiplaceable) {
 			global.selected_thing = -1
 			global.selected_placeable_num = -1
 		}

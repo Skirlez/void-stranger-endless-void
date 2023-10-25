@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ev_prepare_level",
+  "name": "ev_place_level_instances",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {

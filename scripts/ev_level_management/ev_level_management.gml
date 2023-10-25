@@ -63,6 +63,9 @@ function export_level() {
 				case egg_id:
 					addition += base64_encode(object_state.properties.txt) + BASE64_END_CHAR
 					break;
+				case cif_id:
+					addition += string(object_state.properties.lmp)
+					break;
 				default:
 					break;
 			}
@@ -94,7 +97,6 @@ function export_level() {
 
 // imports a level from a level string
 function import_level(tile_string, object_string) {
-	show_message("Start!")
 	var tile_pointer = 1
 	var object_pointer = 1
 	var i = 0;
@@ -162,7 +164,11 @@ function import_level(tile_string, object_string) {
 				global.level_objects[@ i][j] = new tile_with_state(object, { txt: base64_decode(read_string) });
 				show_debug_message(base64_decode(read_string))
 				break;
-
+			case cif_id:
+				var read_lamp = string_copy(object_string, object_pointer, 1)
+				object_pointer++
+				global.level_objects[@ i][j] = new tile_with_state(object, { lmp: bool(int64(read_lamp)) });
+				break;
 			default:
 				global.level_objects[@ i][j] = new tile_with_state(object)
 				break;
@@ -173,7 +179,6 @@ function import_level(tile_string, object_string) {
 		if j >= 14 {
 			j = 0
 			i++;
-			show_message("i is: " + string(i))
 		}
 		
 	}

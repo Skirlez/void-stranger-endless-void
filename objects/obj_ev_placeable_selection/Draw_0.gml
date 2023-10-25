@@ -1,13 +1,7 @@
-if (global.tile_mode) {
-	var tile = global.editor_object.tiles_list[tile_ind]
-	sprite_index = tile.spr_ind
-}
-else {
-	var object = global.editor_object.objects_list[object_ind]
-	sprite_index = object.spr_ind
-}
 
-
+var ind = global.tile_mode ? tile_ind : object_ind
+var tile = global.editor_object.current_list[ind]
+sprite_index = tile.spr_ind
 
 if (selected) {
 	if (global.tile_mode) {

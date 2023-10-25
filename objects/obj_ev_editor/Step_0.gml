@@ -24,7 +24,7 @@ if global.play_transition != -1 {
 	}
 }
 
-if  room == global.editor_room && keyboard_check(vk_control) && keyboard_check_pressed(ord("Z"))
+if room == global.editor_room && keyboard_check(vk_control) && keyboard_check_pressed(ord("Z"))
 	undo();
 
 

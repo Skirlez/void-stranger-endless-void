@@ -8,7 +8,7 @@ var step = (image_xscale * 16 - 2 * margin_x) / 9
 
 star_sprite = asset_get_index("spr_ev_star")
 
-for (var i = 0; i < 6; i++) {
+for (var i = 0; i < 7; i++) {
 	var inst = instance_create_layer(left_edge + i * step, top_edge, "WindowElements", asset_get_index("obj_ev_placeable_drag"), {
 		num : i,
 	}) 
