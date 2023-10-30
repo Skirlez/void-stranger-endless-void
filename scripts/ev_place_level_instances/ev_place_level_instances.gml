@@ -76,11 +76,19 @@ function ev_place_level_instances() {
 						}
 						*/
 						break;
+					case lev_id:
+						inst.b_form = 1
+						break;
+					case tan_id:
+						inst.b_form = 3
+						break;
+					case mon_id:
+						inst.b_form = 7
+						break;
 					case cif_id:
-						
 						if object_state.properties.lmp
 							inst.editor_lamp = true
-					
+
 						inst.b_form = 4
 						break;
 					default:

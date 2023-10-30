@@ -24,9 +24,28 @@ if global.play_transition != -1 {
 	}
 }
 
-if room == global.editor_room && keyboard_check(vk_control) && keyboard_check_pressed(ord("Z"))
-	undo();
-
+if room == global.editor_room && keyboard_check(vk_control) {
+	if keyboard_check_pressed(ord("Z")) {
+		undo_repeat = undo_repeat_frames_start
+		undo();
+	}
+	
+	if keyboard_check(ord("Z")) {
+		undo_repeat--;	
+		if undo_repeat <= 0 {
+			undo()
+			undo_repeat_frames_speed += 2
+		
+			if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
+				undo_repeat_frames_speed = undo_repeat_frames_max_speed;
+			undo_repeat = undo_repeat_frames_start-undo_repeat_frames_speed
+		}
+	}
+	else {
+		undo_repeat = -1	
+		undo_repeat_frames_speed = 0
+	}
+}
 
 if mouse_check_button_pressed(mb_left) {
 	global.mouse_pressed = true;

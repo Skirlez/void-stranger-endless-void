@@ -68,8 +68,8 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro glass_obj "obj_glassfloor"
 
 
-#macro mine_id "mn"
-#macro mine_obj "obj_bombfloor"
+#macro bomb_id "mn"
+#macro bomb_obj "obj_bombfloor"
 
 #macro default_tile_id "fl"
 #macro default_tile_obj "obj_floor"
@@ -132,6 +132,9 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro egg_statue_obj "obj_boulder"
 
 #macro cif_id "cf"
+#macro tan_id "tn"
+#macro mon_id "mo"
+#macro lev_id "lv"
 
 floor_sprite = asset_get_index("spr_floor");
 
@@ -151,7 +154,7 @@ tile_glass.draw_function = function(tile_state, i, j) {
 	tile_pit.draw_function(tile_state, i, j)
 	default_draw_function(tile_state, i, j)
 }
-tile_mine = new editor_placeable(asset_get_index("spr_bombfloor"), mine_id, mine_obj)
+tile_bomb = new editor_placeable(asset_get_index("spr_bombfloor"), bomb_id, bomb_obj)
 tile_default = new editor_placeable(floor_sprite, default_tile_id, default_tile_obj)
 tile_floorswitch = new editor_placeable(asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
 tile_floorswitch.draw_function = function(tile_state, i, j) {
@@ -268,6 +271,9 @@ object_cif.zed_function = function(tile_state) {
 object_cif.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.properties.lmp ? lamp_sprite : cif_sprite, 0, j * 16 + 8, i * 16 + 8)
 }
+object_mon = new editor_placeable(asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
+object_tan = new editor_placeable(asset_get_index("spr_killer"), tan_id, egg_statue_obj)
+object_lev = new editor_placeable(asset_get_index("spr_watcher"), lev_id, egg_statue_obj)
 
 
 global.player_tiles = array_create(7)
@@ -278,11 +284,11 @@ for (var i = 0; i < 7; i++) {
 }
 
 
-tiles_list = [tile_default, tile_glass, tile_mine, tile_floorswitch, tile_copyfloor, tile_exit, 
+tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfloor, tile_exit, 
 	tile_deathfloor, tile_white, tile_wall, tile_edge]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
-	object_mimic, object_diamond, object_egg, object_cif]
+	object_mimic, object_diamond, object_egg, object_cif, object_lev, object_tan, object_mon]
 
 function reset_everything() {
 	global.tile_mode = true
@@ -374,4 +380,7 @@ function undo() {
 		audio_play_sound(undo_sound, 10, false)
 	}
 }
-
+undo_repeat = -1
+undo_repeat_frames_start = 18
+undo_repeat_frames_speed = 0
+undo_repeat_frames_max_speed = 10

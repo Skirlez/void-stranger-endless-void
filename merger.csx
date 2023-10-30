@@ -172,9 +172,9 @@ void applyPatches(string codeEntryName, string patches) {
                 finalResult = string.Join("\n", lines);
                 break;
             case "LINENUMBER": 
-                int firstNewline = patch.IndexOf("\n");
-                int insertPosition = int.Parse(patch.Substring(2, firstNewline - 1));
-                string[] lines = code.Split('\n');
+                firstNewline = patch.IndexOf("\n");
+                insertPosition = int.Parse(patch.Substring(2, firstNewline - 1));
+                lines = code.Split('\n');
                 lines[insertPosition - 1] = patch.Substring(firstNewline) + "\n" + lines[insertPosition - 1];
                 finalResult = string.Join("\n", lines);
                 break;
