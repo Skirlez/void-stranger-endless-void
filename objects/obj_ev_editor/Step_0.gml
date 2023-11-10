@@ -24,7 +24,7 @@ if global.play_transition != -1 {
 	}
 }
 
-if room == global.editor_room && keyboard_check(vk_control) {
+if room == global.editor_room && keyboard_check(vk_control) && global.mouse_layer == 0 {
 	if keyboard_check_pressed(ord("Z")) {
 		undo_repeat = undo_repeat_frames_start
 		undo();

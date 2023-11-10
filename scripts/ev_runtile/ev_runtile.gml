@@ -10,16 +10,16 @@
  * @param {real} y the y coordinate of the cell to evaluate
  */
  
- global.blobtable = ds_list_create();
- ds_list_add(global.blobtable,
- 		  -1, 255, 68, 17, 241, 124,
-		  31, 199, 253, 127, 223, 247,
-		  193, 112, 28, 7, 64, 16, 4,
-		  1, 95, 215, 245, 125, 87,
-		  213, 117, 93, 85, 221, 119,
-		  0, 209, 116, 29, 71, 113, 92,
-		  23, 197, 81, 84, 21, 69, 65,
-		  80, 20, 5);
+global.blobtable = ds_list_create();
+ds_list_add(global.blobtable,
+ 		-1, 255, 68, 17, 241, 124,
+		31, 199, 253, 127, 223, 247,
+		193, 112, 28, 7, 64, 16, 4,
+		1, 95, 215, 245, 125, 87,
+		213, 117, 93, 85, 221, 119,
+		0, 209, 116, 29, 71, 113, 92,
+		23, 197, 81, 84, 21, 69, 65,
+		80, 20, 5);
 		  
 function get_wall(x, y) {
 	static wall = global.editor_object.tile_wall;
@@ -47,29 +47,3 @@ function runtile_fetch_blob(x, y) {
 		return 31; 
 	return ds_list_find_index(table, val);
 }
-
-/**
- * autotiles a 3x3 square using the 47 tile, wang blob tile layout
- * @param {id.TileMapElement} map the tilemap to update
- * @param {real} x center x cell coordinate of the 3x3 square
- * @param {real} y center y cell coordinate of the 3x3 square
- * @param {bool} [mutate] whether or not to randomise the result
- * @param {real} [varieties] the number of varieties of tiles
- */
-function runtile_autotile_blob(x, y) {
-	static neighborhood = [ [0,0], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1], [0,1], [1,1] ];
-	for (var i = 0; i < 9; ++i) {
-		var tx = x + neighborhood[i][0];
-		var ty = y + neighborhood[i][1];
-		
-		if tx < 0 || tx >= 14 || ty < 0 || ty >= 9
-			continue;
-		
-		if (global.level_tiles[ty][tx].tile == global.editor_object.tile_edge) {
-			global.level_tiles[@ ty][tx] = 
-				new tile_with_state(global.editor_object.tile_edge, 
-				{ ind : runtile_fetch_blob(tx, ty) })
-		}
-	}
-}
-

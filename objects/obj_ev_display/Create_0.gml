@@ -27,7 +27,7 @@ held_tile_array = []
 held_tile_offset = [0, 0]
 
 
-function place_placeable(tile_i, tile_j, new_tile, properties = noone) {
+function place_placeable(tile_i, tile_j, new_tile, properties = global.empty_struct, run_place_func = true) {
 	var arr = global.editor_object.current_placeables
 	var tile_state = arr[tile_i][tile_j]
 			
@@ -48,8 +48,10 @@ function place_placeable(tile_i, tile_j, new_tile, properties = noone) {
 		}
 	}
 	
-	
-	arr[@ tile_i][tile_j] = new tile_with_state(new_tile, properties)
+	tile_state = new tile_with_state(new_tile, properties)
+	if (run_place_func)
+		tile_state = new_tile.place_function(tile_state, tile_i, tile_j);
+	arr[@ tile_i][tile_j] = tile_state;
 }
 
 
@@ -129,7 +131,7 @@ function handle_click(tile_i, tile_j) {
 			return;
 		case thing_eraser:
 			place_placeable(tile_i, tile_j, global.editor_object.current_empty_tile)
-			runtile_autotile_blob(tile_j, tile_i)
+			//runtile_autotile_blob(tile_j, tile_i)
 			return;
 		case thing_placeable:
 			if (held_tile_state == global.editor_object.object_empty)
@@ -137,7 +139,7 @@ function handle_click(tile_i, tile_j) {
 
 			
 			place_placeable(tile_i, tile_j, held_tile_state.tile, struct_copy(held_tile_state.properties))
-			runtile_autotile_blob(tile_j, tile_i)
+			//runtile_autotile_blob(tile_j, tile_i)
 			return;
 		case thing_multiplaceable:
 		
@@ -153,7 +155,7 @@ function handle_click(tile_i, tile_j) {
 					if new_tile_j >= 14
 						continue;
 						
-					place_placeable(new_tile_i, new_tile_j, tile_state.tile, struct_copy(tile_state.properties))
+					place_placeable(new_tile_i, new_tile_j, tile_state.tile, struct_copy(tile_state.properties), false)
 				}
 			}
 		default:
@@ -171,9 +173,9 @@ function handle_click_after(tile_i, tile_j) {
 				return;
 				
 			var initial_empty_in_row = 14
-				
+			var empty_row = true
 			for (var i = 0; i < array_length(held_tile_array); i++) {
-				var empty_row = true
+				
 				for (var j = 0; j < array_length(held_tile_array[i]); j++) {
 					var tile_state = held_tile_array[i][j]
 					var is_empty = (tile_state.tile == global.editor_object.current_empty_tile)

@@ -20,11 +20,9 @@ if (global.play_transition != -1) {
 
 
 
-function draw_tile_state(i, j, tile_state) {
-	if (tile_state != noone) {
-		var tile = tile_state.tile
-		tile.draw_function(tile_state, i, j)
-	}
+function draw_tile_state(i, j, tile_state, preview = false) {
+	var tile = tile_state.tile
+	tile.draw_function(tile_state, i, j, preview)
 }
 
 draw_sprite(base_ui, 0, 0, 128)
@@ -73,7 +71,7 @@ if (ev_is_mouse_on_me()) {
 	else if global.selected_thing == thing_placeable 
 	&& held_tile_state.tile != global.editor_object.object_empty {
 		draw_set_alpha((dsin(global.editor_time * 3) / 4) + 0.75)
-		draw_tile_state(tile_i, tile_j, held_tile_state)
+		draw_tile_state(tile_i, tile_j, held_tile_state, true)
 		draw_set_alpha(1)
 	}
 	else if global.selected_thing == thing_multiplaceable {

@@ -3,24 +3,24 @@
 function optional(val = EMPTY) constructor {
 	self.val = val;
 
-	static get = function() {
+	static _get = function() {
 		if (val == EMPTY)
 			throw ("Called get() on an empty optional!")
 		return val;
 	}
-	self.get = method(self, get);
+	self.get = method(self, _get);
 	
 	
-	static get_or_else = function(else_var) {
+	static _get_or_else = function(else_var) {
 		return (val != EMPTY) ? val : else_var
 	}
-	self.get_or_else = method(self, get_or_else);
+	self.get_or_else = method(self, _get_or_else);
 	
 	
-	static is_empty = function() {
+	static _is_empty = function() {
 		return val != EMPTY;
 	}
-	self.is_empty = method(self, is_empty);
+	self.is_empty = method(self, _is_empty);
 	
 	
 	static EMPTY = pointer_invalid

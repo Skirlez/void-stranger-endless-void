@@ -162,7 +162,6 @@ function import_level(tile_string, object_string) {
 				var read_string = string_copy(object_string, object_pointer, count)
 				object_pointer += count;
 				global.level_objects[@ i][j] = new tile_with_state(object, { txt: base64_decode(read_string) });
-				show_debug_message(base64_decode(read_string))
 				break;
 			case cif_id:
 				var read_lamp = string_copy(object_string, object_pointer, 1)

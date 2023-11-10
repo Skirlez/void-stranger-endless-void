@@ -2,14 +2,15 @@ event_inherited()
 var margin_y = 10;
 var margin_x = 16;
 
-left_edge = x - (image_xscale * 8) + margin_x + 16 // + 16 to make room for the star
+left_edge = x - (image_xscale * 8) + margin_x
 top_edge = y - (image_yscale * 8) + margin_y
 var step = (image_xscale * 16 - 2 * margin_x) / 9
 
 star_sprite = asset_get_index("spr_ev_star")
 
 for (var i = 0; i < 7; i++) {
-	var inst = instance_create_layer(left_edge + i * step, top_edge, "WindowElements", asset_get_index("obj_ev_placeable_drag"), {
+	// + 16 to make room for the star
+	var inst = instance_create_layer(left_edge + 16 + i * step, top_edge, "WindowElements", asset_get_index("obj_ev_placeable_drag"), {
 		num : i,
 	}) 
 	add_child(inst)

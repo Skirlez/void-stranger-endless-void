@@ -1,4 +1,4 @@
-
+global.empty_struct = { }
 function tile_with_state(tile, properties = tile.properties_generator()) constructor {
 	self.tile = tile
 	self.properties = properties

@@ -37,8 +37,11 @@ return_noone = function() {
 	return noone;
 }
 
-empty_draw_function = function(tile_state, i, j) { };
+empty_function = function(tile_state, i, j) { };
 
+return_tile_state_function = function(tile_state) { 
+	return tile_state 
+};
 
 default_draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
@@ -52,6 +55,7 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 	self.obj_name = obj_name
 	self.flags = flags
 	self.draw_function = global.editor_object.default_draw_function
+	self.place_function = global.editor_object.return_tile_state_function
 	self.zed_function = noone
 	self.tile_id = tile_id;
 	self.properties_generator = global.editor_object.return_noone
@@ -92,14 +96,11 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro deathfloor_id "df"
 #macro deathfloor_obj "obj_deathfloor"
 
+#macro no_obj ""
+
 #macro wall_id "wa"
-#macro wall_obj ""
-
 #macro edge_id "ed"
-#macro edge_obj ""
-
 #macro empty_id "em"
-#macro empty_obj ""
 
 #macro player_id "pl"
 #macro player_obj "obj_spawnpoint"
@@ -127,6 +128,9 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro diamond_id "co"
 #macro diamond_obj "obj_enemy_co"
 
+#macro spider_id "ct"
+#macro spider_obj "obj_enemy_ct"
+
 #macro egg_id "eg"
 
 #macro egg_statue_obj "obj_boulder"
@@ -135,6 +139,13 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro tan_id "tn"
 #macro mon_id "mo"
 #macro lev_id "lv"
+#macro eus_id "eu"
+#macro bee_id "be"
+#macro gor_id "go"
+#macro add_id "ad"
+
+#macro hologram_id "ho"
+#macro hologram_obj "obj_fakewall"
 
 floor_sprite = asset_get_index("spr_floor");
 
@@ -167,18 +178,23 @@ tile_copyfloor = new editor_placeable(asset_get_index("spr_copyfloor"), copyfloo
 tile_exit = new editor_placeable(asset_get_index("spr_stairs"), exit_id, exit_obj)
 tile_white = new editor_placeable(asset_get_index("spr_floor_white"), white_id, white_obj)
 tile_deathfloor = new editor_placeable(asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
-tile_wall = new editor_placeable(asset_get_index("spr_ev_wall"), wall_id, wall_obj, flag_no_objects)
+tile_wall = new editor_placeable(asset_get_index("spr_ev_wall"), wall_id, no_obj, flag_no_objects)
 tile_wall.properties_generator = function() {
 	return { ind : 4 }
 }
 
-tile_edge = new editor_placeable(asset_get_index("spr_ev_edge"), edge_id, edge_obj, flag_no_objects)
+tile_edge = new editor_placeable(asset_get_index("spr_ev_edge"), edge_id, no_obj, flag_no_objects)
 tile_edge.properties_generator = function() {
 	return { ind : 4 }	
 }
-tile_edge.draw_function = function(tile_state, i, j) {
+tile_edge.draw_function = function(tile_state, i, j, preview) {
 	draw_set_color(c_white)
-	draw_tile(global.tileset_edge, runtile_fetch_blob(j, i), 0, j * 16, i * 16)
+	draw_tile(global.tileset_edge, preview ? runtile_fetch_blob(j, i) : tile_state.properties.ind, 0, j * 16, i * 16)
+}
+tile_edge.place_function = function(tile_state, i, j) {
+	tile_state.properties.ind = runtile_fetch_blob(j, i);
+	show_debug_message(tile_state.properties.ind)
+	return tile_state;
 }
 
 tile_wall.draw_function = function(tile_state, i, j) {
@@ -193,14 +209,25 @@ tile_wall.zed_function = function() {
 
 
 tile_unremovable = new editor_placeable(asset_get_index("spr_floor_white"), unremovable_id, unremovable_obj, flag_unremovable|flag_unplaceable)
-tile_unremovable.draw_function = empty_draw_function;
+tile_unremovable.draw_function = empty_function;
 
 // even though it does nothing, we do need an object parallel to tile_empty as opposed to having it be noone
 // as to not be inconsistent
-object_empty = new editor_placeable(noone, empty_id, empty_obj, flag_unplaceable)
-object_empty.draw_function = empty_draw_function;
+object_empty = new editor_placeable(noone, empty_id, no_obj, flag_unplaceable)
+object_empty.draw_function = empty_function;
 
+
+sweat_sprite = asset_get_index("spr_sweat")
 object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, player_obj, flag_unremovable|flag_only_one)
+object_player.draw_function = function(tile_state, i, j, preview) {
+	if (preview && global.level_tiles[i][j].tile == tile_pit) {
+		draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
+		draw_sprite(sweat_sprite, global.editor_time / 5, j * 16 + 16, i * 16)
+		return;
+	}
+	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
+}
+
 
 object_leech = new editor_placeable(asset_get_index("spr_cl_right"), leech_id, leech_obj)
 object_leech.draw_function = function(tile_state, i, j) {
@@ -246,8 +273,9 @@ object_mimic.draw_function = function(tile_state, i, j) {
 	draw_sprite(mimic_sprite_arr[tile_state.properties.typ], 0, j * 16 + 8, i * 16 + 8)
 }
 
-
 object_diamond = new editor_placeable(asset_get_index("spr_co_idle"), diamond_id, diamond_obj)
+
+object_spider = new editor_placeable(asset_get_index("spr_ct_right"), spider_id, spider_obj)
 
 object_egg = new editor_placeable(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
 object_egg.properties_generator = function() {
@@ -271,10 +299,24 @@ object_cif.zed_function = function(tile_state) {
 object_cif.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.properties.lmp ? lamp_sprite : cif_sprite, 0, j * 16 + 8, i * 16 + 8)
 }
+object_add = new editor_placeable(asset_get_index("spr_voider"), add_id, egg_statue_obj)
 object_mon = new editor_placeable(asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
 object_tan = new editor_placeable(asset_get_index("spr_killer"), tan_id, egg_statue_obj)
 object_lev = new editor_placeable(asset_get_index("spr_watcher"), lev_id, egg_statue_obj)
+object_eus = new editor_placeable(asset_get_index("spr_lover"), eus_id, egg_statue_obj)
+object_bee = new editor_placeable(asset_get_index("spr_smiler"), bee_id, egg_statue_obj)
+object_gor = new editor_placeable(asset_get_index("spr_slower"), gor_id, egg_statue_obj)
 
+
+// we create the hologram sprite in real time!
+var hologram_surf = surface_create(16, 16)
+surface_set_target(hologram_surf)
+draw_sprite(asset_get_index("spr_boulder"), 0, 8, 8)
+draw_sprite(asset_get_index("spr_question_black"), 8, 8, 8)
+var hologram_sprite = sprite_create_from_surface(hologram_surf, 0, 0, 16, 16, false, false, 8, 8)
+surface_reset_target()
+surface_free(hologram_surf)
+object_hologram = new editor_placeable(hologram_sprite, hologram_id, hologram_obj)
 
 global.player_tiles = array_create(7)
 global.player_objects = array_create(7)
@@ -288,7 +330,8 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfl
 	tile_deathfloor, tile_white, tile_wall, tile_edge]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
-	object_mimic, object_diamond, object_egg, object_cif, object_lev, object_tan, object_mon]
+	object_mimic, object_diamond, object_spider, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
+	object_bee, object_gor]
 
 function reset_everything() {
 	global.tile_mode = true

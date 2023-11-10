@@ -1,11 +1,11 @@
+function create(i, j, layerr, name) {
+	var game_object = asset_get_index(name)
+	if game_object == -1
+		show_message(name)
+	return instance_create_layer(j * 16 + 8, i * 16 + 8, layerr, game_object)
+}
 function ev_place_level_instances() {
-	function create(i, j, layerr, name) {
-		
-		var game_object = asset_get_index(name)
-		if game_object == -1
-			show_message(name)
-		return instance_create_layer(j * 16 + 8, i * 16 + 8, layerr, game_object)
-	}
+
 
 
 	wall_tilemap = layer_tilemap_create("Tiles_1", 0, 0, global.tileset_1, 224, 144)
@@ -79,18 +79,31 @@ function ev_place_level_instances() {
 					case lev_id:
 						inst.b_form = 1
 						break;
+					case bee_id:
+						inst.b_form = 2;
+						break;
 					case tan_id:
 						inst.b_form = 3
-						break;
-					case mon_id:
-						inst.b_form = 7
-						break;
+						break
 					case cif_id:
 						if object_state.properties.lmp
 							inst.editor_lamp = true
 
 						inst.b_form = 4
 						break;
+					case gor_id:
+						inst.b_form = 5;
+						break;
+					case eus_id:
+						inst.b_form = 6;
+						break;
+					case mon_id:
+						inst.b_form = 7
+						break;
+					case add_id:
+						inst.b_form = 8
+						break;
+
 					default:
 						break;
 				}
