@@ -17,28 +17,44 @@ function filter_text(txt, debug = false) {
 	var accum_width = 0
 	var new_txt = txt
 	var last_space_ind = 0
-	for (var i = 1; i < string_length(new_txt); i++) {
+	for (var i = 1; i <= string_length(new_txt); i++) {
 		var char = string_char_at(new_txt, i)
-		if char == " "
-			last_space_ind = i
-		accum_width += string_width(char)
-		if debug
-			show_debug_message(accum_width)
-		if accum_width >= 210 {
-			if (i - last_space_ind < 9) {
-				var ind_to_newline = last_space_ind
-				new_txt = string_delete(new_txt, ind_to_newline, 1)
+		if char == "\n"	
+			accum_width = 0
+		else {
+			if char == " "
+				last_space_ind = i
+
+			accum_width += string_width(char)
+			if debug {
+				show_debug_message(accum_width)	
 			}
-			else
-				ind_to_newline = i + 1
-			new_txt = string_insert("\n", new_txt, ind_to_newline)
+			if accum_width > max_line_width {
+				if debug {
+					show_debug_message("balls")	
+				}
+
+				if (i - last_space_ind <= 16) {
+					var ind_to_newline = last_space_ind
+					new_txt = string_delete(new_txt, ind_to_newline, 1)
+				}
+				else
+					ind_to_newline = i
+
+				
+					
+				new_txt = string_insert("\n", new_txt, ind_to_newline)
 			
-			var str = string_copy(new_txt, ind_to_newline + 1, i - ind_to_newline + 1)
-			if debug
-				show_debug_message(str)
-			accum_width = string_width(str)
+				var str = string_copy(new_txt, ind_to_newline, i - ind_to_newline + 1)
+				if debug {
+					show_debug_message(str)
+					show_debug_message(accum_width)
+				}
+				accum_width = string_width(str)
+			}
 		}
 	}
+	show_debug_message(string_width(new_txt))
 	return new_txt
 }
 last_text = ""

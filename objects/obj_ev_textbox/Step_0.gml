@@ -18,6 +18,9 @@ if window.selected_element == id {
 			// so we do this instead.
 			txt += "\n" 
 			break;
+		case vk_escape:
+			window.selected_element = noone
+			break;
 		default:
 			txt += keyboard_lastchar
 	}
