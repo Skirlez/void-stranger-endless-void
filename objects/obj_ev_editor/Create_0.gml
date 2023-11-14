@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -32,6 +32,8 @@ global.tileset_1 = asset_get_index("tile_bg_1")
 global.tileset_edge = asset_get_index("tile_edges")
 
 global.select_sound = asset_get_index("snd_ev_select")
+
+global.ev_font = asset_get_index("fnt_text_12")
 
 return_noone = function() {
 	return noone;
@@ -279,7 +281,7 @@ object_spider = new editor_placeable(asset_get_index("spr_ct_right"), spider_id,
 
 object_egg = new editor_placeable(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
 object_egg.properties_generator = function() {
-	return { txt : "" }	
+	return { txt : array_create(4, "") }	
 }
 object_egg.zed_function = function(tile_state) {
 	new_window(10, 6, asset_get_index("obj_ev_egg_window"), 

@@ -1,7 +1,7 @@
 // TARGET: LINENUMBER_REPLACE
 // 42
 surface_final = surface_create(sx, sy)
-// TARGET: LINENUMBER_REPLACE
+// TARGET: LINENUMBER
 // 46
 if (global.clear_black != -1)
 {

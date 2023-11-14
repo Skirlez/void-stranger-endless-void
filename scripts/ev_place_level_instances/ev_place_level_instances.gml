@@ -64,17 +64,23 @@ function ev_place_level_instances() {
 						inst.editor_type = object_state.properties.typ;
 						break;
 					case egg_id:
-						/*
 						with (inst) {
-							if object_state.properties.txt[0] != "" {
-								text[0] = object_state.properties.txt;
-								special_message = -1
-								voice = b_voice
-					            moods = [neutral]
-					            speakers = [id]
+							special_message = -1
+							voice = b_voice
+							var count = 0
+							for (var m = 0; m < 4; m++) {
+								if object_state.properties.txt[m] == ""
+									break;
+									
+								count++
+								text[m] = object_state.properties.txt[m];
 							}
+							if count == 0
+								count = 1
+							moods = array_create(count, neutral)
+							speakers = array_create(count, id)
 						}
-						*/
+						
 						break;
 					case lev_id:
 						inst.b_form = 1
