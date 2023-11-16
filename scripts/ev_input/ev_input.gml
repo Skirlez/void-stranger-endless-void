@@ -10,10 +10,15 @@ function ev_mouse_released() {
 function ev_is_mouse_on_me() {
 	return position_meeting(mouse_x, mouse_y, id) && layer_num == global.mouse_layer
 }
+
+// This section will be patched while merging with Void Stranger to utilize its input system.
+
 function ev_is_action_pressed() {
 	return keyboard_check_pressed(ord("Z"))
 }
 function ev_get_action_key() {
 	return ord("Z")
 }
-// This file will be patched inside Void Stranger to utilize its input system.
+function ev_get_horizontal_pressed() {
+	return keyboard_check_pressed(vk_right) - keyboard_check_pressed(vk_left)
+}

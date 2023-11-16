@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge true
+#macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -63,8 +63,6 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 	self.properties_generator = global.editor_object.return_noone
 	global.placeable_name_map[? tile_id] = self;
 } 
-
-
 
 
 #macro pit_id "pt"

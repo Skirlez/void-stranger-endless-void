@@ -87,7 +87,7 @@ if (ev_is_mouse_on_me()) {
 				var new_tile_j = tile_j + j
 				if new_tile_j >= 14
 					continue;
-				draw_tile_state(tile_i + i, tile_j + j, tile_state)
+				draw_tile_state(tile_i + i, tile_j + j, tile_state, false)
 			}
 		}
 		draw_set_alpha(1)

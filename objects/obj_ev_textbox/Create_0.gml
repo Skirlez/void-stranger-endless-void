@@ -1,3 +1,18 @@
+// will return true if a character is from a-z, A-Z, is a digit, or is in the exceptions list
+function is_char_valid(char) {
+	if char == ""
+		return false
+	static exceptions = "()[].,:;'|/@+-^!=?<>\\ \""	
+	if string_lettersdigits(char) != ""
+		return true
+	for (var i = 1; i <= string_length(exceptions); i++) {
+		if char == string_char_at(exceptions, i)
+			return true
+	}
+	return false
+		
+}
+
 function update_position() {
 	x = xstart - image_xscale * 8 
 	y = ystart - image_yscale * 8
@@ -5,14 +20,14 @@ function update_position() {
 
 function calculate_scale() {
 	draw_set_font(global.ev_font)
-	var filtered_text = filter_text(txt, last_text != txt)
-	last_text = txt
+	var filtered_text = filter_text(txt)
 	xscale = max(base_scale_x, (string_width(filtered_text) + string_width(" |")) / 16)
-
-	yscale = string_count("\n", filtered_text) + 1
+	yscale = max(base_scale_y, string_count("\n", filtered_text) + 1)
 }
 
-function filter_text(txt, debug = false) {
+
+function filter_text(txt, cursor = false) {
+	var cursor_offset = 0
 	draw_set_font(global.ev_font)
 	var accum_width = 0
 	var new_txt = txt
@@ -26,14 +41,7 @@ function filter_text(txt, debug = false) {
 				last_space_ind = i
 
 			accum_width += string_width(char)
-			if debug {
-				show_debug_message(accum_width)	
-			}
 			if accum_width > max_line_width {
-				if debug {
-					show_debug_message("balls")	
-				}
-
 				if (i - last_space_ind <= 16) {
 					var ind_to_newline = last_space_ind
 					new_txt = string_delete(new_txt, ind_to_newline, 1)
@@ -44,25 +52,30 @@ function filter_text(txt, debug = false) {
 				
 					
 				new_txt = string_insert("\n", new_txt, ind_to_newline)
-			
+				if cursor_pos > ind_to_newline
+					cursor_offset++
 				var str = string_copy(new_txt, ind_to_newline, i - ind_to_newline + 1)
-				if debug {
-					show_debug_message(str)
-					show_debug_message(accum_width)
-				}
 				accum_width = string_width(str)
 			}
 		}
 	}
-	show_debug_message(string_width(new_txt))
+	
+	if cursor && window.selected_element == id
+		new_txt = string_insert(cursor_time % 60 < 30 ? "/" : " ", new_txt, cursor_pos + cursor_offset)
+	
 	return new_txt
 }
-last_text = ""
+cursor_pos = string_length(txt) + 1
 calculate_scale()
 update_position()
 
 curve = animcurve_get_channel(ac_textbox_size, 0)
 size_time = 0
+cursor_time = 0
+
 
 text_surface = noone
+
+
+
 

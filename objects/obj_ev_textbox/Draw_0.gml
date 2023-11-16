@@ -12,8 +12,9 @@ else if surface_get_width(text_surface) != w or surface_get_height(text_surface)
 	surface_resize(text_surface, w, h)	
 surface_set_target(text_surface)
 draw_clear_alpha(c_black, 0)
-var add = (global.editor_time % 60 < 30 && window.selected_element == id) ? "|" : ""
-draw_text_ext(3, 0, filter_text(txt) + add, 15, -1)
+
+var filtered_text = filter_text(txt, true)
+draw_text_ext(3, 0, filtered_text, 15, -1)
 surface_reset_target()
 
 draw_surface(text_surface, x, y)
