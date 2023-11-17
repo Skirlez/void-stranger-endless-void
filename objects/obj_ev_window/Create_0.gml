@@ -11,8 +11,10 @@ add_child(inst)
 
 selected_element = noone
 
+element_object_index = asset_get_index("obj_ev_window_element")
+
 function deselect(element) {
-	if object_is_ancestor(element.object_index, obj_ev_window_element) {
+	if object_is_ancestor(element.object_index, element_object_index) {
 		with (element)
 			event_user(we_deselect_event)
 	}	
@@ -20,7 +22,7 @@ function deselect(element) {
 		selected_element = noone
 }
 function select(element) {
-	if object_is_ancestor(element.object_index, obj_ev_window_element) {
+	if object_is_ancestor(element.object_index, element_object_index) {
 		with (element)
 			event_user(we_select_event)
 	}	

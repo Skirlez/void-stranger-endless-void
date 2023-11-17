@@ -20,15 +20,16 @@ if window.selected_element == id {
 		case vk_enter:
 			// alowing keyboard_lastchar inserts an Evil and Fucked Up newline character that is not \n
 			// so we do this instead.
-	
-			txt = string_insert("\n", txt, cursor_pos)
-			cursor_pos++
+			if allow_newlines && string_length(txt) < char_limit {
+				txt = string_insert("\n", txt, cursor_pos)
+				cursor_pos++
+			}
 			break;
 		case vk_escape:
 			window.selected_element = noone
 			break;
 		default:
-			if is_char_valid(keyboard_lastchar) {
+			if is_char_valid(keyboard_lastchar) && string_length(txt) < char_limit {
 				txt = string_insert(keyboard_lastchar, txt, cursor_pos)
 				cursor_pos++
 			}

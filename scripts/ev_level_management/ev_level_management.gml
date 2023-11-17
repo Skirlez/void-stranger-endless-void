@@ -61,7 +61,20 @@ function export_level() {
 					addition += string(object_state.properties.typ)
 					break;
 				case egg_id:
-					addition += base64_encode(object_state.properties.txt) + BASE64_END_CHAR
+					var arrlen = array_length(object_state.properties.txt)
+					var sub_addition = ""
+					var m
+					for (m = 0; m < arrlen; m++) {
+						var txt = object_state.properties.txt[m]
+						if txt == ""
+							break;
+						sub_addition += base64_encode(txt) + BASE64_END_CHAR	
+					}
+					if m == 0 {
+						addition += "0"
+						break;	
+					}
+					addition += string(m) + sub_addition
 					break;
 				case cif_id:
 					addition += string(object_state.properties.lmp)
@@ -153,15 +166,23 @@ function import_level(tile_string, object_string) {
 				global.level_objects[@ i][j] = new tile_with_state(object, { typ: int64(read_type) });
 				break;
 			case egg_id:
-				var count = 0
-				do {
-					var read_end = string_copy(object_string, object_pointer + count, 1)	
-					count++;
-				} until read_end == BASE64_END_CHAR
+				var read_length = string_copy(object_string, object_pointer, 1)
+				object_pointer++	
+				var arrlen = int64(read_length);
+				var txt_arr = array_create(4, "")
+				for (var m = 0; m < arrlen; m++) {
+					var count = 0
+					do {
+						var read_end = string_copy(object_string, object_pointer + count, 1)	
+						count++;
+					} until read_end == BASE64_END_CHAR
 				
-				var read_string = string_copy(object_string, object_pointer, count)
-				object_pointer += count;
-				global.level_objects[@ i][j] = new tile_with_state(object, { txt: base64_decode(read_string) });
+					var read_string = string_copy(object_string, object_pointer, count)
+					txt_arr[m] = base64_decode(read_string)
+					
+					object_pointer += count;
+				}
+				global.level_objects[@ i][j] = new tile_with_state(object, { txt: txt_arr });
 				break;
 			case cif_id:
 				var read_lamp = string_copy(object_string, object_pointer, 1)

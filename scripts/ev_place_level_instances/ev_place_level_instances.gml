@@ -65,18 +65,18 @@ function ev_place_level_instances() {
 						break;
 					case egg_id:
 						with (inst) {
-							special_message = -1
-							voice = b_voice
-							var count = 0
-							for (var m = 0; m < 4; m++) {
+							var m
+							for (m = 0; m < 4; m++) {
 								if object_state.properties.txt[m] == ""
 									break;
 									
 								count++
 								text[m] = object_state.properties.txt[m];
 							}
-							if count == 0
-								count = 1
+							if m == 0
+								break;
+							special_message = -1
+							voice = b_voice	
 							moods = array_create(count, neutral)
 							speakers = array_create(count, id)
 						}

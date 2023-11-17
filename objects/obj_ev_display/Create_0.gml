@@ -179,7 +179,7 @@ function handle_click_after(tile_i, tile_j) {
 				for (var j = 0; j < array_length(held_tile_array[i]); j++) {
 					var tile_state = held_tile_array[i][j]
 					var is_empty = (tile_state.tile == global.editor_object.current_empty_tile)
-					if !is_empty && empty_row {
+					if !is_empty {
 						empty_row = false;
 						initial_empty_in_row = min(initial_empty_in_row, j)
 					}

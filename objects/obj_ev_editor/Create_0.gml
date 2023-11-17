@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -20,6 +20,11 @@ global.mouse_held = false;
 #macro flag_only_one 2
 #macro flag_unplaceable 4
 #macro flag_no_objects 8
+
+#macro burden_memory 0
+#macro burden_wings 1
+#macro burden_sword 2 
+#macro burden_stackrod 3
 
 global.editor_room = asset_get_index("rm_ev_editor");
 global.editor_object = asset_get_index("obj_ev_editor");
@@ -47,6 +52,10 @@ return_tile_state_function = function(tile_state) {
 
 default_draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
+}
+music_draw_function = function(tile_state, i, j) {
+	var spr = tile_state.tile.spr_ind
+	draw_sprite(spr, ev_strobe_integer(spr), j * 16 + 8, i * 16 + 8)	
 }
 
 global.placeable_name_map = ds_map_create()
@@ -221,18 +230,18 @@ sweat_sprite = asset_get_index("spr_sweat")
 object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, player_obj, flag_unremovable|flag_only_one)
 object_player.draw_function = function(tile_state, i, j, preview) {
 	if (preview && global.level_tiles[i][j].tile == tile_pit) {
-		draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
+		draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
 		draw_sprite(sweat_sprite, global.editor_time / 5, j * 16 + 16, i * 16)
 		return;
 	}
-	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
+	draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
 }
 
 
 object_leech = new editor_placeable(asset_get_index("spr_cl_right"), leech_id, leech_obj)
 object_leech.draw_function = function(tile_state, i, j) {
 	var xscale = tile_state.properties.dir == true ? -1 : 1
-	draw_sprite_ext(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8, xscale, 1, 0, c_white, draw_get_alpha())
+	draw_sprite_ext(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8, xscale, 1, 0, c_white, draw_get_alpha())
 }
 
 maggot_sprite_down = asset_get_index("spr_cc_down");
@@ -240,7 +249,7 @@ maggot_sprite_up = asset_get_index("spr_cc_up");
 
 object_maggot = new editor_placeable(maggot_sprite_down, maggot_id, maggot_obj, 0)
 object_maggot.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_up : maggot_sprite_down, 0, j * 16 + 8, i * 16 + 8)
+	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_up : maggot_sprite_down, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
 }
 
 var directioned_zed_function = function(tile_state) {
@@ -256,8 +265,11 @@ object_maggot.zed_function = directioned_zed_function
 object_maggot.properties_generator = directioned_properties
 
 object_bull = new editor_placeable(asset_get_index("spr_cg_idle"), bull_id, bull_obj)
+object_bull.draw_function = music_draw_function
 object_gobbler = new editor_placeable(asset_get_index("spr_cs_right"), gobbler_id, gobbler_obj)
+object_gobbler.draw_function = music_draw_function
 object_hand = new editor_placeable(asset_get_index("spr_ch"), hand_id, hand_obj)
+object_hand.draw_function = music_draw_function
 object_mimic = new editor_placeable(asset_get_index("spr_cm_down"), mimic_id, mimic_obj)
 object_mimic.properties_generator = function() {
 	return { typ : 0 } 	
@@ -270,13 +282,16 @@ object_mimic.zed_function = function(tile_state) {
 
 mimic_sprite_arr = [asset_get_index("spr_cm_down"), asset_get_index("spr_cm_up1"), asset_get_index("spr_cm_up2")]
 object_mimic.draw_function = function(tile_state, i, j) {
-	draw_sprite(mimic_sprite_arr[tile_state.properties.typ], 0, j * 16 + 8, i * 16 + 8)
+	draw_sprite(mimic_sprite_arr[tile_state.properties.typ], ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
 }
 
 object_diamond = new editor_placeable(asset_get_index("spr_co_idle"), diamond_id, diamond_obj)
+object_diamond.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.tile.spr_ind, ev_strobe_fasttriplet_real(2), j * 16 + 8, i * 16 + 8)	
+}
 
 object_spider = new editor_placeable(asset_get_index("spr_ct_right"), spider_id, spider_obj)
-
+object_spider.draw_function = music_draw_function
 object_egg = new editor_placeable(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
 object_egg.properties_generator = function() {
 	return { txt : array_create(4, "") }	
@@ -349,6 +364,11 @@ function reset_everything() {
 	for (var i = 0; i < array_length(global.level_objects); i++)
 		global.level_objects[i] = array_create(14, new tile_with_state(object_empty))	
 
+	global.level_name = ""
+	global.level_description = ""
+	global.level_burdens = [false, false, false, false]
+	
+	
 	global.level_objects[4][6] = new tile_with_state(object_player)
 	global.level_tiles[2][6] = new tile_with_state(tile_exit)
 	for (var i = 0; i < 3; i++) {

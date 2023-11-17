@@ -22,6 +22,8 @@ switch (image_index) {
 		}
 		break;
 	case 4: // settings
+		new_window(12, 8, asset_get_index("obj_ev_settings_window"))	
+		global.mouse_layer = 1
 		break;
 	case 5: // trash bin
 		global.erasing = 350;

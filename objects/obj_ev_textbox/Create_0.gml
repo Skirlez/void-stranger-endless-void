@@ -65,12 +65,15 @@ function filter_text(txt, cursor = false) {
 	
 	return new_txt
 }
+size_time = 0
 cursor_pos = string_length(txt) + 1
 calculate_scale()
+image_xscale = base_scale_x
+image_yscale = base_scale_y
 update_position()
 
 curve = animcurve_get_channel(ac_textbox_size, 0)
-size_time = 0
+
 cursor_time = 0
 
 
