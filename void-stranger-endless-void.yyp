@@ -96,7 +96,6 @@
     {"id":{"name":"snd_reveal","path":"sounds/snd_reveal/snd_reveal.yy",},"order":0,},
     {"id":{"name":"spr_lamp","path":"sprites/spr_lamp/spr_lamp.yy",},"order":24,},
     {"id":{"name":"spr_tile_bg_1","path":"sprites/spr_tile_bg_1/spr_tile_bg_1.yy",},"order":0,},
-    {"id":{"name":"spr_ev_edge","path":"sprites/spr_ev_edge/spr_ev_edge.yy",},"order":11,},
     {"id":{"name":"ev_strobe","path":"scripts/ev_strobe/ev_strobe.yy",},"order":7,},
     {"id":{"name":"ev_input","path":"scripts/ev_input/ev_input.yy",},"order":0,},
     {"id":{"name":"snd_ev_start_level","path":"sounds/snd_ev_start_level/snd_ev_start_level.yy",},"order":10,},

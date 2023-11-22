@@ -17,5 +17,5 @@ The project is set up like this, as opposed to just a plain UndertaleModTool mod
 # Compiling
 - Run the `copier.csx` script on Void Stranger's data.win from the assetscripts folder to copy all the required Void Stranger assets into the project
 - From this point you can compile and run the editor on its own
-- To merge it into the game, compile and copy the data.win of the editor and run the `merger.csx` script on Void Stranger's data.win
+- To merge it into the game, compile and copy the data.win of the editor and run the `merger.csx` script on Void Stranger's data.win, and save it when it's done
 - Make sure to replace the directories at the top of the scripts with your own

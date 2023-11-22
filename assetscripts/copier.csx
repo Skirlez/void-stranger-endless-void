@@ -5,6 +5,12 @@ using System.Linq;
 using System.Text.Json;
 using System.IO;
 
+
+EnsureDataLoaded();
+
+// Replace with your own
+string endlessVoidPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void";
+
 // A script to copy all required Void Stranger assets into Endless Void.
 
 // Scripts used for reference:
@@ -49,12 +55,6 @@ byte[] GetSoundData(UndertaleSound sound) {
     return null;
 }
 
-
-
-EnsureDataLoaded();
-
-// Replace with your own
-string endlessVoidPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void";
 
 TextureWorker worker = new TextureWorker();
 

@@ -192,7 +192,15 @@ tile_wall.properties_generator = function() {
 	return { ind : 4 }
 }
 
-tile_edge = new editor_placeable(asset_get_index("spr_ev_edge"), edge_id, no_obj, flag_no_objects)
+
+// we create the edge sprite in real time
+var edge_surf = surface_create(16, 16)
+surface_set_target(edge_surf)
+draw_tile(asset_get_index("tile_edges"), 4, 0, 0, 0)
+var edge_sprite = sprite_create_from_surface(edge_surf, 0, 0, 16, 16, false, false, 8, 8)
+surface_reset_target()
+surface_free(edge_surf)
+tile_edge = new editor_placeable(edge_sprite, edge_id, no_obj, flag_no_objects)
 tile_edge.properties_generator = function() {
 	return { ind : 4 }	
 }
@@ -323,7 +331,7 @@ object_bee = new editor_placeable(asset_get_index("spr_smiler"), bee_id, egg_sta
 object_gor = new editor_placeable(asset_get_index("spr_slower"), gor_id, egg_statue_obj)
 
 
-// we create the hologram sprite in real time!
+// we create the hologram sprite in real time
 var hologram_surf = surface_create(16, 16)
 surface_set_target(hologram_surf)
 draw_sprite(asset_get_index("spr_boulder"), 0, 8, 8)
