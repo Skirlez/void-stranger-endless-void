@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "tile_bg_1",
   "spriteId": {
-    "name": "spr_tiles_1",
-    "path": "sprites/spr_tiles_1/spr_tiles_1.yy",
+    "name": "spr_tile_bg_1",
+    "path": "sprites/spr_tile_bg_1/spr_tile_bg_1.yy",
   },
   "tileWidth": 16,
   "tileHeight": 16,

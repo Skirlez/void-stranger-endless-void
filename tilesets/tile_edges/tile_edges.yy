@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "tile_edges",
   "spriteId": {
-    "name": "spr_edge_tiles",
-    "path": "sprites/spr_edge_tiles/spr_edge_tiles.yy",
+    "name": "spr_tile_edges",
+    "path": "sprites/spr_tile_edges/spr_tile_edges.yy",
   },
   "tileWidth": 16,
   "tileHeight": 16,

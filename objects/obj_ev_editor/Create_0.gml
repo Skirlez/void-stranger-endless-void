@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge true
+#macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -364,17 +364,22 @@ function reset_everything() {
 	for (var i = 0; i < array_length(global.level_objects); i++)
 		global.level_objects[i] = array_create(14, new tile_with_state(object_empty))	
 
-	global.level_name = ""
-	global.level_description = ""
-	global.level_burdens = [false, false, false, false]
-	
-	
+
 	global.level_objects[4][6] = new tile_with_state(object_player)
 	global.level_tiles[2][6] = new tile_with_state(tile_exit)
 	for (var i = 0; i < 3; i++) {
 		for (var j = 0; j < 3; j++)
 			global.level_tiles[3 + i][5 + j] = new tile_with_state(tile_default)
 	}
+	
+	global.level = {
+		tiles : global.level_tiles,
+		objects : global.level_objects,
+		burdens : [false, false, false, false],
+		description : "",
+		name : "",
+	}
+	
 	
 	current_list = tiles_list;
 	current_placeables = global.level_tiles

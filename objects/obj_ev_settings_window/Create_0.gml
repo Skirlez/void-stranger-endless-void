@@ -1,13 +1,13 @@
 event_inherited()
 name_textbox = instance_create_layer(112, 72 - 46, "WindowElements", asset_get_index("obj_ev_textbox"), 
-	{txt : global.level_name,
+	{txt : global.level.name,
 	empty_text : "Level Name",
 	char_limit : 32,
 	base_scale_x : 5,
 	allow_newlines : false})
 	
 description_textbox = instance_create_layer(112, 72 - 26, "WindowElements", asset_get_index("obj_ev_textbox"), 
-	{txt : global.level_description,
+	{txt : global.level.description,
 	empty_text : "Level Description",
 	char_limit : 256,
 	base_scale_x : 7,
@@ -17,7 +17,7 @@ burdens = array_create(4)
 for (var i = 0; i < 4; i++) {
 	burdens[i] = instance_create_layer(112 - 72 + i * 16, 72 + 30, "WindowElements", asset_get_index("obj_ev_burden_toggle"), 
 	{burden_ind : i,
-	image_index : global.level_burdens[i]})
+	image_index : global.level.burdens[i]})
 	
 	add_child(burdens[i])
 }
