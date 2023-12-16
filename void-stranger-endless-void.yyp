@@ -100,6 +100,7 @@
     {"id":{"name":"spr_boulder","path":"sprites/spr_boulder/spr_boulder.yy",},"order":23,},
     {"id":{"name":"rm_ev_menu","path":"rooms/rm_ev_menu/rm_ev_menu.yy",},"order":1,},
     {"id":{"name":"spr_co_idle","path":"sprites/spr_co_idle/spr_co_idle.yy",},"order":20,},
+    {"id":{"name":"spr_barrier","path":"sprites/spr_barrier/spr_barrier.yy",},"order":35,},
     {"id":{"name":"obj_ev_wall_choose","path":"objects/obj_ev_wall_choose/obj_ev_wall_choose.yy",},"order":15,},
     {"id":{"name":"spr_ev_window","path":"sprites/spr_ev_window/spr_ev_window.yy",},"order":6,},
     {"id":{"name":"msc_001","path":"sounds/msc_001/msc_001.yy",},"order":0,},

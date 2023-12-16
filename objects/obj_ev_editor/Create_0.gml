@@ -157,6 +157,9 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro hologram_id "ho"
 #macro hologram_obj "obj_fakewall"
 
+#macro secret_exit_id "se"
+#macro secret_exit_obj "obj_na_secret_exit"
+
 floor_sprite = asset_get_index("spr_floor");
 
 tile_pit = new editor_placeable(noone, pit_id, pit_obj, flag_unplaceable)
@@ -348,6 +351,10 @@ object_eus = new editor_placeable(asset_get_index("spr_lover"), eus_id, egg_stat
 object_bee = new editor_placeable(asset_get_index("spr_smiler"), bee_id, egg_statue_obj)
 object_gor = new editor_placeable(asset_get_index("spr_slower"), gor_id, egg_statue_obj)
 
+object_secret_exit = new editor_placeable(asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
+object_secret_exit.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
+}
 
 // we create the hologram sprite in real time
 var hologram_surf = surface_create(16, 16)
@@ -372,7 +379,7 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfl
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_spider, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
-	object_bee, object_gor]
+	object_bee, object_gor, object_secret_exit]
 
 global.music_names = ["msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
 	"msc_gorcircle_lo", "msc_levcircle", "msc_cifcircle", "msc_beesong", "msc_monstrail"]

@@ -32,8 +32,6 @@
     {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"040d4131-b14b-48e2-86e7-72e65de96246",},
     {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"cee8e704-ca65-4162-ac86-19ce6877f2fb",},
     {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"22477fb4-de27-44dc-b440-b09bf2d9f9a1",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"8a5ca3ee-cac5-49b8-8179-a1af55de0f80",},
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"28b9e3ad-1104-4420-96c5-3d415123f84a",},
   ],
   "sequence": {
     "resourceType": "GMSequence",
@@ -45,7 +43,7 @@
     "playbackSpeedType": 0,
     "autoRecord": true,
     "volume": 1.0,
-    "length": 6.0,
+    "length": 4.0,
     "events": {"Keyframes":[],"resourceVersion":"1.0","resourceType":"KeyframeStore<MessageEventKeyframe>",},
     "moments": {"Keyframes":[],"resourceVersion":"1.0","resourceType":"KeyframeStore<MomentsEventKeyframe>",},
     "tracks": [
@@ -54,8 +52,6 @@
             {"id":"98d3aef8-09b3-42a3-a981-292e56e23031","Key":1.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"040d4131-b14b-48e2-86e7-72e65de96246","path":"sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
             {"id":"70440c5a-78a9-4e1e-aeeb-f8f404976e6c","Key":2.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"cee8e704-ca65-4162-ac86-19ce6877f2fb","path":"sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
             {"id":"03e5c112-198a-4f0b-81d0-a26605123cca","Key":3.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"22477fb4-de27-44dc-b440-b09bf2d9f9a1","path":"sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
-            {"id":"89ac0174-d4d5-4454-b2b5-a9773ca15e78","Key":4.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"8a5ca3ee-cac5-49b8-8179-a1af55de0f80","path":"sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
-            {"id":"76333e6c-58a4-4d61-8ce7-87c217a669bb","Key":5.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"28b9e3ad-1104-4420-96c5-3d415123f84a","path":"sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
           ],"resourceVersion":"1.0","resourceType":"KeyframeStore<SpriteFrameKeyframe>",},"trackColour":0,"inheritsTrackColour":true,"builtinName":0,"traits":0,"interpolation":1,"tracks":[],"events":[],"isCreationTrack":false,"modifiers":[],},
     ],
     "visibleRange": null,
