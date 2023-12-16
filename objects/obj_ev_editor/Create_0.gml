@@ -301,7 +301,11 @@ object_diamond.draw_function = function(tile_state, i, j) {
 
 object_spider = new editor_placeable(asset_get_index("spr_ct_right"), spider_id, spider_obj)
 object_spider.draw_function = function(tile_state, i, j) {
-	draw_sprite_ext(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8, 1, 1,
+	
+	var ind = (tile_state.properties.ang == 180 || tile_state.properties.ang == 270) 
+		? 1 - ev_strobe_integer(2) : ev_strobe_integer(2)
+		
+	draw_sprite_ext(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8, 1, 1,
 		tile_state.properties.ang, c_white, 1)
 }
 object_spider.properties_generator = function() {
