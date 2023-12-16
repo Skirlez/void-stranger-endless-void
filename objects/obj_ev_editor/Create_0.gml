@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -56,7 +56,7 @@ default_draw_function = function(tile_state, i, j) {
 }
 music_draw_function = function(tile_state, i, j) {
 	var spr = tile_state.tile.spr_ind
-	draw_sprite(spr, ev_strobe_integer(spr), j * 16 + 8, i * 16 + 8)	
+	draw_sprite(spr, ev_strobe_integer(sprite_get_number(spr)), j * 16 + 8, i * 16 + 8)	
 }
 
 global.placeable_name_map = ds_map_create()
@@ -300,7 +300,20 @@ object_diamond.draw_function = function(tile_state, i, j) {
 }
 
 object_spider = new editor_placeable(asset_get_index("spr_ct_right"), spider_id, spider_obj)
-object_spider.draw_function = music_draw_function
+object_spider.draw_function = function(tile_state, i, j) {
+	draw_sprite_ext(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8, 1, 1,
+		tile_state.properties.ang, c_white, 1)
+}
+object_spider.properties_generator = function() {
+	return { ang : 0 }	
+}
+object_spider.zed_function = function(tile_state) {
+	tile_state.properties.ang -= 90
+	if tile_state.properties.ang < 0
+		tile_state.properties.ang = 270
+}
+
+
 object_egg = new editor_placeable(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
 object_egg.properties_generator = function() {
 	return { txt : array_create(4, "") }	

@@ -60,6 +60,24 @@ function ev_place_level_instances(level) {
 					case mimic_id:
 						inst.editor_type = object_state.properties.typ;
 						break;
+					case spider_id:
+						with (inst) {
+							switch (object_state.properties.ang) {
+							    case 0:
+							        set_e_direction = 0
+							        break
+							    case 270:
+							        set_e_direction = 1
+							        break
+							    case 180:
+							        set_e_direction = 2
+							        break
+							    case 90:
+							        set_e_direction = 3
+							        break
+							}
+						}
+						break;
 					case egg_id:
 						with (inst) {
 							var m
