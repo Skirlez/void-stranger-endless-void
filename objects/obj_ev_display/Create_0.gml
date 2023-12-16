@@ -11,8 +11,6 @@ dragging = false
 painting = false;
 
 held_tile_state = new tile_with_state(global.editor_object.object_empty)
-show_debug_message(held_tile_state)
-
 place_sound = asset_get_index("snd_ev_place")
 drag_sound = asset_get_index("snd_ev_drag")
 erase_sound = asset_get_index("snd_ev_erase")
@@ -105,8 +103,8 @@ function handle_click(tile_i, tile_j) {
 				
 			}
 			else {
-				var object_state = global.level_objects[tile_i][tile_j];
-				var tile_state = global.level_tiles[tile_i][tile_j];
+				var object_state = global.level.objects[tile_i][tile_j];
+				var tile_state = global.level.tiles[tile_i][tile_j];
 
 				if !(object_state.tile.flags & flag_unplaceable) {
 					final_state = object_state
@@ -219,3 +217,8 @@ base_ui = asset_get_index("spr_ev_base_ui")
 
 
 ind = 0
+
+
+voidrod_sprite = asset_get_index("spr_voidrod_icon")
+stackrod_sprite = asset_get_index("spr_voidrod_icon2")
+burdens_sprite = asset_get_index("spr_items")

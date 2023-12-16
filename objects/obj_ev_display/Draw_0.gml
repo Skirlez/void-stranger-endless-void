@@ -25,23 +25,33 @@ function draw_tile_state(i, j, tile_state, preview = false) {
 	tile.draw_function(tile_state, i, j, preview)
 }
 
-draw_sprite(base_ui, 0, 0, 128)
+draw_sprite(base_ui, 0, 0, 8 * 16)
+
+var rodsprite = (global.level.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
+draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
+for (var i = 0; i < array_length(global.level.burdens) - 1; i++) {
+	if global.level.burdens[i]
+		draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)	
+}
+
 
 for (var i = 0; i < 9; i++)	{
 	for (var j = 0; j < 14; j++) {
 		if i != 8 {
-			var tile_state = global.level_tiles[i][j]
+			var tile_state = global.level.tiles[i][j]
 			draw_tile_state(i, j, tile_state)
 		}
 	
 		if (global.tile_mode)
 			draw_set_alpha(0.4)
-		var object_state = global.level_objects[i][j]
+		var object_state = global.level.objects[i][j]
 		draw_tile_state(i, j, object_state)
 		if (global.tile_mode)
 			draw_set_alpha(1)
 	}
 }
+
+
 
 
 

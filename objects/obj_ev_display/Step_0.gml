@@ -98,7 +98,7 @@ else {
 	last_clicked_j = -1;
 	last_i = -1;
 	last_j = -1;
-	if dragging = true {
+	if dragging == true && !ev_mouse_right_held() {
 		dragging = false
 		drag_box_i = -1
 		drag_box_j = -1

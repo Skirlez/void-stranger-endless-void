@@ -3,7 +3,7 @@
 
 if global.mouse_layer != 0
 	exit
-//show_debug_message(export_level())
+//show_debug_message(export_level(global.level))
 //show_debug_message("writing gba save to " + working_directory + "GBAStranger.sav");
 
 // for reasons unknown to the gods, the working directory means nothing :)
@@ -29,9 +29,9 @@ for(var i=0; i < 14; i++) {
 		
 		
 		
-		var tile = global.level_tiles[j][i].tile.tile_id; 
+		var tile = global.level.tiles[j][i].tile.tile_id; 
 		// wtf is noone?
-		var entity = global.level_objects[j][i] == noone ? "em" : global.level_objects[j][i].tile.tile_id;
+		var entity = global.level.objects[j][i] == noone ? "em" : global.level.objects[j][i].tile.tile_id;
 		//show_debug_message(tile_state.tile.tile_id);
 		
 		// does gamemaker have dicts?(which arent a pain)

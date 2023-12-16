@@ -4,6 +4,7 @@ if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
 	audio_group_load(VoidStrangerAudio)
+	global.music = -4	
 }
 
 window_set_cursor(cr_default)
@@ -162,7 +163,7 @@ tile_pit = new editor_placeable(noone, pit_id, pit_obj, flag_unplaceable)
 tile_pit.draw_function = function(tile_state, i, j) {
 	if (i == 0)
 		return;
-	var above_tile_state = global.level_tiles[i - 1][j];
+	var above_tile_state = global.level.tiles[i - 1][j];
 
 	if above_tile_state.tile != tile_pit && above_tile_state.tile != tile_glass
 			&& above_tile_state.tile != tile_edge
@@ -178,7 +179,7 @@ tile_bomb = new editor_placeable(asset_get_index("spr_bombfloor"), bomb_id, bomb
 tile_default = new editor_placeable(floor_sprite, default_tile_id, default_tile_obj)
 tile_floorswitch = new editor_placeable(asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
 tile_floorswitch.draw_function = function(tile_state, i, j) {
-	var ind = global.level_objects[i][j].tile == object_empty ? 0 : 1
+	var ind = global.level.objects[i][j].tile == object_empty ? 0 : 1
 	draw_sprite(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8)
 }
 tile_copyfloor = new editor_placeable(asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
@@ -237,7 +238,7 @@ object_empty.draw_function = empty_function;
 sweat_sprite = asset_get_index("spr_sweat")
 object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, player_obj, flag_unremovable|flag_only_one)
 object_player.draw_function = function(tile_state, i, j, preview) {
-	if (preview && global.level_tiles[i][j].tile == tile_pit) {
+	if (preview && global.level.tiles[i][j].tile == tile_pit) {
 		draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
 		draw_sprite(sweat_sprite, global.editor_time / 5, j * 16 + 16, i * 16)
 		return;
@@ -356,41 +357,31 @@ objects_list = [object_player, object_leech, object_maggot, object_bull, object_
 	object_mimic, object_diamond, object_spider, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
 	object_bee, object_gor]
 
+global.music_names = ["msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
+	"msc_gorcircle_lo", "msc_levcircle", "msc_cifcircle", "msc_beesong", "msc_monstrail"]
+
+
+
+
 function reset_everything() {
 	global.tile_mode = true
 	global.mouse_layer = 0
 	global.selected_thing = -1 
 	global.selected_placeable_num = 0
 	
-	global.level_tiles = array_create(9)
-	for (var i = 0; i < array_length(global.level_tiles) - 1; i++)
-		global.level_tiles[i] = array_create(14, new tile_with_state(tile_pit))	
-	global.level_tiles[8] = array_create(14, new tile_with_state(tile_unremovable))	
+	global.level = new level_struct()
 
-
-	global.level_objects = array_create(9)
-	for (var i = 0; i < array_length(global.level_objects); i++)
-		global.level_objects[i] = array_create(14, new tile_with_state(object_empty))	
-
-
-	global.level_objects[4][6] = new tile_with_state(object_player)
-	global.level_tiles[2][6] = new tile_with_state(tile_exit)
+	global.level.objects[@ 4][6] = new tile_with_state(object_player)
+	global.level.tiles[@ 2][6] = new tile_with_state(tile_exit)
 	for (var i = 0; i < 3; i++) {
 		for (var j = 0; j < 3; j++)
-			global.level_tiles[3 + i][5 + j] = new tile_with_state(tile_default)
+			global.level.tiles[@ 3 + i][5 + j] = new tile_with_state(tile_default)
 	}
-	
-	global.level = {
-		tiles : global.level_tiles,
-		objects : global.level_objects,
-		burdens : [false, false, false, false],
-		description : "",
-		name : "",
-	}
+
 	
 	
 	current_list = tiles_list;
-	current_placeables = global.level_tiles
+	current_placeables = global.level.tiles
 	current_empty_tile = tile_pit
 }
 
@@ -402,12 +393,12 @@ function switch_tile_mode(new_tile_mode) {
 	global.tile_mode = new_tile_mode;
 	if (global.tile_mode) {
 		current_list = tiles_list
-		current_placeables = global.level_tiles
+		current_placeables = global.level.tiles
 		current_empty_tile = tile_pit
 	}
 	else {
 		current_list = objects_list
-		current_placeables = global.level_objects
+		current_placeables = global.level.objects
 		current_empty_tile = object_empty
 	}
 }
@@ -441,21 +432,20 @@ function copy_tile_data(tiles) {
 
 // computers have infinite memory.
 function add_undo() {
-	array_push(history, copy_tile_data(global.level_tiles), copy_tile_data(global.level_objects))
+	array_push(history, copy_tile_data(global.level.tiles), copy_tile_data(global.level.objects))
 	if array_length(history) > 500 // will remember 250 changes before removing
 		array_delete(history, 0, 2)
 }
 
-
-
 function undo() {
 	static undo_sound = asset_get_index("snd_voidrod_place")
 	if array_length(history) != 0 {
-		array_copy(global.level_objects, 0, array_pop(history), 0, array_length(global.level_objects))
-		array_copy(global.level_tiles, 0, array_pop(history), 0, array_length(global.level_tiles))
+		array_copy(global.level.objects, 0, array_pop(history), 0, array_length(global.level.objects))
+		array_copy(global.level.tiles, 0, array_pop(history), 0, array_length(global.level.tiles))
 		audio_play_sound(undo_sound, 10, false)
 	}
 }
+
 undo_repeat = -1
 undo_repeat_frames_start = 18
 undo_repeat_frames_speed = 0

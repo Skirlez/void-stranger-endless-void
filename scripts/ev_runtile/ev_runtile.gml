@@ -25,7 +25,7 @@ function get_wall(x, y) {
 	static wall = global.editor_object.tile_wall;
 	if x < 0 || x >= 14 || y < 0 || y >= 9
 		return true;
-	return global.level_tiles[y][x].tile != wall
+	return global.level.tiles[y][x].tile != wall
 }
 		  
 function runtile_fetch_blob(x, y) {

@@ -1,6 +1,12 @@
 if global.mouse_layer != 0
 	exit
-var level = get_string("", "");
-var splitter_pos = string_pos("|", level)
+var level_string = get_string("", "");
+var out = import_level(level_string);
+if is_string(out)
+	show_debug_message("ERROR IMPORTING LEVEL: " + out)
+else
+	global.level = out;
+	
+ev_play_music(asset_get_index(global.music_names[0]))
 
-import_level(string_copy(level, 1, splitter_pos - 1), string_copy(level, splitter_pos + 1, string_length(level) - splitter_pos));
+switch_tile_mode(true);

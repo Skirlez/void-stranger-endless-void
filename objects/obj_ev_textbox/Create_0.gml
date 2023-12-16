@@ -1,8 +1,8 @@
-// will return true if a character is from a-z, A-Z, is a digit, or is in the exceptions list
+// will return true if a character is from a-z, A-Z, is a digit, or is in the exceptions string
 function is_char_valid(char) {
 	if char == ""
 		return false
-	static exceptions = "()[].,:;'|/@+-^!=?<>\\ \""	
+	static exceptions = "~`!@#$%^&*()_=-+{}[]<>?,./;'\\:\"| "	
 	if string_lettersdigits(char) != ""
 		return true
 	for (var i = 1; i <= string_length(exceptions); i++) {
@@ -80,5 +80,6 @@ cursor_time = 0
 text_surface = noone
 
 
-
+if !allow_edit
+	is_selectable = false
 

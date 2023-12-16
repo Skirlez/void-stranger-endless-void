@@ -4,17 +4,14 @@ function create(i, j, layerr, name) {
 		show_message(name)
 	return instance_create_layer(j * 16 + 8, i * 16 + 8, layerr, game_object)
 }
-function ev_place_level_instances() {
-
-
-
+function ev_place_level_instances(level) {
 	wall_tilemap = layer_tilemap_create("Tiles_1", 0, 0, global.tileset_1, 224, 144)
 	edge_tilemap = layer_tilemap_create("Tiles_2", 0, 0, global.tileset_edge, 224, 144)
 
 	for (var i = 0; i < 9; i++) {
 		for (var j = 0; j < 14; j++) {
 			if i != 8 {
-				var tile_state = global.level_tiles[i][j];
+				var tile_state = level.tiles[i][j];
 				var tile = tile_state.tile
 				var game_object = tile.obj_name
 				var layerr = ""
@@ -43,7 +40,7 @@ function ev_place_level_instances() {
 					create(i, j, layerr, game_object)
 			}
 		
-			var object_state = global.level_objects[i][j];
+			var object_state = level.objects[i][j];
 			var object = object_state.tile
 			if (object.tile_id != empty_id) {
 				var game_object = object.obj_name

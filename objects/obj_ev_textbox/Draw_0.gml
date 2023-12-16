@@ -7,9 +7,9 @@ draw_set_font(global.ev_font)
 var w = image_xscale * 16
 var h = image_yscale * 16
 if !surface_exists(text_surface)
-	text_surface = surface_create(w - 1, h)	
+	text_surface = surface_create(w - 1, h - 1)	
 else if surface_get_width(text_surface) != w or surface_get_height(text_surface) != h
-	surface_resize(text_surface, w - 1, h)	
+	surface_resize(text_surface, w - 1, h - 1)	
 surface_set_target(text_surface)
 draw_clear_alpha(c_black, 0)
 var filtered_text

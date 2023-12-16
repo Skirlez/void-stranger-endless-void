@@ -12,6 +12,7 @@ if global.erasing != -1 {
 		// previously i actually added an additional add_undo() here so you could 
 		// undo erasing the level, but now i'd have to implement metadata undoing, and i don't want to
 		history = [] 
+		ev_stop_music()
 		reset_everything()
 		audio_play_sound(global.goes_sound, 10, false)	
 		room_goto(asset_get_index("rm_ev_after_erase"))
@@ -57,4 +58,14 @@ else
 	global.mouse_pressed = false;
 if mouse_check_button_released(mb_left) {
 	global.mouse_held = false;	
+}
+
+if mouse_check_button_pressed(mb_right) {
+	global.mouse_right_pressed = true;
+	global.mouse_right_held = true;
+}
+else
+	global.mouse_right_pressed = false;
+if mouse_check_button_released(mb_right) {
+	global.mouse_right_held = false;	
 }

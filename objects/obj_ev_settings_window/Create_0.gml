@@ -13,6 +13,9 @@ description_textbox = instance_create_layer(112, 72 - 26, "WindowElements", asse
 	base_scale_x : 7,
 	allow_newlines : false})
 	
+add_child(name_textbox)
+add_child(description_textbox)
+	
 burdens = array_create(4)
 for (var i = 0; i < 4; i++) {
 	burdens[i] = instance_create_layer(112 - 72 + i * 16, 72 + 30, "WindowElements", asset_get_index("obj_ev_burden_toggle"), 
@@ -22,8 +25,11 @@ for (var i = 0; i < 4; i++) {
 	add_child(burdens[i])
 }
 
-var man = instance_create_layer(112 + 72, 72 + 30, "WindowElements", asset_get_index("obj_ev_man"))
+var man = instance_create_layer(112 + 63, 72 + 27, "WindowElements", asset_get_index("obj_ev_man"))
 add_child(man)
 
-add_child(name_textbox)
-add_child(description_textbox)
+var music_select = instance_create_layer(112 + 72 - 4, 72 + 45, "WindowElements", asset_get_index("obj_ev_music_select"))
+music_select.base_scale_x = 1
+
+add_child(music_select)
+

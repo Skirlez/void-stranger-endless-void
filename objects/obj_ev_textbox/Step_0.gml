@@ -1,4 +1,12 @@
 event_inherited()
+if !allow_edit {
+	calculate_scale()
+	image_xscale = xscale
+	image_yscale = yscale
+	update_position()
+	exit	
+}
+
 if window.selected_element == id {
 	cursor_time++
 	if size_time < 100

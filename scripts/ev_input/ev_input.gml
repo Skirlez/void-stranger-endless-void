@@ -4,6 +4,15 @@ function ev_mouse_held() {
 function ev_mouse_pressed() {
 	return global.mouse_pressed
 }
+
+function ev_mouse_right_held() {
+	return global.mouse_right_held
+}
+function ev_mouse_right_pressed() {
+	return global.mouse_right_pressed
+}
+
+
 function ev_mouse_released() {
 	return mouse_check_button_released(mb_left)
 }

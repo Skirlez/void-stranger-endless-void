@@ -23,6 +23,8 @@ function deselect(element) {
 }
 function select(element) {
 	if object_is_ancestor(element.object_index, element_object_index) {
+		if (!element.is_selectable)
+			return;
 		with (element)
 			event_user(we_select_event)
 	}	

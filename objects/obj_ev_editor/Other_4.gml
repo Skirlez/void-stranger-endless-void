@@ -7,4 +7,6 @@ if room == rm_ev_editor {
 		instance_destroy(quill)
 	draw_set_circle_precision(48)
 	global.selected_thing = -1
+	
+	ev_play_music(asset_get_index(global.music_names[0]))
 }
