@@ -37,9 +37,21 @@ if window.selected_element == id {
 			window.selected_element = noone
 			break;
 		default:
+			
 			if is_char_valid(keyboard_lastchar) && string_length(txt) < char_limit {
-				txt = string_insert(keyboard_lastchar, txt, cursor_pos)
-				cursor_pos++
+				
+				var newtxt = string_insert(keyboard_lastchar, txt, cursor_pos)
+				if !(automatic_newline) {
+					draw_set_font(global.ev_font)
+					if string_width(newtxt) < max_line_width {
+						txt = newtxt
+						cursor_pos++	
+					}
+				}
+				else {
+					txt = newtxt
+					cursor_pos++	
+				}
 			}
 			break;
 	}

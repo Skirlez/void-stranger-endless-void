@@ -25,9 +25,15 @@ function ev_is_mouse_on_me() {
 function ev_is_action_pressed() {
 	return keyboard_check_pressed(ord("Z"))
 }
+function ev_is_action_held() {
+	return keyboard_check(ord("Z"))
+}
 function ev_get_action_key() {
 	return ord("Z")
 }
 function ev_get_horizontal_pressed() {
 	return keyboard_check_pressed(vk_right) - keyboard_check_pressed(vk_left)
+}
+function ev_get_vertical_pressed() {
+	return keyboard_check_pressed(vk_down) - keyboard_check_pressed(vk_up)
 }

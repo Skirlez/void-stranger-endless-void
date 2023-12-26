@@ -21,6 +21,6 @@ if (global.level.burdens[3])
 ds_grid_set(obj_inventory.ds_player_info, 0, 2, "B???")
 
 ds_grid_set(obj_inventory.ds_player_info, 0, 1, 1) // Display locusts flag
-ds_grid_set(obj_inventory.ds_player_info, 1, 1, 0)
+ds_grid_set(obj_inventory.ds_player_info, 1, 1, 0) // Locust count
 
 global.player_blink = 0

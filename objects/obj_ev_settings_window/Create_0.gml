@@ -2,16 +2,17 @@ event_inherited()
 name_textbox = instance_create_layer(112, 72 - 46, "WindowElements", asset_get_index("obj_ev_textbox"), 
 	{txt : global.level.name,
 	empty_text : "Level Name",
-	char_limit : 32,
 	base_scale_x : 5,
-	allow_newlines : false})
+	allow_newlines : false,
+	automatic_newline: false})
 	
 description_textbox = instance_create_layer(112, 72 - 26, "WindowElements", asset_get_index("obj_ev_textbox"), 
 	{txt : global.level.description,
 	empty_text : "Level Description",
-	char_limit : 256,
+	char_limit : 128,
 	base_scale_x : 7,
 	allow_newlines : false})
+description_textbox.depth--;
 	
 add_child(name_textbox)
 add_child(description_textbox)

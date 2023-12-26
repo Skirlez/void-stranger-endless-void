@@ -27,13 +27,30 @@ function draw_tile_state(i, j, tile_state, preview = false) {
 
 draw_sprite(base_ui, 0, 0, 8 * 16)
 
+draw_set_font(global.ev_font)
+draw_set_halign(fa_left)
+draw_set_valign(fa_right)
+draw_set_color(c_black)
+
+
+draw_text_ext(1 * 16, 9 * 16 + 2, "VO", 0, -1)
+draw_text_ext(2 * 16, 9 * 16 + 2, "ID", 0, -1)
+
+draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
+draw_text(5 * 16, 9 * 16 + 2, "00")
+
+// idk how void stranger draws it but this is the only way i could make it align properly
+draw_text(12 * 16, 9 * 16 + 2, "B?")
+draw_text(13 * 16, 9 * 16 + 2, "?")
+draw_text(13 * 16 + 8, 9 * 16 + 2, "?")
+
+
 var rodsprite = (global.level.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
 draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
 for (var i = 0; i < array_length(global.level.burdens) - 1; i++) {
 	if global.level.burdens[i]
 		draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)	
 }
-
 
 for (var i = 0; i < 9; i++)	{
 	for (var j = 0; j < 14; j++) {

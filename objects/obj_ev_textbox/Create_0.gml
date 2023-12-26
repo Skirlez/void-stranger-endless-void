@@ -27,11 +27,17 @@ function calculate_scale() {
 
 
 function filter_text(txt, cursor = false) {
+	
 	var cursor_offset = 0
 	draw_set_font(global.ev_font)
 	var accum_width = 0
 	var new_txt = txt
 	var last_space_ind = 0
+	if (!automatic_newline) {
+		if (cursor)
+			txt = string_insert(cursor_time % 60 < 30 ? "/" : " ", txt, cursor_pos)
+		return txt;
+	}
 	for (var i = 1; i <= string_length(new_txt); i++) {
 		var char = string_char_at(new_txt, i)
 		if char == "\n"	
@@ -52,7 +58,7 @@ function filter_text(txt, cursor = false) {
 				
 					
 				new_txt = string_insert("\n", new_txt, ind_to_newline)
-				if cursor_pos > ind_to_newline
+				if cursor_pos + cursor_offset > ind_to_newline
 					cursor_offset++
 				var str = string_copy(new_txt, ind_to_newline, i - ind_to_newline + 1)
 				accum_width = string_width(str)
