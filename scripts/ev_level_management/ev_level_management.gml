@@ -15,7 +15,7 @@ function level_struct() constructor {
 	version = 1;
 	name = ""
 	description = ""
-	music = global.music_names[0]
+	music = global.music_names[1]
 	burdens = [false, false, false, false]
 	tiles = array_create(9);
 	objects = array_create(9);

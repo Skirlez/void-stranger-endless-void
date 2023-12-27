@@ -7,6 +7,8 @@ if (!compiled_for_merge) {
 	global.music = -4	
 }
 
+global.levels_directory = game_save_id + "levels\\"
+
 window_set_cursor(cr_default)
 
 global.editor_time = 0
@@ -112,6 +114,9 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro edge_id "ed"
 #macro empty_id "em"
 
+#macro chest_id "st"
+#macro chest_obj "obj_chest_small"
+
 #macro player_id "pl"
 #macro player_obj "obj_spawnpoint"
 
@@ -159,6 +164,8 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 
 #macro secret_exit_id "se"
 #macro secret_exit_obj "obj_na_secret_exit"
+
+
 
 floor_sprite = asset_get_index("spr_floor");
 
@@ -356,6 +363,8 @@ object_secret_exit.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
 }
 
+tile_chest = new editor_placeable(asset_get_index("spr_chest_regular"), chest_id, chest_obj)
+
 // we create the hologram sprite in real time
 var hologram_surf = surface_create(16, 16)
 surface_set_target(hologram_surf)
@@ -375,13 +384,13 @@ for (var i = 0; i < 7; i++) {
 
 
 tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfloor, tile_exit, 
-	tile_deathfloor, tile_white, tile_wall, tile_edge]
+	tile_deathfloor, tile_white, tile_wall, tile_edge, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_spider, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
 	object_bee, object_gor, object_secret_exit]
 
-global.music_names = ["msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
+global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
 	"msc_gorcircle_lo", "msc_levcircle", "msc_cifcircle", "msc_beesong", "msc_monstrail"]
 
 

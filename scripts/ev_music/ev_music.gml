@@ -1,15 +1,16 @@
 
 function ev_play_music(track){
-	if compiled_for_merge {
-		asset_get_index("scr_stop_music")(0)
+	ev_stop_music()
+	if (track == -1) 
+		return;
+	
+	if compiled_for_merge 
 		asset_get_index("scr_play_music")(track, true)
-	}
-	else {
-		audio_stop_sound(global.music)
+	else 
 		global.music = audio_play_sound(track, 10, true)
-	}
+	
 }
-function ev_stop_music(){
+function ev_stop_music() {
 	if compiled_for_merge
 		asset_get_index("scr_stop_music")(0)
 	else {

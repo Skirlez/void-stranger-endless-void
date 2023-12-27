@@ -8,5 +8,6 @@ if room == rm_ev_editor {
 	draw_set_circle_precision(48)
 	global.selected_thing = -1
 	
-	ev_play_music(asset_get_index(global.music_names[0]))
+
+	ev_play_music(asset_get_index(global.level.music))
 }

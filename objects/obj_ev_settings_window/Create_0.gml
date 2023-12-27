@@ -1,19 +1,47 @@
 event_inherited()
-name_textbox = instance_create_layer(112, 72 - 46, "WindowElements", asset_get_index("obj_ev_textbox"), 
-	{txt : global.level.name,
-	empty_text : "Level Name",
-	base_scale_x : 5,
-	allow_newlines : false,
-	automatic_newline: false})
+
+
+function commit() {
+	with (asset_get_index("obj_ev_settings_window")) {
+		global.level.name = name_textbox.txt
+		global.level.description = description_textbox.txt
+
+		for (var i = 0; i < 4; i++) {
+			global.level.burdens[i] = burdens[i].image_index
+		}
+	}
+}
+
+save_button = instance_create_layer(112 - 45, 72 - 46, "WindowElements", asset_get_index("obj_ev_save_button"), 
+{txt : "Save",
+pre_save_func : commit,
+base_scale_y : 0.7})
+
+save_and_quit_button = instance_create_layer(112 + 30, 72 - 46, "WindowElements", asset_get_index("obj_ev_save_button"), 
+{txt : "Save and Quit",
+pre_save_func : commit,
+base_scale_x : 2.8,
+base_scale_y : 0.7})
+
+
+name_textbox = instance_create_layer(112, 72 - 22, "WindowElements", asset_get_index("obj_ev_textbox"), 
+{txt : global.level.name,
+empty_text : "Level Name",
+base_scale_x : 5,
+allow_newlines : false,
+automatic_newline: false})
 	
-description_textbox = instance_create_layer(112, 72 - 26, "WindowElements", asset_get_index("obj_ev_textbox"), 
-	{txt : global.level.description,
-	empty_text : "Level Description",
-	char_limit : 128,
-	base_scale_x : 7,
-	allow_newlines : false})
+description_textbox = instance_create_layer(112, 72 - 2, "WindowElements", asset_get_index("obj_ev_textbox"), 
+{txt : global.level.description,
+empty_text : "Level Description",
+char_limit : 128,
+base_scale_x : 7,
+allow_newlines : false})
+
 description_textbox.depth--;
 	
+add_child(save_button)
+add_child(save_and_quit_button)
 add_child(name_textbox)
 add_child(description_textbox)
 	

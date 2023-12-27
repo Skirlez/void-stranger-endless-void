@@ -17,7 +17,21 @@ function ev_mouse_released() {
 	return mouse_check_button_released(mb_left)
 }
 function ev_is_mouse_on_me() {
-	return position_meeting(mouse_x, mouse_y, id) && layer_num == global.mouse_layer
+	if layer_num != global.mouse_layer
+		return false
+	var list = ds_list_create()
+	var length = instance_position_list(mouse_x, mouse_y, all, list, false)
+	var min_depth = infinity
+	var min_inst = noone
+	for (var i = 0; i < length; i++) {
+		var inst = list[| i]
+		if (inst.depth < min_depth) {
+			min_inst = inst
+			min_depth = inst.depth	
+		}
+	}
+	ds_list_destroy(list)
+	return min_inst == id
 }
 
 // This section will be patched while merging with Void Stranger to utilize its input system.

@@ -37,7 +37,14 @@ function ev_place_level_instances(level) {
 				
 				}
 				if !abort
-					create(i, j, layerr, game_object)
+					var inst = create(i, j, layerr, game_object)
+				switch (tile.tile_id) {
+					default:
+						break;
+					case chest_id:
+						inst.persistent = false;
+						break;
+				}
 			}
 		
 			var object_state = level.objects[i][j];
@@ -51,7 +58,7 @@ function ev_place_level_instances(level) {
 						break;
 				
 				}
-				var inst = create(i, j, layerr, game_object)
+				inst = create(i, j, layerr, game_object)
 				switch (object.tile_id) {
 					case leech_id:
 					case maggot_id:
@@ -124,7 +131,7 @@ function ev_place_level_instances(level) {
 					case add_id:
 						inst.b_form = 8
 						break;
-
+				
 					default:
 						break;
 				}

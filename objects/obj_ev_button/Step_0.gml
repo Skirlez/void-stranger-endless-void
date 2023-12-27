@@ -37,8 +37,8 @@ else if hover_state == 2 {
 hover_time = clamp(hover_time, 0, 100)
 
 if animated {
-	image_xscale = scale
-	image_yscale = scale
+	image_xscale = scale * base_scale_x
+	image_yscale = scale * base_scale_y
 }
 
 
