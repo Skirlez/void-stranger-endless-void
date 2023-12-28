@@ -4,7 +4,7 @@ if !surface_exists(game_surface)
 surface_set_target(game_surface)
 draw_clear_alpha(c_black, 1)
 
-
+var tile_mode = edit ? global.tile_mode : false
 
 if (global.play_transition != -1) {
 	var t = (global.max_play_transition - global.play_transition) / global.max_play_transition
@@ -12,17 +12,15 @@ if (global.play_transition != -1) {
 	var grow = animcurve_channel_evaluate(grow_curve, t)	
 	image_xscale = lerp(scale_x_start, 1, grow)
 	image_yscale = lerp(scale_y_start, 1, grow)
-	x = xstart - move * 16 - grow * 16
-	y = ystart - move * 16 - grow * 16
+	x = xstart - (move + grow) / 2 * xstart 
+	y = ystart - (move + grow) / 2 * ystart
 	
 }
 
 
-
-
 function draw_tile_state(i, j, tile_state, preview = false) {
 	var tile = tile_state.tile
-	tile.draw_function(tile_state, i, j, preview)
+	tile.draw_function(tile_state, i, j, preview, lvl)
 }
 
 draw_sprite(base_ui, 0, 0, 8 * 16)
@@ -45,25 +43,25 @@ draw_text(13 * 16, 9 * 16 + 2, "?")
 draw_text(13 * 16 + 8, 9 * 16 + 2, "?")
 
 
-var rodsprite = (global.level.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
+var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
 draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
-for (var i = 0; i < array_length(global.level.burdens) - 1; i++) {
-	if global.level.burdens[i]
+for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
+	if lvl.burdens[i]
 		draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)	
 }
 
 for (var i = 0; i < 9; i++)	{
 	for (var j = 0; j < 14; j++) {
 		if i != 8 {
-			var tile_state = global.level.tiles[i][j]
+			var tile_state = lvl.tiles[i][j]
 			draw_tile_state(i, j, tile_state)
 		}
 	
-		if (global.tile_mode)
+		if (tile_mode)
 			draw_set_alpha(0.4)
-		var object_state = global.level.objects[i][j]
+		var object_state = lvl.objects[i][j]
 		draw_tile_state(i, j, object_state)
-		if (global.tile_mode)
+		if (tile_mode)
 			draw_set_alpha(1)
 	}
 }
@@ -72,7 +70,7 @@ for (var i = 0; i < 9; i++)	{
 
 
 
-if (ev_is_mouse_on_me()) {
+if (edit && ev_is_mouse_on_me()) {
 	var tile_j = floor((mouse_x - x) / (16 * image_xscale))
 	var tile_i = floor((mouse_y - y) / (16 * image_yscale))
 
@@ -124,3 +122,13 @@ if (ev_is_mouse_on_me()) {
 surface_reset_target()
 
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
+draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 1)
+
+if !edit {
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_middle)
+	draw_set_color(c_white)
+	draw_set_font(global.ev_font)
+	draw_text_shadow(x + sprite_width / 2, y + sprite_height + 10, lvl.name, c_black)
+
+}

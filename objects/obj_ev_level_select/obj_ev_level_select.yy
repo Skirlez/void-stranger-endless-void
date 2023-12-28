@@ -1,19 +1,16 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_ev_play",
-  "spriteId": {
-    "name": "spr_ev_play",
-    "path": "sprites/spr_ev_play/spr_ev_play.yy",
-  },
+  "name": "obj_ev_level_select",
+  "spriteId": null,
   "solid": false,
   "visible": true,
   "managed": true,
   "spriteMaskId": null,
   "persistent": false,
   "parentObjectId": {
-    "name": "obj_ev_button",
-    "path": "objects/obj_ev_button/obj_ev_button.yy",
+    "name": "obj_ev_window",
+    "path": "objects/obj_ev_window/obj_ev_window.yy",
   },
   "physicsObject": false,
   "physicsSensor": false,
@@ -28,11 +25,13 @@
   "physicsKinematic": false,
   "physicsShapePoints": [],
   "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":10,"eventType":7,"collisionObjectId":null,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,},
   ],
   "properties": [],
-  "overriddenProperties": [],
+  "overriddenProperties": [
+    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","propertyId":{"name":"add_x","path":"objects/obj_ev_window/obj_ev_window.yy",},"objectId":{"name":"obj_ev_window","path":"objects/obj_ev_window/obj_ev_window.yy",},"value":"False",},
+    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","propertyId":{"name":"layer_num","path":"objects/obj_ev_window/obj_ev_window.yy",},"objectId":{"name":"obj_ev_window","path":"objects/obj_ev_window/obj_ev_window.yy",},"value":"0",},
+  ],
   "parent": {
     "name": "Objects",
     "path": "folders/Objects.yy",

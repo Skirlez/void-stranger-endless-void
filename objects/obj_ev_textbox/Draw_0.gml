@@ -14,7 +14,7 @@ surface_set_target(text_surface)
 draw_clear_alpha(c_black, 0)
 var filtered_text
 var draw_color
-if txt == "" && window.selected_element != id {
+if txt == "" && (window == -1 || window.selected_element != id) {
 	filtered_text = empty_text
 	draw_color = c_gray
 }

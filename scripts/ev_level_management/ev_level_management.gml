@@ -56,7 +56,6 @@ function string_split(str, delimiter) {
 
 // returns the level in string format
 function export_level(level) {
-
 	var version_string = string(level.version);
 	var name_string = base64_encode(level.name)	
 	var description_string = base64_encode(level.description)	

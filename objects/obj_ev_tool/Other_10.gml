@@ -21,11 +21,14 @@ switch (image_index) {
 			global.selected_placeable_num = -1
 		}
 		break;
-	case 4: // settings
+	case 4: // undo
+		global.editor_object.undo();
+		break;
+	case 5: // settings
 		new_window(12, 8, asset_get_index("obj_ev_settings_window"))	
 		global.mouse_layer = 1
 		break;
-	case 5: // trash bin
+	case 6: // trash bin
 		global.erasing = 350;
 		audio_play_sound(comes_sound, 10, false, 1, 0, 1)
 		break;

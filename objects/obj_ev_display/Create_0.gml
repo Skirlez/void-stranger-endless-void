@@ -1,3 +1,5 @@
+// Object purpose: Display a level struct, and if edit == true, allow editing it.
+
 game_surface = -1;
 
 last_clicked_i = -1;
@@ -103,8 +105,8 @@ function handle_click(tile_i, tile_j) {
 				
 			}
 			else {
-				var object_state = global.level.objects[tile_i][tile_j];
-				var tile_state = global.level.tiles[tile_i][tile_j];
+				var object_state = lvl.objects[tile_i][tile_j];
+				var tile_state = lvl.tiles[tile_i][tile_j];
 
 				if !(object_state.tile.flags & flag_unplaceable) {
 					final_state = object_state
@@ -222,3 +224,4 @@ ind = 0
 voidrod_sprite = asset_get_index("spr_voidrod_icon")
 stackrod_sprite = asset_get_index("spr_voidrod_icon2")
 burdens_sprite = asset_get_index("spr_items")
+border_sprite = asset_get_index("spr_ev_display_border")

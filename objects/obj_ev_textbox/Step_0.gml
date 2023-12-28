@@ -7,7 +7,7 @@ if !allow_edit {
 	exit	
 }
 
-if window.selected_element == id {
+if window != -1 && window.selected_element == id {
 	cursor_time++
 	if size_time < 100
 		size_time += 10
@@ -60,6 +60,8 @@ if window.selected_element == id {
 	keyboard_lastkey = 0
 }
 else {
+	cursor_time = 30
+	cursor_pos = string_length(txt) + 1
 	if size_time > 0 {
 		size_time -= 10
 		if size_time <= 0 && (xscale != base_scale_x || yscale != base_scale_y) {

@@ -6,7 +6,7 @@ if (selected) {
 	gpu_set_fog(false, c_white, 0, 1)
 }
 
-if image_index == 5 && global.erasing != -1 {
+if image_index == 6 && global.erasing != -1 {
 	var offset_x = dcos(global.editor_time * 4) * (350-global.erasing) / 40
 	var offset_y = dsin(global.editor_time * 4) * (350-global.erasing) / 40
 }

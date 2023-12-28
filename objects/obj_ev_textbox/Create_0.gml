@@ -2,7 +2,6 @@
 function is_char_valid(char) {
 	if char == ""
 		return false
-	static exceptions = "~`!@#$%^&*()_=-+{}[]<>?,./;'\\:\"| "	
 	if string_lettersdigits(char) != ""
 		return true
 	for (var i = 1; i <= string_length(exceptions); i++) {

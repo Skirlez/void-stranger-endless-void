@@ -170,10 +170,10 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 floor_sprite = asset_get_index("spr_floor");
 
 tile_pit = new editor_placeable(noone, pit_id, pit_obj, flag_unplaceable)
-tile_pit.draw_function = function(tile_state, i, j) {
+tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
 	if (i == 0)
 		return;
-	var above_tile_state = global.level.tiles[i - 1][j];
+	var above_tile_state = lvl.tiles[i - 1][j];
 
 	if above_tile_state.tile != tile_pit && above_tile_state.tile != tile_glass
 			&& above_tile_state.tile != tile_edge
@@ -181,15 +181,15 @@ tile_pit.draw_function = function(tile_state, i, j) {
 }
 
 tile_glass = new editor_placeable(asset_get_index("spr_glassfloor"), glass_id, glass_obj)
-tile_glass.draw_function = function(tile_state, i, j) {
-	tile_pit.draw_function(tile_state, i, j)
+tile_glass.draw_function = function(tile_state, i, j, preview, lvl) {
+	tile_pit.draw_function(tile_state, i, j, preview, lvl)
 	default_draw_function(tile_state, i, j)
 }
 tile_bomb = new editor_placeable(asset_get_index("spr_bombfloor"), bomb_id, bomb_obj)
 tile_default = new editor_placeable(floor_sprite, default_tile_id, default_tile_obj)
 tile_floorswitch = new editor_placeable(asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
-tile_floorswitch.draw_function = function(tile_state, i, j) {
-	var ind = global.level.objects[i][j].tile == object_empty ? 0 : 1
+tile_floorswitch.draw_function = function(tile_state, i, j, preview, lvl) {
+	var ind = lvl.objects[i][j].tile == object_empty ? 0 : 1
 	draw_sprite(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8)
 }
 tile_copyfloor = new editor_placeable(asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
@@ -215,12 +215,12 @@ tile_edge = new editor_placeable(edge_sprite, edge_id, no_obj, flag_no_objects)
 tile_edge.properties_generator = function() {
 	return { ind : 4 }	
 }
-tile_edge.draw_function = function(tile_state, i, j, preview) {
+tile_edge.draw_function = function(tile_state, i, j, preview, lvl) {
 	draw_set_color(c_white)
-	draw_tile(global.tileset_edge, preview ? runtile_fetch_blob(j, i) : tile_state.properties.ind, 0, j * 16, i * 16)
+	draw_tile(global.tileset_edge, preview ? runtile_fetch_blob(j, i, lvl) : tile_state.properties.ind, 0, j * 16, i * 16)
 }
-tile_edge.place_function = function(tile_state, i, j) {
-	tile_state.properties.ind = runtile_fetch_blob(j, i);
+tile_edge.place_function = function(tile_state, i, j, preview, lvl) {
+	tile_state.properties.ind = runtile_fetch_blob(j, i, lvl);
 	show_debug_message(tile_state.properties.ind)
 	return tile_state;
 }
@@ -247,8 +247,8 @@ object_empty.draw_function = empty_function;
 
 sweat_sprite = asset_get_index("spr_sweat")
 object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, player_obj, flag_unremovable|flag_only_one)
-object_player.draw_function = function(tile_state, i, j, preview) {
-	if (preview && global.level.tiles[i][j].tile == tile_pit) {
+object_player.draw_function = function(tile_state, i, j, preview, lvl) {
+	if (preview && lvl.tiles[i][j].tile == tile_pit) {
 		draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
 		draw_sprite(sweat_sprite, global.editor_time / 5, j * 16 + 16, i * 16)
 		return;

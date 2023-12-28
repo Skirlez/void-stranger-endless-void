@@ -29,7 +29,8 @@ name_textbox = instance_create_layer(112, 72 - 22, "WindowElements", asset_get_i
 empty_text : "Level Name",
 base_scale_x : 5,
 allow_newlines : false,
-automatic_newline: false})
+automatic_newline: false,
+exceptions: "~`!@#$%^&()_=-+{} [],.;'"})
 	
 description_textbox = instance_create_layer(112, 72 - 2, "WindowElements", asset_get_index("obj_ev_textbox"), 
 {txt : global.level.description,
