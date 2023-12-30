@@ -11,40 +11,65 @@ function get_all_files(dir, ext) {
 	return files;
 }
 
-var files = get_all_files(global.levels_directory, "lvl")
+files = get_all_files(global.levels_directory, "lvl")
+display_object = asset_get_index("obj_ev_display")
 
-var display_object = asset_get_index("obj_ev_display")
-
-
-var line = 0;
-var pos = 0
-
-for (var i = 0; i < array_length(files); i++) {
-	var file = file_text_open_read(files[i])
-	
-	var lvl_string = file_text_read_string(file)
-	var lvl_struct = import_level(lvl_string)
-	
-	instance_create_layer(20 + pos * 50, 40 + line * 40, "Levels", display_object, {
-		lvl : lvl_struct,
-		image_xscale : 0.2,
-		image_yscale : 0.2
-	});
-	
-	pos++;
-	if pos > 2 {
-		pos = 0
-		line++;
+function destroy_displays(except = noone) {
+	for (var i = 0; i < array_length(children); i++) {
+		var inst = children[i]
+		if (inst.object_index == display_object && inst != except) { 
+			array_delete(children, i, 1)
+			i--;
+			instance_destroy(inst)	
+		}
 	}
-	
-	file_text_close(file)
 }
 
-search_box = instance_create_layer(112, 15, "Instances", asset_get_index("obj_ev_textbox"), 
+function create_displays() {
+	destroy_displays()
+	var line = 0;
+	var pos = 0
+
+	var count = 0;
+
+	if (level_start < 0)
+		level_start = 0
+	if (level_start * 6 >= array_length(files))
+		level_start--;
+	show_debug_message(level_start)
+	for (var i = level_start * 6; i < array_length(files) && count < 6; i++) {
+		var file = file_text_open_read(files[i])
+	
+		var lvl_string = file_text_read_string(file)
+		var lvl_struct = import_level(lvl_string)
+	
+		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
+			lvl : lvl_struct,
+			image_xscale : 0.2,
+			image_yscale : 0.2
+		});
+		add_child(display);
+	
+		pos++;
+		if pos > 2 {
+			pos = 0
+			line++;
+		}
+	
+		file_text_close(file)
+		count++;
+	}	
+}
+create_displays()
+
+
+var search_box = instance_create_layer(112, 15, "Instances", asset_get_index("obj_ev_textbox"), 
 {empty_text : "Search...",
+allow_newlines : false,
 automatic_newline : false,
 char_limit : 50,
 base_scale_x : 5})
-search_box.depth = -1
+
+search_box.depth--;
 
 add_child(search_box)

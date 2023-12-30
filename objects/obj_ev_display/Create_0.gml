@@ -225,3 +225,5 @@ voidrod_sprite = asset_get_index("spr_voidrod_icon")
 stackrod_sprite = asset_get_index("spr_voidrod_icon2")
 burdens_sprite = asset_get_index("spr_items")
 border_sprite = asset_get_index("spr_ev_display_border")
+
+draw_name = !edit;

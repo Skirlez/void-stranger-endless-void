@@ -124,7 +124,7 @@ surface_reset_target()
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
 draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 1)
 
-if !edit {
+if draw_name {
 	draw_set_halign(fa_center)
 	draw_set_valign(fa_middle)
 	draw_set_color(c_white)
