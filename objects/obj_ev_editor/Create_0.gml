@@ -7,6 +7,8 @@ if (!compiled_for_merge) {
 	global.music = -4	
 }
 
+#macro level_extension "vsl"
+
 global.levels_directory = game_save_id + "levels\\"
 
 window_set_cursor(cr_default)

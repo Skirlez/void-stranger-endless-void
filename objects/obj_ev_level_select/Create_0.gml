@@ -11,8 +11,22 @@ function get_all_files(dir, ext) {
 	return files;
 }
 
-files = get_all_files(global.levels_directory, "lvl")
+files = get_all_files(global.levels_directory, level_extension)
 display_object = asset_get_index("obj_ev_display")
+
+instance_create_layer(200, 16, "Instances", asset_get_index("obj_ev_main_menu_button"), {
+	base_scale_x : 1,
+	base_scale_y : 0.7,
+	txt : "Back",
+	room_name : "rm_ev_menu",
+});
+
+instance_create_layer(24, 16, "Instances", asset_get_index("obj_ev_main_menu_button"), {
+	base_scale_x : 0.9,
+	base_scale_y : 0.8,
+	txt : "NEW",
+	room_name : "rm_ev_editor",
+});
 
 function destroy_displays(except = noone) {
 	for (var i = 0; i < array_length(children); i++) {
@@ -36,7 +50,6 @@ function create_displays() {
 		level_start = 0
 	if (level_start * 6 >= array_length(files))
 		level_start--;
-	show_debug_message(level_start)
 	for (var i = level_start * 6; i < array_length(files) && count < 6; i++) {
 		var file = file_text_open_read(files[i])
 	
@@ -49,6 +62,7 @@ function create_displays() {
 			image_yscale : 0.2
 		});
 		add_child(display);
+
 	
 		pos++;
 		if pos > 2 {
@@ -60,8 +74,8 @@ function create_displays() {
 		count++;
 	}	
 }
-create_displays()
 
+create_displays()
 
 var search_box = instance_create_layer(112, 15, "Instances", asset_get_index("obj_ev_textbox"), 
 {empty_text : "Search...",

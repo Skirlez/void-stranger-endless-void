@@ -1,4 +1,5 @@
 event_inherited()
+
 // display only has a window managing it on the level select and not in the editor,
 // so we know that this is for when it's been clicked in the level select
 image_xscale = 0.8

@@ -39,7 +39,7 @@ function combine_strings(separator) {
 function string_split(str, delimiter) {
 	var arr = []
 	var build = ""
-	for (var i = 1; i < string_length(str); i++) {
+	for (var i = 1; i <= string_length(str); i++) {
 		var c = string_char_at(str, i)
 		if (c == delimiter) {
 			array_push(arr, build);	
@@ -79,7 +79,7 @@ function export_level(level) {
 		for (var j = 0; j < 14; j++) {
 			if (i != 8) {
 				var addition = ""
-				tile_state = level.tiles[i][j]
+				var tile_state = level.tiles[i][j]
 				var tile_id = tile_state.tile.tile_id
 				addition += tile_id
 				switch (tile_id) {
@@ -104,7 +104,7 @@ function export_level(level) {
 			}
 			
 			var addition = ""
-			object_state = level.objects[i][j]
+			var object_state = level.objects[i][j]
 			var object_id = object_state == noone ? "em" : object_state.tile.tile_id
 			
 			addition += object_id
@@ -197,11 +197,11 @@ function import_level(level_string) {
 	
 	var previous_tile_string = ""
 	var previous_object_string = ""
-	
+
 	while (i < 9) {
 		if i != 8 {
 			tile_string = consider_multiplier(tile_string, tile_pointer, previous_tile_string)
-			var pointer_start = tile_pointer
+			var tile_pointer_start = tile_pointer
 			
 			var tile_id = string_copy(tile_string, tile_pointer, 2)
 			tile_pointer += 2
@@ -221,19 +221,20 @@ function import_level(level_string) {
 					level.tiles[@ i][j] = new tile_with_state(tile);
 					break;
 			}
-			previous_tile_string = string_copy(tile_string, pointer_start, tile_pointer - pointer_start)
+			previous_tile_string = string_copy(tile_string, tile_pointer_start, tile_pointer - tile_pointer_start)
 		}
 		else
 			level.tiles[@ i][j] = new tile_with_state(global.editor_object.tile_unremovable);
 		
 		object_string = consider_multiplier(object_string, object_pointer, previous_object_string)
-		var pointer_start = object_pointer
+		var object_pointer_start = object_pointer
 		var object_id = string_copy(object_string, object_pointer, 2)
 		object_pointer += 2
 		
 		var object = ds_map_find_value(global.placeable_name_map, object_id)
 		if is_undefined(object)
 			object = global.editor_object.object_empty
+		
 		switch (object_id) {
 			case leech_id:
 			case maggot_id:
@@ -274,7 +275,7 @@ function import_level(level_string) {
 				level.objects[@ i][j] = new tile_with_state(object)
 				break;
 		}
-		previous_object_string = string_copy(object_string, pointer_start, object_pointer - pointer_start)
+		previous_object_string = string_copy(object_string, object_pointer_start, object_pointer - object_pointer_start)
 		
 		j++;
 		if j >= 14 {
@@ -299,16 +300,17 @@ function consider_multiplier(str, pointer, previous_string) {
 		return str;
 	var num_string = "";
 	var count = 0;
+
 	while (true) {
 		var read_char = string_copy(str, pointer + count + 1, 1)
 		if is_digit(read_char) {
+
 			num_string += read_char
 			count++;
 			continue;
 		}
 		break;
 	}
-
 	var num = int64(num_string)
 	str = string_delete(str, pointer, count + 1)
 	

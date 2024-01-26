@@ -7,8 +7,8 @@ if (name == "") {
 	ev_notify("Cannot save a level\nwithout a name.")
 	exit;
 }
-var file = file_text_open_write(global.levels_directory + name + ".lvl")
-show_debug_message(global.levels_directory + name + ".lvl")
+var file = file_text_open_write(global.levels_directory + name + "." + level_extension)
+show_debug_message(global.levels_directory + name + "." + level_extension)
 if (file == -1)
 	exit;
 var str = export_level(global.level)

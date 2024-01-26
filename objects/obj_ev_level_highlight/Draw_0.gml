@@ -1,1 +1,1 @@
-draw_clear(c_grey)
+draw_clear(c_dkgray)
