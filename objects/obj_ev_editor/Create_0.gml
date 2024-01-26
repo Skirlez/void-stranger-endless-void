@@ -485,3 +485,13 @@ undo_repeat = -1
 undo_repeat_frames_start = 18
 undo_repeat_frames_speed = 0
 undo_repeat_frames_max_speed = 10
+
+function get_menu_music_name() {
+	switch (current_weekday) {
+		case 2: return "snd_ev_music_monsday"
+		case 5: return "snd_ev_music_gooeyPhantasm"
+		default: return "snd_ev_music_stealie_feelies"
+	}
+}
+global.menu_music = asset_get_index(get_menu_music_name())
+					

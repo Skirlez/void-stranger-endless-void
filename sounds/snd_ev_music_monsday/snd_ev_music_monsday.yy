@@ -1,7 +1,7 @@
 {
   "resourceType": "GMSound",
   "resourceVersion": "1.0",
-  "name": "msc_gotstaff",
+  "name": "snd_ev_music_monsday",
   "conversionMode": 0,
   "compression": 1,
   "volume": 1.0,
@@ -11,13 +11,13 @@
   "type": 0,
   "bitDepth": 1,
   "audioGroupId": {
-    "name": "VoidStrangerAudio",
-    "path": "audiogroups/VoidStrangerAudio",
+    "name": "audiogroup_default",
+    "path": "audiogroups/audiogroup_default",
   },
-  "soundFile": "msc_gotstaff.wav",
-  "duration": 66.766914,
+  "soundFile": "snd_ev_music_monsday.ogg",
+  "duration": 50.08696,
   "parent": {
-    "name": "Void Stranger music",
-    "path": "folders/Sounds/Void Stranger music.yy",
+    "name": "Sounds",
+    "path": "folders/Sounds.yy",
   },
 }
