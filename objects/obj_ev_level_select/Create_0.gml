@@ -45,6 +45,8 @@ function create_displays() {
 	var pos = 0
 
 	var count = 0;
+	if array_length(files) == 0
+		return;
 
 	if (level_start < 0)
 		level_start = 0

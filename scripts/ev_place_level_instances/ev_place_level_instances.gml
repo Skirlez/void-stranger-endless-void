@@ -20,6 +20,7 @@ function ev_place_level_instances(level) {
 					default:
 						layerr = "Floor"
 						break;
+					case chest_id:
 					case glass_id:
 						layerr = "Floor_INS"
 						break;
@@ -43,6 +44,7 @@ function ev_place_level_instances(level) {
 						break;
 					case chest_id:
 						inst.persistent = false;
+						inst.contents = chest_get_contents_num(tile_state.properties.itm)
 						break;
 				}
 			}
@@ -138,5 +140,14 @@ function ev_place_level_instances(level) {
 			}
 		}
 	}
+}
 
+function chest_get_contents_num(item_id) {
+	switch (item_id) {
+		case chest_items.locust: return 1;
+		case chest_items.memory: return 4;
+		case chest_items.wings: return 3;
+		case chest_items.sword: return 2;
+		default: return 1;
+	}
 }

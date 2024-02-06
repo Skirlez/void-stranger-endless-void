@@ -12,8 +12,8 @@ if (global.play_transition != -1) {
 	var grow = animcurve_channel_evaluate(grow_curve, t)	
 	image_xscale = lerp(scale_x_start, 1, grow)
 	image_yscale = lerp(scale_y_start, 1, grow)
-	x = xstart - (move + grow) / 2 * xstart 
-	y = ystart - (move + grow) / 2 * ystart
+	x = lerp(xstart, (room_width / 2) - (sprite_width / 2), move)
+	y = lerp(ystart, (room_height / 2) - (sprite_height / 2), move)
 	
 }
 

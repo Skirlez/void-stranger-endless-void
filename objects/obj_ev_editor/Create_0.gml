@@ -221,9 +221,8 @@ tile_edge.draw_function = function(tile_state, i, j, preview, lvl) {
 	draw_set_color(c_white)
 	draw_tile(global.tileset_edge, preview ? runtile_fetch_blob(j, i, lvl) : tile_state.properties.ind, 0, j * 16, i * 16)
 }
-tile_edge.place_function = function(tile_state, i, j, preview, lvl) {
+tile_edge.place_function = function(tile_state, i, j, lvl) {
 	tile_state.properties.ind = runtile_fetch_blob(j, i, lvl);
-	show_debug_message(tile_state.properties.ind)
 	return tile_state;
 }
 
@@ -339,6 +338,13 @@ object_egg.zed_function = function(tile_state) {
 	{ egg_properties : tile_state.properties })	
 	global.mouse_layer = 1
 }
+spr_eggtext = asset_get_index("spr_ev_eggtext");
+object_egg.draw_function = function(tile_state, i, j) {
+	default_draw_function(tile_state, i, j)
+	if (tile_state.properties.txt[0] != "") {
+		draw_sprite(spr_eggtext, 0, j * 16 + 8, i * 16 + 8)
+	}
+}
 cif_sprite = asset_get_index("spr_atoner")
 lamp_sprite = asset_get_index("spr_lamp")
 
@@ -366,6 +372,30 @@ object_secret_exit.draw_function = function(tile_state, i, j) {
 }
 
 tile_chest = new editor_placeable(asset_get_index("spr_chest_regular"), chest_id, chest_obj)
+enum chest_items {
+	locust,
+	memory,
+	wings,
+	sword,
+	size // cool trick!
+}
+tile_chest.properties_generator = function () {
+	return { itm : chest_items.locust }	
+}
+tile_chest.zed_function = function(tile_state) {
+	new_window(10, 6, asset_get_index("obj_ev_chest_window"), {
+		chest_properties : tile_state.properties
+	})
+	global.mouse_layer = 1
+}
+
+spr_burden_chest = asset_get_index("spr_chest_small")
+tile_chest.draw_function = function (tile_state, i, j) {
+	draw_sprite(tile_state.properties.itm == chest_items.locust 
+			? tile_state.tile.spr_ind
+			: spr_burden_chest,
+			0, j * 16 + 8, i * 16 + 8)	
+}
 
 // we create the hologram sprite in real time
 var hologram_surf = surface_create(16, 16)
@@ -488,7 +518,7 @@ undo_repeat_frames_max_speed = 10
 
 function get_menu_music_name() {
 	switch (current_weekday) {
-		case 2: return "snd_ev_music_monsday"
+		case 1: return "snd_ev_music_monsday"
 		case 5: return "snd_ev_music_gooeyPhantasm"
 		default: return "snd_ev_music_stealie_feelies"
 	}

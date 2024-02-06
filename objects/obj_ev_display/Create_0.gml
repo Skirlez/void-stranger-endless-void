@@ -50,7 +50,7 @@ function place_placeable(tile_i, tile_j, new_tile, properties = global.empty_str
 	
 	tile_state = new tile_with_state(new_tile, properties)
 	if (run_place_func)
-		tile_state = new_tile.place_function(tile_state, tile_i, tile_j);
+		tile_state = new_tile.place_function(tile_state, tile_i, tile_j, lvl);
 	arr[@ tile_i][tile_j] = tile_state;
 }
 
@@ -83,6 +83,7 @@ function handle_click_before(tile_i, tile_j) {
 			
 			return;
 		case thing_multiplaceable:
+			audio_stop_sound(place_sound)
 			audio_play_sound(place_sound, 10, false, 1, 0, 0.7)
 			return;
 		default:

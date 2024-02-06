@@ -87,6 +87,8 @@ function export_level(level) {
 					case edge_id:
 						addition += num_to_string(tile_state.properties.ind, 2)
 						break;
+					case chest_id:
+						addition += num_to_string(tile_state.properties.itm, 2)
 					default:
 						break;
 				}
@@ -216,6 +218,11 @@ function import_level(level_string) {
 					var read_ind = string_copy(tile_string, tile_pointer, 2)
 					tile_pointer += 2;
 					level.tiles[@ i][j] = new tile_with_state(tile, { ind: int64(read_ind) });
+					break;
+				case chest_id:
+					var read_item = string_copy(tile_string, tile_pointer, 2)
+					tile_pointer += 2
+					level.tiles[@ i][j] = new tile_with_state(tile, { itm : int64(read_item) });
 					break;
 				default:
 					level.tiles[@ i][j] = new tile_with_state(tile);

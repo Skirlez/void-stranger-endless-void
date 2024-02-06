@@ -15,7 +15,7 @@
     "path": "audiogroups/audiogroup_default",
   },
   "soundFile": "snd_ev_music_monsday.ogg",
-  "duration": 50.08696,
+  "duration": 66.78261,
   "parent": {
     "name": "Sounds",
     "path": "folders/Sounds.yy",

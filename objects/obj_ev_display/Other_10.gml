@@ -16,6 +16,9 @@ global.mouse_layer = 1
 with (asset_get_index("obj_ev_level_select"))
 	destroy_displays(other.id)
 
-instance_create_layer(0, 0, "Levels", asset_get_index("obj_ev_level_highlight"), {
+instance_create_layer(0, 0, "LevelHighlight", asset_get_index("obj_ev_level_highlight"), {
 	lvl : lvl	
 })
+
+scale_x_start = image_xscale
+scale_y_start = image_yscale

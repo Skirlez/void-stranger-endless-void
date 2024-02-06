@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ev_prepare_level_patched",
+  "name": "ev_prepare_level",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
