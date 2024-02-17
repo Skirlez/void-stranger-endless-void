@@ -12,7 +12,7 @@ dragging = false
 
 painting = false;
 
-held_tile_state = new tile_with_state(global.editor_object.object_empty)
+held_tile_state = new tile_with_state(global.editor_instance.object_empty)
 place_sound = asset_get_index("snd_ev_place")
 drag_sound = asset_get_index("snd_ev_drag")
 erase_sound = asset_get_index("snd_ev_erase")
@@ -28,7 +28,7 @@ held_tile_offset = [0, 0]
 
 
 function place_placeable(tile_i, tile_j, new_tile, properties = global.empty_struct, run_place_func = true) {
-	var arr = global.editor_object.current_placeables
+	var arr = global.editor_instance.current_placeables
 	var tile_state = arr[tile_i][tile_j]
 			
 	if (tile_state.tile != new_tile) {
@@ -42,7 +42,7 @@ function place_placeable(tile_i, tile_j, new_tile, properties = global.empty_str
 		for (var i = 0; i < 9; i++) {
 			for (var j = 0; j < 14; j++) {
 				if arr[i][j].tile == new_tile
-					arr[@ i][j] = new tile_with_state(global.editor_object.current_empty_tile)
+					arr[@ i][j] = new tile_with_state(global.editor_instance.current_empty_tile)
 						
 			}
 		}
@@ -56,7 +56,7 @@ function place_placeable(tile_i, tile_j, new_tile, properties = global.empty_str
 
 
 function handle_click_before(tile_i, tile_j) {
-	var tile_state = global.editor_object.current_placeables[tile_i][tile_j];
+	var tile_state = global.editor_instance.current_placeables[tile_i][tile_j];
 	switch (global.selected_thing) {
 		case thing_plucker:
 			if dragging {
@@ -65,11 +65,11 @@ function handle_click_before(tile_i, tile_j) {
 				held_tile_offset = [small_tile_i, small_tile_j]
 				held_tile_array = array_create(height)
 				for (var i = 0; i < array_length(held_tile_array); i++)
-					held_tile_array[i] = array_create(width, new tile_with_state(global.editor_object.current_empty_tile))	
+					held_tile_array[i] = array_create(width, new tile_with_state(global.editor_instance.current_empty_tile))	
 			}
 			return;
 		case thing_eraser:
-			if tile_state.tile != global.editor_object.current_empty_tile || dragging
+			if tile_state.tile != global.editor_instance.current_empty_tile || dragging
 				audio_play_sound(erase_sound, 10, false, 1, 0, random_range(0.7, 1))
 			return;
 
@@ -96,12 +96,12 @@ function handle_click(tile_i, tile_j) {
 	switch (global.selected_thing) {
 		case thing_plucker:
 			if dragging {
-				var tile_state = global.editor_object.current_placeables[tile_i][tile_j];
+				var tile_state = global.editor_instance.current_placeables[tile_i][tile_j];
 				if !(tile_state.tile.flags & flag_unplaceable) {
 					var local_tile_i = tile_i - held_tile_offset[0]
 					var local_tile_j = tile_j - held_tile_offset[1]
 					held_tile_array[local_tile_i][local_tile_j] = tile_state
-					place_placeable(tile_i, tile_j, global.editor_object.current_empty_tile)
+					place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
 				}
 				
 			}
@@ -112,12 +112,12 @@ function handle_click(tile_i, tile_j) {
 				if !(object_state.tile.flags & flag_unplaceable) {
 					final_state = object_state
 					if global.tile_mode == true
-						global.editor_object.switch_tile_mode(false)		
+						global.editor_instance.switch_tile_mode(false)		
 				}
 				else if !(tile_state.tile.flags & flag_unplaceable){
 					final_state = tile_state
 					if global.tile_mode == false
-						global.editor_object.switch_tile_mode(true)	
+						global.editor_instance.switch_tile_mode(true)	
 				}
 				else 
 					return;
@@ -127,15 +127,15 @@ function handle_click(tile_i, tile_j) {
 				global.selected_thing = thing_placeable
 				switch_held_tile(final_state)
 				global.mouse_held = false;
-				place_placeable(tile_i, tile_j, global.editor_object.current_empty_tile)
+				place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
 			}
 			return;
 		case thing_eraser:
-			place_placeable(tile_i, tile_j, global.editor_object.current_empty_tile)
+			place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
 			//runtile_autotile_blob(tile_j, tile_i)
 			return;
 		case thing_placeable:
-			if (held_tile_state == global.editor_object.object_empty)
+			if (held_tile_state == global.editor_instance.object_empty)
 				return;
 
 			
@@ -147,7 +147,7 @@ function handle_click(tile_i, tile_j) {
 			for (var i = 0; i < array_length(held_tile_array); i++) {
 				for (var j = 0; j < array_length(held_tile_array[i]); j++) {
 					var tile_state = held_tile_array[i][j]
-					if (tile_state.tile == global.editor_object.current_empty_tile)
+					if (tile_state.tile == global.editor_instance.current_empty_tile)
 						continue;
 					var new_tile_i = tile_i + i;
 					if new_tile_i >= 9
@@ -179,7 +179,7 @@ function handle_click_after(tile_i, tile_j) {
 				
 				for (var j = 0; j < array_length(held_tile_array[i]); j++) {
 					var tile_state = held_tile_array[i][j]
-					var is_empty = (tile_state.tile == global.editor_object.current_empty_tile)
+					var is_empty = (tile_state.tile == global.editor_instance.current_empty_tile)
 					if !is_empty {
 						empty_row = false;
 						initial_empty_in_row = min(initial_empty_in_row, j)
@@ -211,8 +211,6 @@ function handle_click_after(tile_i, tile_j) {
 	}
 }
 
-move_curve = animcurve_get_channel(ac_play_transition, "move")
-grow_curve = animcurve_get_channel(ac_play_transition, "grow")
 scale_x_start = image_xscale
 scale_y_start = image_yscale
 

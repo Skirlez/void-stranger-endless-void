@@ -6,17 +6,6 @@ draw_clear_alpha(c_black, 1)
 
 var tile_mode = edit ? global.tile_mode : false
 
-if (global.play_transition != -1) {
-	var t = (global.max_play_transition - global.play_transition) / global.max_play_transition
-	var move = animcurve_channel_evaluate(move_curve, t)	
-	var grow = animcurve_channel_evaluate(grow_curve, t)	
-	image_xscale = lerp(scale_x_start, 1, grow)
-	image_yscale = lerp(scale_y_start, 1, grow)
-	x = lerp(xstart, (room_width / 2) - (sprite_width / 2), move)
-	y = lerp(ystart, (room_height / 2) - (sprite_height / 2), move)
-	
-}
-
 
 function draw_tile_state(i, j, tile_state, preview = false) {
 	var tile = tile_state.tile
@@ -94,7 +83,7 @@ if (edit && ev_is_mouse_on_me()) {
 	}
 	
 	else if global.selected_thing == thing_placeable 
-	&& held_tile_state.tile != global.editor_object.object_empty {
+	&& held_tile_state.tile != global.editor_instance.object_empty {
 		draw_set_alpha((dsin(global.editor_time * 3) / 4) + 0.75)
 		draw_tile_state(tile_i, tile_j, held_tile_state, true)
 		draw_set_alpha(1)
@@ -104,7 +93,7 @@ if (edit && ev_is_mouse_on_me()) {
 		for (var i = 0; i < array_length(held_tile_array); i++) {
 			for (var j = 0; j < array_length(held_tile_array[i]); j++) {
 				var tile_state = held_tile_array[i][j]
-				if (tile_state.tile == global.editor_object.current_empty_tile)
+				if (tile_state.tile == global.editor_instance.current_empty_tile)
 					continue;
 				var new_tile_i = tile_i + i;
 				if new_tile_i >= 9

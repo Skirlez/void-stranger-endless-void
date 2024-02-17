@@ -22,7 +22,7 @@ ds_list_add(global.blobtable,
 		80, 20, 5);
 		  
 function get_wall(x, y, lvl) {
-	static wall = global.editor_object.tile_wall;
+	static wall = global.editor_instance.tile_wall;
 	if x < 0 || x >= 14 || y < 0 || y >= 9
 		return true;
 	return lvl.tiles[y][x].tile != wall

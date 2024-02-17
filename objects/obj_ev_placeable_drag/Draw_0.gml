@@ -1,9 +1,9 @@
 if (global.tile_mode) {
-	var tile = global.editor_object.tiles_list[tile_ind]
+	var tile = global.editor_instance.tiles_list[tile_ind]
 	sprite_index = tile.spr_ind
 }
 else {
-	var object = global.editor_object.objects_list[object_ind]
+	var object = global.editor_instance.objects_list[object_ind]
 	sprite_index = object.spr_ind
 }
 
@@ -15,9 +15,9 @@ if selected {
 	}
 	else {
 		if (global.tile_mode)
-			var tile = global.editor_object.tiles_list[inst.tile_ind]	
+			var tile = global.editor_instance.tiles_list[inst.tile_ind]	
 		else 
-			var tile = global.editor_object.objects_list[inst.object_ind]
+			var tile = global.editor_instance.objects_list[inst.object_ind]
 		draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, 0, c_white, alpha)
 		draw_sprite_ext(tile.spr_ind, 0, x, y, image_xscale, image_yscale, 0, c_white, 1 - alpha)
 	}

@@ -6,7 +6,7 @@ if (edit && ev_is_mouse_on_me()) {
 		if (last_clicked_i != tile_i || last_clicked_j != tile_j) {
 		
 			if painting = false {
-				global.editor_object.add_undo()
+				global.editor_instance.add_undo()
 				painting = true;
 			}
 		
@@ -59,7 +59,7 @@ if (edit && ev_is_mouse_on_me()) {
 				small_tile_j = tile_j
 				tile_j = drag_box_j
 			}
-			global.editor_object.add_undo()
+			global.editor_instance.add_undo()
 			handle_click_before(tile_i, tile_j)
 			for (var i = small_tile_i; i <= tile_i; i++) {
 				for (var j = small_tile_j; j <= tile_j; j++)

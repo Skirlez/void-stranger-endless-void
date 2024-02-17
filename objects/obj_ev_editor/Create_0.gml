@@ -32,7 +32,7 @@ global.mouse_held = false;
 #macro burden_stackrod 3
 
 global.editor_room = asset_get_index("rm_ev_editor");
-global.editor_object = asset_get_index("obj_ev_editor");
+global.editor_instance = id;
 global.display_object = asset_get_index("obj_ev_display");
 
 global.selection_sprite = asset_get_index("spr_ev_selection")
@@ -70,11 +70,11 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
     self.spr_ind = spr_ind
 	self.obj_name = obj_name
 	self.flags = flags
-	self.draw_function = global.editor_object.default_draw_function
-	self.place_function = global.editor_object.return_tile_state_function
+	self.draw_function = global.editor_instance.default_draw_function
+	self.place_function = global.editor_instance.return_tile_state_function
 	self.zed_function = noone
 	self.tile_id = tile_id;
-	self.properties_generator = global.editor_object.return_noone
+	self.properties_generator = global.editor_instance.return_noone
 	global.placeable_name_map[? tile_id] = self;
 } 
 
@@ -317,7 +317,7 @@ object_spider.draw_function = function(tile_state, i, j) {
 		? 1 - ev_strobe_integer(2) : ev_strobe_integer(2)
 		
 	draw_sprite_ext(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8, 1, 1,
-		tile_state.properties.ang, c_white, 1)
+		tile_state.properties.ang, c_white, draw_get_alpha())
 }
 object_spider.properties_generator = function() {
 	return { ang : 0 }	
@@ -345,6 +345,8 @@ object_egg.draw_function = function(tile_state, i, j) {
 		draw_sprite(spr_eggtext, 0, j * 16 + 8, i * 16 + 8)
 	}
 }
+
+
 cif_sprite = asset_get_index("spr_atoner")
 lamp_sprite = asset_get_index("spr_lamp")
 
@@ -377,13 +379,14 @@ enum chest_items {
 	memory,
 	wings,
 	sword,
+	empty,
 	size // cool trick!
 }
 tile_chest.properties_generator = function () {
 	return { itm : chest_items.locust }	
 }
 tile_chest.zed_function = function(tile_state) {
-	new_window(10, 6, asset_get_index("obj_ev_chest_window"), {
+	new_window(6, 5, asset_get_index("obj_ev_chest_window"), {
 		chest_properties : tile_state.properties
 	})
 	global.mouse_layer = 1
@@ -391,7 +394,8 @@ tile_chest.zed_function = function(tile_state) {
 
 spr_burden_chest = asset_get_index("spr_chest_small")
 tile_chest.draw_function = function (tile_state, i, j) {
-	draw_sprite(tile_state.properties.itm == chest_items.locust 
+	var itm = tile_state.properties.itm;
+	draw_sprite((itm == chest_items.locust || itm == chest_items.empty)
 			? tile_state.tile.spr_ind
 			: spr_burden_chest,
 			0, j * 16 + 8, i * 16 + 8)	
@@ -443,8 +447,6 @@ function reset_everything() {
 			global.level.tiles[@ 3 + i][5 + j] = new tile_with_state(tile_default)
 	}
 
-	
-	
 	current_list = tiles_list;
 	current_placeables = global.level.tiles
 	current_empty_tile = tile_pit
@@ -473,8 +475,12 @@ erasing_surface = surface_create(224, 144)
 global.goes_sound = asset_get_index("snd_ex_vacuumgoes")
 
 
-global.play_transition = -1
-global.max_play_transition = 20
+play_transition = -1
+max_play_transition = 20
+play_transition_display = noone
+
+move_curve = animcurve_get_channel(ac_play_transition, "move")
+grow_curve = animcurve_get_channel(ac_play_transition, "grow")
 
 history = []
 
@@ -525,3 +531,19 @@ function get_menu_music_name() {
 }
 global.menu_music = asset_get_index(get_menu_music_name())
 					
+
+function play_level_transition(lvl, display_instance) {
+	global.level = lvl;
+	global.mouse_layer = -1
+	play_transition = max_play_transition
+	play_transition_display = display_instance
+}
+
+function edit_level(lvl) {
+	global.level = lvl;
+	room_goto(asset_get_index("rm_ev_editor"));
+}
+
+// used in obj_ev_level_select, is essentially the level "page". we want this to be global so it persists
+global.level_start = 0;
+

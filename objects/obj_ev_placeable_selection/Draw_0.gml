@@ -1,6 +1,6 @@
 
 var ind = global.tile_mode ? tile_ind : object_ind
-var tile = global.editor_object.current_list[ind]
+var tile = global.editor_instance.current_list[ind]
 sprite_index = tile.spr_ind
 
 if (selected) {

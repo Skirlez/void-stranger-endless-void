@@ -20,6 +20,10 @@ base_scale_y : 0.7})
 save_and_quit_button = instance_create_layer(112 + 30, 72 - 46, "WindowElements", asset_get_index("obj_ev_save_button"), 
 {txt : "Save and Quit",
 pre_save_func : commit,
+post_save_func : function() {
+	room_goto(asset_get_index("rm_ev_level_select"))	
+},
+
 base_scale_x : 2.8,
 base_scale_y : 0.7})
 

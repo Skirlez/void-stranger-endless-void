@@ -14,7 +14,7 @@ switch (image_index) {
 		break;
 	case 2: // tile mode on
 	case 3: // object mode on
-		global.editor_object.switch_tile_mode(!global.tile_mode);
+		global.editor_instance.switch_tile_mode(!global.tile_mode);
 		image_index = global.tile_mode ? 2 : 3
 		if (global.selected_thing == thing_placeable || global.selected_thing == thing_multiplaceable) {
 			global.selected_thing = -1
@@ -22,7 +22,7 @@ switch (image_index) {
 		}
 		break;
 	case 4: // undo
-		global.editor_object.undo();
+		global.editor_instance.undo();
 		break;
 	case 5: // settings
 		new_window(12, 8, asset_get_index("obj_ev_settings_window"))	

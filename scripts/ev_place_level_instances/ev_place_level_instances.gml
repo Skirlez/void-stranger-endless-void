@@ -148,6 +148,7 @@ function chest_get_contents_num(item_id) {
 		case chest_items.memory: return 4;
 		case chest_items.wings: return 3;
 		case chest_items.sword: return 2;
+		case chest_items.empty: return 0;
 		default: return 1;
 	}
 }

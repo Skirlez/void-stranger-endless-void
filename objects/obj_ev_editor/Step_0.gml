@@ -19,9 +19,22 @@ if global.erasing != -1 {
 	}
 }
 
-if global.play_transition != -1 {
-	global.play_transition--;
-	if global.play_transition == -1 {
+if play_transition != -1 {
+	play_transition--;
+	
+	with (play_transition_display) {
+		var t = (other.max_play_transition - other.play_transition) 
+			/ other.max_play_transition
+		var move = animcurve_channel_evaluate(other.move_curve, t)	
+		var grow = animcurve_channel_evaluate(other.grow_curve, t)	
+		image_xscale = lerp(scale_x_start, 1, grow)
+		image_yscale = lerp(scale_y_start, 1, grow)
+		x = lerp(xstart, (room_width / 2) - (sprite_width / 2), move)
+		y = lerp(ystart, (room_height / 2) - (sprite_height / 2), move)
+	
+	}
+
+	if play_transition == -1 {
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(asset_get_index("rm_ev_level"))	
 	}

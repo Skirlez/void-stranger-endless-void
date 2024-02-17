@@ -1,11 +1,12 @@
 event_inherited()
+
+
 function get_all_files(dir, ext) {
 	var files = [];
-	var file_name = file_find_first(dir + "*." + ext, 0);
-
+	var file_name = string_replace(file_find_first(dir + "*." + ext, 0), ".vsl", "");
 	while (file_name != "") {
-	    array_push(files, global.levels_directory + file_name);
-	    file_name = file_find_next();
+	    array_push(files, file_name);
+	    file_name = string_replace(file_find_next(), ".vsl", "");
 	}
 	file_find_close(); 
 	return files;
@@ -48,16 +49,17 @@ function create_displays() {
 	if array_length(files) == 0
 		return;
 
-	if (level_start < 0)
-		level_start = 0
-	if (level_start * 6 >= array_length(files))
-		level_start--;
-	for (var i = level_start * 6; i < array_length(files) && count < 6; i++) {
-		var file = file_text_open_read(files[i])
+	if (global.level_start  < 0)
+		global.level_start = 0
+	if (global.level_start * 6 >= array_length(files))
+		global.level_start--;
+	for (var i = global.level_start * 6; i < array_length(files) && count < 6; i++) {
+		var file = file_text_open_read(global.levels_directory + files[i] + "." + level_extension)
 	
 		var lvl_string = file_text_read_string(file)
 		var lvl_struct = import_level(lvl_string)
-	
+		lvl_struct.save_name = files[i]
+		show_debug_message(lvl_struct.save_name)
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
 			image_xscale : 0.2,

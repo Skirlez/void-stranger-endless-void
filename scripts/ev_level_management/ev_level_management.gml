@@ -20,11 +20,14 @@ function level_struct() constructor {
 	tiles = array_create(9);
 	objects = array_create(9);
 	for (var i = 0; i < array_length(tiles) - 1; i++)
-		tiles[i] = array_create(14, new tile_with_state(global.editor_object.tile_pit))	
-	tiles[8] = array_create(14, new tile_with_state(global.editor_object.tile_unremovable))	
+		tiles[i] = array_create(14, new tile_with_state(global.editor_instance.tile_pit))	
+	tiles[8] = array_create(14, new tile_with_state(global.editor_instance.tile_unremovable))	
 	
 	for (var i = 0; i < array_length(objects); i++)
-		objects[i] = array_create(14, new tile_with_state(global.editor_object.object_empty))	
+		objects[i] = array_create(14, new tile_with_state(global.editor_instance.object_empty))	
+		
+	// This name will be used for when the file is saved.
+	save_name = base64_encode(date_datetime_string(date_current_datetime()))
 }
 
 
@@ -209,7 +212,7 @@ function import_level(level_string) {
 			tile_pointer += 2
 			var tile = ds_map_find_value(global.placeable_name_map, tile_id)
 			if is_undefined(tile)
-				tile = global.editor_object.tile_pit
+				tile = global.editor_instance.tile_pit
 		
 
 			switch (tile_id) {
@@ -231,7 +234,7 @@ function import_level(level_string) {
 			previous_tile_string = string_copy(tile_string, tile_pointer_start, tile_pointer - tile_pointer_start)
 		}
 		else
-			level.tiles[@ i][j] = new tile_with_state(global.editor_object.tile_unremovable);
+			level.tiles[@ i][j] = new tile_with_state(global.editor_instance.tile_unremovable);
 		
 		object_string = consider_multiplier(object_string, object_pointer, previous_object_string)
 		var object_pointer_start = object_pointer
@@ -240,7 +243,7 @@ function import_level(level_string) {
 		
 		var object = ds_map_find_value(global.placeable_name_map, object_id)
 		if is_undefined(object)
-			object = global.editor_object.object_empty
+			object = global.editor_instance.object_empty
 		
 		switch (object_id) {
 			case leech_id:
