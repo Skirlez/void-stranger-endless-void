@@ -16,7 +16,7 @@ if window != -1 && window.selected_element == id {
 	if dir != 0
 		cursor_time = 0
 	cursor_pos = clamp(cursor_pos + dir, 1, string_length(txt) + 1)
-
+	var old = txt;
 	switch (keyboard_lastkey) {
 		case vk_delete:
 			txt = string_delete(txt, cursor_pos, 1)
@@ -32,30 +32,32 @@ if window != -1 && window.selected_element == id {
 				txt = string_insert("\n", txt, cursor_pos)
 				cursor_pos++
 			}
+
 			break;
 		case vk_escape:
 			window.selected_element = noone
 			break;
 		default:
-			
 			if is_char_valid(keyboard_lastchar) && string_length(txt) < char_limit {
-				
 				var newtxt = string_insert(keyboard_lastchar, txt, cursor_pos)
 				if !(automatic_newline) {
 					draw_set_font(global.ev_font)
 					if string_width(newtxt) < max_line_width {
 						txt = newtxt
-						cursor_pos++	
+						cursor_pos++
 					}
 				}
 				else {
 					txt = newtxt
-					cursor_pos++	
+					cursor_pos++
 				}
+
 			}
 			break;
 	}
-
+	if (old != txt && change_func != noone) {
+		change_func();
+	}
 	keyboard_lastchar = ""
 	keyboard_lastkey = 0
 }

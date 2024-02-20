@@ -1,3 +1,3 @@
 event_inherited();
 if (lvl != noone)
-	global.editor_instance.edit_level(lvl);
+	global.editor_instance.edit_level_transition(lvl, display_instance);

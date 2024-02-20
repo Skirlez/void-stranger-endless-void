@@ -45,6 +45,10 @@ function ev_place_level_instances(level) {
 					case chest_id:
 						inst.persistent = false;
 						inst.contents = chest_get_contents_num(tile_state.properties.itm)
+						
+						if (tile_state.properties.itm == chest_items.sword)
+							inst.sprite_index = asset_get_index("spr_chest_small")
+							
 						break;
 				}
 			}

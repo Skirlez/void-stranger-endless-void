@@ -21,10 +21,18 @@ function optional(val = pointer_invalid) constructor {
 		self.get_or_else = method(self, function(else_var) {
 			return else_var;
 		});
-		self.is_empty =method(self, function() {
+		self.is_empty = method(self, function() {
 			return true;
 		});
 	}
 }
+
+function copy_array(arr) {
+	if (array_length(arr) == 0)
+		return [];
+	arr[0] = arr[0]
+	return arr;
+}
+
 
 

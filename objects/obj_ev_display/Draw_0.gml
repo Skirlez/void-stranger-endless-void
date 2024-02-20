@@ -24,7 +24,7 @@ draw_text_ext(1 * 16, 9 * 16 + 2, "VO", 0, -1)
 draw_text_ext(2 * 16, 9 * 16 + 2, "ID", 0, -1)
 
 draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
-draw_text(5 * 16, 9 * 16 + 2, "00")
+draw_text(5 * 16, 9 * 16 + 1, "00")
 
 // idk how void stranger draws it but this is the only way i could make it align properly
 draw_text(12 * 16, 9 * 16 + 2, "B?")

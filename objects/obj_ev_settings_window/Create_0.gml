@@ -5,7 +5,7 @@ function commit() {
 	with (asset_get_index("obj_ev_settings_window")) {
 		global.level.name = name_textbox.txt
 		global.level.description = description_textbox.txt
-
+		global.level.music = global.music_names[music_select.index]
 		for (var i = 0; i < 4; i++) {
 			global.level.burdens[i] = burdens[i].image_index
 		}
@@ -62,8 +62,11 @@ for (var i = 0; i < 4; i++) {
 var man = instance_create_layer(112 + 63, 72 + 27, "WindowElements", asset_get_index("obj_ev_man"))
 add_child(man)
 
-var music_select = instance_create_layer(112 + 72 - 4, 72 + 45, "WindowElements", asset_get_index("obj_ev_music_select"))
-music_select.base_scale_x = 1
+music_select = instance_create_layer(112 + 72 - 4, 72 + 45, "WindowElements", asset_get_index("obj_ev_music_select"), {
+	base_scale_x : 1	
+})
+
+
 
 add_child(music_select)
 

@@ -1,9 +1,9 @@
-if (true) {
+if (compiled_for_merge) {
 	if (room == asset_get_index("rm_ev_editor"))
 		lvl = global.level;
 	event_inherited()
-	if (lvl != noone && display_inst != noone) {
-		global.editor_instance.play_level_transition(lvl, display_inst)
+	if (lvl != noone && display_instance != noone) {
+		global.editor_instance.play_level_transition(lvl, display_instance)
 	}
 }
 else

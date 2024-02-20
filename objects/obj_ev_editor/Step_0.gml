@@ -35,8 +35,64 @@ if play_transition != -1 {
 	}
 
 	if play_transition == -1 {
+		
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(asset_get_index("rm_ev_level"))	
+	}
+}
+
+else if preview_transition != -1 {
+	preview_transition--;
+	var t = (other.max_preview_transition - other.preview_transition) 
+	/ other.max_preview_transition
+	
+	var display = preview_transition_display;
+	
+	with (display) {
+		var curve = animcurve_channel_evaluate(other.preview_curve, t)
+		image_xscale = lerp(scale_x_start, 0.79, curve)
+		image_yscale = lerp(scale_y_start, 0.79, curve)
+		x = lerp(xstart, 0, curve)
+		y = lerp(ystart, 0, curve)
+	}
+	with (preview_transition_highlight) {
+		alpha = t;
+		for (var i = 0; i < array_length(children); i++) {
+			children[i].image_alpha = t	
+		}
+	}
+	
+	if preview_transition == -1 {
+		with (display) {
+			xstart = x
+			ystart = y
+			scale_x_start = image_xscale
+			scale_y_start = image_yscale
+			with (asset_get_index("obj_ev_level_select"))
+				destroy_displays(display)
+		}
+		global.mouse_layer = 1
+	}
+
+}
+else if (edit_transition != -1) {
+	edit_transition--;
+
+	
+	with (edit_transition_display) {
+		var t = (other.max_edit_transition - other.edit_transition) 
+			/ other.max_edit_transition
+		
+		var curve = animcurve_channel_evaluate(other.edit_curve, t)
+		image_xscale = lerp(scale_x_start, 0.7615918, curve)
+		image_yscale = lerp(scale_y_start, 0.7615918, curve)
+		x = lerp(xstart, room_width - sprite_width - 1.5, curve)
+		y = lerp(ystart, room_height - sprite_height - 1.5, curve)
+	}
+	
+	if (edit_transition == -1) {
+		global.mouse_layer = 0;
+		room_goto(asset_get_index("rm_ev_editor"));
 	}
 }
 

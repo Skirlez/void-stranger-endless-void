@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -433,7 +433,7 @@ global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_
 
 
 function reset_everything() {
-	global.tile_mode = true
+	global.tile_mode = false
 	global.mouse_layer = 0
 	global.selected_thing = -1 
 	global.selected_placeable_num = 0
@@ -447,9 +447,9 @@ function reset_everything() {
 			global.level.tiles[@ 3 + i][5 + j] = new tile_with_state(tile_default)
 	}
 
-	current_list = tiles_list;
-	current_placeables = global.level.tiles
-	current_empty_tile = tile_pit
+	current_list = objects_list;
+	current_placeables = global.level.objects
+	current_empty_tile = object_empty
 }
 
 reset_everything()
@@ -475,19 +475,11 @@ erasing_surface = surface_create(224, 144)
 global.goes_sound = asset_get_index("snd_ex_vacuumgoes")
 
 
-play_transition = -1
-max_play_transition = 20
-play_transition_display = noone
 
-move_curve = animcurve_get_channel(ac_play_transition, "move")
-grow_curve = animcurve_get_channel(ac_play_transition, "grow")
+
 
 history = []
 
-function copy_array(arr) {
-	arr[0] = arr[0]
-	return arr;
-}
 
 function copy_tile_data(tiles) {
 	for (var i = 0; i < array_length(tiles); i++) {
@@ -530,7 +522,39 @@ function get_menu_music_name() {
 	}
 }
 global.menu_music = asset_get_index(get_menu_music_name())
-					
+
+
+
+play_transition = -1
+max_play_transition = 20
+play_transition_display = noone
+
+preview_transition = -1
+max_preview_transition = 20
+preview_transition_display = noone
+preview_transition_highlight = noone
+
+
+edit_transition = -1
+max_edit_transition = 30
+edit_transition_display = noone
+
+move_curve = animcurve_get_channel(ac_play_transition, "move")
+grow_curve = animcurve_get_channel(ac_play_transition, "grow")
+preview_curve = animcurve_get_channel(ac_preview_curve, 0)
+edit_curve = animcurve_get_channel(ac_edit_curve, 0)
+
+function preview_level_transition(lvl, display_instance) {
+	global.mouse_layer = -1
+	display_instance.layer = layer_get_id("HighlightedLevel")
+	preview_transition = max_preview_transition
+	preview_transition_display = display_instance
+	preview_transition_highlight = instance_create_layer(0, 0, "LevelHighlight", asset_get_index("obj_ev_level_highlight"), {
+		lvl : lvl,
+		display_instance : display_instance,
+		alpha : 0
+	})
+}
 
 function play_level_transition(lvl, display_instance) {
 	global.level = lvl;
@@ -539,11 +563,20 @@ function play_level_transition(lvl, display_instance) {
 	play_transition_display = display_instance
 }
 
-function edit_level(lvl) {
+function edit_level_transition(lvl, display_instance) {
 	global.level = lvl;
-	room_goto(asset_get_index("rm_ev_editor"));
+	ev_stop_music()
+	edit_transition = max_edit_transition
+	edit_transition_display = display_instance
+	global.mouse_layer = -1
 }
 
 // used in obj_ev_level_select, is essentially the level "page". we want this to be global so it persists
 global.level_start = 0;
 
+
+global.online_mode = false;
+
+//get_levels = http_get("blank")
+online_levels_str = noone
+global.online_levels = array_create()

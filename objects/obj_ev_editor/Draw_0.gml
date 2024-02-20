@@ -17,3 +17,7 @@ if global.erasing != -1 {
 	surface_reset_target()
 	draw_surface(erasing_surface, 0, 0)
 }
+
+if (edit_transition != -1) {
+	draw_clear(c_black)	
+}

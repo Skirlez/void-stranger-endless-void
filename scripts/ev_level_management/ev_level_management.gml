@@ -17,6 +17,8 @@ function level_struct() constructor {
 	description = ""
 	music = global.music_names[1]
 	burdens = [false, false, false, false]
+	author = "Anonymous"
+	author_brand = "10101010101010101010101010101010101010"
 	tiles = array_create(9);
 	objects = array_create(9);
 	for (var i = 0; i < array_length(tiles) - 1; i++)
@@ -63,6 +65,8 @@ function export_level(level) {
 	var name_string = base64_encode(level.name)	
 	var description_string = base64_encode(level.description)	
 	var music_string = base64_encode(level.music)	
+	var author_string = base64_encode(level.author)
+	var author_brand_string = level.author_brand
 	var burdens_string = ""
 	for (var i = 0; i < array_length(level.burdens); i++)
 		burdens_string += string(level.burdens[i])
@@ -165,7 +169,7 @@ function export_level(level) {
 		object_string += MULTIPLIER_CHAR + string(object_multiplier)
 	
 	return combine_strings("|", version_string, name_string, description_string,
-		music_string, burdens_string, tile_string, object_string)
+		music_string, author_string, author_brand_string, burdens_string, tile_string, object_string)
 
 }
 
@@ -175,8 +179,8 @@ function import_level(level_string) {
 	var level = new level_struct()
 	
 	var strings = string_split(level_string, "|");
-	if array_length(strings) != 7 {
-		return "Invalid amount of level data sections! Should be 7, instead got " + string(array_length(strings))	
+	if array_length(strings) != 9 {
+		return "Invalid amount of level data sections! Should be 9, instead got " + string(array_length(strings))	
 	}
 	var version_string = strings[0];
 	if !string_is_uint(version_string)
@@ -186,14 +190,17 @@ function import_level(level_string) {
 	level.name = base64_decode(strings[1]);
 	level.description = base64_decode(strings[2]);
 	level.music = base64_decode(strings[3]);
-	var burdens_string = strings[4];
+	level.author = base64_decode(strings[4])
+	level.author_brand = strings[5]
+	
+	var burdens_string = strings[6];
 	if string_length(burdens_string) != 4
 		return "Invalid burden string length: " + string_length(burdens_string);
 	for (var i = 0; i < 4; i++)
 		level.burdens[i] = (string_char_at(burdens_string, i + 1)) == "0" ? false : true;	
 
-	var tile_string = strings[5]
-	var object_string = strings[6]
+	var tile_string = strings[7]
+	var object_string = strings[8]
 	
 	var tile_pointer = 1
 	var object_pointer = 1

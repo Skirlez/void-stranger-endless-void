@@ -1,6 +1,6 @@
 
 var scale = 1;
-var mouse_on_me = ev_is_mouse_on_me();
+var mouse_on_me = pressable && ev_is_mouse_on_me();
 
 if (selected && hover_state != 1) {
 	hover_state = 1;	
@@ -20,7 +20,7 @@ else if hover_state == 1 {
 	}
 	else
 		scale = 1.2
-	if !ev_is_mouse_on_me() && !selected {
+	if !mouse_on_me && !selected {
 		hover_time = 100
 		hover_state = 2	
 	}
@@ -29,7 +29,7 @@ else if hover_state == 1 {
 else if hover_state == 2 {
 	hover_time -= 5
 	scale += animcurve_channel_evaluate(unhover_curve, hover_time / 100) / 5
-	if ev_is_mouse_on_me()
+	if mouse_on_me
 		hover_state = 1
 }
 
@@ -42,5 +42,5 @@ if animated {
 }
 
 
-if ev_mouse_pressed() && mouse_on_me
+if pressable && ev_mouse_pressed() && mouse_on_me
 	event_user(0)

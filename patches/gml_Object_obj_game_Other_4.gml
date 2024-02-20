@@ -1,5 +1,5 @@
 // TARGET: TAIL
-if (room == rm_ev_editor) {
+if (string_pos("rm_ev_", room_get_name(room)) != 0 && room != rm_ev_level) {
     if surface_get_width(application_surface) == 224 {
     	var ratio = display_get_height() / 144	
     	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -7,7 +7,8 @@ if (room == rm_ev_editor) {
 			surface_resize(surface_final, 224 * ratio, 144 * ratio)
     }
 	global.clear_black = 2
-    global.is_in_editor = true;
+	if (room == rm_ev_editor)
+		global.is_in_editor = true;
 }
 else {
     if surface_get_width(application_surface) != 224 {
