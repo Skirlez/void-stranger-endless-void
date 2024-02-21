@@ -113,11 +113,25 @@ surface_reset_target()
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
 draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 1)
 
-if draw_name {
-	draw_set_halign(fa_center)
-	draw_set_valign(fa_middle)
+if (!surface_exists(name_surface)) {
+	name_surface = surface_create((string_width(lvl.name) + 2), (string_height(lvl.name) + 2));	
+	surface_set_target(name_surface)
+	draw_set_halign(fa_left)
+	draw_set_valign(fa_top)
 	draw_set_color(c_white)
 	draw_set_font(global.ev_font)
-	draw_text_shadow(x + sprite_width / 2, y + sprite_height + 10, lvl.name, c_black)
+	draw_text_shadow(1, 1, lvl.name, c_black)
+	surface_reset_target()
+}
+
+if draw_name {
+	draw_set_font(global.ev_font)
+	var size = 1
+	var text_width = string_width(lvl.name);
+	if (text_width > sprite_width) { 
+		size = sprite_width / text_width
+	}
+	draw_surface_ext(name_surface, x + sprite_width / 2 - (surface_get_width(name_surface) / 2) * size,
+		y + sprite_height + 2, size, size, 0, c_white, image_alpha)
 
 }

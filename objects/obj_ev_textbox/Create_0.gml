@@ -11,10 +11,13 @@ function is_char_valid(char) {
 	return false
 		
 }
+pos_x = xstart
+pos_y = ystart
+
 
 function update_position() {
-	x = xstart - image_xscale * 8 
-	y = ystart - image_yscale * 8
+	x = pos_x - image_xscale * 8 
+	y = pos_y - image_yscale * 8
 }
 
 function calculate_scale() {
@@ -26,7 +29,8 @@ function calculate_scale() {
 
 
 function filter_text(txt, cursor = false) {
-	
+	if (string_length(txt) >= char_limit && !allow_deletion)
+		cursor = false;
 	var cursor_offset = 0
 	draw_set_font(global.ev_font)
 	var accum_width = 0
@@ -70,6 +74,9 @@ function filter_text(txt, cursor = false) {
 	
 	return new_txt
 }
+
+
+
 size_time = 0
 cursor_pos = string_length(txt) + 1
 calculate_scale()

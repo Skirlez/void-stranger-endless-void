@@ -1,5 +1,5 @@
 
-#macro compiled_for_merge true
+#macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -577,6 +577,6 @@ global.level_start = 0;
 
 global.online_mode = false;
 
-//get_levels = http_get("blank")
+//get_levels = http_get("http://207.127.92.246:3000/void_stranger")
 online_levels_str = noone
 global.online_levels = array_create()

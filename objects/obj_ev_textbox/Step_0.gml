@@ -19,11 +19,14 @@ if window != -1 && window.selected_element == id {
 	var old = txt;
 	switch (keyboard_lastkey) {
 		case vk_delete:
-			txt = string_delete(txt, cursor_pos, 1)
+			if (allow_deletion)
+				txt = string_delete(txt, cursor_pos, 1)
 			break;
 		case vk_backspace:
-			txt = string_delete(txt, cursor_pos - 1, 1)
-			cursor_pos--
+			if (allow_deletion) {
+				txt = string_delete(txt, cursor_pos - 1, 1)
+				cursor_pos--
+			}
 			break;
 		case vk_enter:
 			// alowing keyboard_lastchar inserts an Evil and Fucked Up newline character that is not \n
@@ -66,8 +69,13 @@ else {
 	cursor_pos = string_length(txt) + 1
 	if size_time > 0 {
 		size_time -= 10
-		if size_time <= 0 && (xscale != base_scale_x || yscale != base_scale_y) {
-			audio_play_sound(asset_get_index("snd_ev_textbox_click"), 10, false, 1, 0, 1.2)	
+		
+		if size_time <= 0 {
+			var should_make_closing_sound = (xscale != base_scale_x || yscale != base_scale_y 
+				|| (opened_x != xstart) || (opened_y != ystart))
+				
+			if (should_make_closing_sound)
+				audio_play_sound(asset_get_index("snd_ev_textbox_click"), 10, false, 1, 0, 1.2)	
 		}
 	}
 }
@@ -76,4 +84,6 @@ calculate_scale()
 var t = animcurve_channel_evaluate(curve, size_time / 100)
 image_xscale = lerp(base_scale_x, xscale, t)
 image_yscale = lerp(base_scale_y, yscale, t)
+pos_x = lerp(xstart, opened_x, t)
+pos_y = lerp(ystart, opened_y, t)
 update_position()

@@ -26,4 +26,4 @@ draw_set_color(draw_color)
 draw_text_ext(3, 0, filtered_text, 15, -1)
 surface_reset_target()
 
-draw_surface(text_surface, x, y)
+draw_surface_ext(text_surface, x, y, 1, 1, 0, c_white, image_alpha)

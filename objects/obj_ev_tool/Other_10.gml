@@ -15,7 +15,6 @@ switch (image_index) {
 	case 2: // tile mode on
 	case 3: // object mode on
 		global.editor_instance.switch_tile_mode(!global.tile_mode);
-		image_index = global.tile_mode ? 2 : 3
 		if (global.selected_thing == thing_placeable || global.selected_thing == thing_multiplaceable) {
 			global.selected_thing = -1
 			global.selected_placeable_num = -1
