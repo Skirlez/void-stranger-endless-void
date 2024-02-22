@@ -226,6 +226,12 @@ burdens_sprite = asset_get_index("spr_items")
 border_sprite = asset_get_index("spr_ev_display_border")
 
 draw_name = !edit;
+draw_brand = !edit;
 
 draw_set_font(global.ev_font)
 name_surface = noone
+
+brand_surface = noone
+
+highlighted = false
+

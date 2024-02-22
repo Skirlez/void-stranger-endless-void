@@ -18,7 +18,7 @@ function level_struct() constructor {
 	music = global.music_names[1]
 	burdens = [false, false, false, false]
 	author = "Anonymous"
-	author_brand = "10101010101010101010101010101010101010"
+	author_brand = int64(0)
 	tiles = array_create(9);
 	objects = array_create(9);
 	for (var i = 0; i < array_length(tiles) - 1; i++)
@@ -79,13 +79,9 @@ function export_level(level) {
 	var description_string = base64_encode(level.description)	
 	var music_string = base64_encode(level.music)	
 	var author_string = base64_encode(level.author)
-	var author_brand_string = level.author_brand
-	var burdens_string = ""
-	for (var i = 0; i < array_length(level.burdens); i++)
-		burdens_string += string(level.burdens[i])
+	var author_brand_string = string(level.author_brand)
+	var burdens_string = string(level.burdens[0] + level.burdens[1] * 2 + level.burdens[2] * 4 + level.burdens[3] * 8);
 
-	
-	
 	var tile_string = ""
 	var object_string = ""
 	
@@ -204,13 +200,12 @@ function import_level(level_string) {
 	level.description = base64_decode(strings[2]);
 	level.music = base64_decode(strings[3]);
 	level.author = base64_decode(strings[4])
-	level.author_brand = strings[5]
+	level.author_brand = int64(strings[5])
 	
-	var burdens_string = strings[6];
-	if string_length(burdens_string) != 4
-		return "Invalid burden string length: " + string_length(burdens_string);
+	var burdens = int64(strings[6]);
+
 	for (var i = 0; i < 4; i++)
-		level.burdens[i] = (string_char_at(burdens_string, i + 1)) == "0" ? false : true;	
+		level.burdens[i] = (burdens & (1 << i) != 0)
 
 	var tile_string = strings[7]
 	var object_string = strings[8]

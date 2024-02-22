@@ -6,10 +6,16 @@ function add_child(obj) {
 	array_push(children, obj)	
 }
 
-if add_x {
+function add_x_button() {
 	var inst = instance_create_layer(x + image_xscale * 8 - 8, y - image_yscale * 8 + 8, "WindowElements", asset_get_index("obj_ev_close_window"))
-	add_child(inst)
+	add_child(inst)	
 }
+
+if add_x {
+	add_x_button()
+}
+
+
 
 selected_element = noone
 

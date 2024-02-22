@@ -21,8 +21,7 @@ copy.image_alpha = 0
 
 description_textbox = instance_create_layer(200, 125, "LevelDescription", asset_get_index("obj_ev_textbox"), 
 {
-	txt : lvl.description,
-	empty_text : "No description provided.",
+	txt : (lvl.description == "" ? "No description provided." : lvl.description),
 	base_scale_x : 2,
 	base_scale_y : 1,
 	layer_num : 1,
@@ -58,7 +57,18 @@ if (!global.online_mode) {
 	deleteb.level_select = instance_find(asset_get_index("obj_ev_level_select"), 0)
 	deleteb.save_name = lvl.save_name
 	deleteb.image_alpha = 0
+
+	var upload = instance_create_layer(208, 90, "LevelHighlightButtons", asset_get_index("obj_ev_upload_button"))
+	upload.layer_num = 1
+	upload.lvl = lvl;
+	upload.image_alpha = 0
+
+
 	add_child(deleteb)
+	add_child(upload)
+	
+	
+	
 }
 
 

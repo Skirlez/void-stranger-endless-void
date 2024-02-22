@@ -6,3 +6,4 @@ if (global.mouse_layer != layer_num)
 
 global.mouse_layer = -1;
 global.editor_instance.preview_level_transition(lvl, id)
+highlighted = true;

@@ -568,6 +568,7 @@ function edit_level_transition(lvl, display_instance) {
 	ev_stop_music()
 	edit_transition = max_edit_transition
 	edit_transition_display = display_instance
+	display_instance.draw_brand = false;
 	global.mouse_layer = -1
 }
 
@@ -576,7 +577,16 @@ global.level_start = 0;
 
 
 global.online_mode = false;
+global.server = "http://207.127.92.246:3000/void_stranger"
 
-//get_levels = http_get("http://207.127.92.246:3000/void_stranger")
+function try_update_online_levels() {
+	get_levels = http_get(global.server)
+}
+try_update_online_levels()
+
 online_levels_str = noone
-global.online_levels = array_create()
+global.online_levels = []
+
+global.uploaded_keys = get_all_files(global.levels_directory, "key")
+
+show_debug_message(global.uploaded_keys)

@@ -50,8 +50,8 @@ else if preview_transition != -1 {
 	
 	with (display) {
 		var curve = animcurve_channel_evaluate(other.preview_curve, t)
-		image_xscale = lerp(scale_x_start, 0.79, curve)
-		image_yscale = lerp(scale_y_start, 0.79, curve)
+		image_xscale = lerp(scale_x_start, 0.78, curve)
+		image_yscale = lerp(scale_y_start, 0.78, curve)
 		x = lerp(xstart, 0, curve)
 		y = lerp(ystart, 0, curve)
 	}

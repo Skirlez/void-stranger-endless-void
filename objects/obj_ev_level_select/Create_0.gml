@@ -1,21 +1,11 @@
 event_inherited()
 
 
-function get_all_files(dir, ext) {
-	var files = [];
-	var file_name = string_replace(file_find_first(dir + "*." + ext, 0), ".vsl", "");
-	while (file_name != "") {
-	    array_push(files, file_name);
-	    file_name = string_replace(file_find_next(), ".vsl", "");
-	}
-	file_find_close(); 
-	return files;
-}
+
 
 function delete_level(save_name) {
 	file_delete(global.levels_directory + save_name + "." + level_extension)	
 }
-
 
 instance_create_layer(200, 16, "Instances", asset_get_index("obj_ev_main_menu_button"), {
 	base_scale_x : 1,
@@ -104,6 +94,8 @@ search_box.depth--;
 var online_switch = instance_create_layer(112 + 50, 12, "Instances", asset_get_index("obj_ev_online_switch"));
 online_switch.level_select_instance = id
 
+
+online_levels = copy_array(global.online_levels)
 function switch_mode(new_mode) {
 	global.level_start = 0
 	if (new_mode == 0) {
@@ -139,11 +131,12 @@ for (var i = 0; i < array_length(files); i++) {
 	
 }
 
+function on_online_update() {
+	online_levels = copy_array(global.online_levels)
+}
 
-online_levels = copy_array(global.online_levels)
 
-
-levels = offline_levels;
+levels = global.online_mode ? online_levels : offline_levels;
 
 
 create_displays()

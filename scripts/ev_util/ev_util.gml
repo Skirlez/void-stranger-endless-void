@@ -35,4 +35,21 @@ function copy_array(arr) {
 }
 
 
+function get_all_files(dir, ext) {
+	var files = [];
+	var file_name = string_replace(file_find_first(dir + "*." + ext, 0), "." + ext, "");
+	while (file_name != "") {
+	    array_push(files, file_name);
+	    file_name = string_replace(file_find_next(),  "." + ext, "");
+	}
+	file_find_close(); 
+	return files;
+}
 
+function array_contains(arr, value) {
+	for (var i = 0; i < array_length(arr); i++) {
+		if (arr[@ i] == value)
+			return true;
+	}
+	return false;
+}

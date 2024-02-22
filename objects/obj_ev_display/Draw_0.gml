@@ -113,18 +113,54 @@ surface_reset_target()
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
 draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 1)
 
-if (!surface_exists(name_surface)) {
-	name_surface = surface_create((string_width(lvl.name) + 2), (string_height(lvl.name) + 2));	
-	surface_set_target(name_surface)
-	draw_set_halign(fa_left)
-	draw_set_valign(fa_top)
-	draw_set_color(c_white)
-	draw_set_font(global.ev_font)
-	draw_text_shadow(1, 1, lvl.name, c_black)
-	surface_reset_target()
+
+if draw_brand {
+	if !surface_exists(brand_surface) {
+		brand_surface = surface_create(8, 8)
+		surface_set_target(brand_surface)
+		draw_clear_alpha(c_black, 1)
+		
+		draw_set_color(c_grey)
+		draw_rectangle(1, 1, 6, 6, true)
+		
+		draw_set_color(c_white)
+		var author_brand = lvl.author_brand;
+		
+		
+		var i = 0;
+		while (author_brand != 0) {
+			var bit = author_brand % 2
+			author_brand /= 2;
+			
+			if (bit == 1)
+				draw_point((i % 6) + 1, (i div 6) + 1) 
+			i++;
+		}	
+		
+		surface_reset_target()
+	}	
+	var size = 1;
+	draw_surface_ext(brand_surface, x + sprite_width - 4 * size,
+		y + sprite_height - 4 * size, size, size, 0, c_white, image_alpha)
 }
 
+
+
 if draw_name {
+	if (!surface_exists(name_surface)) {
+		var txt = lvl.name
+		name_surface = surface_create((string_width(txt) + 2), (string_height(txt) + 2));	
+		surface_set_target(name_surface)
+		draw_set_halign(fa_left)
+		draw_set_valign(fa_top)
+		draw_set_color(c_white)
+		draw_set_font(global.ev_font)
+		draw_text_shadow(2, 1, txt, c_black)
+		surface_reset_target()
+	}
+
+
+	
 	draw_set_font(global.ev_font)
 	var size = 1
 	var text_width = string_width(lvl.name);
@@ -133,5 +169,6 @@ if draw_name {
 	}
 	draw_surface_ext(name_surface, x + sprite_width / 2 - (surface_get_width(name_surface) / 2) * size,
 		y + sprite_height + 2, size, size, 0, c_white, image_alpha)
-
 }
+
+

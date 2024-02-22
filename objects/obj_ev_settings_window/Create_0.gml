@@ -53,8 +53,10 @@ add_child(description_textbox)
 burdens = array_create(4)
 for (var i = 0; i < 4; i++) {
 	burdens[i] = instance_create_layer(112 - 72 + i * 16, 72 + 30, "WindowElements", asset_get_index("obj_ev_burden_toggle"), 
-	{burden_ind : i,
-	image_index : global.level.burdens[i]})
+	{
+		burden_ind : i,
+		image_index : global.level.burdens[i]
+	})
 	
 	add_child(burdens[i])
 }
