@@ -53,3 +53,46 @@ function array_contains(arr, value) {
 	}
 	return false;
 }
+
+
+function string_split(str, delimiter) {
+	var arr = []
+	var build = ""
+	for (var i = 1; i <= string_length(str); i++) {
+		var c = string_char_at(str, i)
+		if (c == delimiter) {
+			array_push(arr, build);	
+			build = ""
+		}
+		else
+			build += c;	
+	}
+	if (build != "")
+		array_push(arr, build);	
+	return arr;
+}
+function string_split_buffer(str, delimiter) {
+	var delimiter_ord = ord(delimiter)
+	var size = string_length(str) + 1;
+
+	var buf = buffer_create(size, buffer_fast, 1);
+
+    buffer_write(buf, buffer_string, str);
+	buffer_seek(buf, buffer_seek_start, 0);
+	var arr = []
+	var build = "";
+
+	while (buffer_tell(buf) < size) {
+		var c = buffer_read(buf, buffer_u8)
+		if (c == delimiter_ord) {
+			array_push(arr, build);	
+			build = ""
+		}
+		else
+			build += chr(c)
+	}
+	if (build != "")
+		array_push(arr, build);	
+	return arr;
+}
+

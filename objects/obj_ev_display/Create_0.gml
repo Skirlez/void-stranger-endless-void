@@ -1,6 +1,5 @@
 // Object purpose: Display a level struct, and if edit == true, allow editing it.
 
-game_surface = -1;
 
 last_clicked_i = -1;
 last_clicked_j = -1;
@@ -229,8 +228,9 @@ draw_name = !edit;
 draw_brand = !edit;
 
 draw_set_font(global.ev_font)
-name_surface = noone
 
+game_surface = noone
+name_surface = noone
 brand_surface = noone
 
 highlighted = false

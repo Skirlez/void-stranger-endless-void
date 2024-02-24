@@ -590,3 +590,6 @@ global.online_levels = []
 global.uploaded_keys = get_all_files(global.levels_directory, "key")
 
 show_debug_message(global.uploaded_keys)
+
+//show_debug_message(string_split("34|631||54", "|"))
+//show_debug_message(string_split_ultimate2("34|631||54", "|"))

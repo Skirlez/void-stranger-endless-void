@@ -56,9 +56,6 @@ for (var i = 0; i < 9; i++)	{
 }
 
 
-
-
-
 if (edit && ev_is_mouse_on_me()) {
 	var tile_j = floor((mouse_x - x) / (16 * image_xscale))
 	var tile_i = floor((mouse_y - y) / (16 * image_yscale))
@@ -151,6 +148,7 @@ if draw_name {
 		var txt = lvl.name
 		name_surface = surface_create((string_width(txt) + 2), (string_height(txt) + 2));	
 		surface_set_target(name_surface)
+		draw_clear_alpha(c_black, 0)
 		draw_set_halign(fa_left)
 		draw_set_valign(fa_top)
 		draw_set_color(c_white)

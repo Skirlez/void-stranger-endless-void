@@ -51,11 +51,20 @@ function create_displays() {
 		global.level_start = 0
 	if (global.level_start * 6 >= array_length(levels))
 		global.level_start--;
+	
+	var search_text = string_lower(search_box.txt);
 	for (var i = global.level_start * 6; i < array_length(levels) && count < 6; i++) {
 
-		var lvl_struct = levels[i]
-		if (string_lower(search_box.txt) != "" && string_pos(string_lower(search_box.txt), string_lower(lvl_struct.name)) == 0)
+
+		var lvl_string = levels[i];
+		var lvl_name = get_level_name_from_string(lvl_string);
+		if (search_text != "" && string_pos(search_text, string_lower(lvl_name)) == 0)
 			continue;
+		
+		var lvl_struct = import_level(lvl_string)
+		if (!global.online_mode)
+			lvl_struct.save_name = files[i]
+
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
 			image_xscale : 0.2,
@@ -122,11 +131,7 @@ offline_levels = array_create(array_length(files));
 for (var i = 0; i < array_length(files); i++) {
 	var file = file_text_open_read(global.levels_directory + files[i] + "." + level_extension)
 	var lvl_string = file_text_read_string(file)
-
-	
-	var lvl_struct = import_level(lvl_string)
-	lvl_struct.save_name = files[i]
-	offline_levels[i] = lvl_struct
+	offline_levels[i] = lvl_string
 	file_text_close(file)
 	
 }
@@ -135,8 +140,6 @@ function on_online_update() {
 	online_levels = copy_array(global.online_levels)
 }
 
-
 levels = global.online_mode ? online_levels : offline_levels;
-
 
 create_displays()

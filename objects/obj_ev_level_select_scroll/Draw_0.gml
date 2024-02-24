@@ -1,7 +1,7 @@
 draw_self()
 if (image_angle == 0) {
 	with (asset_get_index("obj_ev_level_select")) {
-		var page_max = (array_length(files) - 1) div 6;
+		var page_max = (array_length(levels) - 1) div 6;
 		var page = global.level_start;
 		draw_set_halign(fa_center)
 		draw_set_valign(fa_middle)

@@ -54,22 +54,6 @@ function combine_strings(separator) {
 	return str + argument[argument_count - 1];
 }
 
-function string_split(str, delimiter) {
-	var arr = []
-	var build = ""
-	for (var i = 1; i <= string_length(str); i++) {
-		var c = string_char_at(str, i)
-		if (c == delimiter) {
-			array_push(arr, build);	
-			build = ""
-		}
-		else
-			build += c;	
-	}
-	if (build != "")
-		array_push(arr, build);	
-	return arr;
-}
 
 
 // returns the level in string format
@@ -183,12 +167,20 @@ function export_level(level) {
 }
 
 
+function get_level_name_from_string(level_string) {
+	var start = string_pos("|", level_string) + 1;
+	var ending = string_pos_ext("|", level_string, start);
+		
+	return base64_decode(string_copy(level_string, start, ending - start));
+}
+
 // imports a level from a level string
 function import_level(level_string) {
 	var level = new level_struct()
 	
 	var strings = string_split(level_string, "|");
 	if array_length(strings) != 9 {
+		show_debug_message(level_string)
 		return "Invalid amount of level data sections! Should be 9, instead got " + string(array_length(strings))	
 	}
 	var version_string = strings[0];
