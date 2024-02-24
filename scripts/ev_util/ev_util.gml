@@ -71,28 +71,35 @@ function string_split(str, delimiter) {
 		array_push(arr, build);	
 	return arr;
 }
-function string_split_buffer(str, delimiter) {
+function string_split_buffer(str, delimiter, approx_average_substr_length) {
 	var delimiter_ord = ord(delimiter)
+	
 	var size = string_length(str) + 1;
-
-	var buf = buffer_create(size, buffer_fast, 1);
-
+	var buf = buffer_create(size, buffer_fixed, 1);
     buffer_write(buf, buffer_string, str);
 	buffer_seek(buf, buffer_seek_start, 0);
+	
 	var arr = []
-	var build = "";
+	var build = buffer_create(approx_average_substr_length, buffer_grow, 1);
 
 	while (buffer_tell(buf) < size) {
 		var c = buffer_read(buf, buffer_u8)
 		if (c == delimiter_ord) {
-			array_push(arr, build);	
-			build = ""
+			buffer_write(build, buffer_u8, 0)
+			var substr = buffer_peek(build, 0, buffer_string)
+			array_push(arr, substr);
+			buffer_seek(build, buffer_seek_start, 0)
 		}
 		else
-			build += chr(c)
+			buffer_write(build, buffer_u8, c)
 	}
-	if (build != "")
-		array_push(arr, build);	
+	if (buffer_tell(build) != 0) {
+		buffer_write(build, buffer_u8, 0)
+		var substr = buffer_peek(build, 0, buffer_string)
+		array_push(arr, substr);	
+	}
+	buffer_delete(buf)
+	buffer_delete(build)
 	return arr;
 }
 
