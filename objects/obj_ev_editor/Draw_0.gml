@@ -21,3 +21,18 @@ if global.erasing != -1 {
 if (edit_transition != -1) {
 	draw_clear(c_black)	
 }
+
+if (room == asset_get_index("rm_ev_menu")) {
+	draw_set_color(c_white)
+	draw_set_font(global.ev_font)
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_middle)
+	draw_text_transformed(112, 72 + 50, "Packs coming whenever..", 0.5, 0.5, 0)
+}
+if (room == global.startup_room) {
+	draw_set_color(c_white)
+	draw_set_font(global.ev_font)
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_middle)
+	draw_text_transformed(112, 72, "Communicating with server...", 1, 1, 0)
+}

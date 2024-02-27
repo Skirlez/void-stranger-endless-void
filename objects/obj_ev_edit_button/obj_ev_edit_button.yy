@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "obj_ev_edit_button",
   "spriteId": {
-    "name": "spr_ev_tools",
-    "path": "sprites/spr_ev_tools/spr_ev_tools.yy",
+    "name": "spr_ev_edit_level",
+    "path": "sprites/spr_ev_edit_level/spr_ev_edit_level.yy",
   },
   "solid": false,
   "visible": true,

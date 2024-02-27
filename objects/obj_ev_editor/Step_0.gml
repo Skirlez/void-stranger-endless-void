@@ -1,8 +1,13 @@
-
 if keyboard_check_pressed(vk_f11)
 	window_set_fullscreen(!window_get_fullscreen())
 
-
+if (room == asset_get_index("rm_ev_startup")) {
+	if (startup_timeout != -1) {
+		startup_timeout--;
+		if (startup_timeout == -1 || startup_actions_count == 0)
+			on_startup_finish()
+	}
+}
 
 global.editor_time++
 
@@ -12,8 +17,11 @@ if global.erasing != -1 {
 		// previously i actually added an additional add_undo() here so you could 
 		// undo erasing the level, but now i'd have to implement metadata undoing, and i don't want to
 		history = [] 
+		var retain_save_name = global.level.save_name
 		ev_stop_music()
 		reset_everything()
+		ev_claim_level(global.level)
+		global.level.save_name = retain_save_name
 		audio_play_sound(global.goes_sound, 10, false)	
 		room_goto(asset_get_index("rm_ev_after_erase"))
 	}
@@ -52,8 +60,8 @@ else if preview_transition != -1 {
 		var curve = animcurve_channel_evaluate(other.preview_curve, t)
 		image_xscale = lerp(scale_x_start, 0.78, curve)
 		image_yscale = lerp(scale_y_start, 0.78, curve)
-		x = lerp(xstart, 0, curve)
-		y = lerp(ystart, 0, curve)
+		x = lerp(xstart, 1.5, curve)
+		y = lerp(ystart, 1.5, curve)
 	}
 	with (preview_transition_highlight) {
 		alpha = t;

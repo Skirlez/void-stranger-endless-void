@@ -30,6 +30,9 @@ function level_struct() constructor {
 		
 	// This name will be used for when the file is saved.
 	save_name = generate_level_save_name()
+	upload_date = "";
+	last_edit_date = "";
+	
 }
 
 function generate_level_save_name() {
@@ -65,6 +68,8 @@ function export_level(level) {
 	var author_string = base64_encode(level.author)
 	var author_brand_string = string(level.author_brand)
 	var burdens_string = string(level.burdens[0] + level.burdens[1] * 2 + level.burdens[2] * 4 + level.burdens[3] * 8);
+	var upload_date_string = "";
+	var last_edit_date_string = "";
 
 	var tile_string = ""
 	var object_string = ""
@@ -162,7 +167,8 @@ function export_level(level) {
 		object_string += MULTIPLIER_CHAR + string(object_multiplier)
 	
 	return combine_strings("|", version_string, name_string, description_string,
-		music_string, author_string, author_brand_string, burdens_string, tile_string, object_string)
+		music_string, author_string, author_brand_string, burdens_string, tile_string, object_string, 
+		upload_date_string, last_edit_date_string)
 
 }
 
@@ -179,9 +185,9 @@ function import_level(level_string) {
 	var level = new level_struct()
 	
 	var strings = string_split(level_string, "|");
-	if array_length(strings) != 9 {
+	if array_length(strings) != 11 {
 		show_debug_message(level_string)
-		return "Invalid amount of level data sections! Should be 9, instead got " + string(array_length(strings))	
+		return "Invalid amount of level data sections! Should be 11, instead got " + string(array_length(strings))	
 	}
 	var version_string = strings[0];
 	if !string_is_uint(version_string)
@@ -194,6 +200,7 @@ function import_level(level_string) {
 	level.author = base64_decode(strings[4])
 	level.author_brand = int64(strings[5])
 	
+	
 	var burdens = int64(strings[6]);
 
 	for (var i = 0; i < 4; i++)
@@ -201,6 +208,8 @@ function import_level(level_string) {
 
 	var tile_string = strings[7]
 	var object_string = strings[8]
+	level.upload_date = strings[9]
+	level.last_edit_date = strings[10];
 	
 	var tile_pointer = 1
 	var object_pointer = 1

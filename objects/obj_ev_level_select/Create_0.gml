@@ -20,6 +20,7 @@ new_button = instance_create_layer(24, 16, "Instances", asset_get_index("obj_ev_
 	txt : "NEW",
 	func : function () {
 		global.editor_instance.reset_everything();
+		ev_claim_level(global.level)
 		room_goto(asset_get_index("rm_ev_editor"))	
 	}
 });
@@ -53,7 +54,9 @@ function create_displays() {
 		global.level_start--;
 	
 	var search_text = string_lower(search_box.txt);
-	for (var i = global.level_start * 6; i < array_length(levels) && count < 6; i++) {
+	
+	var start = (search_box.txt == "" ? global.level_start * 6 : 0)
+	for (var i = start; i < array_length(levels) && count < 6; i++) {
 
 
 		var lvl_string = levels[i];
@@ -100,7 +103,7 @@ search_box = instance_create_layer(112 - 20, 12, "Instances", asset_get_index("o
 
 search_box.depth--;
 
-var online_switch = instance_create_layer(112 + 50, 12, "Instances", asset_get_index("obj_ev_online_switch"));
+var online_switch = instance_create_layer(112 + 47, 12, "Instances", asset_get_index("obj_ev_online_switch"));
 online_switch.level_select_instance = id
 
 
@@ -138,6 +141,7 @@ for (var i = 0; i < array_length(files); i++) {
 
 function on_online_update() {
 	online_levels = copy_array(global.online_levels)
+	show_debug_message("Online updated!")
 }
 
 levels = global.online_mode ? online_levels : offline_levels;

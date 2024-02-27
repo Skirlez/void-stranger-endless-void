@@ -1,4 +1,4 @@
-
+randomize()
 #macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
@@ -10,7 +10,17 @@ if (!compiled_for_merge) {
 #macro level_extension "vsl"
 
 global.levels_directory = game_save_id + "levels\\"
+global.save_directory = game_save_id
 
+
+
+global.author = { username : "Anonymous", brand : string(irandom_range(0, $FFFFFFFFF)) }
+
+if !file_exists(global.save_directory + "author.ini") {
+	ev_save();
+}
+else
+	ev_load()
 window_set_cursor(cr_default)
 
 global.editor_time = 0
@@ -446,6 +456,7 @@ function reset_everything() {
 		for (var j = 0; j < 3; j++)
 			global.level.tiles[@ 3 + i][5 + j] = new tile_with_state(tile_default)
 	}
+	
 
 	current_list = objects_list;
 	current_placeables = global.level.objects
@@ -577,19 +588,65 @@ global.level_start = 0;
 
 
 global.online_mode = false;
-global.server = "http://207.127.92.246:3000/void_stranger"
+global.server = "http://207.127.92.246:3000/voyager"
 
-function try_update_online_levels() {
-	get_levels = http_get(global.server)
-}
-try_update_online_levels()
-
+get_levels = noone
+validate_levels = noone
 online_levels_str = noone
+	
 global.online_levels = []
+function try_update_online_levels() {
+	get_levels = http_get(global.server);
+}
+startup_timeout = -1;
 
-global.uploaded_keys = get_all_files(global.levels_directory, "key")
+global.key_level_map = ds_map_create()
+global.level_key_map = ds_map_create()
 
-show_debug_message(global.uploaded_keys)
+function add_level_key(key, level_save_name) {
+	ds_map_add(global.key_level_map, key, level_save_name)
+	ds_map_add(global.level_key_map, level_save_name, key)
+}
+function remove_level_key(level_save_name) {
+	var key = ds_map_find_value(global.level_key_map, level_save_name)
+	ds_map_delete(global.key_level_map, key)
+	ds_map_delete(global.level_key_map, level_save_name)
+}
 
-//show_debug_message(string_split("34|631||54", "|"))
-//show_debug_message(string_split_ultimate2("34|631||54", "|"))
+uploaded_levels = get_all_files(global.levels_directory, "key")
+uploaded_keys = array_create(array_length(uploaded_levels), "")
+
+for (var i = 0; i < array_length(uploaded_levels); i++) {
+	var save_name = uploaded_levels[i] 
+	var file = file_text_open_read(global.levels_directory + save_name + ".key")
+	var key = file_text_read_string(file);
+	uploaded_keys[i] = key;
+	file_text_close(file)
+}
+
+function on_server_validate_startup(valid_str) {
+	var arr_ind = 0;
+	for (var i = 1; i <= string_length(valid_str); i++) {
+		var char = string_char_at(valid_str, i)
+		if (char == "0") {
+			file_delete(global.levels_directory + uploaded_levels[arr_ind] + ".key")
+			array_delete(uploaded_keys, arr_ind, 1)
+			array_delete(uploaded_levels, arr_ind, 1)
+		}
+		else
+			arr_ind++;
+	}
+	for (var i = 0; i < array_length(uploaded_keys); i++) {
+		add_level_key(uploaded_keys[i], uploaded_levels[i])	
+	}
+		
+	on_startup_finish()
+}
+function on_startup_finish() {
+	get_levels = noone;
+	validate_levels = noone;
+	startup_timeout = 0;
+	room_goto(asset_get_index("rm_ev_menu"))
+}
+
+global.startup_room = asset_get_index("rm_ev_startup")

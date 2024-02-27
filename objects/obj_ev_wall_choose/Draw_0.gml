@@ -8,7 +8,7 @@ if !surface_exists(surf) {
 
 
 draw_sprite_ext(black_sprite, 0, x, y, 
-	image_xscale * 1.15, image_yscale * 1.15, 0, c_white, 1)
+	scale_x * 1.15, scale_y * 1.15, 0, c_white, 1)
 
-draw_surface_ext(surf, x - image_xscale * 8, y - image_yscale * 8, 
-	image_xscale, image_yscale, 0, c_white, 1)
+draw_surface_ext(surf, x - scale_x * 8, y - scale_y * 8, 
+	scale_x, scale_y, 0, c_white, 1)

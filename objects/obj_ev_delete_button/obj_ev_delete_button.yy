@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "obj_ev_delete_button",
   "spriteId": {
-    "name": "spr_ev_tools",
-    "path": "sprites/spr_ev_tools/spr_ev_tools.yy",
+    "name": "spr_ev_delete_level",
+    "path": "sprites/spr_ev_delete_level/spr_ev_delete_level.yy",
   },
   "solid": false,
   "visible": true,

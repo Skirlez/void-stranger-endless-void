@@ -7,21 +7,27 @@ play.display_instance = display_instance
 play.highlighter = id;
 play.image_alpha = 0
 
-var edit = instance_create_layer(192, 40, "LevelHighlightButtons", asset_get_index("obj_ev_edit_button"))
-edit.layer_num = 1
-edit.lvl = lvl
-edit.display_instance = display_instance;
-edit.highlighter = id;
-edit.image_alpha = 0
-
-var copy = instance_create_layer(192, 60, "LevelHighlightButtons", asset_get_index("obj_ev_copy_button"))
+var copy = instance_create_layer(192, 40, "LevelHighlightButtons", asset_get_index("obj_ev_copy_button"))
 copy.layer_num = 1
 copy.lvl = lvl
 copy.image_alpha = 0
 
-description_textbox = instance_create_layer(200, 125, "LevelDescription", asset_get_index("obj_ev_textbox"), 
+description_textbox = instance_create_layer(201, 110, "LevelDescription", asset_get_index("obj_ev_textbox"), 
 {
-	txt : (lvl.description == "" ? "No description provided." : lvl.description),
+	txt : (lvl.description == "" ? "No description provided." : "Description:\n" + lvl.description),
+	base_scale_x : 2,
+	base_scale_y : 1,
+	layer_num : 1,
+	allow_deletion : false,
+	char_limit : 0,	
+	opened_x : room_width / 2,
+	opened_y : room_height / 2,
+	image_alpha : 0
+})
+
+author_textbox = instance_create_layer(201, 130, "LevelDescription", asset_get_index("obj_ev_textbox"), 
+{
+	txt : (lvl.author == "" ? "No author?" : "Author:\n" + lvl.author),
 	base_scale_x : 2,
 	base_scale_y : 1,
 	layer_num : 1,
@@ -45,9 +51,10 @@ var back = instance_create_layer(200, 16, "LevelHighlightButtons", asset_get_ind
 
 
 add_child(play)
-add_child(edit)
+
 add_child(back)
 add_child(description_textbox)
+add_child(author_textbox)
 add_child(copy)
 
 
@@ -63,16 +70,25 @@ if (!global.online_mode) {
 	upload.lvl = lvl;
 	upload.image_alpha = 0
 
+	var edit = instance_create_layer(200, 73, "LevelHighlightButtons", asset_get_index("obj_ev_edit_button"))
+	edit.layer_num = 1
+	edit.lvl = lvl
+	edit.display_instance = display_instance;
+	edit.highlighter = id;
+	edit.image_alpha = 0
+
 
 	add_child(deleteb)
 	add_child(upload)
-	
-	
-	
+	add_child(edit)
+}
+else {
+
 }
 
 
 function hide_textbox() {
 	layer_add_instance("LevelHighlightButtons", description_textbox)
+	layer_add_instance("LevelHighlightButtons", author_textbox)
 	description_textbox.size_time = 0;
 }

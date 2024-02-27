@@ -121,18 +121,8 @@ if draw_brand {
 		draw_rectangle(1, 1, 6, 6, true)
 		
 		draw_set_color(c_white)
-		var author_brand = lvl.author_brand;
 		
-		
-		var i = 0;
-		while (author_brand != 0) {
-			var bit = author_brand % 2
-			author_brand /= 2;
-			
-			if (bit == 1)
-				draw_point((i % 6) + 1, (i div 6) + 1) 
-			i++;
-		}	
+		ev_draw_brand(lvl.author_brand, 1, 1)
 		
 		surface_reset_target()
 	}	

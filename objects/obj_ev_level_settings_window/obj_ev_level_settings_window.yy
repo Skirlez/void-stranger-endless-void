@@ -1,7 +1,7 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_ev_settings_window",
+  "name": "obj_ev_level_settings_window",
   "spriteId": {
     "name": "spr_ev_window",
     "path": "sprites/spr_ev_window/spr_ev_window.yy",

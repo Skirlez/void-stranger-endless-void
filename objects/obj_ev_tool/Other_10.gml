@@ -24,7 +24,7 @@ switch (image_index) {
 		global.editor_instance.undo();
 		break;
 	case 5: // settings
-		new_window(12, 8, asset_get_index("obj_ev_settings_window"))	
+		new_window(12, 8, asset_get_index("obj_ev_level_settings_window"))	
 		global.mouse_layer = 1
 		break;
 	case 6: // trash bin

@@ -8,3 +8,5 @@ selected = false;
 
 image_xscale = base_scale_x
 image_yscale = base_scale_y
+scale_x = base_scale_x
+scale_y = base_scale_y

@@ -2,7 +2,7 @@ if (selected) {
 	gpu_set_fog(true, c_white, 0, 1)
 	var increase = dsin(global.editor_time) / 8 + 0.25;
 
-	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale + increase, image_yscale + increase, 0, c_white, 1)
+	draw_sprite_ext(sprite_index, image_index, x, y, scale_x + increase, scale_y + increase, 0, c_white, 1)
 	gpu_set_fog(false, c_white, 0, 1)
 }
 
@@ -15,4 +15,4 @@ else {
 	offset_y = 0
 }
 
-draw_sprite_ext(sprite_index, image_index, x + offset_x, y + offset_y, image_xscale, image_yscale, 0, c_white, 1)
+draw_sprite_ext(sprite_index, image_index, x + offset_x, y + offset_y, scale_x, scale_y, 0, c_white, 1)

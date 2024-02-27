@@ -67,11 +67,11 @@ function string_split(str, delimiter) {
 		else
 			build += c;	
 	}
-	if (build != "")
-		array_push(arr, build);	
+	array_push(arr, build);	
 	return arr;
 }
 function string_split_buffer(str, delimiter, approx_average_substr_length) {
+
 	var delimiter_ord = ord(delimiter)
 	
 	var size = string_length(str) + 1;
