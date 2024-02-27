@@ -13,7 +13,7 @@ instance_create_layer(200, 16, "Instances", asset_get_index("obj_ev_executing_bu
 	txt : "Back",
 	room_name : "rm_ev_menu",
 	func : function () {
-		asset_get_index("obj_ev_profile").commit();
+		asset_get_index("obj_ev_options").commit();
 		room_goto(asset_get_index("rm_ev_menu"))
 	}
 });
