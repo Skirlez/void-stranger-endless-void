@@ -103,3 +103,15 @@ function string_split_buffer(str, delimiter, approx_average_substr_length) {
 	return arr;
 }
 
+function int64_safe(value, failsafe = 0) {
+	try { 
+		return int64(value);
+	}
+	catch (e) {
+		return failsafe;
+	}
+}
+
+function num_to_string(num, length) {
+	return string_replace(string_format(num, length, 0), " ", 0)	
+}

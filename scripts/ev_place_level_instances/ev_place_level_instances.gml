@@ -10,10 +10,12 @@ function ev_place_level_instances(level) {
 
 	for (var i = 0; i < 9; i++) {
 		for (var j = 0; j < 14; j++) {
+			/*
 			if i != 8 {
 				var tile_state = level.tiles[i][j];
 				var tile = tile_state.tile
 				var game_object = tile.obj_name
+				
 				var layerr = ""
 				var abort = false;
 				switch (tile.tile_id) {
@@ -122,7 +124,6 @@ function ev_place_level_instances(level) {
 					case cif_id:
 						if object_state.properties.lmp
 							inst.editor_lamp = true
-
 						inst.b_form = 4
 						break;
 					case gor_id:
@@ -142,17 +143,8 @@ function ev_place_level_instances(level) {
 						break;
 				}
 			}
+			*/
 		}
 	}
 }
 
-function chest_get_contents_num(item_id) {
-	switch (item_id) {
-		case chest_items.locust: return 1;
-		case chest_items.memory: return 4;
-		case chest_items.wings: return 3;
-		case chest_items.sword: return 2;
-		case chest_items.empty: return 0;
-		default: return 1;
-	}
-}

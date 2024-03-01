@@ -12,7 +12,7 @@ if (!compiled_for_merge) {
 global.levels_directory = game_save_id + "levels\\"
 global.save_directory = game_save_id
 
-
+global.server = "http://207.127.92.246:3000/voyager"
 
 global.author = { username : "Anonymous", brand : string(irandom_range(0, $FFFFFFFFF)) }
 
@@ -76,25 +76,51 @@ music_draw_function = function(tile_state, i, j) {
 global.placeable_name_map = ds_map_create()
 
 
-function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
+default_reader = function(tile /*, lvl_str, pos*/ ) {
+	var t = new tile_with_state(tile)
+	return { value : t, offset : 0 }
+}
+default_writer = function(tile_state) {
+	return tile_state.tile.tile_id
+}
+default_placer = function(tile_state, i, j /*, wall_tilemap, edge_tilemap */) {
+	instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name))
+}
+
+default_tile_io = { 
+	read : default_reader,
+	write : default_writer,
+	place : default_placer
+}
+
+enum editor_types {
+	tile,
+	object
+}
+
+function editor_tile(spr_ind, tile_id, obj_name, obj_layer = "Floor", flags = 0) constructor {
     self.spr_ind = spr_ind
 	self.obj_name = obj_name
+	self.obj_layer = obj_layer
 	self.flags = flags
 	self.draw_function = global.editor_instance.default_draw_function
 	self.place_function = global.editor_instance.return_tile_state_function
 	self.zed_function = noone
 	self.tile_id = tile_id;
 	self.properties_generator = global.editor_instance.return_noone
+	self.editor_type = editor_types.tile;
+	self.iostruct = global.editor_instance.default_tile_io;
 	global.placeable_name_map[? tile_id] = self;
 } 
-
+function editor_object(spr_ind, tile_id, obj_name, obj_layer = "Instances", flags = 0) 
+		: editor_tile(spr_ind, tile_id, obj_name, obj_layer, flags) constructor {
+	self.editor_type = editor_types.object;
+} 
 
 #macro pit_id "pt"
 #macro pit_obj "obj_pit"
-
 #macro glass_id "gl"
 #macro glass_obj "obj_glassfloor"
-
 
 #macro bomb_id "mn"
 #macro bomb_obj "obj_bombfloor"
@@ -124,14 +150,14 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 
 #macro wall_id "wa"
 #macro edge_id "ed"
-#macro empty_id "em"
 
 #macro chest_id "st"
 #macro chest_obj "obj_chest_small"
 
+#macro empty_id "em"
+
 #macro player_id "pl"
 #macro player_obj "obj_spawnpoint"
-
 
 #macro leech_id "cl"
 #macro leech_obj "obj_enemy_cl"
@@ -177,11 +203,13 @@ function editor_placeable(spr_ind, tile_id, obj_name, flags = 0) constructor {
 #macro secret_exit_id "se"
 #macro secret_exit_obj "obj_na_secret_exit"
 
+#macro hungry_man_id "hu"
+#macro hungry_man_obj "obj_npc_famished"
 
 
 floor_sprite = asset_get_index("spr_floor");
 
-tile_pit = new editor_placeable(noone, pit_id, pit_obj, flag_unplaceable)
+tile_pit = new editor_tile(noone, pit_id, pit_obj, "Pit", flag_unplaceable)
 tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
 	if (i == 0)
 		return;
@@ -192,27 +220,34 @@ tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
 		draw_sprite(floor_sprite, 1, j * 16 + 8, i * 16 + 8)
 }
 
-tile_glass = new editor_placeable(asset_get_index("spr_glassfloor"), glass_id, glass_obj)
+tile_glass = new editor_tile(asset_get_index("spr_glassfloor"), glass_id, glass_obj, "Floor_INS")
 tile_glass.draw_function = function(tile_state, i, j, preview, lvl) {
 	tile_pit.draw_function(tile_state, i, j, preview, lvl)
 	default_draw_function(tile_state, i, j)
 }
-tile_bomb = new editor_placeable(asset_get_index("spr_bombfloor"), bomb_id, bomb_obj)
-tile_default = new editor_placeable(floor_sprite, default_tile_id, default_tile_obj)
-tile_floorswitch = new editor_placeable(asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
+tile_bomb = new editor_tile(asset_get_index("spr_bombfloor"), bomb_id, bomb_obj)
+tile_default = new editor_tile(floor_sprite, default_tile_id, default_tile_obj)
+tile_floorswitch = new editor_tile(asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
 tile_floorswitch.draw_function = function(tile_state, i, j, preview, lvl) {
 	var ind = lvl.objects[i][j].tile == object_empty ? 0 : 1
 	draw_sprite(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8)
 }
-tile_copyfloor = new editor_placeable(asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
+tile_copyfloor = new editor_tile(asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
 
 
-tile_exit = new editor_placeable(asset_get_index("spr_stairs"), exit_id, exit_obj)
-tile_white = new editor_placeable(asset_get_index("spr_floor_white"), white_id, white_obj)
-tile_deathfloor = new editor_placeable(asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
-tile_wall = new editor_placeable(asset_get_index("spr_ev_wall"), wall_id, no_obj, flag_no_objects)
-tile_wall.properties_generator = function() {
-	return { ind : 4 }
+tile_exit = new editor_tile(asset_get_index("spr_stairs"), exit_id, exit_obj)
+tile_white = new editor_tile(asset_get_index("spr_floor_white"), white_id, white_obj)
+tile_deathfloor = new editor_tile(asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
+
+
+tilemap_tile_read = function(tile, lvl_str, pos) {
+	var read_ind = string_copy(lvl_str, pos, 2)
+	var ind = clamp(int64_safe(read_ind, 0), 0, 255)
+	var t = new tile_with_state(tile, { ind : ind });
+	return { value : t, offset : 2 };
+}
+tilemap_tile_write = function(tile_state) {
+	return tile_state.tile.tile_id + num_to_string(tile_state.properties.ind, 2);
 }
 
 
@@ -223,7 +258,8 @@ draw_tile(asset_get_index("tile_edges"), 4, 0, 0, 0)
 var edge_sprite = sprite_create_from_surface(edge_surf, 0, 0, 16, 16, false, false, 8, 8)
 surface_reset_target()
 surface_free(edge_surf)
-tile_edge = new editor_placeable(edge_sprite, edge_id, no_obj, flag_no_objects)
+
+tile_edge = new editor_tile(edge_sprite, edge_id, no_obj, "Floor", flag_no_objects)
 tile_edge.properties_generator = function() {
 	return { ind : 4 }	
 }
@@ -235,7 +271,16 @@ tile_edge.place_function = function(tile_state, i, j, lvl) {
 	tile_state.properties.ind = runtile_fetch_blob(j, i, lvl);
 	return tile_state;
 }
+tile_edge.iostruct = {
+	read : tilemap_tile_read,
+	write : tilemap_tile_write,
+	place : function(tile_state, i, j, wall_tilemap, edge_tilemap) {
+		tilemap_set(edge_tilemap, tile_state.properties.ind, j, i)
+	}
+}
 
+
+tile_wall = new editor_tile(asset_get_index("spr_ev_wall"), wall_id, no_obj, "Floor", flag_no_objects)
 tile_wall.draw_function = function(tile_state, i, j) {
 	draw_set_color(c_white)
 	draw_tile(global.tileset_1, tile_state.properties.ind, 0, j * 16, i * 16)	
@@ -245,153 +290,19 @@ tile_wall.zed_function = function() {
 	global.mouse_layer = 1
 }
 
-
-
-tile_unremovable = new editor_placeable(asset_get_index("spr_floor_white"), unremovable_id, unremovable_obj, flag_unremovable|flag_unplaceable)
-tile_unremovable.draw_function = empty_function;
-
-// even though it does nothing, we do need an object parallel to tile_empty as opposed to having it be noone
-// as to not be inconsistent
-object_empty = new editor_placeable(noone, empty_id, no_obj, flag_unplaceable)
-object_empty.draw_function = empty_function;
-
-
-sweat_sprite = asset_get_index("spr_sweat")
-object_player = new editor_placeable(asset_get_index("spr_player_down"), player_id, player_obj, flag_unremovable|flag_only_one)
-object_player.draw_function = function(tile_state, i, j, preview, lvl) {
-	if (preview && lvl.tiles[i][j].tile == tile_pit) {
-		draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
-		draw_sprite(sweat_sprite, global.editor_time / 5, j * 16 + 16, i * 16)
-		return;
-	}
-	draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
+tile_wall.properties_generator = function() {
+	return { ind : 4 }
 }
-
-
-object_leech = new editor_placeable(asset_get_index("spr_cl_right"), leech_id, leech_obj)
-object_leech.draw_function = function(tile_state, i, j) {
-	var xscale = tile_state.properties.dir == true ? -1 : 1
-	draw_sprite_ext(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8, xscale, 1, 0, c_white, draw_get_alpha())
-}
-
-maggot_sprite_down = asset_get_index("spr_cc_down");
-maggot_sprite_up = asset_get_index("spr_cc_up");
-
-object_maggot = new editor_placeable(maggot_sprite_down, maggot_id, maggot_obj, 0)
-object_maggot.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_up : maggot_sprite_down, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
-}
-
-var directioned_zed_function = function(tile_state) {
-	tile_state.properties.dir = !tile_state.properties.dir
-}
-var directioned_properties = function() {
-	return { dir : false }
-}
-
-object_leech.zed_function = directioned_zed_function
-object_leech.properties_generator = directioned_properties
-object_maggot.zed_function = directioned_zed_function
-object_maggot.properties_generator = directioned_properties
-
-object_bull = new editor_placeable(asset_get_index("spr_cg_idle"), bull_id, bull_obj)
-object_bull.draw_function = music_draw_function
-object_gobbler = new editor_placeable(asset_get_index("spr_cs_right"), gobbler_id, gobbler_obj)
-object_gobbler.draw_function = music_draw_function
-object_hand = new editor_placeable(asset_get_index("spr_ch"), hand_id, hand_obj)
-object_hand.draw_function = music_draw_function
-object_mimic = new editor_placeable(asset_get_index("spr_cm_down"), mimic_id, mimic_obj)
-object_mimic.properties_generator = function() {
-	return { typ : 0 } 	
-}
-object_mimic.zed_function = function(tile_state) {
-	tile_state.properties.typ++;
-	if tile_state.properties.typ > 2
-		tile_state.properties.typ = 0
-}
-
-mimic_sprite_arr = [asset_get_index("spr_cm_down"), asset_get_index("spr_cm_up1"), asset_get_index("spr_cm_up2")]
-object_mimic.draw_function = function(tile_state, i, j) {
-	draw_sprite(mimic_sprite_arr[tile_state.properties.typ], ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
-}
-
-object_diamond = new editor_placeable(asset_get_index("spr_co_idle"), diamond_id, diamond_obj)
-object_diamond.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.tile.spr_ind, ev_strobe_fasttriplet_real(2), j * 16 + 8, i * 16 + 8)	
-}
-
-object_spider = new editor_placeable(asset_get_index("spr_ct_right"), spider_id, spider_obj)
-object_spider.draw_function = function(tile_state, i, j) {
-	
-	var ind = (tile_state.properties.ang == 180 || tile_state.properties.ang == 270) 
-		? 1 - ev_strobe_integer(2) : ev_strobe_integer(2)
-		
-	draw_sprite_ext(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8, 1, 1,
-		tile_state.properties.ang, c_white, draw_get_alpha())
-}
-object_spider.properties_generator = function() {
-	return { ang : 0 }	
-}
-object_spider.zed_function = function(tile_state) {
-	tile_state.properties.ang -= 90
-	if tile_state.properties.ang < 0
-		tile_state.properties.ang = 270
-}
-
-
-object_egg = new editor_placeable(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
-object_egg.properties_generator = function() {
-	return { txt : array_create(4, "") }	
-}
-object_egg.zed_function = function(tile_state) {
-	new_window(10, 6, asset_get_index("obj_ev_egg_window"), 
-	{ egg_properties : tile_state.properties })	
-	global.mouse_layer = 1
-}
-spr_eggtext = asset_get_index("spr_ev_eggtext");
-object_egg.draw_function = function(tile_state, i, j) {
-	default_draw_function(tile_state, i, j)
-	if (tile_state.properties.txt[0] != "") {
-		draw_sprite(spr_eggtext, 0, j * 16 + 8, i * 16 + 8)
+tile_wall.iostruct = {
+	read : tilemap_tile_read,
+	write : tilemap_tile_write,
+	place : function(tile_state, i, j, wall_tilemap, edge_tilemap) {
+		tilemap_set(wall_tilemap, tile_state.properties.ind, j, i)
 	}
 }
 
 
-cif_sprite = asset_get_index("spr_atoner")
-lamp_sprite = asset_get_index("spr_lamp")
-
-object_cif = new editor_placeable(cif_sprite, cif_id, egg_statue_obj)
-object_cif.properties_generator = function() {
-	return { lmp : false }
-}
-object_cif.zed_function = function(tile_state) {
-	tile_state.properties.lmp = !tile_state.properties.lmp
-}
-object_cif.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.properties.lmp ? lamp_sprite : cif_sprite, 0, j * 16 + 8, i * 16 + 8)
-}
-object_add = new editor_placeable(asset_get_index("spr_voider"), add_id, egg_statue_obj)
-object_mon = new editor_placeable(asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
-object_tan = new editor_placeable(asset_get_index("spr_killer"), tan_id, egg_statue_obj)
-object_lev = new editor_placeable(asset_get_index("spr_watcher"), lev_id, egg_statue_obj)
-object_eus = new editor_placeable(asset_get_index("spr_lover"), eus_id, egg_statue_obj)
-object_bee = new editor_placeable(asset_get_index("spr_smiler"), bee_id, egg_statue_obj)
-object_gor = new editor_placeable(asset_get_index("spr_slower"), gor_id, egg_statue_obj)
-
-object_secret_exit = new editor_placeable(asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
-object_secret_exit.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
-}
-
-tile_chest = new editor_placeable(asset_get_index("spr_chest_regular"), chest_id, chest_obj)
-enum chest_items {
-	locust,
-	memory,
-	wings,
-	sword,
-	empty,
-	size // cool trick!
-}
+tile_chest = new editor_tile(asset_get_index("spr_chest_regular"), chest_id, chest_obj, "Floor_INS")
 tile_chest.properties_generator = function () {
 	return { itm : chest_items.locust }	
 }
@@ -402,14 +313,331 @@ tile_chest.zed_function = function(tile_state) {
 	global.mouse_layer = 1
 }
 
-spr_burden_chest = asset_get_index("spr_chest_small")
 tile_chest.draw_function = function (tile_state, i, j) {
+	static spr_burden_chest = asset_get_index("spr_chest_small");
 	var itm = tile_state.properties.itm;
 	draw_sprite((itm == chest_items.locust || itm == chest_items.empty)
 			? tile_state.tile.spr_ind
 			: spr_burden_chest,
 			0, j * 16 + 8, i * 16 + 8)	
 }
+
+tile_chest.iostruct = {
+	read : function(tile, lvl_str, pos) {
+		var read_item = string_copy(lvl_str, pos, 2)
+		var item = clamp(int64_safe(read_item, 0), 0, chest_items.size - 1)
+		var t = new tile_with_state(tile, { itm : item });
+		return { value : t, offset : 2 };
+	},
+	write : function (tile_state) {
+		return tile_state.tile.tile_id + num_to_string(tile_state.properties.itm, 2);	
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		inst.persistent = false;
+		inst.contents = chest_get_contents_num(tile_state.properties.itm)
+		if (tile_state.properties.itm == chest_items.sword)
+			inst.sprite_index = asset_get_index("spr_chest_small")
+	}
+}
+function chest_get_contents_num(item_id) {
+	switch (item_id) {
+		case chest_items.locust: return 1;
+		case chest_items.memory: return 4;
+		case chest_items.wings: return 3;
+		case chest_items.sword: return 2;
+		case chest_items.empty: return 0;
+		default: return 1;
+	}
+}
+
+tile_unremovable = new editor_tile(asset_get_index("spr_floor_white"), unremovable_id, unremovable_obj, "Floor", flag_unremovable|flag_unplaceable)
+tile_unremovable.draw_function = empty_function;
+
+object_empty = new editor_object(noone, empty_id, no_obj, "Instances", flag_unplaceable)
+object_empty.draw_function = empty_function;
+
+
+sweat_sprite = asset_get_index("spr_sweat")
+object_player = new editor_object(asset_get_index("spr_player_down"), player_id, player_obj, "Instances", flag_unremovable|flag_only_one)
+object_player.draw_function = function(tile_state, i, j, preview, lvl) {
+	if (preview && lvl.tiles[i][j].tile == tile_pit) {
+		draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
+		draw_sprite(sweat_sprite, global.editor_time / 5, j * 16 + 16, i * 16)
+		return;
+	}
+	draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
+}
+
+
+object_leech = new editor_object(asset_get_index("spr_cl_right"), leech_id, leech_obj)
+object_leech.draw_function = function(tile_state, i, j) {
+	var xscale = tile_state.properties.dir == true ? -1 : 1
+	draw_sprite_ext(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8, xscale, 1, 0, c_white, draw_get_alpha())
+}
+maggot_sprite_down = asset_get_index("spr_cc_down");
+maggot_sprite_up = asset_get_index("spr_cc_up");
+
+object_maggot = new editor_object(maggot_sprite_down, maggot_id, maggot_obj, 0)
+object_maggot.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_up : maggot_sprite_down, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
+}
+var directioned_zed_function = function(tile_state) {
+	tile_state.properties.dir = !tile_state.properties.dir
+}
+var directioned_properties = function() {
+	return { dir : false }
+}
+var directioned_iostruct = {
+	read : function(tile_id, lvl_str, pos) {
+		var read_dir = string_copy(lvl_str, pos, 1)
+		var dir = bool(int64_safe(read_dir, 0))
+		var t = new tile_with_state(tile_id, { dir : dir })
+		return { value : t, offset : 1 };
+	},
+	write : function(tile_state) {
+		return tile_state.tile.tile_id + (tile_state.properties.dir == true ? "1" : "0");
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		inst.editor_dir = tile_state.properties.dir;
+		return inst;
+	}
+}
+
+object_leech.zed_function = directioned_zed_function
+object_leech.properties_generator = directioned_properties
+object_leech.iostruct = directioned_iostruct
+object_maggot.zed_function = directioned_zed_function
+object_maggot.properties_generator = directioned_properties
+object_maggot.iostruct = directioned_iostruct
+
+object_bull = new editor_object(asset_get_index("spr_cg_idle"), bull_id, bull_obj)
+object_bull.draw_function = music_draw_function
+object_gobbler = new editor_object(asset_get_index("spr_cs_right"), gobbler_id, gobbler_obj)
+object_gobbler.draw_function = music_draw_function
+object_hand = new editor_object(asset_get_index("spr_ch"), hand_id, hand_obj)
+object_hand.draw_function = music_draw_function
+object_mimic = new editor_object(asset_get_index("spr_cm_down"), mimic_id, mimic_obj)
+object_mimic.properties_generator = function() {
+	return { typ : 0 } 	
+}
+object_mimic.zed_function = function(tile_state) {
+	tile_state.properties.typ++;
+	if tile_state.properties.typ > 2
+		tile_state.properties.typ = 0
+}
+mimic_sprite_arr = [asset_get_index("spr_cm_down"), asset_get_index("spr_cm_up1"), asset_get_index("spr_cm_up2")]
+object_mimic.draw_function = function(tile_state, i, j) {
+	draw_sprite(mimic_sprite_arr[tile_state.properties.typ], ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
+}
+object_mimic.iostruct = {
+	read : function(tile_id, lvl_str, pos) {
+		var read_type = string_copy(lvl_str, pos, 1)
+		var type = clamp(int64_safe(read_type, 0), 0, 2)
+		var t = new tile_with_state(tile_id, { typ: type })
+		return { value : t, offset : 1 };
+	},
+	write : function(tile_state) {
+		return tile_state.tile.tile_id + string(tile_state.properties.typ);
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		inst.editor_type = tile_state.properties.typ;
+		return inst;
+	}	
+}
+
+object_diamond = new editor_object(asset_get_index("spr_co_idle"), diamond_id, diamond_obj)
+object_diamond.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.tile.spr_ind, ev_strobe_fasttriplet_real(2), j * 16 + 8, i * 16 + 8)	
+}
+
+object_spider = new editor_object(asset_get_index("spr_ct_right"), spider_id, spider_obj)
+object_spider.draw_function = function(tile_state, i, j) {
+	var ind = (tile_state.properties.ang == 2 || tile_state.properties.ang == 3) 
+		? 1 - ev_strobe_integer(2) : ev_strobe_integer(2)
+		
+	draw_sprite_ext(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8, 1, 1,
+		tile_state.properties.ang * 90, c_white, draw_get_alpha())
+}
+object_spider.properties_generator = function() {
+	return { ang : 0 }	
+}
+object_spider.zed_function = function(tile_state) {
+	tile_state.properties.ang -= 1
+	if tile_state.properties.ang < 0
+		tile_state.properties.ang = 3
+}
+object_spider.iostruct = {
+	read : function(tile_id, lvl_str, pos) {
+		var read_angle = string_copy(lvl_str, pos, 1)
+		var angle = clamp(int64_safe(read_angle, 0), 0, 3)
+		var t = new tile_with_state(tile_id, { ang: angle })
+		return { value : t, offset : 1 };
+	},
+	write : function(tile_state) {
+		return tile_state.tile.tile_id + string(tile_state.properties.ang );
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		inst.set_e_direction = 3 - tile_state.properties.ang;
+		return inst;
+	}		
+}
+
+object_egg = new editor_object(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
+object_egg.properties_generator = function() {
+	return { txt : array_create(4, "") }	
+}
+object_egg.zed_function = function(tile_state) {
+	new_window(10, 6, asset_get_index("obj_ev_egg_window"), 
+	{ egg_properties : tile_state.properties })	
+	global.mouse_layer = 1
+}
+
+object_egg.draw_function = function(tile_state, i, j) {
+	default_draw_function(tile_state, i, j)
+	static spr_eggtext = asset_get_index("spr_ev_eggtext");
+	if (tile_state.properties.txt[0] != "") {
+		draw_sprite(spr_eggtext, 0, j * 16 + 8, i * 16 + 8)
+	}
+}
+object_egg.iostruct = {
+	read : function(tile, lvl_str, pos) {
+		var read_length = string_char_at(lvl_str, pos)
+		var arrlen = clamp(int64_safe(read_length, 0), 0, 4);
+		pos += 1;
+		
+		var txt_arr = array_create(4, "")
+		var total_count = 0;
+		
+		for (var m = 0; m < arrlen; m++) {
+			var endp = string_pos_ext(BASE64_END_CHAR, lvl_str, pos)	
+			if (endp == 0)
+				break;
+			total_count += endp - pos + 1;
+			var read_string = string_copy(lvl_str, pos, endp - pos)
+			pos = endp + 1;
+			txt_arr[m] = base64_decode(read_string)
+		}
+		var t = new tile_with_state(tile, { txt: txt_arr });
+		return { value : t, offset : 1 + total_count };
+	},
+	write : function(tile_state) {
+		var arrlen = array_length(tile_state.properties.txt)
+		var encoded_text = "";
+		var m;
+		for (m = 0; m < arrlen; m++) {
+			var txt = tile_state.properties.txt[m]
+			if txt == ""
+				break;
+			encoded_text += base64_encode(txt) + BASE64_END_CHAR	
+		}
+		return tile_state.tile.tile_id + string(m) + encoded_text
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		with (inst) {
+			var m;
+			for (m = 0; m < 4; m++) {
+				if tile_state.properties.txt[m] == ""
+					break;
+									
+				count++
+				text[m] = tile_state.properties.txt[m];
+			}
+			if m == 0
+				break;
+			special_message = -1
+			voice = b_voice	
+			moods = array_create(count, neutral)
+			speakers = array_create(count, id)
+		}
+	}		
+}
+
+
+cif_sprite = asset_get_index("spr_atoner")
+lamp_sprite = asset_get_index("spr_lamp")
+
+object_cif = new editor_object(cif_sprite, cif_id, egg_statue_obj)
+object_cif.properties_generator = function() {
+	return { lmp : false }
+}
+object_cif.zed_function = function(tile_state) {
+	tile_state.properties.lmp = !tile_state.properties.lmp
+}
+object_cif.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.properties.lmp ? lamp_sprite : cif_sprite, 0, j * 16 + 8, i * 16 + 8)
+}
+object_cif.iostruct = {
+	read : function(tile_id, lvl_str, pos) {
+		var read_lamp = string_copy(lvl_str, pos, 1)
+		var lamp = bool(int64_safe(read_lamp, 0))
+		var t = new tile_with_state(tile_id, { lmp: lamp })
+		return { value : t, offset : 1 };
+	},
+	write : function(tile_state) {
+		return tile_state.tile.tile_id + string(tile_state.properties.lmp);
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		if (tile_state.properties.lmp)
+			inst.editor_lamp = true
+		inst.b_form = 4
+		return inst;
+	}		
+}
+
+function voidlord_io(b_form) {
+	return {
+		read : default_reader,
+		write : default_writer,
+		place : method(self, function (tile_state, i, j) {
+			var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+			inst.b_form = num
+			return inst;
+		}),
+		num : b_form
+	};
+}	
+
+object_add = new editor_object(asset_get_index("spr_voider"), add_id, egg_statue_obj)
+object_add.iostruct = voidlord_io(8)
+object_mon = new editor_object(asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
+object_mon.iostruct = voidlord_io(7)
+object_tan = new editor_object(asset_get_index("spr_killer"), tan_id, egg_statue_obj)
+object_tan.iostruct = voidlord_io(3)
+object_lev = new editor_object(asset_get_index("spr_watcher"), lev_id, egg_statue_obj)
+object_lev.iostruct = voidlord_io(1)
+object_eus = new editor_object(asset_get_index("spr_lover"), eus_id, egg_statue_obj)
+object_eus.iostruct = voidlord_io(6)
+object_bee = new editor_object(asset_get_index("spr_smiler"), bee_id, egg_statue_obj)
+object_bee.iostruct = voidlord_io(2)
+object_gor = new editor_object(asset_get_index("spr_slower"), gor_id, egg_statue_obj)
+object_gor.iostruct = voidlord_io(5)
+
+object_secret_exit = new editor_object(asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
+object_secret_exit.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
+}
+object_hungry_man = new editor_object(asset_get_index("spr_fam_u"), hungry_man_id, hungry_man_obj)
+object_hungry_man.draw_function = music_draw_function
+
+
+
+
+
+enum chest_items {
+	locust,
+	memory,
+	wings,
+	sword,
+	empty,
+	size // cool trick!
+}
+
 
 // we create the hologram sprite in real time
 var hologram_surf = surface_create(16, 16)
@@ -419,7 +647,7 @@ draw_sprite(asset_get_index("spr_question_black"), 8, 8, 8)
 var hologram_sprite = sprite_create_from_surface(hologram_surf, 0, 0, 16, 16, false, false, 8, 8)
 surface_reset_target()
 surface_free(hologram_surf)
-object_hologram = new editor_placeable(hologram_sprite, hologram_id, hologram_obj)
+object_hologram = new editor_object(hologram_sprite, hologram_id, hologram_obj)
 
 global.player_tiles = array_create(7)
 global.player_objects = array_create(7)
@@ -434,7 +662,7 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfl
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_spider, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
-	object_bee, object_gor, object_secret_exit]
+	object_bee, object_gor, object_hungry_man, object_secret_exit]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
 	"msc_gorcircle_lo", "msc_levcircle", "msc_cifcircle", "msc_beesong", "msc_monstrail"]
@@ -588,7 +816,7 @@ global.level_start = 0;
 
 
 global.online_mode = false;
-global.server = "http://207.127.92.246:3000/voyager"
+
 
 get_levels = noone
 validate_levels = noone
@@ -650,3 +878,4 @@ function on_startup_finish() {
 }
 
 global.startup_room = asset_get_index("rm_ev_startup")
+global.playtesting = false;

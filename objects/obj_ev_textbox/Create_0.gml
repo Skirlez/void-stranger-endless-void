@@ -27,20 +27,20 @@ function calculate_scale() {
 	yscale = max(base_scale_y, string_count("\n", filtered_text) + 1)
 }
 
+#macro CHARACTER_THAT_CANT_BE_TYPED "\r"
 
 function filter_text(txt, cursor = false) {
 	if (string_length(txt) >= char_limit && !allow_deletion)
 		cursor = false;
-	var cursor_offset = 0
 	draw_set_font(global.ev_font)
 	var accum_width = 0
 	var new_txt = txt
 	var last_space_ind = 0
-	if (!automatic_newline) {
-		if (cursor)
-			txt = string_insert(cursor_time % 60 < 30 ? "/" : " ", txt, cursor_pos)
-		return txt;
-	}
+
+	if cursor && window.selected_element == id
+		new_txt = string_insert(CHARACTER_THAT_CANT_BE_TYPED, new_txt, cursor_pos)
+
+	var ind_in_original = 1;
 	for (var i = 1; i <= string_length(new_txt); i++) {
 		var char = string_char_at(new_txt, i)
 		if char == "\n"	
@@ -48,29 +48,29 @@ function filter_text(txt, cursor = false) {
 		else {
 			if char == " "
 				last_space_ind = i
-
-			accum_width += string_width(char)
+			if (char != "/")
+				accum_width += string_width(char)
 			if accum_width > max_line_width {
 				if (i - last_space_ind <= 16) {
 					var ind_to_newline = last_space_ind
-					new_txt = string_delete(new_txt, ind_to_newline, 1)
+					new_txt = string_delete(new_txt, ind_to_newline, 1)	
+					
 				}
 				else
 					ind_to_newline = i
 
-				
-					
+						
 				new_txt = string_insert("\n", new_txt, ind_to_newline)
-				if cursor_pos + cursor_offset > ind_to_newline
-					cursor_offset++
+		
 				var str = string_copy(new_txt, ind_to_newline, i - ind_to_newline + 1)
 				accum_width = string_width(str)
 			}
 		}
+		ind_in_original++;
 	}
-	
 	if cursor && window.selected_element == id
-		new_txt = string_insert(cursor_time % 60 < 30 ? "/" : " ", new_txt, cursor_pos + cursor_offset)
+		new_txt = string_replace_all(new_txt, CHARACTER_THAT_CANT_BE_TYPED, cursor_time % 60 < 30 ? "/" : " ")
+
 	
 	return new_txt
 }

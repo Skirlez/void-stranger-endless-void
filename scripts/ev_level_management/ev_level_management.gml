@@ -4,9 +4,7 @@
 
 #macro BASE64_END_CHAR "!"
 #macro MULTIPLIER_CHAR "X"
-function num_to_string(num, length) {
-	return string_replace(string_format(num, length, 0), " ", 0)	
-}
+
 function string_is_uint(str) {
 	return str != "" && string_length(str) == string_length(string_digits(str));
 }
@@ -77,33 +75,22 @@ function export_level(level) {
 	var tile_previous = "";
 	var object_previous = ""
 	
-	var tile_multiplier = 0;
-	var object_multiplier = 0;
+	var tile_multiplier = 1;
+	var object_multiplier = 1;
 	
 	for (var i = 0; i < 9; i++)	{
 		for (var j = 0; j < 14; j++) {
 			if (i != 8) {
-				var addition = ""
 				var tile_state = level.tiles[i][j]
-				var tile_id = tile_state.tile.tile_id
-				addition += tile_id
-				switch (tile_id) {
-					case wall_id:
-					case edge_id:
-						addition += num_to_string(tile_state.properties.ind, 2)
-						break;
-					case chest_id:
-						addition += num_to_string(tile_state.properties.itm, 2)
-					default:
-						break;
-				}
+				var tile = tile_state.tile
+				var addition = tile.iostruct.write(tile_state)
 				
 				if (addition == tile_previous)
 					tile_multiplier++;
 				else {
-					if tile_multiplier != 0 { 
+					if tile_multiplier != 1 { 
 						tile_string += MULTIPLIER_CHAR + string(tile_multiplier)
-						tile_multiplier = 0	
+						tile_multiplier = 1	
 					}
 					tile_string += addition;
 				}
@@ -112,47 +99,16 @@ function export_level(level) {
 			
 			var addition = ""
 			var object_state = level.objects[i][j]
-			var object_id = object_state == noone ? "em" : object_state.tile.tile_id
+			var object = object_state.tile
 			
-			addition += object_id
-			switch (object_id) {
-				case leech_id:
-				case maggot_id:
-					addition += string(object_state.properties.dir)
-					break;
-				case mimic_id:
-					addition += string(object_state.properties.typ)
-					break;
-				case egg_id:
-					var arrlen = array_length(object_state.properties.txt)
-					var sub_addition = ""
-					var m
-					for (m = 0; m < arrlen; m++) {
-						var txt = object_state.properties.txt[m]
-						if txt == ""
-							break;
-						sub_addition += base64_encode(txt) + BASE64_END_CHAR	
-					}
-					if m == 0 {
-						addition += "0"
-						break;	
-					}
-					addition += string(m) + sub_addition
-					break;
-				case cif_id:
-					addition += string(object_state.properties.lmp)
-					break;
-				default:
-					break;
-			}
-			
+			addition += object.iostruct.write(object_state);
 			
 			if (addition == object_previous)
 				object_multiplier++;
 			else {
-				if object_multiplier != 0 { 
+				if object_multiplier != 1 { 
 					object_string += MULTIPLIER_CHAR + string(object_multiplier)
-					object_multiplier = 0	
+					object_multiplier = 1	
 				}
 				object_string += addition;
 			}
@@ -160,18 +116,17 @@ function export_level(level) {
 		}
 	}
 	
-	if tile_multiplier != 0 
+	if tile_multiplier != 1
 		tile_string += MULTIPLIER_CHAR + string(tile_multiplier)
 	
-	if object_multiplier != 0 
+	if object_multiplier != 1 
 		object_string += MULTIPLIER_CHAR + string(object_multiplier)
 	
 	return combine_strings("|", version_string, name_string, description_string,
-		music_string, author_string, author_brand_string, burdens_string, tile_string, object_string, 
-		upload_date_string, last_edit_date_string)
+		music_string, author_string, author_brand_string, upload_date_string, last_edit_date_string,
+		burdens_string, tile_string, object_string)
 
 }
-
 
 function get_level_name_from_string(level_string) {
 	var start = string_pos("|", level_string) + 1;
@@ -180,8 +135,7 @@ function get_level_name_from_string(level_string) {
 	return base64_decode(string_copy(level_string, start, ending - start));
 }
 
-// imports a level from a level string
-function import_level(level_string) {
+function import_level_OLD(level_string) {
 	var level = new level_struct()
 	
 	var strings = string_split(level_string, "|");
@@ -199,18 +153,17 @@ function import_level(level_string) {
 	level.music = base64_decode(strings[3]);
 	level.author = base64_decode(strings[4])
 	level.author_brand = int64(strings[5])
+	level.upload_date = strings[6]
+	level.last_edit_date = strings[7];
 	
-	
-	var burdens = int64(strings[6]);
+	var burdens = int64(strings[8]);
 
 	for (var i = 0; i < 4; i++)
 		level.burdens[i] = (burdens & (1 << i) != 0)
 
-	var tile_string = strings[7]
-	var object_string = strings[8]
-	level.upload_date = strings[9]
-	level.last_edit_date = strings[10];
-	
+	var tile_string = strings[9]
+	var object_string = strings[10]
+
 	var tile_pointer = 1
 	var object_pointer = 1
 	var i = 0;
@@ -226,11 +179,11 @@ function import_level(level_string) {
 			
 			var tile_id = string_copy(tile_string, tile_pointer, 2)
 			tile_pointer += 2
+			
 			var tile = ds_map_find_value(global.placeable_name_map, tile_id)
 			if is_undefined(tile)
 				tile = global.editor_instance.tile_pit
-		
-
+			
 			switch (tile_id) {
 				case edge_id:
 				case wall_id:
@@ -284,10 +237,9 @@ function import_level(level_string) {
 						var read_end = string_copy(object_string, object_pointer + count, 1)	
 						count++;
 					} until read_end == BASE64_END_CHAR
-				
+
 					var read_string = string_copy(object_string, object_pointer, count)
 					txt_arr[m] = base64_decode(read_string)
-					
 					object_pointer += count;
 				}
 				level.objects[@ i][j] = new tile_with_state(object, { txt: txt_arr });
@@ -300,6 +252,7 @@ function import_level(level_string) {
 			default:
 				level.objects[@ i][j] = new tile_with_state(object)
 				break;
+
 		}
 		previous_object_string = string_copy(object_string, object_pointer_start, object_pointer - object_pointer_start)
 		
@@ -314,6 +267,84 @@ function import_level(level_string) {
 	return level
 }
 
+
+
+// imports a level from a level string
+function import_level(level_string) {
+	var level = new level_struct()
+	
+	var strings = string_split(level_string, "|");
+	if array_length(strings) != 11 {
+		show_debug_message(level_string)
+		return "Invalid amount of level data sections! Should be 11, instead got " + string(array_length(strings))	
+	}
+	var version_string = strings[0];
+	if !string_is_uint(version_string)
+		return "Invalid version: " + version_string
+	level.version = int64(version_string);
+		
+	level.name = base64_decode(strings[1]);
+	level.description = base64_decode(strings[2]);
+	level.music = base64_decode(strings[3]);
+	level.author = base64_decode(strings[4])
+	level.author_brand = int64(strings[5])
+	level.upload_date = strings[6]
+	level.last_edit_date = strings[7];
+	
+	var burdens = int64(strings[8]);
+
+	for (var i = 0; i < 4; i++)
+		level.burdens[i] = (burdens & (1 << i) != 0)
+
+	var tile_string = strings[9]
+	var object_string = strings[10]
+
+
+
+	import_process_tiles(tile_string, level, 7)
+	import_process_tiles(object_string, level, 8)
+	
+	
+	return level
+}
+function import_process_tiles(tile_string, level, height) {
+	var tile_pointer = 1
+	var i = 0;
+	var j = 0;
+	while (true) {
+		var tile_id = string_copy(tile_string, tile_pointer, 2)
+		tile_pointer += 2
+		var tile = ds_map_find_value(global.placeable_name_map, tile_id)
+		if is_undefined(tile)
+			tile = global.editor_instance.tile_pit
+			
+		var result = tile.iostruct.read(tile, tile_string, tile_pointer)
+			
+		var state = result.value;
+		var offset = result.offset;
+		tile_pointer += offset;
+			
+		var result = get_multiplier(tile_string, tile_pointer);
+		
+		var mult = result.mult;
+		tile_pointer += result.offset;
+		
+		repeat (mult) {
+			if (tile.editor_type == editor_types.tile)
+				level.tiles[@ i][j] = new tile_with_state(state.tile, struct_copy(state.properties))
+			else
+				level.objects[@ i][j] = new tile_with_state(state.tile, struct_copy(state.properties))
+			
+			j++;
+			if (j >= 14) {
+				j = 0;
+				i++;
+				if (i > height)
+					return;
+			}
+		}	
+	}
+}
 
 
 
@@ -344,4 +375,22 @@ function consider_multiplier(str, pointer, previous_string) {
 		str = string_insert(previous_string, str, pointer)
 	
 	return str;
+}
+
+function get_multiplier(str, pointer) {
+	if string_copy(str, pointer, 1) != MULTIPLIER_CHAR
+		return { mult : 1, offset : 0};
+	var num_string = "";
+	var count = 1;
+	while (true) {
+		var read_char = string_copy(str, pointer + count, 1)
+		if is_digit(read_char) {
+			num_string += read_char
+			count++;
+			continue;
+		}
+		break;
+	}
+	var num = int64(num_string)
+	return { mult : num, offset : count };
 }

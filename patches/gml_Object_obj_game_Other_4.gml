@@ -17,5 +17,6 @@ else {
 			surface_resize(surface_final, 224, 144)
 	}
 	global.clear_black = 2
-    global.is_in_editor = false;
+	if (room != rm_ev_editor)
+		global.is_in_editor = false;
 }

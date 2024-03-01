@@ -51,3 +51,6 @@ function ev_get_horizontal_pressed() {
 function ev_get_vertical_pressed() {
 	return keyboard_check_pressed(vk_down) - keyboard_check_pressed(vk_up)
 }
+function ev_is_leave_key_pressed() {
+	return keyboard_check_pressed(ord("E"))
+}

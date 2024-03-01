@@ -8,7 +8,8 @@ if ds_map_find_value(async_load, "id") == get_levels
 	show_debug_message(global.online_levels)
 	with (asset_get_index("obj_ev_level_select"))
 		on_online_update();
-		
+	with (asset_get_index("obj_ev_refresh_window"))
+		on_online_update();	
 	
 	if (room == global.startup_room)
 		startup_actions_count--;

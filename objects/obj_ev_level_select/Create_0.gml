@@ -89,7 +89,7 @@ function create_displays() {
 
 
 
-search_box = instance_create_layer(112 - 20, 12, "Instances", asset_get_index("obj_ev_textbox"), 
+search_box = instance_create_layer(112 - 30, 12, "Instances", asset_get_index("obj_ev_textbox"), 
 {
 	empty_text : "Search...",
 	allow_newlines : false,
@@ -103,9 +103,10 @@ search_box = instance_create_layer(112 - 20, 12, "Instances", asset_get_index("o
 
 search_box.depth--;
 
-var online_switch = instance_create_layer(112 + 47, 12, "Instances", asset_get_index("obj_ev_online_switch"));
+var online_switch = instance_create_layer(112 + 29, 12, "Instances", asset_get_index("obj_ev_online_switch"));
 online_switch.level_select_instance = id
 
+var refresh_button = instance_create_layer(112 + 56, 12, "Instances", asset_get_index("obj_ev_refresh"));
 
 online_levels = copy_array(global.online_levels)
 function switch_mode(new_mode) {
@@ -124,23 +125,39 @@ function switch_mode(new_mode) {
 }
 
 add_child(online_switch)
+add_child(refresh_button)
 add_child(search_box)
 
 
-files = get_all_files(global.levels_directory, level_extension)
-display_object = asset_get_index("obj_ev_display")
 
-offline_levels = array_create(array_length(files));
-for (var i = 0; i < array_length(files); i++) {
-	var file = file_text_open_read(global.levels_directory + files[i] + "." + level_extension)
-	var lvl_string = file_text_read_string(file)
-	offline_levels[i] = lvl_string
-	file_text_close(file)
+display_object = asset_get_index("obj_ev_display")
+files = []
+function read_offline_levels() {
+	files = get_all_files(global.levels_directory, level_extension)
+	var offline_levels = array_create(array_length(files));
+	for (var i = 0; i < array_length(files); i++) {
+		var file = file_text_open_read(global.levels_directory + files[i] + "." + level_extension)
+		var lvl_string = file_text_read_string(file)
+		offline_levels[i] = lvl_string
+		file_text_close(file)
 	
+	}
+	return offline_levels
 }
+offline_levels = read_offline_levels();
+online_levels = copy_array(global.online_levels)
 
 function on_online_update() {
-	online_levels = copy_array(global.online_levels)
+	if (global.online_mode) {
+		online_levels = copy_array(global.online_levels)
+		levels = online_levels
+	}
+	else {
+		offline_levels = read_offline_levels()
+		levels = offline_levels
+	}
+	if (!instance_exists(asset_get_index("obj_ev_level_highlight")))
+		create_displays();
 	show_debug_message("Online updated!")
 }
 

@@ -43,7 +43,8 @@ if play_transition != -1 {
 	}
 
 	if play_transition == -1 {
-		
+		if (room == global.editor_room)
+			global.playtesting = true;
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(asset_get_index("rm_ev_level"))	
 	}
@@ -145,4 +146,7 @@ else
 	global.mouse_right_pressed = false;
 if mouse_check_button_released(mb_right) {
 	global.mouse_right_held = false;	
+}
+if (ev_is_leave_key_pressed() && room == asset_get_index("rm_ev_level")) {
+	ev_leave_level()
 }
