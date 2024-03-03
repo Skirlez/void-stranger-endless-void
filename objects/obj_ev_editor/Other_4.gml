@@ -25,6 +25,18 @@ if (room == asset_get_index("rm_ev_level")) {
 
 
 if (room == asset_get_index("rm_ev_startup")) {
+	uploaded_levels = get_all_files(global.levels_directory, "key")
+	uploaded_keys = array_create(array_length(uploaded_levels), "")
+
+	for (var i = 0; i < array_length(uploaded_levels); i++) {
+		var save_name = uploaded_levels[i] 
+		var file = file_text_open_read(global.levels_directory + save_name + ".key")
+		var key = file_text_read_string(file);
+		uploaded_keys[i] = key;
+		file_text_close(file)
+	}
+	
+	global.online_levels = []
 	startup_timeout = 300; // frames seconds to do the following things
 	startup_actions_count = 2; 
 	

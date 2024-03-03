@@ -10,6 +10,14 @@ function ev_place_level_instances(level) {
 
 	for (var i = 0; i < 9; i++) {
 		for (var j = 0; j < 14; j++) {
+			var tile_state = level.tiles[i][j];
+			var tile = tile_state.tile
+			if i != 8 {
+				tile.iostruct.place(tile_state, i, j, wall_tilemap, edge_tilemap)
+			}
+			var object_state = level.objects[i][j];
+			var object = object_state.tile
+			object.iostruct.place(object_state, i, j, wall_tilemap, edge_tilemap)
 			/*
 			if i != 8 {
 				var tile_state = level.tiles[i][j];

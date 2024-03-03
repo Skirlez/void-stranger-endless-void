@@ -1,5 +1,9 @@
-if keyboard_check_pressed(vk_f11)
+if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(!window_get_fullscreen())
+if (ev_is_leave_key_pressed() && room == asset_get_index("rm_ev_level")) {
+	ev_leave_level()
+}
+
 
 if (room == asset_get_index("rm_ev_startup")) {
 	if (startup_timeout != -1) {
@@ -146,7 +150,4 @@ else
 	global.mouse_right_pressed = false;
 if mouse_check_button_released(mb_right) {
 	global.mouse_right_held = false;	
-}
-if (ev_is_leave_key_pressed() && room == asset_get_index("rm_ev_level")) {
-	ev_leave_level()
 }

@@ -1,23 +1,24 @@
 randomize()
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
 	audio_group_load(VoidStrangerAudio)
+	window_set_fullscreen(true)
 	global.music = -4	
 }
 
 #macro level_extension "vsl"
 
-global.levels_directory = game_save_id + "levels\\"
-global.save_directory = game_save_id
 
-global.server = "http://207.127.92.246:3000/voyager"
+global.save_directory = game_save_id
+global.server_ip = "207.127.92.246:3000"
 
 global.author = { username : "Anonymous", brand : string(irandom_range(0, $FFFFFFFFF)) }
 
-if !file_exists(global.save_directory + "author.ini") {
+if !file_exists(global.save_directory + "ev_options.ini") {
 	ev_save();
+	ev_update_vars()
 }
 else
 	ev_load()
@@ -84,7 +85,7 @@ default_writer = function(tile_state) {
 	return tile_state.tile.tile_id
 }
 default_placer = function(tile_state, i, j /*, wall_tilemap, edge_tilemap */) {
-	instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name))
+	instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name))
 }
 
 default_tile_io = { 
@@ -322,24 +323,6 @@ tile_chest.draw_function = function (tile_state, i, j) {
 			0, j * 16 + 8, i * 16 + 8)	
 }
 
-tile_chest.iostruct = {
-	read : function(tile, lvl_str, pos) {
-		var read_item = string_copy(lvl_str, pos, 2)
-		var item = clamp(int64_safe(read_item, 0), 0, chest_items.size - 1)
-		var t = new tile_with_state(tile, { itm : item });
-		return { value : t, offset : 2 };
-	},
-	write : function (tile_state) {
-		return tile_state.tile.tile_id + num_to_string(tile_state.properties.itm, 2);	
-	},
-	place : function (tile_state, i, j) {
-		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
-		inst.persistent = false;
-		inst.contents = chest_get_contents_num(tile_state.properties.itm)
-		if (tile_state.properties.itm == chest_items.sword)
-			inst.sprite_index = asset_get_index("spr_chest_small")
-	}
-}
 function chest_get_contents_num(item_id) {
 	switch (item_id) {
 		case chest_items.locust: return 1;
@@ -351,12 +334,38 @@ function chest_get_contents_num(item_id) {
 	}
 }
 
+tile_chest.iostruct = {
+	read : function(tile, lvl_str, pos) {
+		var read_item = string_copy(lvl_str, pos, 2)
+		var item = clamp(int64_safe(read_item, 0), 0, chest_items.size - 1)
+		var t = new tile_with_state(tile, { itm : item });
+		return { value : t, offset : 2 };
+	},
+	write : function (tile_state) {
+		return tile_state.tile.tile_id + num_to_string(tile_state.properties.itm, 2);	
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		inst.persistent = false;
+		inst.contents = global.editor_instance.chest_get_contents_num(tile_state.properties.itm)
+		if (tile_state.properties.itm == chest_items.sword)
+			inst.sprite_index = asset_get_index("spr_chest_small")
+	}
+}
+
+
 tile_unremovable = new editor_tile(asset_get_index("spr_floor_white"), unremovable_id, unremovable_obj, "Floor", flag_unremovable|flag_unplaceable)
 tile_unremovable.draw_function = empty_function;
 
 object_empty = new editor_object(noone, empty_id, no_obj, "Instances", flag_unplaceable)
 object_empty.draw_function = empty_function;
-
+object_empty.iostruct = {
+	read: default_reader,
+	write : default_writer,
+	place : function () {
+		
+	}
+}
 
 sweat_sprite = asset_get_index("spr_sweat")
 object_player = new editor_object(asset_get_index("spr_player_down"), player_id, player_obj, "Instances", flag_unremovable|flag_only_one)
@@ -378,7 +387,7 @@ object_leech.draw_function = function(tile_state, i, j) {
 maggot_sprite_down = asset_get_index("spr_cc_down");
 maggot_sprite_up = asset_get_index("spr_cc_up");
 
-object_maggot = new editor_object(maggot_sprite_down, maggot_id, maggot_obj, 0)
+object_maggot = new editor_object(maggot_sprite_down, maggot_id, maggot_obj)
 object_maggot.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_up : maggot_sprite_down, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
 }
@@ -399,7 +408,7 @@ var directioned_iostruct = {
 		return tile_state.tile.tile_id + (tile_state.properties.dir == true ? "1" : "0");
 	},
 	place : function (tile_state, i, j) {
-		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
 		inst.editor_dir = tile_state.properties.dir;
 		return inst;
 	}
@@ -408,6 +417,7 @@ var directioned_iostruct = {
 object_leech.zed_function = directioned_zed_function
 object_leech.properties_generator = directioned_properties
 object_leech.iostruct = directioned_iostruct
+
 object_maggot.zed_function = directioned_zed_function
 object_maggot.properties_generator = directioned_properties
 object_maggot.iostruct = directioned_iostruct
@@ -442,7 +452,7 @@ object_mimic.iostruct = {
 		return tile_state.tile.tile_id + string(tile_state.properties.typ);
 	},
 	place : function (tile_state, i, j) {
-		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
 		inst.editor_type = tile_state.properties.typ;
 		return inst;
 	}	
@@ -480,8 +490,11 @@ object_spider.iostruct = {
 		return tile_state.tile.tile_id + string(tile_state.properties.ang );
 	},
 	place : function (tile_state, i, j) {
-		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
-		inst.set_e_direction = 3 - tile_state.properties.ang;
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		var val = tile_state.properties.ang - 1
+		if (val < 0)
+			val = 3
+		inst.set_e_direction = 3 - val;
 		return inst;
 	}		
 }
@@ -537,22 +550,20 @@ object_egg.iostruct = {
 		return tile_state.tile.tile_id + string(m) + encoded_text
 	},
 	place : function (tile_state, i, j) {
-		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
 		with (inst) {
 			var m;
 			for (m = 0; m < 4; m++) {
 				if tile_state.properties.txt[m] == ""
 					break;
-									
-				count++
 				text[m] = tile_state.properties.txt[m];
 			}
 			if m == 0
 				break;
 			special_message = -1
 			voice = b_voice	
-			moods = array_create(count, neutral)
-			speakers = array_create(count, id)
+			moods = array_create(m, neutral)
+			speakers = array_create(m, id)
 		}
 	}		
 }
@@ -582,7 +593,7 @@ object_cif.iostruct = {
 		return tile_state.tile.tile_id + string(tile_state.properties.lmp);
 	},
 	place : function (tile_state, i, j) {
-		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
 		if (tile_state.properties.lmp)
 			inst.editor_lamp = true
 		inst.b_form = 4
@@ -594,11 +605,11 @@ function voidlord_io(b_form) {
 	return {
 		read : default_reader,
 		write : default_writer,
-		place : method(self, function (tile_state, i, j) {
-			var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.obj_layer, asset_get_index(tile_state.obj_name));
-			inst.b_form = num
+		place : function (tile_state, i, j) {
+			var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+			inst.b_form = self.num
 			return inst;
-		}),
+		},
 		num : b_form
 	};
 }	
@@ -841,16 +852,7 @@ function remove_level_key(level_save_name) {
 	ds_map_delete(global.level_key_map, level_save_name)
 }
 
-uploaded_levels = get_all_files(global.levels_directory, "key")
-uploaded_keys = array_create(array_length(uploaded_levels), "")
 
-for (var i = 0; i < array_length(uploaded_levels); i++) {
-	var save_name = uploaded_levels[i] 
-	var file = file_text_open_read(global.levels_directory + save_name + ".key")
-	var key = file_text_read_string(file);
-	uploaded_keys[i] = key;
-	file_text_close(file)
-}
 
 function on_server_validate_startup(valid_str) {
 	var arr_ind = 0;

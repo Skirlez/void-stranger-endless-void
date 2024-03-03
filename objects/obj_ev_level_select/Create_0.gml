@@ -70,6 +70,7 @@ function create_displays() {
 
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
+			no_spoiling : true,
 			image_xscale : 0.2,
 			image_yscale : 0.2
 		});

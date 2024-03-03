@@ -135,139 +135,6 @@ function get_level_name_from_string(level_string) {
 	return base64_decode(string_copy(level_string, start, ending - start));
 }
 
-function import_level_OLD(level_string) {
-	var level = new level_struct()
-	
-	var strings = string_split(level_string, "|");
-	if array_length(strings) != 11 {
-		show_debug_message(level_string)
-		return "Invalid amount of level data sections! Should be 11, instead got " + string(array_length(strings))	
-	}
-	var version_string = strings[0];
-	if !string_is_uint(version_string)
-		return "Invalid version: " + version_string
-	level.version = int64(version_string);
-		
-	level.name = base64_decode(strings[1]);
-	level.description = base64_decode(strings[2]);
-	level.music = base64_decode(strings[3]);
-	level.author = base64_decode(strings[4])
-	level.author_brand = int64(strings[5])
-	level.upload_date = strings[6]
-	level.last_edit_date = strings[7];
-	
-	var burdens = int64(strings[8]);
-
-	for (var i = 0; i < 4; i++)
-		level.burdens[i] = (burdens & (1 << i) != 0)
-
-	var tile_string = strings[9]
-	var object_string = strings[10]
-
-	var tile_pointer = 1
-	var object_pointer = 1
-	var i = 0;
-	var j = 0;
-	
-	var previous_tile_string = ""
-	var previous_object_string = ""
-
-	while (i < 9) {
-		if i != 8 {
-			tile_string = consider_multiplier(tile_string, tile_pointer, previous_tile_string)
-			var tile_pointer_start = tile_pointer
-			
-			var tile_id = string_copy(tile_string, tile_pointer, 2)
-			tile_pointer += 2
-			
-			var tile = ds_map_find_value(global.placeable_name_map, tile_id)
-			if is_undefined(tile)
-				tile = global.editor_instance.tile_pit
-			
-			switch (tile_id) {
-				case edge_id:
-				case wall_id:
-					var read_ind = string_copy(tile_string, tile_pointer, 2)
-					tile_pointer += 2;
-					level.tiles[@ i][j] = new tile_with_state(tile, { ind: int64(read_ind) });
-					break;
-				case chest_id:
-					var read_item = string_copy(tile_string, tile_pointer, 2)
-					tile_pointer += 2
-					level.tiles[@ i][j] = new tile_with_state(tile, { itm : int64(read_item) });
-					break;
-				default:
-					level.tiles[@ i][j] = new tile_with_state(tile);
-					break;
-			}
-			previous_tile_string = string_copy(tile_string, tile_pointer_start, tile_pointer - tile_pointer_start)
-		}
-		else
-			level.tiles[@ i][j] = new tile_with_state(global.editor_instance.tile_unremovable);
-		
-		object_string = consider_multiplier(object_string, object_pointer, previous_object_string)
-		var object_pointer_start = object_pointer
-		var object_id = string_copy(object_string, object_pointer, 2)
-		object_pointer += 2
-		
-		var object = ds_map_find_value(global.placeable_name_map, object_id)
-		if is_undefined(object)
-			object = global.editor_instance.object_empty
-		
-		switch (object_id) {
-			case leech_id:
-			case maggot_id:
-				var read_dir = string_copy(object_string, object_pointer, 1)
-				object_pointer++
-				level.objects[@ i][j] = new tile_with_state(object, { dir: bool(int64(read_dir)) });
-				break;
-			case mimic_id:
-				var read_type = string_copy(object_string, object_pointer, 1)
-				object_pointer++	
-				level.objects[@ i][j] = new tile_with_state(object, { typ: int64(read_type) });
-				break;
-			case egg_id:
-				var read_length = string_copy(object_string, object_pointer, 1)
-				object_pointer++	
-				var arrlen = int64(read_length);
-				var txt_arr = array_create(4, "")
-				for (var m = 0; m < arrlen; m++) {
-					var count = 0
-					do {
-						var read_end = string_copy(object_string, object_pointer + count, 1)	
-						count++;
-					} until read_end == BASE64_END_CHAR
-
-					var read_string = string_copy(object_string, object_pointer, count)
-					txt_arr[m] = base64_decode(read_string)
-					object_pointer += count;
-				}
-				level.objects[@ i][j] = new tile_with_state(object, { txt: txt_arr });
-				break;
-			case cif_id:
-				var read_lamp = string_copy(object_string, object_pointer, 1)
-				object_pointer++
-				level.objects[@ i][j] = new tile_with_state(object, { lmp: bool(int64(read_lamp)) });
-				break;
-			default:
-				level.objects[@ i][j] = new tile_with_state(object)
-				break;
-
-		}
-		previous_object_string = string_copy(object_string, object_pointer_start, object_pointer - object_pointer_start)
-		
-		j++;
-		if j >= 14 {
-			j = 0
-			i++;
-		}
-	}
-	
-	
-	return level
-}
-
-
 
 // imports a level from a level string
 function import_level(level_string) {
@@ -311,7 +178,7 @@ function import_process_tiles(tile_string, level, height) {
 	var tile_pointer = 1
 	var i = 0;
 	var j = 0;
-	while (true) {
+	while (tile_pointer < string_length(tile_string)) {
 		var tile_id = string_copy(tile_string, tile_pointer, 2)
 		tile_pointer += 2
 		var tile = ds_map_find_value(global.placeable_name_map, tile_id)

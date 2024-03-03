@@ -20,16 +20,16 @@ draw_set_valign(fa_right)
 draw_set_color(c_black)
 
 
-draw_text_ext(1 * 16, 9 * 16 + 2, "VO", 0, -1)
-draw_text_ext(2 * 16, 9 * 16 + 2, "ID", 0, -1)
+draw_text_ext(1 * 16, 9 * 16 + 1, "VO", 0, -1)
+draw_text_ext(2 * 16, 9 * 16 + 1, "ID", 0, -1)
 
 draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
 draw_text(5 * 16, 9 * 16 + 1, "00")
 
 // idk how void stranger draws it but this is the only way i could make it align properly
-draw_text(12 * 16, 9 * 16 + 2, "B?")
-draw_text(13 * 16, 9 * 16 + 2, "?")
-draw_text(13 * 16 + 8, 9 * 16 + 2, "?")
+draw_text(12 * 16, 9 * 16 + 1, "B?")
+draw_text(13 * 16, 9 * 16 + 1, "?")
+draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
 
 
 var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
@@ -49,7 +49,16 @@ for (var i = 0; i < 9; i++)	{
 		if (tile_mode)
 			draw_set_alpha(0.4)
 		var object_state = lvl.objects[i][j]
-		draw_tile_state(i, j, object_state)
+		if (no_spoiling) {
+			
+			// We don't want to spoil hologram eggs, and we don't want to spoil if an egg has text or not.
+			if (object_state.tile == global.editor_instance.object_hologram || object_state.tile == global.editor_instance.object_egg)
+				draw_tile_state(i, j, new tile_with_state(global.editor_instance.object_egg))
+			else if (object_state.tile != global.editor_instance.object_secret_exit)
+				draw_tile_state(i, j, object_state)
+		}
+		else
+			draw_tile_state(i, j, object_state)
 		if (tile_mode)
 			draw_set_alpha(1)
 	}
