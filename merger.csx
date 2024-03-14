@@ -100,17 +100,19 @@ foreach (UndertaleScript script in endlessVoidData.Scripts)
 foreach (UndertaleGameObject gameObject in endlessVoidData.GameObjects) {
     Data.GameObjects.Add(gameObject);
 }
+
 foreach (UndertaleRoom room in endlessVoidData.Rooms) {
     Data.Rooms.Add(room);
     foreach (UndertaleRoom.Layer layer in room.Layers) {
         if (layer.LayerType == UndertaleRoom.LayerType.Instances) {
             foreach (UndertaleRoom.GameObject gameObject in layer.InstancesData.Instances)
                 gameObject.InstanceID += addInstanceId;
-
-     
         }
     }
 }
+
+
+
 foreach (UndertaleAnimationCurve curve in endlessVoidData.AnimationCurves)
     Data.AnimationCurves.Add(curve);
 
@@ -186,6 +188,10 @@ void applyPatches(string codeEntryName, string patches) {
     }
 }
 
+
+Data.GeneralInfo.FileName = endlessVoidData.GeneralInfo.FileName;
+Data.GeneralInfo.Name = endlessVoidData.GeneralInfo.Name;
+Data.GeneralInfo.DisplayName = endlessVoidData.GeneralInfo.DisplayName;
 
 //DisableAllSyncBindings();
 

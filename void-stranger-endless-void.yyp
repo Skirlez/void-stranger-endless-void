@@ -126,6 +126,7 @@
     {"id":{"name":"msc_monstrail","path":"sounds/msc_monstrail/msc_monstrail.yy",},"order":8,},
     {"id":{"name":"snd_ev_togglebox_click","path":"sounds/snd_ev_togglebox_click/snd_ev_togglebox_click.yy",},"order":13,},
     {"id":{"name":"obj_ev_display","path":"objects/obj_ev_display/obj_ev_display.yy",},"order":4,},
+    {"id":{"name":"rm_ev_info","path":"rooms/rm_ev_info/rm_ev_info.yy",},"order":7,},
     {"id":{"name":"spr_smiler","path":"sprites/spr_smiler/spr_smiler.yy",},"order":30,},
     {"id":{"name":"spr_voider","path":"sprites/spr_voider/spr_voider.yy",},"order":32,},
     {"id":{"name":"rm_ev_editor","path":"rooms/rm_ev_editor/rm_ev_editor.yy",},"order":3,},
@@ -154,6 +155,7 @@
     {"id":{"name":"msc_dungeongroove","path":"sounds/msc_dungeongroove/msc_dungeongroove.yy",},"order":3,},
     {"id":{"name":"spr_ev_ls_border","path":"sprites/spr_ev_ls_border/spr_ev_ls_border.yy",},"order":21,},
     {"id":{"name":"snd_ev_start_level","path":"sounds/snd_ev_start_level/snd_ev_start_level.yy",},"order":9,},
+    {"id":{"name":"obj_ev_info","path":"objects/obj_ev_info/obj_ev_info.yy",},"order":39,},
     {"id":{"name":"spr_deathfloor","path":"sprites/spr_deathfloor/spr_deathfloor.yy",},"order":22,},
     {"id":{"name":"spr_ev_toggle","path":"sprites/spr_ev_toggle/spr_ev_toggle.yy",},"order":17,},
     {"id":{"name":"spr_ev_delete_level","path":"sprites/spr_ev_delete_level/spr_ev_delete_level.yy",},"order":29,},
@@ -198,6 +200,7 @@
     {"roomId":{"name":"rm_ev_level","path":"rooms/rm_ev_level/rm_ev_level.yy",},},
     {"roomId":{"name":"rm_ev_level_select","path":"rooms/rm_ev_level_select/rm_ev_level_select.yy",},},
     {"roomId":{"name":"rm_ev_options","path":"rooms/rm_ev_options/rm_ev_options.yy",},},
+    {"roomId":{"name":"rm_ev_info","path":"rooms/rm_ev_info/rm_ev_info.yy",},},
   ],
   "Folders": [
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Animation Curves","folderPath":"folders/Animation Curves.yy","order":6,},

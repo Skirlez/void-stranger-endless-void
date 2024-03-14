@@ -1,3 +1,3 @@
 // TARGET: LINENUMBER
 // 3
-return;
+return true;

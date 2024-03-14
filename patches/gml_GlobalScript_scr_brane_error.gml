@@ -1,3 +1,4 @@
 // TARGET: LINENUMBER
 // 3
-return;
+scr_errorcrash()
+exit

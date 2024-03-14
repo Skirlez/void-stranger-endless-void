@@ -1,4 +1,4 @@
-if (true) {
+if (compiled_for_merge) {
 	if (room == asset_get_index("rm_ev_editor"))
 		lvl = global.level;
 	event_inherited()

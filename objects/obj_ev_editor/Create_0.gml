@@ -4,17 +4,18 @@ if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
 	audio_group_load(VoidStrangerAudio)
-	window_set_fullscreen(true)
+	
 	global.music = -4	
 }
+window_set_fullscreen(true)
 
 #macro level_extension "vsl"
 
 
 global.save_directory = game_save_id
-global.server_ip = "207.127.92.246:3000"
+global.server_ip = "skirlez.com"
 
-global.author = { username : "Anonymous", brand : string(irandom_range(0, $FFFFFFFFF)) }
+global.author = { username : "Anonymous", brand : string(int64(irandom_range(0, $FFFFFFFFF))) }
 
 if !file_exists(global.save_directory + "ev_options.ini") {
 	ev_save();

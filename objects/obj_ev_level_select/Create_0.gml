@@ -104,10 +104,12 @@ search_box = instance_create_layer(112 - 30, 12, "Instances", asset_get_index("o
 
 search_box.depth--;
 
-var online_switch = instance_create_layer(112 + 29, 12, "Instances", asset_get_index("obj_ev_online_switch"));
-online_switch.level_select_instance = id
-
-var refresh_button = instance_create_layer(112 + 56, 12, "Instances", asset_get_index("obj_ev_refresh"));
+var online_switch = instance_create_layer(112 + 29, 12, "Instances", asset_get_index("obj_ev_online_switch"), {
+	level_select_instance : id,	
+});
+var refresh_button = instance_create_layer(112 + 56, 12, "Instances", asset_get_index("obj_ev_refresh"), {
+	level_select_instance : id,	
+});
 
 online_levels = copy_array(global.online_levels)
 function switch_mode(new_mode) {
@@ -148,7 +150,7 @@ function read_offline_levels() {
 offline_levels = read_offline_levels();
 online_levels = copy_array(global.online_levels)
 
-function on_online_update() {
+function on_level_update() {
 	if (global.online_mode) {
 		online_levels = copy_array(global.online_levels)
 		levels = online_levels
