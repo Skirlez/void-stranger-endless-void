@@ -9,10 +9,10 @@ F5 - Exit out of a level.
 CTRL + Z - Undo hotkey.
 
 The action key, bound to Z by default, 
-can modify properties of tiles and objects, the rotation of Leeches,
+can modify properties of tiles and objects, like the rotation of Leeches,
 or the contents of chests. Try it on all of them!
 
 NOTE: You will be banned from the official server
 for not using common sense.";
 
-draw_text_transformed(5, 5, long_text, 0.5, 0.5, 0)
+draw_text_transformed(4, 5, long_text, 0.5, 0.5, 0)
