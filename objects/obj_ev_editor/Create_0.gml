@@ -349,8 +349,8 @@ tile_chest.iostruct = {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
 		inst.persistent = false;
 		inst.contents = global.editor_instance.chest_get_contents_num(tile_state.properties.itm)
-		if (tile_state.properties.itm == chest_items.sword)
-			inst.sprite_index = asset_get_index("spr_chest_small")
+		//if (tile_state.properties.itm == chest_items.sword)
+		//	inst.sprite_index = asset_get_index("spr_chest_small")
 	}
 }
 

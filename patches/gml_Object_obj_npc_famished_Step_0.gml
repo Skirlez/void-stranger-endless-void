@@ -1,3 +1,3 @@
 // TARGET: LINENUMBER
-// 216
+// 215
 instance_destroy(id);
