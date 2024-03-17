@@ -5,9 +5,9 @@ draw_set_valign(fa_top)
 var long_text = 
 @"Controls:
 Use your mouse.
-F6 - Exit out of a level.
+Backspace - Exit out of a level.
 CTRL + Z - Undo hotkey.
-Backspace - Switch between tiles and objects.
+Shift - Switch between tiles and objects.
 1-7 - Tile/object selection hotkeys.
 Middle Click - Plucker tool hotkey.
 
