@@ -1,5 +1,6 @@
 if ds_map_find_value(async_load, "id") == get_levels
 {
+	
     online_levels_str = ds_map_find_value(async_load, "result");
 	if (online_levels_str != "" && !is_undefined(online_levels_str))
 		global.online_levels = string_split_buffer(online_levels_str, ",", 512)
@@ -11,8 +12,9 @@ if ds_map_find_value(async_load, "id") == get_levels
 	with (asset_get_index("obj_ev_refresh_window"))
 		on_level_update();	
 	
-	if (room == global.startup_room)
+	if (room == global.startup_room && ds_map_find_value(async_load, "status") != 1)
 		startup_actions_count--;
+		
 }
 if ds_map_find_value(async_load, "id") == validate_levels
 {
@@ -20,7 +22,8 @@ if ds_map_find_value(async_load, "id") == validate_levels
 		var result = ds_map_find_value(async_load, "result");
 		show_debug_message(result)
 		on_server_validate_startup(result)
+		if (room == global.startup_room)
+			startup_actions_count--;
     }
-	if (room == global.startup_room)
-		startup_actions_count--;
+
 }

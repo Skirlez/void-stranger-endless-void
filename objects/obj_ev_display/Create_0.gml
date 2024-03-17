@@ -226,6 +226,8 @@ border_sprite = asset_get_index("spr_ev_display_border")
 
 draw_name = !edit;
 draw_brand = !edit;
+show_debug_message(level_content_sha1(lvl))
+draw_beaten = !edit && ds_map_exists(global.beaten_levels_map, level_content_sha1(lvl));
 
 draw_set_font(global.ev_font)
 

@@ -1,3 +1,3 @@
 // TARGET: REPLACE
-ev_leave_level()
+ev_clear_level()
 instance_destroy()

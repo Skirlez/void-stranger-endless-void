@@ -1,6 +1,6 @@
 if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(!window_get_fullscreen())
-if (ev_is_leave_key_pressed() && room == asset_get_index("rm_ev_level")) {
+if (ev_is_leave_key_pressed() && !global.pause && room == asset_get_index("rm_ev_level")) {
 	ev_leave_level()
 }
 
@@ -109,26 +109,34 @@ else if (edit_transition != -1) {
 	}
 }
 
-if room == global.editor_room && keyboard_check(vk_control) && global.mouse_layer == 0 {
-	if keyboard_check_pressed(ord("Z")) {
-		undo_repeat = undo_repeat_frames_start
-		undo();
+if room == global.editor_room { 
+	if ev_is_tile_mode_hotkey_pressed() && global.mouse_layer == 0 {
+		switch_tile_mode(!global.tile_mode)
+		audio_play_sound(global.select_sound, 10, false, 1, 0, 1.2)
 	}
-	
-	if keyboard_check(ord("Z")) {
-		undo_repeat--;	
-		if undo_repeat <= 0 {
-			undo()
-			undo_repeat_frames_speed += 2
-		
-			if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
-				undo_repeat_frames_speed = undo_repeat_frames_max_speed;
-			undo_repeat = undo_repeat_frames_start-undo_repeat_frames_speed
+
+	if keyboard_check(vk_control) && global.mouse_layer == 0 {
+
+		if keyboard_check_pressed(ord("Z")) {
+			undo_repeat = undo_repeat_frames_start
+			undo();
 		}
-	}
-	else {
-		undo_repeat = -1	
-		undo_repeat_frames_speed = 0
+	
+		if keyboard_check(ord("Z")) {
+			undo_repeat--;	
+			if undo_repeat <= 0 {
+				undo()
+				undo_repeat_frames_speed += 2
+		
+				if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
+					undo_repeat_frames_speed = undo_repeat_frames_max_speed;
+				undo_repeat = undo_repeat_frames_start-undo_repeat_frames_speed
+			}
+		}
+		else {
+			undo_repeat = -1	
+			undo_repeat_frames_speed = 0
+		}
 	}
 }
 

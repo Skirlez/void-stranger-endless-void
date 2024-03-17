@@ -35,7 +35,7 @@ instance_create_layer(200, 16, "Instances", asset_get_index("obj_ev_executing_bu
 	}
 });
 
-instance_create_layer(112, 72 + 50, "Instances", asset_get_index("obj_ev_executing_button"), {
+instance_create_layer(112 + 30, 72 + 50, "Instances", asset_get_index("obj_ev_executing_button"), {
 	base_scale_x : 1.7,
 	base_scale_y : 0.7,
 	txt : "Random",
@@ -43,6 +43,13 @@ instance_create_layer(112, 72 + 50, "Instances", asset_get_index("obj_ev_executi
 		asset_get_index("obj_ev_make_brand").brand = int64(irandom_range(0, $FFFFFFFFF))
 	}
 });
+author_brand = instance_create_layer(112 + 30, 72 + 10, "Instances", asset_get_index("obj_ev_make_brand"), {
+	brand : global.author.brand
+})
+add_child(author_brand)
+
+change_character = instance_create_layer(112 - 30, 72 + 10, "Instances", asset_get_index("obj_ev_change_character"));
+add_child(change_character)
 
 author_textbox = instance_create_layer(112, 72 - 20, "Instances", asset_get_index("obj_ev_textbox"), 
 {
@@ -55,11 +62,6 @@ author_textbox = instance_create_layer(112, 72 - 20, "Instances", asset_get_inde
 })
 add_child(author_textbox)
 
-author_brand = instance_create_layer(112, 72 + 10, "Instances", asset_get_index("obj_ev_make_brand"), 
-{
-	brand : global.author.brand
-})
-add_child(author_brand)
 
 server_textbox = instance_create_layer(112, 72 - 40, "Instances", asset_get_index("obj_ev_textbox"), 
 {

@@ -1,13 +1,16 @@
 randomize()
+global.latest_lvl_format = 1;
 #macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
 	audio_group_load(VoidStrangerAudio)
-	
+	global.debug = false;
+	global.pause = false;
 	global.music = -4	
 }
 window_set_fullscreen(true)
+
 
 #macro level_extension "vsl"
 
@@ -15,7 +18,8 @@ window_set_fullscreen(true)
 global.save_directory = game_save_id
 global.server_ip = "skirlez.com"
 
-global.author = { username : "Anonymous", brand : string(int64(irandom_range(0, $FFFFFFFFF))) }
+global.author = { username : "Anonymous", brand : int64(irandom_range(0, $FFFFFFFFF)) }
+global.stranger = 0;
 
 if !file_exists(global.save_directory + "ev_options.ini") {
 	ev_save();
@@ -86,7 +90,9 @@ default_writer = function(tile_state) {
 	return tile_state.tile.tile_id
 }
 default_placer = function(tile_state, i, j /*, wall_tilemap, edge_tilemap */) {
-	instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name))
+	var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name))
+	if (inst.persistent)
+		inst.persistent = false;
 }
 
 default_tile_io = { 
@@ -138,6 +144,9 @@ function editor_object(spr_ind, tile_id, obj_name, obj_layer = "Instances", flag
 
 #macro exit_id "ex"
 #macro exit_obj "obj_exit"
+
+#macro black_floor_id "bl"
+#macro black_floor_obj "obj_floor"
 
 #macro white_id "wh"
 #macro white_obj "obj_floor_blank"
@@ -237,10 +246,27 @@ tile_floorswitch.draw_function = function(tile_state, i, j, preview, lvl) {
 tile_copyfloor = new editor_tile(asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
 
 
+
+
 tile_exit = new editor_tile(asset_get_index("spr_stairs"), exit_id, exit_obj)
+
+level_has_unpressed_button = function(lvl) {
+	static fs = tile_floorswitch;
+	static em = object_empty;
+	for (var i = 0; i < 8; i++) {
+		for (var j = 0; j < 14; j++) {
+			if (lvl.tiles[i][j].tile == fs && lvl.objects[i][j].tile == em)
+				return true;	
+		}
+	}	
+	return false;
+}
+
+tile_exit.draw_function = function(tile_state, i, j, preview, lvl) {
+	draw_sprite(tile_state.tile.spr_ind, global.editor_instance.level_has_unpressed_button(lvl) ? 4 : 0, j * 16 + 8, i * 16 + 8)	
+}
 tile_white = new editor_tile(asset_get_index("spr_floor_white"), white_id, white_obj)
 tile_deathfloor = new editor_tile(asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
-
 
 tilemap_tile_read = function(tile, lvl_str, pos) {
 	var read_ind = string_copy(lvl_str, pos, 2)
@@ -278,6 +304,7 @@ tile_edge.iostruct = {
 	write : tilemap_tile_write,
 	place : function(tile_state, i, j, wall_tilemap, edge_tilemap) {
 		tilemap_set(edge_tilemap, tile_state.properties.ind, j, i)
+		global.editor_instance.tile_pit.iostruct.place(new tile_with_state(global.editor_instance.tile_pit), i, j, wall_tilemap, edge_tilemap)
 	}
 }
 
@@ -303,6 +330,37 @@ tile_wall.iostruct = {
 	}
 }
 
+
+var black_floor_surf = surface_create(16, 16)
+surface_set_target(black_floor_surf)
+
+draw_sprite(asset_get_index("spr_floor"), 0, 8, 8)
+draw_set_color(c_black)
+draw_set_alpha(0.2)
+draw_rectangle(0, 0, 16, 16, false)
+draw_set_alpha(1)
+draw_set_color(c_white)
+// invert colors
+gpu_set_blendmode_ext_sepalpha(bm_inv_dest_color, bm_zero, bm_src_alpha, bm_inv_src_alpha)
+
+draw_rectangle(0, 0, 16, 16, false)
+
+gpu_set_blendmode(bm_normal)
+surface_reset_target()
+
+black_floor_sprite = sprite_create_from_surface(black_floor_surf, 0, 0, 16, 16, false, false, 8, 8)
+surface_free(black_floor_surf)
+
+tile_black_floor = new editor_tile(black_floor_sprite, black_floor_id, black_floor_obj)
+tile_black_floor.iostruct = {
+	read : default_reader,
+	write : default_writer,
+	place : function(tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		inst.black_floor = true;
+	
+	}
+}
 
 tile_chest = new editor_tile(asset_get_index("spr_chest_regular"), chest_id, chest_obj, "Floor_INS")
 tile_chest.properties_generator = function () {
@@ -371,12 +429,14 @@ object_empty.iostruct = {
 sweat_sprite = asset_get_index("spr_sweat")
 object_player = new editor_object(asset_get_index("spr_player_down"), player_id, player_obj, "Instances", flag_unremovable|flag_only_one)
 object_player.draw_function = function(tile_state, i, j, preview, lvl) {
+
+	var spr = ev_get_stranger_down_sprite(global.stranger)
 	if (preview && lvl.tiles[i][j].tile == tile_pit) {
-		draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
+		draw_sprite(spr, ev_strobe_integer(2), j * 16 + 8 + dsin(global.editor_time * 24), i * 16 + 8)		
 		draw_sprite(sweat_sprite, global.editor_time / 5, j * 16 + 16, i * 16)
 		return;
 	}
-	draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
+	draw_sprite(spr, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
 }
 
 
@@ -597,6 +657,7 @@ object_cif.iostruct = {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
 		if (tile_state.properties.lmp)
 			inst.editor_lamp = true
+
 		inst.b_form = 4
 		return inst;
 	}		
@@ -632,6 +693,8 @@ object_gor.iostruct = voidlord_io(5)
 
 object_secret_exit = new editor_object(asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
 object_secret_exit.draw_function = function(tile_state, i, j) {
+
+	
 	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
 }
 object_hungry_man = new editor_object(asset_get_index("spr_fam_u"), hungry_man_id, hungry_man_obj)
@@ -670,17 +733,14 @@ for (var i = 0; i < 7; i++) {
 
 
 tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfloor, tile_exit, 
-	tile_deathfloor, tile_white, tile_wall, tile_edge, tile_chest]
+	tile_deathfloor, tile_white, tile_black_floor, tile_wall, tile_edge, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_spider, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
 	object_bee, object_gor, object_hungry_man, object_secret_exit]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
-	"msc_gorcircle_lo", "msc_levcircle", "msc_cifcircle", "msc_beesong", "msc_monstrail"]
-
-
-
+	"msc_gorcircle_lo", "msc_levcircle", "msc_cifcircle", "msc_beesong", "msc_themeofcif", "msc_monstrail", "msc_endless"]
 
 function reset_everything() {
 	global.tile_mode = false
@@ -690,12 +750,7 @@ function reset_everything() {
 	
 	global.level = new level_struct()
 
-	global.level.objects[@ 4][6] = new tile_with_state(object_player)
-	global.level.tiles[@ 2][6] = new tile_with_state(tile_exit)
-	for (var i = 0; i < 3; i++) {
-		for (var j = 0; j < 3; j++)
-			global.level.tiles[@ 3 + i][5 + j] = new tile_with_state(tile_default)
-	}
+	place_placeholder_tiles(global.level)
 	
 
 	current_list = objects_list;
@@ -718,6 +773,10 @@ function switch_tile_mode(new_tile_mode) {
 		current_list = objects_list
 		current_placeables = global.level.objects
 		current_empty_tile = object_empty
+	}
+	if (global.selected_thing == thing_placeable || global.selected_thing == thing_multiplaceable) {
+		global.selected_thing = -1
+		global.selected_placeable_num = -1
 	}
 }
 
@@ -768,6 +827,8 @@ undo_repeat_frames_max_speed = 10
 function get_menu_music_name() {
 	switch (current_weekday) {
 		case 1: return "snd_ev_music_monsday"
+		case 2: return "snd_ev_music_Teusday"
+		case 3: return "snd_ev_music_alsoGooeyPhantasm"
 		case 5: return "snd_ev_music_gooeyPhantasm"
 		default: return "snd_ev_music_stealie_feelies"
 	}
@@ -820,6 +881,7 @@ function edit_level_transition(lvl, display_instance) {
 	edit_transition = max_edit_transition
 	edit_transition_display = display_instance
 	display_instance.draw_brand = false;
+	display_instance.draw_beaten = false;
 	global.mouse_layer = -1
 }
 
@@ -871,7 +933,7 @@ function on_server_validate_startup(valid_str) {
 		add_level_key(uploaded_keys[i], uploaded_levels[i])	
 	}
 		
-	on_startup_finish()
+
 }
 function on_startup_finish() {
 	get_levels = noone;
@@ -880,5 +942,46 @@ function on_startup_finish() {
 	room_goto(asset_get_index("rm_ev_menu"))
 }
 
+global.beaten_levels_map = ds_map_create()
+function read_beaten_levels() {
+	ds_map_clear(global.beaten_levels_map)
+	if !file_exists(global.levels_directory + "beaten_levels.txt")
+		exit
+	var file = file_text_open_read(global.levels_directory + "beaten_levels.txt")
+	
+	var arr = []
+	while (!file_text_eof(file)) {
+	    array_push(arr, file_text_readln(file));
+	}
+	
+	
+	for (var i = 0; i < array_length(arr); i++) {
+		arr[i] = string_replace(arr[i], "\n", "")
+		arr[i] = string_replace(arr[i], "\r", "")
+		show_debug_message(arr[i])
+		ds_map_add(global.beaten_levels_map, arr[i], true);
+	}
+	file_text_close(file)
+	
+	return arr;
+}
+function save_beaten_levels() {	
+	var str = ""
+	
+	var size = ds_map_size(global.beaten_levels_map);
+	var key = ds_map_find_first(global.beaten_levels_map);
+	if (is_undefined(key))
+		return;
+	str += key;
+	for (var i = 0; i < size - 1; i++;) {
+		key = ds_map_find_next(global.beaten_levels_map, key);
+	    str += ("\n" + key)
+	}
+	var file = file_text_open_write(global.levels_directory + "beaten_levels.txt")
+	file_text_write_string(file, str)
+	file_text_close(file)
+}
+
 global.startup_room = asset_get_index("rm_ev_startup")
 global.playtesting = false;
+

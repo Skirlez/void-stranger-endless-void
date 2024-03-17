@@ -168,4 +168,6 @@ if draw_name {
 		y + sprite_height + 2, size, size, 0, c_white, image_alpha)
 }
 
-
+if draw_beaten {
+	draw_sprite(asset_get_index("spr_ev_checkmark"), 0, x + sprite_width - 9, y + sprite_height)
+}

@@ -96,6 +96,7 @@ search_box = instance_create_layer(112 - 30, 12, "Instances", asset_get_index("o
 	allow_newlines : false,
 	automatic_newline : false,
 	char_limit : 50,
+	layer_num : 0,
 	base_scale_x : 5,
 	change_func : function () {
 		asset_get_index("obj_ev_level_select").create_displays();

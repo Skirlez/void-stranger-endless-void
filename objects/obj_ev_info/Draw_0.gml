@@ -5,8 +5,11 @@ draw_set_valign(fa_top)
 var long_text = 
 @"Controls:
 Use your mouse.
-F5 - Exit out of a level.
+F6 - Exit out of a level.
 CTRL + Z - Undo hotkey.
+Backspace - Switch between tiles and objects.
+1-7 - Tile/object selection hotkeys.
+Middle Click - Plucker tool hotkey.
 
 The action key, bound to Z by default, 
 can modify properties of tiles and objects, like the rotation of Leeches,

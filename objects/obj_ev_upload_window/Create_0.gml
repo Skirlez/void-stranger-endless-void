@@ -1,8 +1,11 @@
 event_inherited();
 
+if lvl == noone
+	exit
+
 error_message = ""
 
-are_you_sure_upload_text = "Are you sure you want to\n upload this" + ((irandom($7fffffffffffffff) == 40) ? " stupid " : " ") + "level?"
+are_you_sure_upload_text = "Are you sure you want to\n upload this" + ((int64(irandom($7fffffffffffffff)) == 40) ? " stupid " : " ") + "level?"
 are_you_sure_delete_text = "Are you sure you want to\n delete this level? It will\nnot be deleted locally."
 doing_the_thing_text = "Doing the thing..."
 verifying_text = "Verifying upload..."
@@ -10,6 +13,7 @@ done_text = "Done!\nThe thing you tried doing\nwas successful!"
 fail_text = "Something went wrong.\nError message:\n"
 manage_text = "This level is uploaded.\nWhat would you like to do?"
 no_idea_text = "I have no idea whether\nwhether or not this level\nhas uploaded correctly."
+beat_first = "Clear the level outside\nthe editor first!"
 
 post_level_id = noone
 update_level_id = noone
@@ -17,7 +21,6 @@ delete_level_id = noone
 post_level_verify_id = noone
 
 verifying_key = ""
-
 if ds_map_exists(global.level_key_map, lvl.save_name) {
 	state = 4
 	var updateb = instance_create_layer(112 - 60, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
@@ -92,6 +95,12 @@ function reset_window() {
 }
 
 function start_uploading() {
+	if !ds_map_exists(global.beaten_levels_map, level_content_sha1(lvl)) {
+		state = 8;
+		reset_window()
+		create_finish_buttons("Ah")
+		return;
+	}
 	state = 1;
 	upload_timeout = 300
 	reset_window()
@@ -103,6 +112,13 @@ function start_uploading() {
 }
 
 function start_updating() {
+	if !ds_map_exists(global.beaten_levels_map, level_content_sha1(lvl)) {
+		state = 8;
+		reset_window()
+		create_finish_buttons("Ah")
+		return;
+	}
+
 	state = 1;
 	upload_timeout = 300
 	reset_window()

@@ -10,7 +10,7 @@ function string_is_uint(str) {
 }
 
 function level_struct() constructor {
-	version = 1;
+	version = global.latest_lvl_format;
 	name = ""
 	description = ""
 	music = global.music_names[1]
@@ -32,6 +32,16 @@ function level_struct() constructor {
 	last_edit_date = "";
 	
 }
+function place_placeholder_tiles(level) {
+	level.objects[@ 4][6] = new tile_with_state(global.editor_instance.object_player)
+	level.tiles[@ 2][6] = new tile_with_state(global.editor_instance.tile_exit)
+	for (var i = 0; i < 3; i++) {
+		for (var j = 0; j < 3; j++)
+			level.tiles[@ 3 + i][5 + j] = new tile_with_state(global.editor_instance.tile_default)
+	}	
+	return level;
+}
+
 
 function generate_level_save_name() {
 	return base64_encode(date_string() + string(irandom($7fffffffffffffff)));	
@@ -55,11 +65,8 @@ function combine_strings(separator) {
 	return str + argument[argument_count - 1];
 }
 
-
-
-// returns the level in string format
-function export_level(level) {
-	var version_string = string(level.version);
+function export_level_arr(level) {
+	var version_string = string(global.latest_lvl_format);
 	var name_string = base64_encode(level.name)	
 	var description_string = base64_encode(level.description)	
 	var music_string = base64_encode(level.music)	
@@ -121,12 +128,29 @@ function export_level(level) {
 	
 	if object_multiplier != 1 
 		object_string += MULTIPLIER_CHAR + string(object_multiplier)
-	
-	return combine_strings("|", version_string, name_string, description_string,
-		music_string, author_string, author_brand_string, upload_date_string, last_edit_date_string,
-		burdens_string, tile_string, object_string)
-
+		
+	return [version_string, name_string, description_string, music_string, 
+		author_string, author_brand_string, upload_date_string, last_edit_date_string,
+		burdens_string, tile_string, object_string]
 }
+
+// returns the level in string format
+function export_level(level) {
+	var arr = export_level_arr(level)
+	var str = arr[0]
+	for (var i = 1; i < array_length(arr); i++) {
+		str += "|" + arr[i];
+	}
+	
+	return str;
+}
+function level_content_sha1(level) {
+	var arr = export_level_arr(level)
+	var str = sha1_string_utf8(arr[8] + "|" + arr[9] + "|" + arr[10])
+	return str;
+}
+
+
 
 function get_level_name_from_string(level_string) {
 	var start = string_pos("|", level_string) + 1;
@@ -142,13 +166,19 @@ function import_level(level_string) {
 	
 	var strings = string_split(level_string, "|");
 	if array_length(strings) != 11 {
-		show_debug_message(level_string)
-		return "Invalid amount of level data sections! Should be 11, instead got " + string(array_length(strings))	
+		return place_placeholder_tiles(level);
 	}
 	var version_string = strings[0];
-	if !string_is_uint(version_string)
-		return "Invalid version: " + version_string
-	level.version = int64(version_string);
+	level.version = int64_safe(version_string, 0);
+	if (level.version == 0)
+		return place_placeholder_tiles(level)
+	if (level.version < global.latest_lvl_format) {
+		// conversion code goes here
+	}
+	else if (level.version > global.latest_lvl_format) {
+		return place_placeholder_tiles(level)
+	}
+
 		
 	level.name = base64_decode(strings[1]);
 	level.description = base64_decode(strings[2]);
@@ -168,13 +198,13 @@ function import_level(level_string) {
 
 
 
-	import_process_tiles(tile_string, level, 7)
-	import_process_tiles(object_string, level, 8)
+	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit)
+	import_process_tiles(object_string, level, 8,  global.editor_instance.object_empty)
 	
 	
 	return level
 }
-function import_process_tiles(tile_string, level, height) {
+function import_process_tiles(tile_string, level, height, failsafe_tile) {
 	var tile_pointer = 1
 	var i = 0;
 	var j = 0;
@@ -183,7 +213,7 @@ function import_process_tiles(tile_string, level, height) {
 		tile_pointer += 2
 		var tile = ds_map_find_value(global.placeable_name_map, tile_id)
 		if is_undefined(tile)
-			tile = global.editor_instance.tile_pit
+			tile = failsafe_tile
 			
 		var result = tile.iostruct.read(tile, tile_string, tile_pointer)
 			

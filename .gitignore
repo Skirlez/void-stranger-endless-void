@@ -1,10 +1,10 @@
 # Ignore all PNG images in subfolders except those starting with "ev_"
 sprites/**/*.png
-!sprites/ev_*/**/*.png
+!sprites/spr_ev_*/**/*.png
 
 # Ignore all WAV files in subfolders except those starting with "ev_"
 sounds/**/*.wav
-!sounds/ev_*/**/*.wav
+!sounds/snd_ev_*/**/*.wav
 
 # Ignore all images in the tilesets folder
 tilesets/**/*.png

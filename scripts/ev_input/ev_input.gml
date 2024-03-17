@@ -65,5 +65,11 @@ function ev_get_vertical_pressed() {
 	return keyboard_check_pressed(vk_down) - keyboard_check_pressed(vk_up)
 }
 function ev_is_leave_key_pressed() {
-	return keyboard_check_pressed(vk_f5)
+	return keyboard_check_pressed(vk_backspace)
+}
+function ev_is_tile_mode_hotkey_pressed() {
+	return keyboard_check_pressed(vk_shift)
+}
+function ev_is_plucker_hotkey_pressed() {
+	return mouse_check_button_pressed(mb_middle)
 }
