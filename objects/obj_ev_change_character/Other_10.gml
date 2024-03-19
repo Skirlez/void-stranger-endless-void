@@ -3,6 +3,8 @@ event_inherited()
 if global.stranger == 0
 	global.stranger = 1;
 else if global.stranger == 1
+	global.stranger = 2;	
+else if global.stranger == 2
 	global.stranger = 5;
 else if global.stranger == 5
 	global.stranger = 6;

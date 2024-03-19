@@ -5,5 +5,5 @@ selected = (global.selected_thing == 2 && tile == global.display_object.held_til
 
 event_inherited()
 
-if keyboard_check_pressed(ord(string(num + 1))) && !selected && window == noone
+if keyboard_check_pressed(ord(string(num + 1))) && !selected && global.mouse_layer == 0
 	event_user(0)	
