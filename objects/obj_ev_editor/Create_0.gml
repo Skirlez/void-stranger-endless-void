@@ -195,6 +195,9 @@ function editor_object(spr_ind, tile_id, obj_name, obj_layer = "Instances", flag
 #macro spider_id "ct"
 #macro spider_obj "obj_enemy_ct"
 
+#macro orb_id "cv"
+#macro orb_obj "obj_enemy_cv"
+
 #macro egg_id "eg"
 
 #macro egg_statue_obj "obj_boulder"
@@ -560,6 +563,11 @@ object_spider.iostruct = {
 	}		
 }
 
+object_orb = new editor_object(asset_get_index("spr_cv"), orb_id, orb_obj)
+object_orb.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.tile.spr_ind, ev_strobe_fasttriplet_real(2), j * 16 + 8, i * 16 + 8)	
+}
+
 object_egg = new editor_object(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
 object_egg.properties_generator = function() {
 	return { txt : array_create(4, "") }	
@@ -736,7 +744,7 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfl
 	tile_deathfloor, tile_white, tile_black_floor, tile_wall, tile_edge, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
-	object_mimic, object_diamond, object_spider, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
+	object_mimic, object_diamond, object_spider, object_orb, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
 	object_bee, object_gor, object_hungry_man, object_secret_exit]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
