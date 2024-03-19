@@ -1,6 +1,9 @@
 function ev_prepare_level(level) {
 	// resets all burdens
 	var inv = asset_get_index("obj_inventory");
+    global.memory_backup = 0
+    global.wings_backup = 0
+    global.blade_backup = 0	
 	ds_grid_set(inv.ds_equipment, 0, 0, 0)
 	ds_grid_set(inv.ds_equipment, 0, 1, 0)
 	ds_grid_set(inv.ds_equipment, 0, 2, 0)
