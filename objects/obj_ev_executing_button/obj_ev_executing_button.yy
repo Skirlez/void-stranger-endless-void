@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "obj_ev_executing_button",
   "spriteId": {
-    "name": "spr_white_button",
-    "path": "sprites/spr_white_button/spr_white_button.yy",
+    "name": "spr_ev_white_button",
+    "path": "sprites/spr_ev_white_button/spr_ev_white_button.yy",
   },
   "solid": false,
   "visible": true,

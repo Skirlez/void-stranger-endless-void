@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "obj_ev_logo",
   "spriteId": {
-    "name": "spr_logo",
-    "path": "sprites/spr_logo/spr_logo.yy",
+    "name": "spr_ev_logo",
+    "path": "sprites/spr_ev_logo/spr_ev_logo.yy",
   },
   "solid": false,
   "visible": true,
