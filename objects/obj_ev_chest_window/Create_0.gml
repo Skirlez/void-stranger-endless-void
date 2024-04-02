@@ -13,6 +13,7 @@ function get_item_name(item_id) {
 		case chest_items.memory: return "Memory";
 		case chest_items.wings: return "Wings";
 		case chest_items.sword: return "Sword";
+		case chest_items.opened: return "Opened";
 		default: return "IDK";
 	}
 }

@@ -10,7 +10,6 @@ function string_is_uint(str) {
 }
 
 function level_struct() constructor {
-	version = global.latest_lvl_format;
 	name = ""
 	description = ""
 	music = global.music_names[1]
@@ -169,13 +168,10 @@ function import_level(level_string) {
 		return place_placeholder_tiles(level);
 	}
 	var version_string = strings[0];
-	level.version = int64_safe(version_string, 0);
-	if (level.version == 0)
+	var version = int64_safe(version_string, 0);
+	if (version <= 0)
 		return place_placeholder_tiles(level)
-	if (level.version < global.latest_lvl_format) {
-		// conversion code goes here
-	}
-	else if (level.version > global.latest_lvl_format) {
+	if (version > global.latest_lvl_format) {
 		return place_placeholder_tiles(level)
 	}
 
@@ -197,14 +193,13 @@ function import_level(level_string) {
 	var object_string = strings[10]
 
 
-
 	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit)
 	import_process_tiles(object_string, level, 8,  global.editor_instance.object_empty)
 	
 	
 	return level
 }
-function import_process_tiles(tile_string, level, height, failsafe_tile) {
+function import_process_tiles(tile_string, level, height, failsafe_tile, version) {
 	var tile_pointer = 1
 	var i = 0;
 	var j = 0;

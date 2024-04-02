@@ -1,6 +1,6 @@
 randomize()
 global.latest_lvl_format = 1;
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -133,6 +133,9 @@ function editor_object(spr_ind, tile_id, obj_name, obj_layer = "Instances", flag
 #macro bomb_id "mn"
 #macro bomb_obj "obj_bombfloor"
 
+#macro explo_id "xp"
+#macro explo_obj "obj_explofloor"
+
 #macro default_tile_id "fl"
 #macro default_tile_obj "obj_floor"
 
@@ -240,6 +243,8 @@ tile_glass.draw_function = function(tile_state, i, j, preview, lvl) {
 	default_draw_function(tile_state, i, j)
 }
 tile_bomb = new editor_tile(asset_get_index("spr_bombfloor"), bomb_id, bomb_obj)
+tile_explo = new editor_tile(asset_get_index("spr_explofloor"), explo_id, explo_obj)
+
 tile_default = new editor_tile(floor_sprite, default_tile_id, default_tile_obj)
 tile_floorswitch = new editor_tile(asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
 tile_floorswitch.draw_function = function(tile_state, i, j, preview, lvl) {
@@ -333,7 +338,7 @@ tile_wall.iostruct = {
 	}
 }
 
-
+/*
 var black_floor_surf = surface_create(16, 16)
 surface_set_target(black_floor_surf)
 
@@ -353,8 +358,9 @@ surface_reset_target()
 
 black_floor_sprite = sprite_create_from_surface(black_floor_surf, 0, 0, 16, 16, false, false, 8, 8)
 surface_free(black_floor_surf)
-
-tile_black_floor = new editor_tile(black_floor_sprite, black_floor_id, black_floor_obj)
+*/
+show_debug_message(asset_get_index("spr_ev_blackfloor"))
+tile_black_floor = new editor_tile(asset_get_index("spr_ev_blackfloor"), black_floor_id, black_floor_obj)
 tile_black_floor.iostruct = {
 	read : default_reader,
 	write : default_writer,
@@ -379,10 +385,14 @@ tile_chest.zed_function = function(tile_state) {
 tile_chest.draw_function = function (tile_state, i, j) {
 	static spr_burden_chest = asset_get_index("spr_chest_small");
 	var itm = tile_state.properties.itm;
-	draw_sprite((itm == chest_items.locust || itm == chest_items.empty)
+	
+	var spr	= (itm == chest_items.locust || itm == chest_items.empty || itm == chest_items.opened)
 			? tile_state.tile.spr_ind
-			: spr_burden_chest,
-			0, j * 16 + 8, i * 16 + 8)	
+			: spr_burden_chest;
+	
+	var ind = (itm == chest_items.opened) ? 1 : 0;
+	
+	draw_sprite(spr, ind, j * 16 + 8, i * 16 + 8)	
 }
 
 function chest_get_contents_num(item_id) {
@@ -392,6 +402,7 @@ function chest_get_contents_num(item_id) {
 		case chest_items.wings: return 3;
 		case chest_items.sword: return 2;
 		case chest_items.empty: return 0;
+		case chest_items.opened: return 5;
 		default: return 1;
 	}
 }
@@ -565,7 +576,7 @@ object_spider.iostruct = {
 
 object_orb = new editor_object(asset_get_index("spr_cv"), orb_id, orb_obj)
 object_orb.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.tile.spr_ind, ev_strobe_fasttriplet_real(2), j * 16 + 8, i * 16 + 8)	
+	draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
 }
 
 object_egg = new editor_object(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
@@ -718,6 +729,7 @@ enum chest_items {
 	wings,
 	sword,
 	empty,
+	opened,
 	size // cool trick!
 }
 
@@ -740,8 +752,8 @@ for (var i = 0; i < 7; i++) {
 }
 
 
-tiles_list = [tile_default, tile_glass, tile_bomb, tile_floorswitch, tile_copyfloor, tile_exit, 
-	tile_deathfloor, tile_white, tile_black_floor, tile_wall, tile_edge, tile_chest]
+tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch, tile_copyfloor, tile_exit, 
+	tile_deathfloor, tile_black_floor, tile_white, tile_wall, tile_edge, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_spider, object_orb, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 

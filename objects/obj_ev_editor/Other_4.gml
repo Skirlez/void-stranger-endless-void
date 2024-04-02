@@ -7,6 +7,7 @@ if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level
 		ev_play_music(music)	
 }
 if room == asset_get_index("rm_ev_editor") {
+	history = []
 	draw_set_circle_precision(48)
 	global.selected_thing = -1
 	

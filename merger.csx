@@ -147,6 +147,7 @@ void applyPatches(string codeEntryName, string patches) {
     UndertaleCode entry = Data.Code.ByName(codeEntryName);
     string targetPattern = @"// TARGET: ([^\n\r]+)";
     string[] sections = Regex.Split(patches, targetPattern);
+
     for (int i = 1; i < sections.Length; i += 2) {
         string code = GetDecompiledText(entry);
         string target = sections[i];
