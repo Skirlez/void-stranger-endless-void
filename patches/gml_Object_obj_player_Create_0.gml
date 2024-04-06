@@ -1,17 +1,16 @@
 // TARGET: STRING
-scr_steam_achievement_get()>// do nothing
+scr_steam_achievement_get()> { /* do nothing*/ }
 // TARGET: STRING
-scr_steam_achievement_clear()>// do nothing
+scr_steam_achievement_clear()> { /* do nothing*/ }
 
-// TARGET: LINENUMBER_REPLACE
-// 98
-if global.level.burdens[1] spr_wings = 2561
-// TARGET: LINENUMBER_REPLACE
-// 100
-if global.level.burdens[2] spr_blade = 1685
 // TARGET: LINENUMBER
-// 109
-else if (global.stranger == 5) {
+// 98
+if global.level.burdens[1] 
+	spr_wings = 2561
+if global.level.burdens[2] 
+	spr_blade = 1685
+// TARGET: TAIL
+if (global.stranger == 5) {
     spr_m_right = spr_prin_wed_r
     spr_m_up = spr_prin_wed_u
     spr_m_left = spr_prin_wed_l

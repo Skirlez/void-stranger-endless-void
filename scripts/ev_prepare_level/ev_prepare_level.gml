@@ -20,7 +20,7 @@ function ev_prepare_level(level) {
 		ds_grid_set(inv.ds_player_info, 10, 2, 999)
 
 
-	ds_grid_set(inv.ds_player_info, 0, 2, "B???")
+	ds_grid_set(inv.ds_player_info, 0, 2, "V???")
 
 	ds_grid_set(inv.ds_player_info, 0, 1, 1) // Display locusts flag
 	ds_grid_set(inv.ds_player_info, 1, 1, 0) // Locust count

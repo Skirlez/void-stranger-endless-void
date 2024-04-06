@@ -1,6 +1,6 @@
 randomize()
 global.latest_lvl_format = 1;
-#macro compiled_for_merge true
+#macro compiled_for_merge false
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -214,14 +214,19 @@ function editor_object(spr_ind, tile_id, obj_name, obj_layer = "Instances", flag
 #macro gor_id "go"
 #macro add_id "ad"
 
+#macro jukebox_id "jb"
+
 #macro hologram_id "ho"
 #macro hologram_obj "obj_fakewall"
+
+
 
 #macro secret_exit_id "se"
 #macro secret_exit_obj "obj_na_secret_exit"
 
 #macro hungry_man_id "hu"
 #macro hungry_man_obj "obj_npc_famished"
+
 
 
 floor_sprite = asset_get_index("spr_floor");
@@ -258,20 +263,28 @@ tile_copyfloor = new editor_tile(asset_get_index("spr_copyfloor"), copyfloor_id,
 
 tile_exit = new editor_tile(asset_get_index("spr_stairs"), exit_id, exit_obj)
 
-level_has_unpressed_button = function(lvl) {
+function can_tile_press_buttons(tile) {
+	static exceptions = [object_empty, object_hologram, object_secret_exit]
+	for (var i = 0; i < array_length(exceptions); i++) {
+		if (tile == exceptions[i])
+			return false;
+	}
+	return true;
+}
+
+function level_has_unpressed_button(lvl) {
 	static fs = tile_floorswitch;
-	static em = object_empty;
 	for (var i = 0; i < 8; i++) {
 		for (var j = 0; j < 14; j++) {
-			if (lvl.tiles[i][j].tile == fs && lvl.objects[i][j].tile == em)
-				return true;	
+			if (lvl.tiles[i][j].tile == fs && !can_tile_press_buttons(lvl.objects[i][j].tile))
+				return true;
 		}
 	}	
 	return false;
 }
 
 tile_exit.draw_function = function(tile_state, i, j, preview, lvl) {
-	draw_sprite(tile_state.tile.spr_ind, global.editor_instance.level_has_unpressed_button(lvl) ? 4 : 0, j * 16 + 8, i * 16 + 8)	
+	draw_sprite(tile_state.tile.spr_ind, level_has_unpressed_button(lvl) ? 4 : 0, j * 16 + 8, i * 16 + 8)	
 }
 tile_white = new editor_tile(asset_get_index("spr_floor_white"), white_id, white_obj)
 tile_deathfloor = new editor_tile(asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
@@ -365,10 +378,27 @@ tile_black_floor.iostruct = {
 	read : default_reader,
 	write : default_writer,
 	place : function(tile_state, i, j) {
-		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
-		inst.black_floor = true;
-	
+		instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name), {
+			black_floor : true,	
+		});
+		
+		// We create this object to prevent the player from grabbing the tile.
+		instance_create_layer(j * 16 + 8, i * 16 + 8, "Instances", asset_get_index("obj_jewel_collect"), {
+			visible : false	
+		});
 	}
+}
+
+
+
+enum chest_items {
+	locust,
+	memory,
+	wings,
+	sword,
+	empty,
+	opened,
+	size // cool trick!
 }
 
 tile_chest = new editor_tile(asset_get_index("spr_chest_regular"), chest_id, chest_obj, "Floor_INS")
@@ -710,28 +740,15 @@ object_bee.iostruct = voidlord_io(2)
 object_gor = new editor_object(asset_get_index("spr_slower"), gor_id, egg_statue_obj)
 object_gor.iostruct = voidlord_io(5)
 
+object_jukebox = new editor_object(asset_get_index("spr_jb"), jukebox_id, egg_statue_obj)
+object_jukebox.iostruct = voidlord_io(9)
+
 object_secret_exit = new editor_object(asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
 object_secret_exit.draw_function = function(tile_state, i, j) {
-
-	
 	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
 }
 object_hungry_man = new editor_object(asset_get_index("spr_fam_u"), hungry_man_id, hungry_man_obj)
 object_hungry_man.draw_function = music_draw_function
-
-
-
-
-
-enum chest_items {
-	locust,
-	memory,
-	wings,
-	sword,
-	empty,
-	opened,
-	size // cool trick!
-}
 
 
 // we create the hologram sprite in real time
@@ -743,6 +760,7 @@ var hologram_sprite = sprite_create_from_surface(hologram_surf, 0, 0, 16, 16, fa
 surface_reset_target()
 surface_free(hologram_surf)
 object_hologram = new editor_object(hologram_sprite, hologram_id, hologram_obj)
+
 
 global.player_tiles = array_create(7)
 global.player_objects = array_create(7)
@@ -756,11 +774,13 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch,
 	tile_deathfloor, tile_black_floor, tile_white, tile_wall, tile_edge, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
-	object_mimic, object_diamond, object_spider, object_orb, object_egg, object_hologram, object_add, object_cif, object_lev, object_tan, object_mon, object_eus, 
-	object_bee, object_gor, object_hungry_man, object_secret_exit]
+	object_mimic, object_diamond, object_spider, object_orb, object_egg, object_hologram, object_add, 
+	object_cif, object_tan, object_lev, object_mon, object_eus, object_jukebox, object_bee, object_gor, 
+	object_hungry_man, object_secret_exit]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
-	"msc_gorcircle_lo", "msc_levcircle", "msc_cifcircle", "msc_beesong", "msc_themeofcif", "msc_monstrail", "msc_endless"]
+	"msc_gorcircle_lo", "msc_levcircle", "msc_escapewithfriend", "msc_cifcircle", "msc_006", "msc_beesong", "msc_themeofcif",
+	"msc_monstrail", "msc_endless", "msc_stg_extraboss", "msc_rytmi2", "msc_test2"]
 
 function reset_everything() {
 	global.tile_mode = false

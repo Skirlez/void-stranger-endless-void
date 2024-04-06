@@ -27,7 +27,7 @@ draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
 draw_text(5 * 16, 9 * 16 + 1, "00")
 
 // idk how void stranger draws it but this is the only way i could make it align properly
-draw_text(12 * 16, 9 * 16 + 1, "B?")
+draw_text(12 * 16, 9 * 16 + 1, "V?")
 draw_text(13 * 16, 9 * 16 + 1, "?")
 draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
 
@@ -57,6 +57,7 @@ for (var i = 0; i < 9; i++)	{
 			else if (object_state.tile != global.editor_instance.object_secret_exit)
 				draw_tile_state(i, j, object_state)
 		}
+		
 		else
 			draw_tile_state(i, j, object_state)
 		if (tile_mode)

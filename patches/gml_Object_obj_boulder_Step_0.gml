@@ -3,8 +3,8 @@ spr_atoner>cif_sprite
 // TARGET: STRING
 spr_atoner_shaken>cif_sprite_shaken
 // TARGET: LINENUMBER_REPLACE
-// 624
+// 627
 sprite_index = other.cif_sprite_shaken
 // TARGET: LINENUMBER_REPLACE
-// 705
+// 708
 sprite_index = other.cif_sprite_shaken
