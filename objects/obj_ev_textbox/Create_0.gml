@@ -15,6 +15,20 @@ pos_x = xstart
 pos_y = ystart
 
 
+function try_inserting_character_at_cursor(char) {
+	if !is_char_valid(char) || string_length(txt) >= char_limit
+		return false;
+	var newtxt = string_insert(char, txt, cursor_pos)
+	if !(automatic_newline) {
+		draw_set_font(global.ev_font)
+		if string_width(newtxt) >= max_line_width
+			return false;
+	}
+	txt = newtxt
+	cursor_pos++
+	return true;
+}
+
 function update_position() {
 	x = pos_x - image_xscale * 8 
 	y = pos_y - image_yscale * 8

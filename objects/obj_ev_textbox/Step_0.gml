@@ -40,22 +40,23 @@ if window != -1 && window.selected_element == id {
 		case vk_escape:
 			window.selected_element = noone
 			break;
-		default:
-			if is_char_valid(keyboard_lastchar) && string_length(txt) < char_limit {
-				var newtxt = string_insert(keyboard_lastchar, txt, cursor_pos)
-				if !(automatic_newline) {
-					draw_set_font(global.ev_font)
-					if string_width(newtxt) < max_line_width {
-						txt = newtxt
-						cursor_pos++
-					}
-				}
-				else {
-					txt = newtxt
-					cursor_pos++
-				}
-
+		case ord("C"):
+			if (keyboard_check(vk_control)) {
+				clipboard_set_text(txt)
+				ev_notify("Copied to clipboard!")
+				break;
 			}
+		case ord("V"):
+			if (keyboard_check(vk_control)) {
+				var str = clipboard_get_text()
+				for (var i = 1; i <= string_length(str); i++) {
+					var char = string_char_at(str, i);	
+					try_inserting_character_at_cursor(char)
+				}
+				break;
+			}
+		default:
+			try_inserting_character_at_cursor(keyboard_lastchar)
 			break;
 	}
 	if (old != txt && change_func != noone) {

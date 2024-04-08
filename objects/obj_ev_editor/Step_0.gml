@@ -14,6 +14,7 @@ if (room == asset_get_index("rm_ev_startup")) {
 }
 
 global.editor_time++
+global.selected_thing_time++;
 
 if global.erasing != -1 {
 	global.erasing--;	
@@ -50,7 +51,9 @@ if play_transition != -1 {
 		if (room == global.editor_room)
 			global.playtesting = true;
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
-		room_goto(asset_get_index("rm_ev_level"))	
+		room_goto(asset_get_index("rm_ev_level"))
+		if (!audio_is_playing(asset_get_index(global.level.music)))
+			ev_play_music(asset_get_index(global.level.music))	
 	}
 }
 

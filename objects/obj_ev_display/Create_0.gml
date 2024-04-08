@@ -20,6 +20,7 @@ pluck_sound = asset_get_index("snd_ev_pluck")
 
 function switch_held_tile(tile_state) {
 	held_tile_state = tile_state
+	global.selected_thing_time = 0
 }
 
 held_tile_array = []

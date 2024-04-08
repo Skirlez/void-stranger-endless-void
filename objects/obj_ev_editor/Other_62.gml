@@ -11,6 +11,7 @@ if ds_map_find_value(async_load, "id") == get_levels
 		on_level_update();
 	with (asset_get_index("obj_ev_refresh_window"))
 		on_level_update();	
+		
 	
 	if (room == global.startup_room && ds_map_find_value(async_load, "status") != 1)
 		startup_actions_count--;

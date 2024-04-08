@@ -18,6 +18,6 @@
   "preload": false,
   "sampleRate": 44100,
   "soundFile": "snd_ev_music_gooeyPhantasm.ogg",
-  "type": 0,
+  "type": 1,
   "volume": 0.8,
 }

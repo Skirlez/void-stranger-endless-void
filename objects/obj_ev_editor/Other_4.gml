@@ -15,11 +15,6 @@ if room == asset_get_index("rm_ev_editor") {
 	if (!audio_is_playing(asset_get_index(global.level.music)))
 		ev_play_music(asset_get_index(global.level.music))	
 }
-
-if (room == asset_get_index("rm_ev_level")) {
-	if (!audio_is_playing(asset_get_index(global.level.music)))
-		ev_play_music(asset_get_index(global.level.music))	
-}
 else {
 	var quill = asset_get_index("obj_quill")
 	if quill != -1

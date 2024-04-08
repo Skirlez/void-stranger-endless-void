@@ -30,6 +30,7 @@ else
 window_set_cursor(cr_default)
 
 global.editor_time = 0
+global.selected_thing_time = 0
 global.mouse_pressed = false;
 global.mouse_held = false;
 #macro thing_plucker 0
@@ -106,8 +107,9 @@ enum editor_types {
 	object
 }
 
-function editor_tile(spr_ind, tile_id, obj_name, obj_layer = "Floor", flags = 0) constructor {
-    self.spr_ind = spr_ind
+function editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer = "Floor", flags = 0) constructor {
+    self.display_name = display_name
+	self.spr_ind = spr_ind
 	self.obj_name = obj_name
 	self.obj_layer = obj_layer
 	self.flags = flags
@@ -120,118 +122,159 @@ function editor_tile(spr_ind, tile_id, obj_name, obj_layer = "Floor", flags = 0)
 	self.iostruct = global.editor_instance.default_tile_io;
 	global.placeable_name_map[? tile_id] = self;
 } 
-function editor_object(spr_ind, tile_id, obj_name, obj_layer = "Instances", flags = 0) 
-		: editor_tile(spr_ind, tile_id, obj_name, obj_layer, flags) constructor {
+function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "Instances", flags = 0) 
+		: editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer, flags) constructor {
 	self.editor_type = editor_types.object;
 } 
 
 #macro pit_id "pt"
 #macro pit_obj "obj_pit"
+
 #macro glass_id "gl"
 #macro glass_obj "obj_glassfloor"
+#macro glass_name "Glass Tile"
 
 #macro bomb_id "mn"
 #macro bomb_obj "obj_bombfloor"
+#macro bomb_name "Bomb Tile"
 
 #macro explo_id "xp"
 #macro explo_obj "obj_explofloor"
+#macro explo_name "Lit Bomb Tile"
 
 #macro default_tile_id "fl"
 #macro default_tile_obj "obj_floor"
+#macro default_tile_name "Floor Tile"
+
 
 #macro floorswitch_id "fs"
 #macro floorswitch_obj "obj_floorswitch"
+#macro floorswitch_name "Button Tile"
 
 #macro copyfloor_id "cr"
 #macro copyfloor_obj "obj_copyfloor"
+#macro copyfloor_name "Shade Tile"
 
 #macro exit_id "ex"
 #macro exit_obj "obj_exit"
+#macro exit_name "Exit"
 
 #macro black_floor_id "bl"
 #macro black_floor_obj "obj_floor"
+#macro black_floor_name "Black Floor Tile"
 
 #macro white_id "wh"
 #macro white_obj "obj_floor_blank"
+#macro white_name "Blank Tile"
+
 
 #macro unremovable_id "ur"
 #macro unremovable_obj ""
 
 #macro deathfloor_id "df"
 #macro deathfloor_obj "obj_deathfloor"
+#macro deathfloor_name "Lightning Tile"
 
 #macro no_obj ""
+#macro no_name ""
 
 #macro wall_id "wa"
+#macro wall_name "Wall Tile"
 #macro edge_id "ed"
+#macro edge_name "Edge Tile"
 
 #macro chest_id "st"
 #macro chest_obj "obj_chest_small"
+#macro chest_name "Chest"
 
 #macro empty_id "em"
 
 #macro player_id "pl"
 #macro player_obj "obj_spawnpoint"
+#macro player_name "Player"
 
 #macro leech_id "cl"
 #macro leech_obj "obj_enemy_cl"
+#macro leech_name "Leech"
 
 #macro maggot_id "cc"
 #macro maggot_obj "obj_enemy_cc"
+#macro maggot_name "Maggot"
 
 #macro gobbler_id "cs"
 #macro gobbler_obj "obj_enemy_cs"
+#macro gobbler_name "Smile"
 
 #macro bull_id "cg"
 #macro bull_obj "obj_enemy_cg"
-
+#macro bull_name "Beaver"
 
 #macro hand_id "ch"
 #macro hand_obj "obj_enemy_ch"
+#macro hand_name "Eye"
 
 #macro mimic_id "cm"
 #macro mimic_obj "obj_enemy_cm"
+#macro mimic_name "Mimic"
 
 #macro diamond_id "co"
 #macro diamond_obj "obj_enemy_co"
+#macro diamond_name "Octahedron"
 
 #macro spider_id "ct"
 #macro spider_obj "obj_enemy_ct"
+#macro spider_name "Spider"
 
 #macro orb_id "cv"
 #macro orb_obj "obj_enemy_cv"
+#macro orb_name "Orb Thing"
 
 #macro egg_id "eg"
+#macro egg_name "Egg"
 
 #macro egg_statue_obj "obj_boulder"
 
 #macro cif_id "cf"
+#macro cif_name "Cif Statue"
 #macro tan_id "tn"
+#macro tan_name "Tan Statue"
 #macro mon_id "mo"
+#macro mon_name "Mon Statue"
 #macro lev_id "lv"
+#macro lev_name "Lev Statue"
 #macro eus_id "eu"
+#macro eus_name "Eus Statue"
 #macro bee_id "be"
+#macro bee_name "Bee Statue"
 #macro gor_id "go"
+#macro gor_name "Gor Statue"
 #macro add_id "ad"
+#macro add_name "Add Statue"
 
 #macro jukebox_id "jb"
+#macro jukebox_name "Jukebox"
+
 
 #macro hologram_id "ho"
 #macro hologram_obj "obj_fakewall"
-
-
+#macro hologram_name "Fake Egg"
 
 #macro secret_exit_id "se"
 #macro secret_exit_obj "obj_na_secret_exit"
+#macro secret_exit_name "Secret Exit"
+
 
 #macro hungry_man_id "hu"
 #macro hungry_man_obj "obj_npc_famished"
+#macro hungry_man_name "Famished Man"
 
-
+#macro scaredeer_id "sd"
+#macro scaredeer_obj "obj_enemy_cs"
+#macro scaredeer_name "Scaredeer"
 
 floor_sprite = asset_get_index("spr_floor");
 
-tile_pit = new editor_tile(noone, pit_id, pit_obj, "Pit", flag_unplaceable)
+tile_pit = new editor_tile(no_name, noone, pit_id, pit_obj, "Pit", flag_unplaceable)
 tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
 	if (i == 0)
 		return;
@@ -242,26 +285,26 @@ tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
 		draw_sprite(floor_sprite, 1, j * 16 + 8, i * 16 + 8)
 }
 
-tile_glass = new editor_tile(asset_get_index("spr_glassfloor"), glass_id, glass_obj, "Floor_INS")
+tile_glass = new editor_tile(glass_name, asset_get_index("spr_glassfloor"), glass_id, glass_obj, "Floor_INS")
 tile_glass.draw_function = function(tile_state, i, j, preview, lvl) {
 	tile_pit.draw_function(tile_state, i, j, preview, lvl)
 	default_draw_function(tile_state, i, j)
 }
-tile_bomb = new editor_tile(asset_get_index("spr_bombfloor"), bomb_id, bomb_obj)
-tile_explo = new editor_tile(asset_get_index("spr_explofloor"), explo_id, explo_obj)
+tile_bomb = new editor_tile(bomb_name, asset_get_index("spr_bombfloor"), bomb_id, bomb_obj)
+tile_explo = new editor_tile(explo_name, asset_get_index("spr_explofloor"), explo_id, explo_obj)
 
-tile_default = new editor_tile(floor_sprite, default_tile_id, default_tile_obj)
-tile_floorswitch = new editor_tile(asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
+tile_default = new editor_tile(default_tile_name, floor_sprite, default_tile_id, default_tile_obj)
+tile_floorswitch = new editor_tile(floorswitch_name, asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
 tile_floorswitch.draw_function = function(tile_state, i, j, preview, lvl) {
 	var ind = lvl.objects[i][j].tile == object_empty ? 0 : 1
 	draw_sprite(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8)
 }
-tile_copyfloor = new editor_tile(asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
+tile_copyfloor = new editor_tile(copyfloor_name, asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
 
 
 
 
-tile_exit = new editor_tile(asset_get_index("spr_stairs"), exit_id, exit_obj)
+tile_exit = new editor_tile(exit_name, asset_get_index("spr_stairs"), exit_id, exit_obj)
 
 function can_tile_press_buttons(tile) {
 	static exceptions = [object_empty, object_hologram, object_secret_exit]
@@ -286,8 +329,8 @@ function level_has_unpressed_button(lvl) {
 tile_exit.draw_function = function(tile_state, i, j, preview, lvl) {
 	draw_sprite(tile_state.tile.spr_ind, level_has_unpressed_button(lvl) ? 4 : 0, j * 16 + 8, i * 16 + 8)	
 }
-tile_white = new editor_tile(asset_get_index("spr_floor_white"), white_id, white_obj)
-tile_deathfloor = new editor_tile(asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
+tile_white = new editor_tile(white_name, asset_get_index("spr_floor_white"), white_id, white_obj)
+tile_deathfloor = new editor_tile(deathfloor_name, asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
 
 tilemap_tile_read = function(tile, lvl_str, pos) {
 	var read_ind = string_copy(lvl_str, pos, 2)
@@ -308,7 +351,7 @@ var edge_sprite = sprite_create_from_surface(edge_surf, 0, 0, 16, 16, false, fal
 surface_reset_target()
 surface_free(edge_surf)
 
-tile_edge = new editor_tile(edge_sprite, edge_id, no_obj, "Floor", flag_no_objects)
+tile_edge = new editor_tile(edge_name, edge_sprite, edge_id, no_obj, "Floor", flag_no_objects)
 tile_edge.properties_generator = function() {
 	return { ind : 4 }	
 }
@@ -330,7 +373,7 @@ tile_edge.iostruct = {
 }
 
 
-tile_wall = new editor_tile(asset_get_index("spr_ev_wall"), wall_id, no_obj, "Floor", flag_no_objects)
+tile_wall = new editor_tile(wall_name, asset_get_index("spr_ev_wall"), wall_id, no_obj, "Floor", flag_no_objects)
 tile_wall.draw_function = function(tile_state, i, j) {
 	draw_set_color(c_white)
 	draw_tile(global.tileset_1, tile_state.properties.ind, 0, j * 16, i * 16)	
@@ -351,29 +394,8 @@ tile_wall.iostruct = {
 	}
 }
 
-/*
-var black_floor_surf = surface_create(16, 16)
-surface_set_target(black_floor_surf)
-
-draw_sprite(asset_get_index("spr_floor"), 0, 8, 8)
-draw_set_color(c_black)
-draw_set_alpha(0.2)
-draw_rectangle(0, 0, 16, 16, false)
-draw_set_alpha(1)
-draw_set_color(c_white)
-// invert colors
-gpu_set_blendmode_ext_sepalpha(bm_inv_dest_color, bm_zero, bm_src_alpha, bm_inv_src_alpha)
-
-draw_rectangle(0, 0, 16, 16, false)
-
-gpu_set_blendmode(bm_normal)
-surface_reset_target()
-
-black_floor_sprite = sprite_create_from_surface(black_floor_surf, 0, 0, 16, 16, false, false, 8, 8)
-surface_free(black_floor_surf)
-*/
 show_debug_message(asset_get_index("spr_ev_blackfloor"))
-tile_black_floor = new editor_tile(asset_get_index("spr_ev_blackfloor"), black_floor_id, black_floor_obj)
+tile_black_floor = new editor_tile(black_floor_name, asset_get_index("spr_ev_blackfloor"), black_floor_id, black_floor_obj)
 tile_black_floor.iostruct = {
 	read : default_reader,
 	write : default_writer,
@@ -401,7 +423,7 @@ enum chest_items {
 	size // cool trick!
 }
 
-tile_chest = new editor_tile(asset_get_index("spr_chest_regular"), chest_id, chest_obj, "Floor_INS")
+tile_chest = new editor_tile(chest_name, asset_get_index("spr_chest_regular"), chest_id, chest_obj, "Floor_INS")
 tile_chest.properties_generator = function () {
 	return { itm : chest_items.locust }	
 }
@@ -457,10 +479,10 @@ tile_chest.iostruct = {
 }
 
 
-tile_unremovable = new editor_tile(asset_get_index("spr_floor_white"), unremovable_id, unremovable_obj, "Floor", flag_unremovable|flag_unplaceable)
+tile_unremovable = new editor_tile(no_name, asset_get_index("spr_floor_white"), unremovable_id, unremovable_obj, "Floor", flag_unremovable|flag_unplaceable)
 tile_unremovable.draw_function = empty_function;
 
-object_empty = new editor_object(noone, empty_id, no_obj, "Instances", flag_unplaceable)
+object_empty = new editor_object(no_name, noone, empty_id, no_obj, "Instances", flag_unplaceable)
 object_empty.draw_function = empty_function;
 object_empty.iostruct = {
 	read: default_reader,
@@ -471,7 +493,7 @@ object_empty.iostruct = {
 }
 
 sweat_sprite = asset_get_index("spr_sweat")
-object_player = new editor_object(asset_get_index("spr_player_down"), player_id, player_obj, "Instances", flag_unremovable|flag_only_one)
+object_player = new editor_object(player_name, asset_get_index("spr_player_down"), player_id, player_obj, "Instances", flag_unremovable|flag_only_one)
 object_player.draw_function = function(tile_state, i, j, preview, lvl) {
 
 	var spr = ev_get_stranger_down_sprite(global.stranger)
@@ -484,7 +506,7 @@ object_player.draw_function = function(tile_state, i, j, preview, lvl) {
 }
 
 
-object_leech = new editor_object(asset_get_index("spr_cl_right"), leech_id, leech_obj)
+object_leech = new editor_object(leech_name, asset_get_index("spr_cl_right"), leech_id, leech_obj)
 object_leech.draw_function = function(tile_state, i, j) {
 	var xscale = tile_state.properties.dir == true ? -1 : 1
 	draw_sprite_ext(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8, xscale, 1, 0, c_white, draw_get_alpha())
@@ -492,7 +514,7 @@ object_leech.draw_function = function(tile_state, i, j) {
 maggot_sprite_down = asset_get_index("spr_cc_down");
 maggot_sprite_up = asset_get_index("spr_cc_up");
 
-object_maggot = new editor_object(maggot_sprite_down, maggot_id, maggot_obj)
+object_maggot = new editor_object(maggot_name, maggot_sprite_down, maggot_id, maggot_obj)
 object_maggot.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.properties.dir == true ? maggot_sprite_up : maggot_sprite_down, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)
 }
@@ -527,13 +549,13 @@ object_maggot.zed_function = directioned_zed_function
 object_maggot.properties_generator = directioned_properties
 object_maggot.iostruct = directioned_iostruct
 
-object_bull = new editor_object(asset_get_index("spr_cg_idle"), bull_id, bull_obj)
+object_bull = new editor_object(bull_name, asset_get_index("spr_cg_idle"), bull_id, bull_obj)
 object_bull.draw_function = music_draw_function
-object_gobbler = new editor_object(asset_get_index("spr_cs_right"), gobbler_id, gobbler_obj)
+object_gobbler = new editor_object(gobbler_name, asset_get_index("spr_cs_right"), gobbler_id, gobbler_obj)
 object_gobbler.draw_function = music_draw_function
-object_hand = new editor_object(asset_get_index("spr_ch"), hand_id, hand_obj)
+object_hand = new editor_object(hand_name, asset_get_index("spr_ch"), hand_id, hand_obj)
 object_hand.draw_function = music_draw_function
-object_mimic = new editor_object(asset_get_index("spr_cm_down"), mimic_id, mimic_obj)
+object_mimic = new editor_object(mimic_name, asset_get_index("spr_cm_down"), mimic_id, mimic_obj)
 object_mimic.properties_generator = function() {
 	return { typ : 0 } 	
 }
@@ -563,12 +585,12 @@ object_mimic.iostruct = {
 	}	
 }
 
-object_diamond = new editor_object(asset_get_index("spr_co_idle"), diamond_id, diamond_obj)
+object_diamond = new editor_object(diamond_name, asset_get_index("spr_co_idle"), diamond_id, diamond_obj)
 object_diamond.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, ev_strobe_fasttriplet_real(2), j * 16 + 8, i * 16 + 8)	
 }
 
-object_spider = new editor_object(asset_get_index("spr_ct_right"), spider_id, spider_obj)
+object_spider = new editor_object(spider_name, asset_get_index("spr_ct_right"), spider_id, spider_obj)
 object_spider.draw_function = function(tile_state, i, j) {
 	var ind = (tile_state.properties.ang == 2 || tile_state.properties.ang == 3) 
 		? 1 - ev_strobe_integer(2) : ev_strobe_integer(2)
@@ -604,12 +626,12 @@ object_spider.iostruct = {
 	}		
 }
 
-object_orb = new editor_object(asset_get_index("spr_cv"), orb_id, orb_obj)
+object_orb = new editor_object(orb_name, asset_get_index("spr_cv"), orb_id, orb_obj)
 object_orb.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
 }
 
-object_egg = new editor_object(asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
+object_egg = new editor_object(egg_name, asset_get_index("spr_boulder"), egg_id, egg_statue_obj)
 object_egg.properties_generator = function() {
 	return { txt : array_create(4, "") }	
 }
@@ -682,7 +704,7 @@ object_egg.iostruct = {
 cif_sprite = asset_get_index("spr_atoner")
 lamp_sprite = asset_get_index("spr_lamp")
 
-object_cif = new editor_object(cif_sprite, cif_id, egg_statue_obj)
+object_cif = new editor_object(cif_name, cif_sprite, cif_id, egg_statue_obj)
 object_cif.properties_generator = function() {
 	return { lmp : false }
 }
@@ -725,31 +747,81 @@ function voidlord_io(b_form) {
 	};
 }	
 
-object_add = new editor_object(asset_get_index("spr_voider"), add_id, egg_statue_obj)
+object_add = new editor_object(add_name, asset_get_index("spr_voider"), add_id, egg_statue_obj)
 object_add.iostruct = voidlord_io(8)
-object_mon = new editor_object(asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
+object_mon = new editor_object(mon_name, asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
 object_mon.iostruct = voidlord_io(7)
-object_tan = new editor_object(asset_get_index("spr_killer"), tan_id, egg_statue_obj)
+object_tan = new editor_object(tan_name, asset_get_index("spr_killer"), tan_id, egg_statue_obj)
 object_tan.iostruct = voidlord_io(3)
-object_lev = new editor_object(asset_get_index("spr_watcher"), lev_id, egg_statue_obj)
+object_lev = new editor_object(lev_name, asset_get_index("spr_watcher"), lev_id, egg_statue_obj)
 object_lev.iostruct = voidlord_io(1)
-object_eus = new editor_object(asset_get_index("spr_lover"), eus_id, egg_statue_obj)
+object_eus = new editor_object(eus_name, asset_get_index("spr_lover"), eus_id, egg_statue_obj)
 object_eus.iostruct = voidlord_io(6)
-object_bee = new editor_object(asset_get_index("spr_smiler"), bee_id, egg_statue_obj)
+object_bee = new editor_object(add_name, asset_get_index("spr_smiler"), bee_id, egg_statue_obj)
 object_bee.iostruct = voidlord_io(2)
-object_gor = new editor_object(asset_get_index("spr_slower"), gor_id, egg_statue_obj)
+object_gor = new editor_object(gor_name, asset_get_index("spr_slower"), gor_id, egg_statue_obj)
 object_gor.iostruct = voidlord_io(5)
 
-object_jukebox = new editor_object(asset_get_index("spr_jb"), jukebox_id, egg_statue_obj)
+object_jukebox = new editor_object(jukebox_name, asset_get_index("spr_jb"), jukebox_id, egg_statue_obj)
 object_jukebox.iostruct = voidlord_io(9)
 
-object_secret_exit = new editor_object(asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
+object_secret_exit = new editor_object(secret_exit_name, asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
 object_secret_exit.draw_function = function(tile_state, i, j) {
 	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
 }
-object_hungry_man = new editor_object(asset_get_index("spr_fam_u"), hungry_man_id, hungry_man_obj)
+object_hungry_man = new editor_object(hungry_man_name, asset_get_index("spr_fam_u"), hungry_man_id, hungry_man_obj)
 object_hungry_man.draw_function = music_draw_function
 
+// The lengths I go to to not include base game sprites in the source.
+var surface_deer = surface_create(16, 16)
+surface_set_target(surface_deer)
+
+draw_sprite(asset_get_index("spr_ee_enemy_reaper"), 0, 0, -16 * 3)
+scaredeer_sprite_r = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
+
+draw_clear_alpha(c_black, 0)
+draw_sprite(asset_get_index("spr_ee_enemy_reaper"), 1, 0, -16 * 3)
+var scaredeer_sprite_r_2 = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
+
+sprite_merge(scaredeer_sprite_r, scaredeer_sprite_r_2)
+sprite_delete(scaredeer_sprite_r_2)
+
+draw_clear_alpha(c_black, 0)
+draw_sprite_ext(asset_get_index("spr_ee_enemy_reaper"), 0, 16, -16 * 3, -1, 1, 0, c_white, 1)
+scaredeer_sprite_l = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
+
+draw_clear_alpha(c_black, 0)
+draw_sprite_ext(asset_get_index("spr_ee_enemy_reaper"), 1, 16, -16 * 3, -1, 1, 0, c_white, 1)
+var scaredeer_sprite_l_2 = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
+sprite_merge(scaredeer_sprite_l, scaredeer_sprite_l_2)
+sprite_delete(scaredeer_sprite_r_2)
+
+
+sprite_merge(scaredeer_sprite_l, scaredeer_sprite_l_2)
+sprite_delete(scaredeer_sprite_l_2)
+
+
+
+surface_reset_target()
+
+surface_free(surface_deer)
+object_scaredeer = new editor_object(scaredeer_name, scaredeer_sprite_r, scaredeer_id, scaredeer_obj)
+object_scaredeer.draw_function = music_draw_function;
+object_scaredeer.iostruct = { 
+	read : default_reader,
+	write : default_writer,
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		with (inst) {
+			ev_scaredeer = true;
+			spr_l = global.editor_instance.scaredeer_sprite_l
+			spr_r = global.editor_instance.scaredeer_sprite_r
+			e_fall_sprite = global.editor_instance.scaredeer_sprite_l
+			e_falling_sprite = asset_get_index("spr_fall");
+		}
+	},
+
+}
 
 // we create the hologram sprite in real time
 var hologram_surf = surface_create(16, 16)
@@ -759,7 +831,7 @@ draw_sprite(asset_get_index("spr_question_black"), 8, 8, 8)
 var hologram_sprite = sprite_create_from_surface(hologram_surf, 0, 0, 16, 16, false, false, 8, 8)
 surface_reset_target()
 surface_free(hologram_surf)
-object_hologram = new editor_object(hologram_sprite, hologram_id, hologram_obj)
+object_hologram = new editor_object(hologram_name, hologram_sprite, hologram_id, hologram_obj)
 
 
 global.player_tiles = array_create(7)
@@ -774,9 +846,9 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch,
 	tile_deathfloor, tile_black_floor, tile_white, tile_wall, tile_edge, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
-	object_mimic, object_diamond, object_spider, object_orb, object_egg, object_hologram, object_add, 
-	object_cif, object_tan, object_lev, object_mon, object_eus, object_jukebox, object_bee, object_gor, 
-	object_hungry_man, object_secret_exit]
+	object_mimic, object_diamond, object_spider, object_orb, object_scaredeer, object_egg, 
+	object_hologram, object_add, object_hungry_man, object_secret_exit, object_jukebox,
+	object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
 	"msc_gorcircle_lo", "msc_levcircle", "msc_escapewithfriend", "msc_cifcircle", "msc_006", "msc_beesong", "msc_themeofcif",
@@ -792,7 +864,6 @@ function reset_everything() {
 
 	place_placeholder_tiles(global.level)
 	
-
 	current_list = objects_list;
 	current_placeables = global.level.objects
 	current_empty_tile = object_empty
@@ -866,6 +937,7 @@ undo_repeat_frames_max_speed = 10
 
 function get_menu_music_name() {
 	switch (current_weekday) {
+		case 0: return "snd_ev_music_astra_jam"
 		case 1: return "snd_ev_music_monsday"
 		case 2: return "snd_ev_music_Teusday"
 		case 3: return "snd_ev_music_alsoGooeyPhantasm"
@@ -994,7 +1066,6 @@ function read_beaten_levels() {
 	    array_push(arr, file_text_readln(file));
 	}
 	
-	
 	for (var i = 0; i < array_length(arr); i++) {
 		arr[i] = string_replace(arr[i], "\n", "")
 		arr[i] = string_replace(arr[i], "\r", "")
@@ -1025,3 +1096,4 @@ function save_beaten_levels() {
 global.startup_room = asset_get_index("rm_ev_startup")
 global.playtesting = false;
 
+spin_surface = surface_create(16, 16)

@@ -47,7 +47,7 @@ for (var i = 0; i < 9; i++)	{
 		}
 	
 		if (tile_mode)
-			draw_set_alpha(0.4)
+			draw_set_alpha(0.3)
 		var object_state = lvl.objects[i][j]
 		if (no_spoiling) {
 			
