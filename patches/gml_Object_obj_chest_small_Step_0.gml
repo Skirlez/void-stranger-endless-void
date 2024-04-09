@@ -40,7 +40,7 @@
         {
             text[0] = scrScript(237)
             text[1] = scrScript(238)
-            text[2] = "[...Add...]"
+            text[2] = "[Why did you leave...?]"
             moods = [neutral, neutral, neutral]
             speakers = [id, id, id]
         }    	
