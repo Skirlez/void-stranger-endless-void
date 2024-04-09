@@ -5,9 +5,11 @@ if global.stranger == 0
 else if global.stranger == 1
 	global.stranger = 2;	
 else if global.stranger == 2
+	global.stranger = 7;	
+else if global.stranger == 7
 	global.stranger = 5;
 else if global.stranger == 5
-	global.stranger = 6;
+	global.stranger = 6;	
 else
 	global.stranger = 0;
 if (compiled_for_merge)
