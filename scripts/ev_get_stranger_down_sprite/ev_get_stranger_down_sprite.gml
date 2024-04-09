@@ -6,6 +6,7 @@ function ev_get_stranger_down_sprite(stranger){
 	static lev = asset_get_index("spr_lev_d")		
 	static lily = asset_get_index("spr_ev_lily_down")
 	static ninnie = asset_get_index("spr_ev_ninnie")
+	static bee = asset_get_index("spr_ev_bee_down")		
 	switch (stranger) {
 		case 0: return gray
 		case 1: return lil
@@ -13,6 +14,7 @@ function ev_get_stranger_down_sprite(stranger){
 		case 4: return lev				
 		case 5: return lily
 		case 6: return ninnie
+		case 7: return bee		
 		default: return gray
 	}	
 }

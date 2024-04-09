@@ -1,6 +1,6 @@
 randomize()
 global.latest_lvl_format = 1;
-#macro compiled_for_merge false
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)

@@ -9,8 +9,9 @@ if global.level.burdens[1]
 	spr_wings = 2561
 if global.level.burdens[2] 
 	spr_blade = 1685
-// TARGET: TAIL
-if (global.stranger == 5) {
+// TARGET: LINENUMBER
+// 114
+else if (global.stranger == 5) {
     spr_m_right = spr_prin_wed_r
     spr_m_up = spr_prin_wed_u
     spr_m_left = spr_prin_wed_l
@@ -43,5 +44,23 @@ else if (global.stranger == 6) {
     spr_a_up = spr_ev_ninnie
     spr_a_left = spr_ev_ninnie
     spr_a_down = spr_ev_ninnie
+    wake_speed = 6
+}
+else if (global.stranger == 7) {
+    spr_m_right = spr_ev_bee_right
+    spr_m_up = spr_ev_bee_up
+    spr_m_left = spr_ev_bee_left
+    spr_m_down = spr_ev_bee_down
+    spr_blink = spr_baal_flicker
+    spr_hurt = spr_baal_shaken
+    spr_sleep = 53
+    spr_wakey = 54
+    spr_enter = 45
+    spr_item = spr_ev_bee_item_get
+    spr_a_right = spr_ev_bee_attack_r
+    spr_a_up = spr_ev_bee_attack_u
+    spr_a_left = spr_ev_bee_attack_l
+    spr_a_down = spr_ev_bee_attack_d
+	voice = snd_baal
     wake_speed = 6
 }
