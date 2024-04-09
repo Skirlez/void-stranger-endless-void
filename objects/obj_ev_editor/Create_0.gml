@@ -11,9 +11,7 @@ if (!compiled_for_merge) {
 }
 window_set_fullscreen(true)
 
-
 #macro level_extension "vsl"
-
 
 global.save_directory = game_save_id
 global.server_ip = "skirlez.com"
@@ -132,7 +130,7 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 
 #macro glass_id "gl"
 #macro glass_obj "obj_glassfloor"
-#macro glass_name "Glass Tile"
+#macro glass_name "Glass"
 
 #macro bomb_id "mn"
 #macro bomb_obj "obj_bombfloor"
@@ -144,12 +142,12 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 
 #macro default_tile_id "fl"
 #macro default_tile_obj "obj_floor"
-#macro default_tile_name "Floor Tile"
+#macro default_tile_name "Floor"
 
 
 #macro floorswitch_id "fs"
 #macro floorswitch_obj "obj_floorswitch"
-#macro floorswitch_name "Button Tile"
+#macro floorswitch_name "Button"
 
 #macro copyfloor_id "cr"
 #macro copyfloor_obj "obj_copyfloor"
@@ -161,7 +159,7 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 
 #macro black_floor_id "bl"
 #macro black_floor_obj "obj_floor"
-#macro black_floor_name "Black Floor Tile"
+#macro black_floor_name "Black Floor"
 
 #macro white_id "wh"
 #macro white_obj "obj_floor_blank"
@@ -179,7 +177,7 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 #macro no_name ""
 
 #macro wall_id "wa"
-#macro wall_name "Wall Tile"
+#macro wall_name "Wall"
 #macro edge_id "ed"
 #macro edge_name "Edge Tile"
 
@@ -783,9 +781,6 @@ draw_clear_alpha(c_black, 0)
 draw_sprite(asset_get_index("spr_ee_enemy_reaper"), 1, 0, -16 * 3)
 var scaredeer_sprite_r_2 = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
 
-sprite_merge(scaredeer_sprite_r, scaredeer_sprite_r_2)
-sprite_delete(scaredeer_sprite_r_2)
-
 draw_clear_alpha(c_black, 0)
 draw_sprite_ext(asset_get_index("spr_ee_enemy_reaper"), 0, 16, -16 * 3, -1, 1, 0, c_white, 1)
 scaredeer_sprite_l = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
@@ -793,12 +788,19 @@ scaredeer_sprite_l = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, fals
 draw_clear_alpha(c_black, 0)
 draw_sprite_ext(asset_get_index("spr_ee_enemy_reaper"), 1, 16, -16 * 3, -1, 1, 0, c_white, 1)
 var scaredeer_sprite_l_2 = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
+
+scaredeer_sprite_fall = sprite_duplicate(scaredeer_sprite_r);
+sprite_merge(scaredeer_sprite_fall, scaredeer_sprite_l_2)
+sprite_merge(scaredeer_sprite_fall, scaredeer_sprite_l)
+sprite_merge(scaredeer_sprite_fall, scaredeer_sprite_r_2)
+
+sprite_merge(scaredeer_sprite_r, scaredeer_sprite_r_2)
 sprite_merge(scaredeer_sprite_l, scaredeer_sprite_l_2)
-sprite_delete(scaredeer_sprite_r_2)
 
 
-sprite_merge(scaredeer_sprite_l, scaredeer_sprite_l_2)
+
 sprite_delete(scaredeer_sprite_l_2)
+sprite_delete(scaredeer_sprite_r_2)
 
 
 
@@ -816,7 +818,7 @@ object_scaredeer.iostruct = {
 			ev_scaredeer = true;
 			spr_l = global.editor_instance.scaredeer_sprite_l
 			spr_r = global.editor_instance.scaredeer_sprite_r
-			e_fall_sprite = global.editor_instance.scaredeer_sprite_l
+			e_fall_sprite = global.editor_instance.scaredeer_sprite_fall
 			e_falling_sprite = asset_get_index("spr_fall");
 		}
 	},
@@ -847,8 +849,8 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch,
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_spider, object_orb, object_scaredeer, object_egg, 
-	object_hologram, object_add, object_hungry_man, object_secret_exit, object_jukebox,
-	object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor]
+	object_hologram, object_hungry_man, object_secret_exit, object_jukebox,
+	 object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
 	"msc_gorcircle_lo", "msc_levcircle", "msc_escapewithfriend", "msc_cifcircle", "msc_006", "msc_beesong", "msc_themeofcif",

@@ -158,6 +158,18 @@ function get_level_name_from_string(level_string) {
 	return base64_decode(string_copy(level_string, start, ending - start));
 }
 
+function get_level_date_from_string(level_string) {
+	var count = 1;
+	var start = string_pos_ext("|", level_string, 0) + 1;
+	while (count != 6) {
+		start = string_pos_ext("|", level_string, start) + 1;
+		count++;
+	}
+	var str = string_copy(level_string, start, string_pos_ext("|", level_string, start) - start);
+	return str;
+}
+
+
 
 // imports a level from a level string
 function import_level(level_string) {

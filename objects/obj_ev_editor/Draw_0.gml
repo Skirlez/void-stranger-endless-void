@@ -16,6 +16,12 @@ if (room == global.editor_room) {
 		draw_set_halign(fa_center)
 		draw_set_valign(fa_middle)
 		draw_set_font(global.ev_font)
+		
+		draw_set_color(c_black)
+		draw_text_transformed(26 + 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(26 - 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(26, 100 + 0.5, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(26, 100 - 0.5, state.tile.display_name, 0.5, 0.5, 0)
 		draw_set_color(c_white)
 		draw_text_transformed(26, 100, state.tile.display_name, 0.5, 0.5, 0)
 		draw_surface_ext(spin_surface, 26 - 8 * xscale, 80, xscale, size, 0, c_white, 1)
@@ -56,6 +62,8 @@ if (room == asset_get_index("rm_ev_menu")) {
 	draw_set_halign(fa_center)
 	draw_set_valign(fa_middle)
 	draw_text_transformed(112, 72 + 50, "Packs coming whenever..", 0.5, 0.5, 0)
+	
+	draw_text_transformed(112, 72 + 67, "0.87", 0.5, 0.5, 0)
 }
 else if (room == global.startup_room) {
 	draw_set_color(c_white)

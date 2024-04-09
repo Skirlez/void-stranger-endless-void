@@ -35,7 +35,7 @@
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
-    "IDEVersion": "2023.4.0.87",
+    "IDEVersion": "2023.4.0.84",
   },
   "resources": [
     {"id":{"name":"obj_ev_executing_button","path":"objects/obj_ev_executing_button/obj_ev_executing_button.yy",},},
@@ -48,6 +48,7 @@
     {"id":{"name":"spr_ev_edit_level","path":"sprites/spr_ev_edit_level/spr_ev_edit_level.yy",},},
     {"id":{"name":"spr_cm_up1","path":"sprites/spr_cm_up1/spr_cm_up1.yy",},},
     {"id":{"name":"spr_ev_play","path":"sprites/spr_ev_play/spr_ev_play.yy",},},
+    {"id":{"name":"snd_ev_paint_brand","path":"sounds/snd_ev_paint_brand/snd_ev_paint_brand.yy",},},
     {"id":{"name":"obj_ev_play_button","path":"objects/obj_ev_play_button/obj_ev_play_button.yy",},},
     {"id":{"name":"snd_ev_music_astra_jam","path":"sounds/snd_ev_music_astra_jam/snd_ev_music_astra_jam.yy",},},
     {"id":{"name":"tile_edges","path":"tilesets/tile_edges/tile_edges.yy",},},
@@ -87,6 +88,7 @@
     {"id":{"name":"msc_cifcircle","path":"sounds/msc_cifcircle/msc_cifcircle.yy",},},
     {"id":{"name":"fnt_text_12","path":"fonts/fnt_text_12/fnt_text_12.yy",},},
     {"id":{"name":"obj_ev_chest_window","path":"objects/obj_ev_chest_window/obj_ev_chest_window.yy",},},
+    {"id":{"name":"spr_cif_down","path":"sprites/spr_cif_down/spr_cif_down.yy",},},
     {"id":{"name":"msc_escapewithfriend","path":"sounds/msc_escapewithfriend/msc_escapewithfriend.yy",},},
     {"id":{"name":"snd_ev_textbox_click","path":"sounds/snd_ev_textbox_click/snd_ev_textbox_click.yy",},},
     {"id":{"name":"spr_greeder","path":"sprites/spr_greeder/spr_greeder.yy",},},

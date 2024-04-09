@@ -115,18 +115,13 @@ var refresh_button = instance_create_layer(112 + 56, 12, "Instances", asset_get_
 online_levels = copy_array(global.online_levels)
 function switch_mode(new_mode) {
 	global.level_start = 0
-	if (new_mode == 0) {
+	if (new_mode == 0)
 		levels = offline_levels 
-		new_button.pressable = true
-		new_button.image_alpha = 1
-	}
-	else {
+	else
 		levels = online_levels 
-		new_button.pressable = false
-		new_button.image_alpha = 0.5
-	}
 	create_displays();
 }
+
 
 add_child(online_switch)
 add_child(refresh_button)
@@ -148,12 +143,27 @@ function read_offline_levels() {
 	}
 	return offline_levels
 }
+function sort_online_levels() {	
+	array_sort(online_levels, function (lvl_str_1, lvl_str_2) {
+		var date_1 = int64_safe(get_level_date_from_string(lvl_str_1), 0)
+		var date_2 = int64_safe(get_level_date_from_string(lvl_str_2), 0)
+		if (date_1 < date_2)
+			return 1
+		else if (date_1 > date_2)
+			return -1;
+		return 0;
+	})	
+}
+
+
 offline_levels = read_offline_levels();
 online_levels = copy_array(global.online_levels)
+sort_online_levels()
 
 function on_level_update() {
 	if (global.online_mode) {
 		online_levels = copy_array(global.online_levels)
+		sort_online_levels()
 		levels = online_levels
 	}
 	else {
