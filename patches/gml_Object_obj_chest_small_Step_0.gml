@@ -45,7 +45,7 @@
             speakers = [id, id, id]
         }    	
 // TARGET: LINENUMBER
-// 293
+// 290
             else if ((global.stranger == 7))
             {
                 text[0] = scrScript(221)
