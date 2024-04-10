@@ -63,7 +63,7 @@ if (room == asset_get_index("rm_ev_menu")) {
 	draw_set_valign(fa_middle)
 	draw_text_transformed(112, 72 + 50, "Packs coming whenever..", 0.5, 0.5, 0)
 	
-	draw_text_transformed(112, 72 + 67, "0.87", 0.5, 0.5, 0)
+	draw_text_transformed(112, 72 + 67, "0.875", 0.5, 0.5, 0)
 }
 else if (room == global.startup_room) {
 	draw_set_color(c_white)
