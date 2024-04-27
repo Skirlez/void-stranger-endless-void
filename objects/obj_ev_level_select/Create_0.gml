@@ -49,7 +49,7 @@ function create_displays() {
 	}
 
 	if (global.level_start <= -1)
-		global.level_start = array_length(levels) div 6;
+		global.level_start = array_length(levels) div 6 - 1;
 	else if (global.level_start * 6 >= array_length(levels))
 		global.level_start = 0;	
 

@@ -128,7 +128,7 @@ if draw_brand {
 		draw_clear_alpha(c_black, 1)
 		
 		draw_set_color(c_grey)
-		draw_rectangle(1, 1, 6, 6, true)
+		ev_draw_rectangle(0, 0, 7, 7, true)
 		
 		draw_set_color(c_white)
 		

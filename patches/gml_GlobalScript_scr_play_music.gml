@@ -1,3 +1,3 @@
 // TARGET: LINENUMBER_REPLACE
-// 23
+// 27
 if (false)
