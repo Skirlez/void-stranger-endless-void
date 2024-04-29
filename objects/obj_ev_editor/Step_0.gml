@@ -142,6 +142,15 @@ if room == global.editor_room {
 		}
 	}
 }
+else if (room == global.level_room) {
+	global.leech_count = instance_number_string(leech_obj)
+	global.maggot_count = instance_number_string(maggot_obj)
+	global.smile_count = instance_number(gobbler_obj)
+
+}
+function instance_number_string(object_string) {
+	return instance_number(asset_get_index(object_string))
+}
 
 if mouse_check_button_pressed(mb_left) {
 	global.mouse_pressed = true;
@@ -161,4 +170,9 @@ else
 	global.mouse_right_pressed = false;
 if mouse_check_button_released(mb_right) {
 	global.mouse_right_held = false;	
+}
+
+if (stupid_sprite_i_can_only_delete_later != noone) {
+	sprite_delete(stupid_sprite_i_can_only_delete_later)
+	stupid_sprite_i_can_only_delete_later = noone
 }

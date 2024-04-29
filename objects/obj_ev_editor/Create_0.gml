@@ -7,7 +7,7 @@ if (!compiled_for_merge) {
 	audio_group_load(VoidStrangerAudio)
 	global.debug = false;
 	global.pause = false;
-	global.music = -4	
+	global.music = -4;
 }
 window_set_fullscreen(true)
 
@@ -47,6 +47,8 @@ global.mouse_held = false;
 #macro burden_stackrod 3
 
 global.editor_room = asset_get_index("rm_ev_editor");
+global.level_room = asset_get_index("rm_ev_level");
+
 global.editor_instance = id;
 global.display_object = asset_get_index("obj_ev_display");
 
@@ -747,6 +749,13 @@ function voidlord_io(b_form) {
 
 object_add = new editor_object(add_name, asset_get_index("spr_voider"), add_id, egg_statue_obj)
 object_add.iostruct = voidlord_io(8)
+object_add.zed_function = function(tile_state) {
+	new_window(13, 8, asset_get_index("obj_ev_add_statue_window"), {
+		add_properties : tile_state.properties
+	})
+	global.mouse_layer = 1
+}
+
 object_mon = new editor_object(mon_name, asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
 object_mon.iostruct = voidlord_io(7)
 object_tan = new editor_object(tan_name, asset_get_index("spr_killer"), tan_id, egg_statue_obj)
@@ -1099,3 +1108,5 @@ global.startup_room = asset_get_index("rm_ev_startup")
 global.playtesting = false;
 
 spin_surface = surface_create(16, 16)
+
+stupid_sprite_i_can_only_delete_later = noone

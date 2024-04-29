@@ -25,8 +25,10 @@ function ev_play_music(track){
 	
 }
 function ev_stop_music() {
-	if compiled_for_merge
+	if compiled_for_merge {
+		global.music_file = noone
 		asset_get_index("scr_stop_music")(0)
+	}
 	else {
 		audio_stop_sound(global.music)
 		global.music = -4;

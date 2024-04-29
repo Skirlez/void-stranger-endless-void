@@ -11,20 +11,27 @@ if (room == global.editor_room) {
 		surface_reset_target()
 		
 		var size = 1
-		
-		var xscale = dcos(global.selected_thing_time) * size;
+
 		draw_set_halign(fa_center)
 		draw_set_valign(fa_middle)
 		draw_set_font(global.ev_font)
 		
 		draw_set_color(c_black)
-		draw_text_transformed(26 + 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
-		draw_text_transformed(26 - 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
-		draw_text_transformed(26, 100 + 0.5, state.tile.display_name, 0.5, 0.5, 0)
-		draw_text_transformed(26, 100 - 0.5, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27 + 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27 - 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27, 100 + 0.5, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27, 100 - 0.5, state.tile.display_name, 0.5, 0.5, 0)
 		draw_set_color(c_white)
-		draw_text_transformed(26, 100, state.tile.display_name, 0.5, 0.5, 0)
-		draw_surface_ext(spin_surface, 26 - 8 * xscale, 80, xscale, size, 0, c_white, 1)
+		draw_text_transformed(27, 100, state.tile.display_name, 0.5, 0.5, 0)
+		
+
+		if stupid_sprite_i_can_only_delete_later == noone {
+			var sprite = sprite_create_from_surface(spin_surface, 0, 0, 16, 16, false, false, 8, 0)
+			ev_draw_cube(sprite, 0, 27, 84, 7, (dsin(global.editor_time / 2.8 + 120) + 1) / 2, (dsin(global.editor_time / 3) + 1) / 2)		
+			stupid_sprite_i_can_only_delete_later = sprite;
+		}
+		
+
 		
 	}
 	if (global.selected_thing == thing_multiplaceable) {
