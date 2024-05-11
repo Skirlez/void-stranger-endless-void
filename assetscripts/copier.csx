@@ -68,9 +68,7 @@ string[] getAssetNames(string path) {
 
 void exportSpriteTexture(UndertaleTexturePageItem texture, string spriteDir, string name, string layerName) {
     worker.ExportAsPNG(texture, $"{spriteDir}/{name}.png", null, true);
-    
-    string[] layerFiles = Directory.GetFiles($"{spriteDir}/layers/{name}", "*.bin");
-    File.Delete(layerFiles[0]);
+    System.IO.Directory.CreateDirectory($"{spriteDir}/layers/{name}/");
 
     worker.ExportAsPNG(texture, $"{spriteDir}/layers/{name}/{layerName}.png", null, true);
 
