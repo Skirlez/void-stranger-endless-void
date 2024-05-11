@@ -33,7 +33,6 @@ foreach (string spriteName in sprites) {
             continue;
         }
         File.Delete(layerFiles[0]);
-        File.Create(layerFiles[0].Substring(0, layerFiles[0].Length - 3) + "bin").Close();
     }
 }
 
