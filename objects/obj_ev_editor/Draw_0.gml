@@ -25,11 +25,28 @@ if (room == global.editor_room) {
 		draw_text_transformed(27, 100, state.tile.display_name, 0.5, 0.5, 0)
 		
 
-		if stupid_sprite_i_can_only_delete_later == noone {
+	
+		var spin_h = (dsin(global.editor_time / 2.2) + 1) / 2;
+		var spin_v = 1 - (dsin(global.editor_time / 2.6) + 1) / 2;
+		
+		
+		if stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten == noone {
 			var sprite = sprite_create_from_surface(spin_surface, 0, 0, 16, 16, false, false, 8, 0)
-			ev_draw_cube(sprite, 0, 27, 84, 7, (dsin(global.editor_time / 2.8 + 120) + 1) / 2, (dsin(global.editor_time / 3) + 1) / 2)		
-			stupid_sprite_i_can_only_delete_later = sprite;
+			stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = sprite;
+			
+			if state.tile.cube_type == cube_types.uniform
+				ev_draw_cube(sprite, 0, 27, 84, 7, spin_h, spin_v)		
+			else if state.tile.cube_type == cube_types.edge {
+				var edge_sprite = asset_get_index("spr_floor")
+				var black_bottom_sprite = asset_get_index("spr_ev_tile_hitbox");
+				ev_draw_cube_multisprite(
+					[edge_sprite, edge_sprite, edge_sprite, edge_sprite, state.tile.spr_ind,
+						black_bottom_sprite], [1, 1, 1, 1, 0, 0], 27, 84, 7, spin_h, spin_v)			
+			}
+			
 		}
+		
+		
 		
 
 		

@@ -1,5 +1,28 @@
 
-function execute(program, input_1, input_2) {
+function string_to_array(str) {
+	var arr = array_create(string_length(str))
+	for (var i = 0; i < array_length(arr); i++) {
+		arr[i] = string_char_at(str, i + 1);	
+	}
+	return arr;
+}
+
+function evaluate_input(input) {
+	if string_is_int(input)
+		return int64_safe(input, 0)
+	if variable_global_exists(input) {
+		var global_value = variable_global_get(input)	
+		return int64_safe(global_value, 0)
+	}
+	return 0;
+}
+
+
+
+
+program = string_to_array(program_str)
+
+function execute(program, input_1, input_2, destroy_value) {
 	var memory = array_create(23, 0)
 	memory[0] = input_1
 	memory[1] = input_2
@@ -13,7 +36,7 @@ function execute(program, input_1, input_2) {
 		var command = program[i];
 		count++;
 		if (count > 100000)
-			return expected_value;
+			return destroy_value;
 		switch (command) {
 			case "<": 
 				var ret = get_bf_multiplier(program, i)
@@ -85,13 +108,6 @@ function execute(program, input_1, input_2) {
 	}
 }
 
-function string_to_array(str) {
-	var arr = array_create(string_length(str))
-	for (var i = 0; i < array_length(arr); i++) {
-		arr[i] = string_char_at(str, i + 1);	
-	}
-	return arr;
-}
 
 // get the multiplier following this character, if it exists.
 function get_bf_multiplier(program, i) {

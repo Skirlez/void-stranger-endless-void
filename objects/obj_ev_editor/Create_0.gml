@@ -1,6 +1,6 @@
 randomize()
-global.latest_lvl_format = 1;
-#macro compiled_for_merge false
+global.latest_lvl_format = 2;
+#macro compiled_for_merge true
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -83,7 +83,7 @@ music_draw_function = function(tile_state, i, j) {
 global.placeable_name_map = ds_map_create()
 
 
-default_reader = function(tile /*, lvl_str, pos*/ ) {
+default_reader = function(tile /*, lvl_str, pos, version*/ ) {
 	var t = new tile_with_state(tile)
 	return { value : t, offset : 0 }
 }
@@ -106,6 +106,10 @@ enum editor_types {
 	tile,
 	object
 }
+enum cube_types {
+	uniform,
+	edge,
+}
 
 function editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer = "Floor", flags = 0) constructor {
     self.display_name = display_name
@@ -120,6 +124,7 @@ function editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer = "Floo
 	self.properties_generator = global.editor_instance.return_noone
 	self.editor_type = editor_types.tile;
 	self.iostruct = global.editor_instance.default_tile_io;
+	self.cube_type = cube_types.uniform;
 	global.placeable_name_map[? tile_id] = self;
 } 
 function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "Instances", flags = 0) 
@@ -180,6 +185,7 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 
 #macro wall_id "wa"
 #macro wall_name "Wall"
+
 #macro edge_id "ed"
 #macro edge_name "Edge Tile"
 
@@ -294,17 +300,20 @@ tile_bomb = new editor_tile(bomb_name, asset_get_index("spr_bombfloor"), bomb_id
 tile_explo = new editor_tile(explo_name, asset_get_index("spr_explofloor"), explo_id, explo_obj)
 
 tile_default = new editor_tile(default_tile_name, floor_sprite, default_tile_id, default_tile_obj)
+tile_default.cube_type = cube_types.edge
+
 tile_floorswitch = new editor_tile(floorswitch_name, asset_get_index("spr_floorswitch"), floorswitch_id, floorswitch_obj)
 tile_floorswitch.draw_function = function(tile_state, i, j, preview, lvl) {
 	var ind = lvl.objects[i][j].tile == object_empty ? 0 : 1
 	draw_sprite(tile_state.tile.spr_ind, ind, j * 16 + 8, i * 16 + 8)
 }
+tile_floorswitch.cube_type = cube_types.edge
+
 tile_copyfloor = new editor_tile(copyfloor_name, asset_get_index("spr_copyfloor"), copyfloor_id, copyfloor_obj)
-
-
-
+tile_copyfloor.cube_type = cube_types.edge
 
 tile_exit = new editor_tile(exit_name, asset_get_index("spr_stairs"), exit_id, exit_obj)
+tile_exit.cube_type = cube_types.edge
 
 function can_tile_press_buttons(tile) {
 	static exceptions = [object_empty, object_hologram, object_secret_exit]
@@ -331,6 +340,7 @@ tile_exit.draw_function = function(tile_state, i, j, preview, lvl) {
 }
 tile_white = new editor_tile(white_name, asset_get_index("spr_floor_white"), white_id, white_obj)
 tile_deathfloor = new editor_tile(deathfloor_name, asset_get_index("spr_deathfloor"), deathfloor_id, deathfloor_obj)
+tile_deathfloor.cube_type = cube_types.edge
 
 tilemap_tile_read = function(tile, lvl_str, pos) {
 	var read_ind = string_copy(lvl_str, pos, 2)
@@ -346,7 +356,7 @@ tilemap_tile_write = function(tile_state) {
 // we create the edge sprite in real time
 var edge_surf = surface_create(16, 16)
 surface_set_target(edge_surf)
-draw_tile(asset_get_index("tile_edges"), 4, 0, 0, 0)
+draw_tile(asset_get_index("tile_edges"), 31, 0, 0, 0)
 var edge_sprite = sprite_create_from_surface(edge_surf, 0, 0, 16, 16, false, false, 8, 8)
 surface_reset_target()
 surface_free(edge_surf)
@@ -371,6 +381,7 @@ tile_edge.iostruct = {
 		global.editor_instance.tile_pit.iostruct.place(new tile_with_state(global.editor_instance.tile_pit), i, j, wall_tilemap, edge_tilemap)
 	}
 }
+tile_edge.cube_type = cube_types.edge
 
 
 tile_wall = new editor_tile(wall_name, asset_get_index("spr_ev_wall"), wall_id, no_obj, "Floor", flag_no_objects)
@@ -386,6 +397,7 @@ tile_wall.zed_function = function() {
 tile_wall.properties_generator = function() {
 	return { ind : 4 }
 }
+
 tile_wall.iostruct = {
 	read : tilemap_tile_read,
 	write : tilemap_tile_write,
@@ -393,8 +405,8 @@ tile_wall.iostruct = {
 		tilemap_set(wall_tilemap, tile_state.properties.ind, j, i)
 	}
 }
+tile_wall.cube_type = cube_types.edge
 
-show_debug_message(asset_get_index("spr_ev_blackfloor"))
 tile_black_floor = new editor_tile(black_floor_name, asset_get_index("spr_ev_blackfloor"), black_floor_id, black_floor_obj)
 tile_black_floor.iostruct = {
 	read : default_reader,
@@ -410,6 +422,7 @@ tile_black_floor.iostruct = {
 		});
 	}
 }
+tile_black_floor.cube_type = cube_types.edge
 
 
 
@@ -748,13 +761,125 @@ function voidlord_io(b_form) {
 }	
 
 object_add = new editor_object(add_name, asset_get_index("spr_voider"), add_id, egg_statue_obj)
-object_add.iostruct = voidlord_io(8)
+object_add.draw_function = function(tile_state, i, j) {
+	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)
+	if tile_state.properties.mde != 0 {
+		static branefucked = asset_get_index("spr_ev_branefucked")
+		draw_sprite(branefucked, 0, j * 16 + 8, i * 16 + 8)
+	}
+}
+object_add.properties_generator = function() {
+	return {
+		mde : 0,
+		in1 : "",
+		in2 : "",
+		val : "",
+		pgm : "",
+	}
+}
+
+#macro BRAINFUCK_SEP "?"
+
+object_add.iostruct = {
+	read : function(tile, lvl_str, pos, version) {
+		if (version == 1)
+			return global.editor_instance.default_reader(tile, lvl_str, pos)	
+		var original_pos = pos;
+		var read_mode = string_copy(lvl_str, pos, 1)
+		var mode = int64_safe(read_mode, 0)	
+		pos++;
+		
+		if (mode == 0) {
+			var t = new tile_with_state(tile)
+			return { value : t, offset : pos - original_pos }
+		}
+		var read_input_1 = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
+		
+		pos += read_input_1.offset + 1;
+		
+		if (mode == 1) {
+			var read_destroy_value = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
+			pos += read_destroy_value.offset + 1;
+			
+			
+			var t = new tile_with_state(tile, {
+				mde : 1,
+				in1 : base64_decode(read_input_1.substr),
+				in2 : "",
+				val : base64_decode(read_destroy_value.substr),
+				pgm : "",
+			})
+			return { value : t, offset : pos - original_pos }
+		}
+		
+		var read_input_2 = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
+		pos += read_input_2.offset + 1;
+		var read_destroy_value = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
+		pos += read_destroy_value.offset + 1;
+		var read_program = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
+		pos += read_program.offset + 1;
+		
+		var t = new tile_with_state(tile, {
+			mde : 2,
+			in1 : base64_decode(read_input_1.substr),
+			in2 : base64_decode(read_input_2.substr),
+			val : base64_decode(read_destroy_value.substr),
+			pgm : read_program.substr,
+		})
+		return { value : t, offset : pos - original_pos }
+	},
+	write : function(tile_state) {
+		
+		var mode = tile_state.properties.mde
+		var program = tile_state.properties.pgm;
+		var input_1 = tile_state.properties.in1;
+		var input_2 = tile_state.properties.in2;
+		var destroy_value = tile_state.properties.val;
+		
+		if mode == 0 {
+			return tile_state.tile.tile_id + "0"
+		}
+		if mode == 1 {
+			return tile_state.tile.tile_id + "1" + base64_encode(input_1) + BRAINFUCK_SEP + base64_encode(destroy_value) + BRAINFUCK_SEP
+		}
+		return tile_state.tile.tile_id + "2" + base64_encode(input_1) + BRAINFUCK_SEP 
+			+ base64_encode(input_2) + BRAINFUCK_SEP 
+			+ base64_encode(destroy_value) + BRAINFUCK_SEP 
+			+ program + BRAINFUCK_SEP; 
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		inst.b_form = 8;
+		
+		var mode = tile_state.properties.mde;
+		
+		if mode == 0
+			return inst;
+			
+		
+		var program 
+		if mode == 1
+			program = ".";
+		else
+			program = tile_state.properties.pgm
+		instance_create_layer(0, 0, tile_state.tile.obj_layer, asset_get_index("obj_ev_brainfucker"), {
+			add_inst : inst,
+			input_1_str : tile_state.properties.in1,
+			input_2_str : tile_state.properties.in2,
+			destroy_value_str : tile_state.properties.val,
+			program_str : program,
+		});
+		
+		return inst;
+	},
+};
 object_add.zed_function = function(tile_state) {
 	new_window(13, 8, asset_get_index("obj_ev_add_statue_window"), {
 		add_properties : tile_state.properties
 	})
 	global.mouse_layer = 1
 }
+
 
 object_mon = new editor_object(mon_name, asset_get_index("spr_greeder"), mon_id, egg_statue_obj)
 object_mon.iostruct = voidlord_io(7)
@@ -1109,4 +1234,4 @@ global.playtesting = false;
 
 spin_surface = surface_create(16, 16)
 
-stupid_sprite_i_can_only_delete_later = noone
+stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone

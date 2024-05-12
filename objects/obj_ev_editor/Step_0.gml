@@ -145,8 +145,23 @@ if room == global.editor_room {
 else if (room == global.level_room) {
 	global.leech_count = instance_number_string(leech_obj)
 	global.maggot_count = instance_number_string(maggot_obj)
-	global.smile_count = instance_number(gobbler_obj)
-
+	global.beaver_count = instance_number_string(bull_obj)
+	global.smile_count = instance_number_string(gobbler_obj)
+	global.eye_count = instance_number_string(hand_obj)
+	global.mimic_count = instance_number_string(mimic_obj)
+	global.octahedron_count = instance_number_string(diamond_obj)
+	global.spider_count = instance_number_string(spider_obj)
+	global.orb_count = instance_number_string(orb_obj)
+	global.scaredeer_count = instance_number_string(scaredeer_obj)
+	with (asset_get_index(player_obj)) {
+		global.player_x = x div 16;
+		global.player_y = y div 16;
+	}
+	global.add_count = 0;
+	with (asset_get_index(egg_statue_obj)) {
+		if (b_form == 8)
+			global.add_count++;
+	}
 }
 function instance_number_string(object_string) {
 	return instance_number(asset_get_index(object_string))
@@ -172,7 +187,7 @@ if mouse_check_button_released(mb_right) {
 	global.mouse_right_held = false;	
 }
 
-if (stupid_sprite_i_can_only_delete_later != noone) {
-	sprite_delete(stupid_sprite_i_can_only_delete_later)
-	stupid_sprite_i_can_only_delete_later = noone
+if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
+	sprite_delete(stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten)
+	stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone
 }

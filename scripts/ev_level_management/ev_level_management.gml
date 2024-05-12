@@ -5,9 +5,7 @@
 #macro BASE64_END_CHAR "!"
 #macro MULTIPLIER_CHAR "X"
 
-function string_is_uint(str) {
-	return str != "" && string_length(str) == string_length(string_digits(str));
-}
+
 
 function level_struct() constructor {
 	name = ""
@@ -205,8 +203,8 @@ function import_level(level_string) {
 	var object_string = strings[10]
 
 
-	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit)
-	import_process_tiles(object_string, level, 8,  global.editor_instance.object_empty)
+	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit, version)
+	import_process_tiles(object_string, level, 8,  global.editor_instance.object_empty, version)
 	
 	
 	return level
@@ -222,7 +220,7 @@ function import_process_tiles(tile_string, level, height, failsafe_tile, version
 		if is_undefined(tile)
 			tile = failsafe_tile
 			
-		var result = tile.iostruct.read(tile, tile_string, tile_pointer)
+		var result = tile.iostruct.read(tile, tile_string, tile_pointer, version)
 			
 		var state = result.value;
 		var offset = result.offset;
@@ -252,10 +250,7 @@ function import_process_tiles(tile_string, level, height, failsafe_tile, version
 
 
 
-function is_digit(str) {
-	return str != "" && str == string_digits(str)	
-}
-
+/*
 function consider_multiplier(str, pointer, previous_string) {
 	if string_copy(str, pointer, 1) != MULTIPLIER_CHAR
 		return str;
@@ -280,6 +275,7 @@ function consider_multiplier(str, pointer, previous_string) {
 	
 	return str;
 }
+*/
 
 function get_multiplier(str, pointer) {
 	if string_copy(str, pointer, 1) != MULTIPLIER_CHAR
