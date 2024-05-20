@@ -3,8 +3,8 @@ Endless Void is a fully functional level builder for Void Stranger.
 
 You can create your own levels with it, and upload them to a server (a [Voyager](https://github.com/hexfae/voyager) instance).
 
-This repository contains its project file, the UndertaleModTool script used to merge it into the game (merger.csx), 
-UndertaleModTool scripts to add and remove game assets from the project (located in the assetscripts folder), and patches applied to the game on-merge (/patches).
+This repository contains its project file, the UndertaleModTool script used to merge it into the game (`merger.csx`), 
+UndertaleModTool scripts to add and remove game assets from the project (located in the `/assetscripts` folder), and patches applied to the game on-merge (`/patches`).
 
 The project is set up like this, as opposed to just a plain UndertaleModTool mod, for several reasons:
 - Much faster iteration
