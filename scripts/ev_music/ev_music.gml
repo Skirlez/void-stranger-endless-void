@@ -5,7 +5,7 @@ function ev_play_music(track){
 		return;
 	}
 	
-	if compiled_for_merge {
+	if global.compiled_for_merge {
 		if (audio_get_name(track) == "msc_test2") {
 			track = ev_get_elysium_music(global.level)
 			if (global.music_file == track)
@@ -25,7 +25,7 @@ function ev_play_music(track){
 	
 }
 function ev_stop_music() {
-	if compiled_for_merge {
+	if global.compiled_for_merge {
 		global.music_file = noone
 		asset_get_index("scr_stop_music")(0)
 	}

@@ -35,7 +35,7 @@ function ev_is_mouse_on_me() {
 }
 
 function ev_is_action_pressed() {
-	if (compiled_for_merge) {
+	if (global.compiled_for_merge) {
 		static func = asset_get_index("scr_input_check_pressed");
 		return func(4)
 	}
@@ -43,14 +43,14 @@ function ev_is_action_pressed() {
 	return keyboard_check_pressed(ord("Z"))
 }
 function ev_is_action_held() {
-	if (compiled_for_merge) {
+	if (global.compiled_for_merge) {
 		static func = asset_get_index("scr_input_check");
 		return func(4)
 	}
 	return keyboard_check(ord("Z"))
 }
 function ev_get_action_key() {
-	if (compiled_for_merge) {
+	if (global.compiled_for_merge) {
 
 		return variable_global_get("key_action")
 	}

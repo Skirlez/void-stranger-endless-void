@@ -2,10 +2,10 @@ randomize()
 global.latest_lvl_format = 2;
 global.ev_version = "0.875";
 
-#macro compiled_for_merge false
+global.compiled_for_merge = (asset_get_index("obj_game") != -1)
 
 
-if (!compiled_for_merge) {
+if (!global.compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
 	audio_group_load(VoidStrangerAudio)
