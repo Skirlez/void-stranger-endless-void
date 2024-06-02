@@ -141,6 +141,15 @@ function export_level(level) {
 	
 	return str;
 }
+
+function level_string_content_sha1(level_string) {
+	var arr = ev_string_split(level_string, "|")
+	if array_length(arr) != 11
+		return sha1_string_utf8("fuck")
+	var str = sha1_string_utf8(arr[8] + "|" + arr[9] + "|" + arr[10])
+	return str;
+}
+
 function level_content_sha1(level) {
 	var arr = export_level_arr(level)
 	var str = sha1_string_utf8(arr[8] + "|" + arr[9] + "|" + arr[10])
@@ -173,7 +182,7 @@ function get_level_date_from_string(level_string) {
 function import_level(level_string) {
 	var level = new level_struct()
 	
-	var strings = string_split(level_string, "|");
+	var strings = ev_string_split(level_string, "|");
 	if array_length(strings) != 11 {
 		return place_placeholder_tiles(level);
 	}

@@ -106,8 +106,6 @@ function start_uploading() {
 	reset_window()
 	
 	var lvl_str = export_level(lvl);
-	show_debug_message("Start uploading level...")
-	show_debug_message(lvl_str)
 	post_level_id = http_post_string(global.server, lvl_str)
 }
 

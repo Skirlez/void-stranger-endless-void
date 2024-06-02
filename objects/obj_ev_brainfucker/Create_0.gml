@@ -35,8 +35,10 @@ function execute(program, input_1, input_2, destroy_value) {
 	while (i < program_length) {
 		var command = program[i];
 		count++;
-		if (count > 100000)
+		if (count > 100000) {
+			ev_notify("BF code ran for too long!")
 			return destroy_value;
+		}
 		switch (command) {
 			case "<": 
 				var ret = get_bf_multiplier(program, i)
@@ -79,6 +81,8 @@ function execute(program, input_1, input_2, destroy_value) {
 						return; // TODO
 					i = j + 1;
 				}
+				else
+					i++;
 				break;
 			case "]":
 				if (memory[pointer] != 0) {
@@ -98,10 +102,15 @@ function execute(program, input_1, input_2, destroy_value) {
 						return; // TODO
 					i = j + 1;
 				}
-
+				else
+					i++;
 				break;
 			case ".":
 				return (memory[pointer])
+			case "?":
+				memory[pointer] = sign(memory[pointer])
+				i++;
+				break;
 			default:
 				i++;
 		}

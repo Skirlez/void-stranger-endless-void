@@ -28,4 +28,10 @@ switch (image_index) {
 		global.erasing = 350;
 		audio_play_sound(comes_sound, 10, false, 1, 0, 1)
 		break;
+	case 7: // picker
+		if (global.selected_thing != thing_picker)
+			global.selected_thing = thing_picker
+		else
+			global.selected_thing = -1
+		break;
 }

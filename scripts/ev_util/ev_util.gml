@@ -55,7 +55,7 @@ function array_contains(arr, value) {
 }
 
 
-function string_split(str, delimiter) {
+function ev_string_split(str, delimiter) {
 	var arr = []
 	var build = ""
 	for (var i = 1; i <= string_length(str); i++) {
@@ -70,7 +70,7 @@ function string_split(str, delimiter) {
 	array_push(arr, build);	
 	return arr;
 }
-function string_split_buffer(str, delimiter, approx_average_substr_length) {
+function ev_string_split_buffer(str, delimiter, approx_average_substr_length) {
 
 	var delimiter_ord = ord(delimiter)
 	
@@ -106,6 +106,15 @@ function string_split_buffer(str, delimiter, approx_average_substr_length) {
 function int64_safe(value, failsafe = 0) {
 	try { 
 		return int64(value);
+	}
+	catch (e) {
+		return failsafe;
+	}
+}
+
+function real_safe(value, failsafe = 0) {
+	try { 
+		return real(value);
 	}
 	catch (e) {
 		return failsafe;

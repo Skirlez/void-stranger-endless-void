@@ -1,8 +1,6 @@
 function is_digit(str) {
 	return str != "" && str == string_digits(str)	
 }
-
-
 function string_is_uint(str) {
 	return str != "" && string_length(str) == string_length(string_digits(str));
 }

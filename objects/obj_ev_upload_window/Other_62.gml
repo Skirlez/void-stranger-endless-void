@@ -1,8 +1,6 @@
 if ds_map_find_value(async_load, "id") == post_level_id
 {
 	var http_status = ds_map_find_value(async_load, "http_status");
-	show_debug_message(http_status)
-
     if ds_map_find_value(async_load, "status") == 0
     {
 		if (http_status == 201) {

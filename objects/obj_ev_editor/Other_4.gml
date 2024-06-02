@@ -38,7 +38,7 @@ if (room == asset_get_index("rm_ev_startup")) {
 	
 	global.online_levels = []
 	startup_timeout = 300; // frames seconds to do the following things
-	startup_actions_count = 2; 
+	startup_actions_count = 3; 
 	try_update_online_levels()
 	if array_length(uploaded_keys) != 0 {
 		var build = uploaded_keys[0];
@@ -49,4 +49,5 @@ if (room == asset_get_index("rm_ev_startup")) {
 	}
 	else
 		startup_actions_count--;
+	request_version_string()
 }

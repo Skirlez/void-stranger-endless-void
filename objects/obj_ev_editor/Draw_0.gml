@@ -1,7 +1,8 @@
 if (room == global.editor_room) {
 	
 	if (global.selected_thing == thing_placeable) && global.mouse_layer == 0 {
-
+		var draw_y = 98
+		
 		var state = global.display_object.held_tile_state;
 		if !surface_exists(spin_surface)
 			spin_surface = surface_create(16, 16)
@@ -17,12 +18,12 @@ if (room == global.editor_room) {
 		draw_set_font(global.ev_font)
 		
 		draw_set_color(c_black)
-		draw_text_transformed(27 + 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
-		draw_text_transformed(27 - 0.5, 100, state.tile.display_name, 0.5, 0.5, 0)
-		draw_text_transformed(27, 100 + 0.5, state.tile.display_name, 0.5, 0.5, 0)
-		draw_text_transformed(27, 100 - 0.5, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27 + 0.5, draw_y + 16, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27 - 0.5, draw_y + 16, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27, draw_y + 16 + 0.5, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27, draw_y + 16 - 0.5, state.tile.display_name, 0.5, 0.5, 0)
 		draw_set_color(c_white)
-		draw_text_transformed(27, 100, state.tile.display_name, 0.5, 0.5, 0)
+		draw_text_transformed(27, draw_y + 16, state.tile.display_name, 0.5, 0.5, 0)
 		
 
 	
@@ -35,13 +36,13 @@ if (room == global.editor_room) {
 			stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = sprite;
 			
 			if state.tile.cube_type == cube_types.uniform
-				ev_draw_cube(sprite, 0, 27, 84, 7, spin_h, spin_v)		
+				ev_draw_cube(sprite, 0, 27, draw_y, 7, spin_h, spin_v)		
 			else if state.tile.cube_type == cube_types.edge {
 				var edge_sprite = asset_get_index("spr_floor")
 				var black_bottom_sprite = asset_get_index("spr_ev_tile_hitbox");
 				ev_draw_cube_multisprite(
 					[edge_sprite, edge_sprite, edge_sprite, edge_sprite, state.tile.spr_ind,
-						black_bottom_sprite], [1, 1, 1, 1, 0, 0], 27, 84, 7, spin_h, spin_v)			
+						black_bottom_sprite], [1, 1, 1, 1, 0, 0], 27, draw_y, 7, spin_h, spin_v)			
 			}
 			
 		}
@@ -52,7 +53,7 @@ if (room == global.editor_room) {
 		
 	}
 	if (global.selected_thing == thing_multiplaceable) {
-		
+		// do something later maybe
 	}
 }
 
@@ -87,7 +88,10 @@ if (room == asset_get_index("rm_ev_menu")) {
 	draw_set_valign(fa_middle)
 	draw_text_transformed(112, 72 + 50, "Packs coming whenever..", 0.5, 0.5, 0)
 	
-	draw_text_transformed(112, 72 + 67, "0.875", 0.5, 0.5, 0)
+	if global.there_is_a_newer_version
+		draw_text_transformed(112, 72 + 64, "THERE IS A NEWER VERSION!!!" + "\nYou are on " + global.ev_version + ", latest is " + global.newest_version, 0.5, 0.5, 0)
+	else
+		draw_text_transformed(112, 72 + 67, "0.875", 0.5, 0.5, 0)
 }
 else if (room == global.startup_room) {
 	draw_set_color(c_white)

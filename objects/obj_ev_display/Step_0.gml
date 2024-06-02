@@ -12,6 +12,7 @@ if (edit && ev_is_mouse_on_me()) {
 		
 			handle_click_before(tile_i, tile_j)
 			handle_click(tile_i, tile_j)
+			handle_click_after(tile_i, tile_j)
 			last_clicked_i = tile_i;
 			last_clicked_j = tile_j;
 		}
@@ -31,7 +32,8 @@ if (edit && ev_is_mouse_on_me()) {
 			&& !(global.selected_thing == thing_placeable 
 				&& held_tile_state != noone 
 				&& held_tile_state.tile.flags & flag_only_one)
-			&& global.selected_thing != thing_multiplaceable) {
+			&& global.selected_thing != thing_multiplaceable)
+			&& global.selected_thing != thing_nothing {
 		dragging = true
 		drag_box_i = tile_i
 		drag_box_j = tile_j
@@ -59,13 +61,39 @@ if (edit && ev_is_mouse_on_me()) {
 				small_tile_j = tile_j
 				tile_j = drag_box_j
 			}
+			
+			function region_has_tiles(from_i, from_j, to_i, to_j) {
+				for (var i = from_i; i <= to_i; i++) {
+					for (var j = from_j; j <= to_j; j++) {
+						if (lvl.tiles[i][j].tile != global.editor_instance.tile_pit)
+							return true;
+					}
+				}	
+				return false;
+			}
+			
+			function region_has_objects(from_i, from_j, to_i, to_j) {
+				for (var i = from_i; i <= to_i; i++) {
+					for (var j = from_j; j <= to_j; j++) {
+						if (lvl.objects[i][j].tile != global.editor_instance.object_empty)
+							return true;
+					}
+				}	
+				return false;
+			}
+			if (!global.tile_mode 
+					&& !region_has_objects(small_tile_i, small_tile_j, tile_i, tile_j)
+					&& region_has_tiles(small_tile_i, small_tile_j, tile_i, tile_j))
+				global.editor_instance.switch_tile_mode(true)
+			
 			global.editor_instance.add_undo()
 			handle_click_before(tile_i, tile_j)
+			
 			for (var i = small_tile_i; i <= tile_i; i++) {
 				for (var j = small_tile_j; j <= tile_j; j++)
 					handle_click(i, j)
-
 			}
+			
 			handle_click_after(tile_i, tile_j)
 			
 			dragging = false		

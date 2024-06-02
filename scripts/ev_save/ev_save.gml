@@ -19,7 +19,6 @@ function ev_load() {
 
 function ev_update_vars() {
 	global.server = "http://" + global.server_ip + ":3000/voyager"
-	show_debug_message(global.server)
 	var folder = string_lettersdigits(global.server_ip);
 	global.levels_directory = game_save_id + folder + "\\levels\\"
 	

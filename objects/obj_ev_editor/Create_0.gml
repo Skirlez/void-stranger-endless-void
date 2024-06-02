@@ -1,6 +1,10 @@
 randomize()
 global.latest_lvl_format = 2;
-#macro compiled_for_merge true
+global.ev_version = "0.875";
+
+#macro compiled_for_merge false
+
+
 if (!compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -9,6 +13,7 @@ if (!compiled_for_merge) {
 	global.pause = false;
 	global.music = -4;
 }
+
 window_set_fullscreen(true)
 
 #macro level_extension "vsl"
@@ -25,16 +30,19 @@ if !file_exists(global.save_directory + "ev_options.ini") {
 }
 else
 	ev_load()
+
 window_set_cursor(cr_default)
 
 global.editor_time = 0
 global.selected_thing_time = 0
 global.mouse_pressed = false;
 global.mouse_held = false;
+#macro thing_nothing -1
 #macro thing_plucker 0
 #macro thing_eraser 1
 #macro thing_placeable 2
 #macro thing_multiplaceable 3
+#macro thing_picker 7
 
 #macro flag_unremovable 1
 #macro flag_only_one 2
@@ -80,7 +88,6 @@ music_draw_function = function(tile_state, i, j) {
 	draw_sprite(spr, ev_strobe_integer(sprite_get_number(spr)), j * 16 + 8, i * 16 + 8)	
 }
 
-global.placeable_name_map = ds_map_create()
 
 
 default_reader = function(tile /*, lvl_str, pos, version*/ ) {
@@ -110,6 +117,8 @@ enum cube_types {
 	uniform,
 	edge,
 }
+
+global.placeable_name_map = ds_map_create()
 
 function editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer = "Floor", flags = 0) constructor {
     self.display_name = display_name
@@ -268,7 +277,6 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 #macro secret_exit_id "se"
 #macro secret_exit_obj "obj_na_secret_exit"
 #macro secret_exit_name "Secret Exit"
-
 
 #macro hungry_man_id "hu"
 #macro hungry_man_obj "obj_npc_famished"
@@ -778,7 +786,7 @@ object_add.properties_generator = function() {
 	}
 }
 
-#macro BRAINFUCK_SEP "?"
+#macro BRAINFUCK_SEP "!"
 
 object_add.iostruct = {
 	read : function(tile, lvl_str, pos, version) {
@@ -897,10 +905,63 @@ object_gor.iostruct = voidlord_io(5)
 object_jukebox = new editor_object(jukebox_name, asset_get_index("spr_jb"), jukebox_id, egg_statue_obj)
 object_jukebox.iostruct = voidlord_io(9)
 
-object_secret_exit = new editor_object(secret_exit_name, asset_get_index("spr_barrier"), secret_exit_id, secret_exit_obj)
-object_secret_exit.draw_function = function(tile_state, i, j) {
-	draw_sprite(tile_state.tile.spr_ind, global.editor_time / 20, j * 16 + 8, i * 16 + 8)	
+object_secret_exit = new editor_object(secret_exit_name, asset_get_index("spr_ev_secret_exit_arrow"), secret_exit_id, secret_exit_obj)
+
+// 0 - invisible, 1 - stars, 2 - stink lines
+object_secret_exit.properties_generator = function () {
+	return { typ : 0 }	
 }
+object_secret_exit.iostruct = {
+	read : function(tile_id, lvl_str, pos, version) {
+		if (version == 1) {
+			var t = new tile_with_state(tile_id, { typ : 0 })
+			return { value : t, offset : 0 };	
+		}
+		var read_type = string_copy(lvl_str, pos, 1)
+		var type = clamp(int64_safe(read_type, 0), 0, 2)
+		var t = new tile_with_state(tile_id, { typ : type })
+		return { value : t, offset : 1 };
+	},
+	write : function(tile_state) {
+		return tile_state.tile.tile_id + string(tile_state.properties.typ);
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		
+		var type = tile_state.properties.typ;
+		
+		if type == 1
+			inst.secret_stars = true;
+		else if type == 2
+			instance_create_layer(j * 16 + 8, i * 16 + 8, "Effects", asset_get_index("obj_stinklines"))	
+		
+		return inst;
+	}
+}
+
+object_secret_exit.draw_function = function(tile_state, i, j) {
+	static stinklines_sprite = asset_get_index("spr_stinklines")
+	static stars_sprite = asset_get_index("spr_soulstar_spark")
+	
+	var type = tile_state.properties.typ;
+	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
+		
+	if type == 1 {
+		draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
+		draw_sprite(stars_sprite, 2, j * 16 + 5, i * 16 + 10)	
+		draw_sprite(stars_sprite, 3, j * 16 + 13, i * 16 + 5)	
+	}
+	else if type == 2
+		draw_sprite(stinklines_sprite, global.editor_time / 10, j * 16 + 8, i * 16 + 8)
+}
+
+object_secret_exit.zed_function = function(tile_state) {
+	tile_state.properties.typ++;
+	if tile_state.properties.typ > 2
+		tile_state.properties.typ = 0;
+}
+
+
 object_hungry_man = new editor_object(hungry_man_name, asset_get_index("spr_fam_u"), hungry_man_id, hungry_man_obj)
 object_hungry_man.draw_function = music_draw_function
 
@@ -1143,12 +1204,17 @@ global.online_mode = false;
 get_levels = noone
 validate_levels = noone
 online_levels_str = noone
+get_version = noone
 	
 global.online_levels = []
 function try_update_online_levels() {
 	get_levels = http_get(global.server);
 }
 startup_timeout = -1;
+
+function request_version_string() {
+	get_version = http_get(global.server + "/version")
+}
 
 global.key_level_map = ds_map_create()
 global.level_key_map = ds_map_create()
@@ -1205,7 +1271,6 @@ function read_beaten_levels() {
 	for (var i = 0; i < array_length(arr); i++) {
 		arr[i] = string_replace(arr[i], "\n", "")
 		arr[i] = string_replace(arr[i], "\r", "")
-		show_debug_message(arr[i])
 		ds_map_add(global.beaten_levels_map, arr[i], true);
 	}
 	file_text_close(file)
@@ -1228,6 +1293,10 @@ function save_beaten_levels() {
 	file_text_write_string(file, str)
 	file_text_close(file)
 }
+
+
+global.there_is_a_newer_version = false;
+global.newest_version = "0.875";
 
 global.startup_room = asset_get_index("rm_ev_startup")
 global.playtesting = false;

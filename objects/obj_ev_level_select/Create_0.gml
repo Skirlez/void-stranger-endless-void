@@ -70,6 +70,7 @@ function create_displays() {
 
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
+			lvl_sha : level_string_content_sha1(lvl_string),
 			no_spoiling : true,
 			image_xscale : 0.2,
 			image_yscale : 0.2
@@ -172,7 +173,7 @@ function on_level_update() {
 	}
 	if (!instance_exists(asset_get_index("obj_ev_level_highlight")))
 		create_displays();
-	show_debug_message("Online updated!")
+
 }
 
 levels = global.online_mode ? online_levels : offline_levels;

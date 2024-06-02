@@ -4,7 +4,7 @@ if image_index == 0 {
 		event_user(0)
 }
 
-if (image_index < 2)
+if (image_index == thing_plucker || image_index == thing_eraser || image_index == thing_picker)
 	selected = (global.selected_thing == image_index)
 event_inherited()
 

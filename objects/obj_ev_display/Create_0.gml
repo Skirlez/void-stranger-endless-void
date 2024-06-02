@@ -17,6 +17,8 @@ drag_sound = asset_get_index("snd_ev_drag")
 erase_sound = asset_get_index("snd_ev_erase")
 zed_sound = asset_get_index("snd_ev_zed")
 pluck_sound = asset_get_index("snd_ev_pluck")
+pick_sound = asset_get_index("snd_ev_pick")
+
 
 function switch_held_tile(tile_state) {
 	held_tile_state = tile_state
@@ -54,18 +56,22 @@ function place_placeable(tile_i, tile_j, new_tile, properties = global.empty_str
 	arr[@ tile_i][tile_j] = tile_state;
 }
 
-
+// This function runs first when handling a right click release (drag), or left click
 function handle_click_before(tile_i, tile_j) {
 	var tile_state = global.editor_instance.current_placeables[tile_i][tile_j];
 	switch (global.selected_thing) {
 		case thing_plucker:
+		case thing_picker:
 			if dragging {
 				var height = tile_i - small_tile_i + 1;
 				var width = tile_j - small_tile_j + 1;
 				held_tile_offset = [small_tile_i, small_tile_j]
 				held_tile_array = array_create(height)
-				for (var i = 0; i < array_length(held_tile_array); i++)
+				
+				
+				for (var i = 0; i < array_length(held_tile_array); i++) {
 					held_tile_array[i] = array_create(width, new tile_with_state(global.editor_instance.current_empty_tile))	
+				}
 			}
 			return;
 		case thing_eraser:
@@ -91,24 +97,30 @@ function handle_click_before(tile_i, tile_j) {
 	}
 }
 
-
+// This function runs second when handling a right click release (drag), or left click.
+// it runs for every single tile affected by the action, unlike the others 
+// (meaning, per tile for each tile dragged, or just 1 if left clicked)
 function handle_click(tile_i, tile_j) {
 	switch (global.selected_thing) {
-		case thing_plucker:
+		
+		case thing_picker:
+		case thing_plucker: // nearly the same, might as well lump them together and check when needed..
 			if dragging {
 				var tile_state = global.editor_instance.current_placeables[tile_i][tile_j];
 				if !(tile_state.tile.flags & flag_unplaceable) {
 					var local_tile_i = tile_i - held_tile_offset[0]
 					var local_tile_j = tile_j - held_tile_offset[1]
 					held_tile_array[local_tile_i][local_tile_j] = tile_state
-					place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
+					if (global.selected_thing == thing_plucker)
+						place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
 				}
 				
 			}
 			else {
 				var object_state = lvl.objects[tile_i][tile_j];
 				var tile_state = lvl.tiles[tile_i][tile_j];
-
+				
+				var final_state;
 				if !(object_state.tile.flags & flag_unplaceable) {
 					final_state = object_state
 					if global.tile_mode == true
@@ -122,28 +134,29 @@ function handle_click(tile_i, tile_j) {
 				else 
 					return;
 				
-			
-				audio_play_sound(pluck_sound, 10, false, 1.2)	
+				if (global.selected_thing == thing_plucker) {
+					place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
+					audio_play_sound(pluck_sound, 10, false, 1.2)		
+				}
+				else
+					audio_play_sound(pick_sound, 10, false, 1.2)
+				
 				global.selected_thing = thing_placeable
 				switch_held_tile(final_state)
 				global.mouse_held = false;
-				place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
+				
+
 			}
 			return;
 		case thing_eraser:
 			place_placeable(tile_i, tile_j, global.editor_instance.current_empty_tile)
-			//runtile_autotile_blob(tile_j, tile_i)
 			return;
 		case thing_placeable:
 			if (held_tile_state == global.editor_instance.object_empty)
 				return;
-
-			
 			place_placeable(tile_i, tile_j, held_tile_state.tile, struct_copy(held_tile_state.properties))
-			//runtile_autotile_blob(tile_j, tile_i)
 			return;
 		case thing_multiplaceable:
-		
 			for (var i = 0; i < array_length(held_tile_array); i++) {
 				for (var j = 0; j < array_length(held_tile_array[i]); j++) {
 					var tile_state = held_tile_array[i][j]
@@ -165,14 +178,14 @@ function handle_click(tile_i, tile_j) {
 	}
 }
 
-
-
+// This function runs last when handling a right click release (drag), or left click
 function handle_click_after(tile_i, tile_j) {
+
 	switch (global.selected_thing) {
+		case thing_picker:
 		case thing_plucker:
 			if !dragging 
 				return;
-				
 			var initial_empty_in_row = 14
 			var empty_row = true
 			for (var i = 0; i < array_length(held_tile_array); i++) {
@@ -201,10 +214,13 @@ function handle_click_after(tile_i, tile_j) {
 				}	
 			}
 				
-			global.selected_thing = thing_multiplaceable
-			audio_play_sound(pluck_sound, 10, false, 1.2, 0, random_range(0.75, 0.85))		
+		
+		
+			var sound = (global.selected_thing == thing_plucker) ? pluck_sound : pick_sound;
+			audio_play_sound(sound, 10, false, 1.2, 0, random_range(0.75, 0.85))
 			
-				
+			
+			global.selected_thing = thing_multiplaceable
 			return;
 		default:
 			return;
@@ -232,8 +248,10 @@ border_sprite = asset_get_index("spr_ev_display_border")
 
 draw_name = !edit;
 draw_brand = !edit;
-show_debug_message(level_content_sha1(lvl))
-draw_beaten = !edit && ds_map_exists(global.beaten_levels_map, level_content_sha1(lvl));
+if lvl_sha == noone
+	draw_beaten = false
+else
+	draw_beaten = !edit && ds_map_exists(global.beaten_levels_map, lvl_sha);
 
 draw_set_font(global.ev_font)
 
