@@ -16,7 +16,7 @@ if (image_index == 0) {
 		draw_set_color(c_white)
 		draw_set_font(global.ev_font)
 		
-		draw_text_shadow(other.x, other.y - 16, draw, c_black)
+		draw_text_shadow(other.xstart, other.ystart - 16, draw, c_black)
 	}
 		
 }

@@ -71,23 +71,15 @@ function create_displays() {
 		if (!global.online_mode)
 			lvl_struct.save_name = files[i]
 			
-		var has_beaten_level = false;
-		var has_gotten_crystal = false;
 		var sha = level_string_content_sha1(lvl_string);
-		if ds_map_exists(global.beaten_levels_map, sha) {
-			var value = ds_map_find_value(global.beaten_levels_map, sha)
-			if value == 1
-				has_beaten_level = true
-			else if value == 2 {
-				has_beaten_level = true
-				has_gotten_crystal = true
-			}
-		}
-
+		var beat_value;
+		if ds_map_exists(global.beaten_levels_map, sha)
+			beat_value = ds_map_find_value(global.beaten_levels_map, sha)
+		else
+			beat_value = 0;
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
-			draw_beaten : has_beaten_level,
-			draw_crystal : has_gotten_crystal,
+			draw_beaten : beat_value,
 			no_spoiling : true,
 			image_xscale : 0.2,
 			image_yscale : 0.2

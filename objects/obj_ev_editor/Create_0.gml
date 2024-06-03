@@ -1223,9 +1223,11 @@ function preview_level_transition(lvl, display_instance) {
 
 function play_level_transition(lvl, display_instance) {
 	global.level = lvl;
-	global.mouse_layer = -1
 	play_transition = max_play_transition
 	play_transition_display = display_instance
+	display_instance.draw_brand = false;
+	display_instance.draw_beaten = 0;
+	global.mouse_layer = -1
 }
 
 function edit_level_transition(lvl, display_instance) {
@@ -1234,7 +1236,7 @@ function edit_level_transition(lvl, display_instance) {
 	edit_transition = max_edit_transition
 	edit_transition_display = display_instance
 	display_instance.draw_brand = false;
-	display_instance.draw_beaten = false;
+	display_instance.draw_beaten = 0;
 	global.mouse_layer = -1
 }
 

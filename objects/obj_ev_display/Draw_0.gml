@@ -159,9 +159,14 @@ if draw_name {
 		y + sprite_height + 2, size, size, 0, c_white, image_alpha)
 }
 
-if draw_beaten {
+if draw_beaten == 1 {
 	draw_sprite(asset_get_index("spr_ev_checkmark"), 0, x + sprite_width - 9, y + sprite_height)
-	if draw_crystal {
-		draw_sprite(asset_get_index("spr_ev_memory_collected"), 0, x + sprite_width - 18, y + sprite_height)
-	}
+}
+else if draw_beaten == 2 {
+	var time = (global.editor_time / 2) % 80
+	var spr = asset_get_index("spr_ev_memory_collected")
+	if time > sprite_get_number(spr) - 1
+		time = 0;
+	draw_sprite(spr, time, x + sprite_width - 9, y + sprite_height)
+	
 }
