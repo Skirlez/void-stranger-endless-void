@@ -26,6 +26,7 @@ y
 ```
 will replace every sequence of characters matching x with y in the file.
 
+It is a really good idea to leave comments explaining what each section is responsible for.
 Note that each section's code should not be indented to match the original file. UndertaleModTool's compiler doesn't care.
 
 Remember to account for the fact that sections are processed individually! This means that if you have two LINENUMBER sections (operating on, in this case, an empty file), like so:
@@ -59,5 +60,5 @@ more code
 
 This can be avoided by ordering the LINENUMBER sections, from highest line number to lowest.
 
-- TIP: Use `exit` or `return` to erase entire code paths!
+- TIP: Use `exit` or `return` to erase entire branches!
 - TIP 2: Use LINENUMBER_REPLACE to delete single lines by replacing the line with a comment! As for deleting regions... I've never actually needed to do that... 

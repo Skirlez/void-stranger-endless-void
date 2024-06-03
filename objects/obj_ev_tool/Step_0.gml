@@ -1,6 +1,6 @@
 
-if image_index == 0 {
-	if ev_is_plucker_hotkey_pressed() && !selected
+if image_index == thing_picker {
+	if ev_is_picker_hotkey_pressed() && !selected
 		event_user(0)
 }
 

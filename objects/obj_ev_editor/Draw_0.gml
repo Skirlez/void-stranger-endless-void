@@ -1,7 +1,7 @@
 if (room == global.editor_room) {
 	
 	if (global.selected_thing == thing_placeable) && global.mouse_layer == 0 {
-		var draw_y = 98
+		var draw_y = 99
 		
 		var state = global.display_object.held_tile_state;
 		if !surface_exists(spin_surface)
@@ -10,8 +10,6 @@ if (room == global.editor_room) {
 		draw_clear_alpha(c_black, 0)
 		state.tile.draw_function(state, 0, 0, false, global.level)
 		surface_reset_target()
-		
-		var size = 1
 
 		draw_set_halign(fa_center)
 		draw_set_valign(fa_middle)
@@ -25,10 +23,12 @@ if (room == global.editor_room) {
 		draw_set_color(c_white)
 		draw_text_transformed(27, draw_y + 16, state.tile.display_name, 0.5, 0.5, 0)
 		
-
+			
+		spin_time_h += 0.45 + random_range(-0.05, 0.05)
+		spin_time_v += 0.38 + random_range(-0.05, 0.05)
 	
-		var spin_h = (dsin(global.editor_time / 2.2) + 1) / 2;
-		var spin_v = 1 - (dsin(global.editor_time / 2.6) + 1) / 2;
+		var spin_h = (dsin(spin_time_h) + 1) / 2;
+		var spin_v = (dcos(spin_time_v) + 1) / 2;
 		
 		
 		if stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten == noone {
@@ -91,7 +91,7 @@ if (room == asset_get_index("rm_ev_menu")) {
 	if global.there_is_a_newer_version
 		draw_text_transformed(112, 72 + 64, "THERE IS A NEWER VERSION!!!" + "\nYou are on " + global.ev_version + ", latest is " + global.newest_version, 0.5, 0.5, 0)
 	else
-		draw_text_transformed(112, 72 + 67, "0.875", 0.5, 0.5, 0)
+		draw_text_transformed(112, 72 + 67, global.ev_version, 0.5, 0.5, 0)
 }
 else if (room == global.startup_room) {
 	draw_set_color(c_white)

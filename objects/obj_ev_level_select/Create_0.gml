@@ -60,6 +60,9 @@ function create_displays() {
 
 
 		var lvl_string = levels[i];
+		var lvl_version = get_level_version_from_string(lvl_string)
+		if (lvl_version == -1 || lvl_version > global.latest_lvl_format)
+			continue;
 		var lvl_name = get_level_name_from_string(lvl_string);
 		if (search_text != "" && string_pos(search_text, string_lower(lvl_name)) == 0)
 			continue;
@@ -67,10 +70,24 @@ function create_displays() {
 		var lvl_struct = import_level(lvl_string)
 		if (!global.online_mode)
 			lvl_struct.save_name = files[i]
+			
+		var has_beaten_level = false;
+		var has_gotten_crystal = false;
+		var sha = level_string_content_sha1(lvl_string);
+		if ds_map_exists(global.beaten_levels_map, sha) {
+			var value = ds_map_find_value(global.beaten_levels_map, sha)
+			if value == 1
+				has_beaten_level = true
+			else if value == 2 {
+				has_beaten_level = true
+				has_gotten_crystal = true
+			}
+		}
 
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
-			lvl_sha : level_string_content_sha1(lvl_string),
+			draw_beaten : has_beaten_level,
+			draw_crystal : has_gotten_crystal,
 			no_spoiling : true,
 			image_xscale : 0.2,
 			image_yscale : 0.2

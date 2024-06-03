@@ -248,10 +248,7 @@ border_sprite = asset_get_index("spr_ev_display_border")
 
 draw_name = !edit;
 draw_brand = !edit;
-if lvl_sha == noone
-	draw_beaten = false
-else
-	draw_beaten = !edit && ds_map_exists(global.beaten_levels_map, lvl_sha);
+
 
 draw_set_font(global.ev_font)
 

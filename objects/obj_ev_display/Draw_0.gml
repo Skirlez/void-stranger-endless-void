@@ -9,7 +9,7 @@ var tile_mode = edit ? global.tile_mode : false
 
 function draw_tile_state(i, j, tile_state, preview = false) {
 	var tile = tile_state.tile
-	tile.draw_function(tile_state, i, j, preview, lvl)
+	tile.draw_function(tile_state, i, j, preview, lvl, no_spoiling)
 }
 
 draw_sprite(base_ui, 0, 0, 8 * 16)
@@ -49,17 +49,7 @@ for (var i = 0; i < 9; i++)	{
 		if (tile_mode)
 			draw_set_alpha(0.3)
 		var object_state = lvl.objects[i][j]
-		if (no_spoiling) {
-			
-			// We don't want to spoil hologram eggs, and we don't want to spoil if an egg has text or not.
-			if (object_state.tile == global.editor_instance.object_hologram || object_state.tile == global.editor_instance.object_egg)
-				draw_tile_state(i, j, new tile_with_state(global.editor_instance.object_egg))
-			else if (object_state.tile != global.editor_instance.object_secret_exit)
-				draw_tile_state(i, j, object_state)
-		}
-		
-		else
-			draw_tile_state(i, j, object_state)
+		draw_tile_state(i, j, object_state)
 		if (tile_mode)
 			draw_set_alpha(1)
 	}
@@ -171,4 +161,7 @@ if draw_name {
 
 if draw_beaten {
 	draw_sprite(asset_get_index("spr_ev_checkmark"), 0, x + sprite_width - 9, y + sprite_height)
+	if draw_crystal {
+		draw_sprite(asset_get_index("spr_ev_memory_collected"), 0, x + sprite_width - 18, y + sprite_height)
+	}
 }

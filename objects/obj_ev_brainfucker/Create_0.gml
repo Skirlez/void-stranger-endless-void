@@ -23,9 +23,13 @@ function evaluate_input(input) {
 program = string_to_array(program_str)
 
 function execute(program, input_1, input_2, destroy_value) {
-	var memory = array_create(23, 0)
+	var memory = array_create(23)
+	
 	memory[0] = input_1
 	memory[1] = input_2
+	for (var i = 2; i < 23; i++)
+		memory[i] = int64(0);	
+	
 	
 	var memory_length = array_length(memory);
 	var program_length = array_length(program);

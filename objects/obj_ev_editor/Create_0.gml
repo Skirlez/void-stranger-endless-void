@@ -1,6 +1,6 @@
 randomize()
 global.latest_lvl_format = 2;
-global.ev_version = "0.875";
+global.ev_version = "0.89";
 
 global.compiled_for_merge = (asset_get_index("obj_game") != -1)
 
@@ -80,7 +80,7 @@ return_tile_state_function = function(tile_state) {
 	return tile_state 
 };
 
-default_draw_function = function(tile_state, i, j) {
+default_draw_function = function(tile_state, i, j/*, preview, lvl, no_spoilers*/) {
 	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
 }
 music_draw_function = function(tile_state, i, j) {
@@ -281,6 +281,10 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 #macro hungry_man_id "hu"
 #macro hungry_man_obj "obj_npc_famished"
 #macro hungry_man_name "Famished Man"
+
+#macro memory_crystal_id "mm"
+#macro memory_crystal_obj "obj_token_uncover"
+#macro memory_crystal_name "Memory Crystal"
 
 #macro scaredeer_id "sd"
 #macro scaredeer_obj "obj_enemy_cs"
@@ -662,8 +666,10 @@ object_egg.zed_function = function(tile_state) {
 	global.mouse_layer = 1
 }
 
-object_egg.draw_function = function(tile_state, i, j) {
+object_egg.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	default_draw_function(tile_state, i, j)
+	if no_spoilers
+		return;
 	static spr_eggtext = asset_get_index("spr_ev_eggtext");
 	if (tile_state.properties.txt[0] != "") {
 		draw_sprite(spr_eggtext, 0, j * 16 + 8, i * 16 + 8)
@@ -939,7 +945,9 @@ object_secret_exit.iostruct = {
 	}
 }
 
-object_secret_exit.draw_function = function(tile_state, i, j) {
+object_secret_exit.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
+	if (no_spoilers)
+		return;
 	static stinklines_sprite = asset_get_index("spr_stinklines")
 	static stars_sprite = asset_get_index("spr_soulstar_spark")
 	
@@ -964,6 +972,34 @@ object_secret_exit.zed_function = function(tile_state) {
 
 object_hungry_man = new editor_object(hungry_man_name, asset_get_index("spr_fam_u"), hungry_man_id, hungry_man_obj)
 object_hungry_man.draw_function = music_draw_function
+
+
+// we make a memory crystal sprite with an outline for the object selection window only, in the draw
+// function it uses the unmodified sprite
+crystal_sprite = asset_get_index("spr_token_floor");
+
+var surface_crystal = surface_create(16, 16)
+surface_set_target(surface_crystal)
+
+draw_sprite_ext(crystal_sprite, 0, 8 - 1, 8, 1, 1, 0, c_black, 1)
+draw_sprite_ext(crystal_sprite, 0, 8 + 1, 8, 1, 1, 0, c_black, 1)
+draw_sprite_ext(crystal_sprite, 0, 8, 8 - 1, 1, 1, 0, c_black, 1)
+draw_sprite_ext(crystal_sprite, 0, 8, 8 + 1, 1, 1, 0, c_black, 1)
+
+draw_sprite(crystal_sprite, 0, 8, 8)
+
+surface_reset_target()
+
+
+var crystal_sprite_with_outline = sprite_create_from_surface(surface_crystal, 0, 0, 16, 16, false, false, 8, 8)
+surface_free(surface_crystal)
+
+object_memory_crystal = new editor_object(memory_crystal_name, crystal_sprite_with_outline, memory_crystal_id, memory_crystal_obj, "Instances", flag_only_one)
+object_memory_crystal.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
+	draw_sprite(global.editor_instance.crystal_sprite, 0, j * 16 + 8, i * 16 + 8)	
+}
+
+
 
 // The lengths I go to to not include base game sprites in the source.
 var surface_deer = surface_create(16, 16)
@@ -1030,6 +1066,14 @@ surface_reset_target()
 surface_free(hologram_surf)
 object_hologram = new editor_object(hologram_name, hologram_sprite, hologram_id, hologram_obj)
 
+object_hologram.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
+	if no_spoilers {
+		draw_sprite(global.editor_instance.object_egg.spr_ind, 0, j * 16 + 8, i * 16 + 8)
+		return;
+	}
+	default_draw_function(tile_state, i, j)
+}
+
 
 global.player_tiles = array_create(7)
 global.player_objects = array_create(7)
@@ -1043,9 +1087,9 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch,
 	tile_deathfloor, tile_black_floor, tile_white, tile_wall, tile_edge, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
-	object_mimic, object_diamond, object_spider, object_orb, object_scaredeer, object_egg, 
-	object_hologram, object_hungry_man, object_secret_exit, object_jukebox,
-	 object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor]
+	object_mimic, object_diamond, object_hungry_man, object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor, 
+	object_jukebox, object_egg, object_hologram, object_memory_crystal, object_secret_exit,
+	object_spider, object_scaredeer, object_orb]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
 	"msc_gorcircle_lo", "msc_levcircle", "msc_escapewithfriend", "msc_cifcircle", "msc_006", "msc_beesong", "msc_themeofcif",
@@ -1256,6 +1300,8 @@ function on_startup_finish() {
 	room_goto(asset_get_index("rm_ev_menu"))
 }
 
+
+
 global.beaten_levels_map = ds_map_create()
 function read_beaten_levels() {
 	ds_map_clear(global.beaten_levels_map)
@@ -1271,11 +1317,22 @@ function read_beaten_levels() {
 	for (var i = 0; i < array_length(arr); i++) {
 		arr[i] = string_replace(arr[i], "\n", "")
 		arr[i] = string_replace(arr[i], "\r", "")
-		ds_map_add(global.beaten_levels_map, arr[i], true);
+	
+		var split = ev_string_split(arr[i], "|")
+		var value;
+		var key;
+		if array_length(split) == 2 {
+			key = split[0]	
+			value = int64_safe(split[1], 1)
+		}
+		else {
+			key = arr[i]
+			value = 1;
+		}
+		
+		ds_map_add(global.beaten_levels_map, key, value);
 	}
 	file_text_close(file)
-	
-	return arr;
 }
 function save_beaten_levels() {	
 	var str = ""
@@ -1284,10 +1341,13 @@ function save_beaten_levels() {
 	var key = ds_map_find_first(global.beaten_levels_map);
 	if (is_undefined(key))
 		return;
-	str += key;
+	var value = ds_map_find_value(global.beaten_levels_map, key)		
+	str += key + "|" + string(value);
+	
 	for (var i = 0; i < size - 1; i++;) {
 		key = ds_map_find_next(global.beaten_levels_map, key);
-	    str += ("\n" + key)
+		value = ds_map_find_value(global.beaten_levels_map, key)		
+	    str += ("\n" + key + "|" + string(value))
 	}
 	var file = file_text_open_write(global.levels_directory + "beaten_levels.txt")
 	file_text_write_string(file, str)
@@ -1304,3 +1364,6 @@ global.playtesting = false;
 spin_surface = surface_create(16, 16)
 
 stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone
+
+spin_time_h = 0
+spin_time_v = 0;

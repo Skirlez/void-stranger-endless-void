@@ -2,6 +2,28 @@ event_inherited();
 
 if lvl == noone
 	exit
+	
+function level_contains_crystal_memory(level) {
+	for (var i = 0; i < 9; i++) {
+		for (var j = 0; j < 14; j++) {
+			if level.objects[i][j].tile == global.editor_instance.object_memory_crystal
+				return true;
+		}
+	}
+	return false;
+}
+
+function can_upload_level(level) {
+	var sha = level_content_sha1(level);
+	if !ds_map_exists(global.beaten_levels_map, sha)
+		return false;
+		
+	var value = ds_map_find_value(global.beaten_levels_map, sha)
+	if level_contains_crystal_memory(level)
+		return (value == 2)
+	return (value == 1)
+}
+
 
 error_message = ""
 
@@ -13,7 +35,9 @@ done_text = "Done!\nThe thing you tried doing\nwas successful!"
 fail_text = "Something went wrong.\nError message:\n"
 manage_text = "This level is uploaded.\nWhat would you like to do?"
 no_idea_text = "I have no idea whether\nwhether or not this level\nhas uploaded correctly."
-beat_first = "Clear the level outside\nthe editor first!"
+beat_first_text = "Clear the level outside\nthe editor first!"
+and_memory_crystal_text = "(and get the Memory Crystal)"
+
 
 post_level_id = noone
 update_level_id = noone
@@ -95,7 +119,7 @@ function reset_window() {
 }
 
 function start_uploading() {
-	if !ds_map_exists(global.beaten_levels_map, level_content_sha1(lvl)) {
+	if !can_upload_level(lvl) {
 		state = 8;
 		reset_window()
 		create_finish_buttons("Ah")
@@ -110,7 +134,7 @@ function start_uploading() {
 }
 
 function start_updating() {
-	if !ds_map_exists(global.beaten_levels_map, level_content_sha1(lvl)) {
+	if !can_upload_level(lvl) {
 		state = 8;
 		reset_window()
 		create_finish_buttons("Ah")

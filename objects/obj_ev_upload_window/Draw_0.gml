@@ -20,5 +20,11 @@ else if (state == 6)
 	draw_text_shadow(room_width / 2, room_height / 2 - 10, verifying_text, c_black)
 else if (state == 7)
 	draw_text_shadow(room_width / 2, room_height / 2 - 10, no_idea_text, c_black)
-else if (state == 8)
-	draw_text_shadow(room_width / 2, room_height / 2 - 10, beat_first, c_black)
+else if (state == 8) {
+
+	var str = beat_first_text
+	if level_contains_crystal_memory(lvl)
+		str += "\n" + and_memory_crystal_text
+	draw_text_shadow(room_width / 2, room_height / 2 - 10, str, c_black)
+	
+}

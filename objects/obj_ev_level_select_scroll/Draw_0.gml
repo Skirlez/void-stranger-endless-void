@@ -1,5 +1,5 @@
 event_inherited()
-if (image_angle == 0) {
+if (image_index == 0) {
 	with (asset_get_index("obj_ev_level_select")) {
 		var draw;
 		if (search_box.txt == "") {
