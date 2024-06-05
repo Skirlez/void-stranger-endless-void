@@ -43,6 +43,8 @@ global.level = noone;
 global.level_sha = ""
 
 global.editor_time = int64(0)
+global.level_time = int64(0)
+
 global.selected_thing_time = 0
 global.mouse_pressed = false;
 global.mouse_held = false;

@@ -43,14 +43,14 @@ function create_base_buttons(mode) {
 		input_1_text = instance_create_layer(112, 72 - 40, "WindowElements", asset_get_index("obj_ev_textbox"), {
 			empty_text : "Input",
 			txt : add_properties.in1,
-			exceptions : "_",
+			exceptions : "_-",
 			base_scale_x : 2.5,
 		})
 		add_child(input_1_text)
 		destroy_value_text = instance_create_layer(112, 72 - 20, "WindowElements", asset_get_index("obj_ev_textbox"), {
 			empty_text : "Destroy Value",
 			txt : add_properties.val,
-			exceptions : "_",
+			exceptions : "_-",
 			base_scale_x : 6,
 		})
 		add_child(destroy_value_text)	
@@ -59,14 +59,14 @@ function create_base_buttons(mode) {
 		input_1_text = instance_create_layer(112 - 32, 72 - 40, "WindowElements", asset_get_index("obj_ev_textbox"), {
 			empty_text : "Input 1",
 			txt : add_properties.in1,
-			exceptions : "_",
+			exceptions : "_-",
 			base_scale_x : 3.5,
 		})
 		add_child(input_1_text)
 		input_2_text = instance_create_layer(112 + 32, 72 - 40, "WindowElements", asset_get_index("obj_ev_textbox"), {
 			empty_text : "Input 2",
 			txt : add_properties.in2,
-			exceptions : "_",
+			exceptions : "_-",
 			base_scale_x : 3.5,
 		})
 		add_child(input_2_text)
@@ -81,7 +81,7 @@ function create_base_buttons(mode) {
 		destroy_value_text = instance_create_layer(112, 72, "WindowElements", asset_get_index("obj_ev_textbox"), {
 			empty_text : "Destroy Value",
 			txt : add_properties.val,
-			exceptions : "_",
+			exceptions : "_-",
 			base_scale_x : 6,
 		})
 		add_child(destroy_value_text)

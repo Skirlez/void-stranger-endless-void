@@ -7,6 +7,7 @@ if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level
 	if !audio_is_playing(music)
 		ev_play_music(music)
 	global.level_sha = "";
+	global.jukebox_song = 0;
 }
 if room == asset_get_index("rm_ev_editor") {
 	draw_set_circle_precision(48)
@@ -51,4 +52,8 @@ if (room == asset_get_index("rm_ev_startup")) {
 	else
 		startup_actions_count--;
 	request_version_string()
+}
+
+if (room == asset_get_index("rm_ev_level")) {
+	global.level_time = 0;	
 }

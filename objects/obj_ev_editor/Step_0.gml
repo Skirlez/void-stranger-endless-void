@@ -1,7 +1,12 @@
 if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(!window_get_fullscreen())
-if (ev_is_leave_key_pressed() && !global.pause && room == asset_get_index("rm_ev_level")) {
-	ev_leave_level()
+if room == asset_get_index("rm_ev_level") {
+	if !global.pause { 
+		if (ev_is_leave_key_pressed()) {
+			ev_leave_level()
+		}
+		global.level_time++;
+	}
 }
 
 
