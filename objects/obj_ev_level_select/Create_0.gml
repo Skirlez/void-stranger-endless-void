@@ -70,8 +70,8 @@ function create_displays() {
 		var lvl_struct = import_level(lvl_string)
 		if (!global.online_mode)
 			lvl_struct.save_name = files[i]
-			
-		var sha = level_string_content_sha1(lvl_string);
+		
+		var sha = level_string_content_sha1(lvl_string)
 		var beat_value;
 		if ds_map_exists(global.beaten_levels_map, sha)
 			beat_value = ds_map_find_value(global.beaten_levels_map, sha)
@@ -79,6 +79,7 @@ function create_displays() {
 			beat_value = 0;
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
+			lvl_sha : sha,
 			draw_beaten : beat_value,
 			no_spoiling : true,
 			image_xscale : 0.2,

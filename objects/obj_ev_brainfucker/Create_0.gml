@@ -11,10 +11,12 @@ function evaluate_input(input) {
 	if string_is_int(input)
 		return int64_safe(input, 0)
 	if variable_global_exists(input) {
+		if input == "playtesting"
+			return int64(0);
 		var global_value = variable_global_get(input)	
 		return int64_safe(global_value, 0)
 	}
-	return 0;
+	return int64(0);
 }
 
 
@@ -82,7 +84,7 @@ function execute(program, input_1, input_2, destroy_value) {
 						}
 					}
 					if (j == program_length)
-						return; // TODO
+						return destroy_value; // TODO
 					i = j + 1;
 				}
 				else
@@ -102,8 +104,8 @@ function execute(program, input_1, input_2, destroy_value) {
 							stack--;
 						}
 					}
-					if (j == program_length)
-						return; // TODO
+					if (j == 0)
+						return destroy_value;
 					i = j + 1;
 				}
 				else
@@ -119,6 +121,7 @@ function execute(program, input_1, input_2, destroy_value) {
 				i++;
 		}
 	}
+	return memory[pointer];
 }
 
 

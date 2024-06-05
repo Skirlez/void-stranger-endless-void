@@ -3,6 +3,7 @@ event_inherited()
 var play = instance_create_layer(208, 40, "LevelHighlightButtons", asset_get_index("obj_ev_play_button"))
 play.layer_num = 1
 play.lvl = lvl
+play.lvl_sha = lvl_sha
 play.display_instance = display_instance
 play.highlighter = id;
 play.image_alpha = 0

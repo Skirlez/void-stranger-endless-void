@@ -2,7 +2,7 @@ if !surface_exists(surf) {
 	surf = surface_create(16, 16)
 	surface_set_target(surf)
 	draw_set_color(c_white)
-	draw_tile(global.tileset_1, ind, 0, 0, 0)	
+	draw_tile(tileset, ind, 0, 0, 0)	
 	surface_reset_target()
 }
 

@@ -8,8 +8,8 @@ function ev_leave_level() {
 }
 
 function ev_clear_level() {
-	if (global.level != noone && !global.debug && !global.playtesting) {
-		var sha = level_content_sha1(global.level);
+	if (global.level_sha != "" && !global.debug && !global.playtesting) {
+		var sha = global.level_sha;
 
 		var gotten_crystal = (global.token_check != 0)
 		

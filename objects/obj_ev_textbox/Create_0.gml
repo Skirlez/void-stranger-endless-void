@@ -1,8 +1,8 @@
-// will return true if a character is from a-z, A-Z, is a digit, or is in the exceptions string
+// will return true if a character is from a-z, A-Z, is a digit, or is in the exceptions string.
 function is_char_valid(char) {
 	if char == ""
 		return false
-	if string_lettersdigits(char) != ""
+	if allow_alphanumeric && string_lettersdigits(char) != ""
 		return true
 	for (var i = 1; i <= string_length(exceptions); i++) {
 		if char == string_char_at(exceptions, i)

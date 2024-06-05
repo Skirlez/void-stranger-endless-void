@@ -108,7 +108,7 @@ function int64_safe(value, failsafe = 0) {
 		return int64(value);
 	}
 	catch (e) {
-		return failsafe;
+		return int64(failsafe);
 	}
 }
 
@@ -117,7 +117,7 @@ function real_safe(value, failsafe = 0) {
 		return real(value);
 	}
 	catch (e) {
-		return failsafe;
+		return real(failsafe);
 	}
 }
 

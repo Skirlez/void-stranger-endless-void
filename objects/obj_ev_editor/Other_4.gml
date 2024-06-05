@@ -5,7 +5,8 @@ if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level
 	history = []
 	var music = global.menu_music;
 	if !audio_is_playing(music)
-		ev_play_music(music)	
+		ev_play_music(music)
+	global.level_sha = "";
 }
 if room == asset_get_index("rm_ev_editor") {
 	draw_set_circle_precision(48)

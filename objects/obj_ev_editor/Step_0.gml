@@ -157,10 +157,53 @@ else if (room == global.level_room) {
 		global.player_x = x div 16;
 		global.player_y = y div 16;
 	}
+	
 	global.add_count = 0;
+	global.mon_count = 0;
+	global.tan_count = 0;
+	global.lev_count = 0;
+	global.eus_count = 0;
+	global.bee_count = 0;
+	global.gor_count = 0;
+	global.cif_count = 0;
+	global.jukebox_count = 0;
+	global.egg_count = 0;
+	
 	with (asset_get_index(egg_statue_obj)) {
-		if (b_form == 8)
-			global.add_count++;
+		switch (b_form) {
+			case 8:
+				global.add_count++;
+				break;
+			case 7:
+				global.mon_count++;
+				break;
+			case 3:
+				global.tan_count++;
+				break;
+			case 1:
+				global.lev_count++;
+				break;
+			case 4:
+				global.cif_count++;
+				break;
+			case 6:
+				global.eus_count++;
+				break;
+			case 2:
+				global.bee_count++;
+				break;
+			case 5:
+				global.gor_count++;
+				break;
+			case 9:
+				global.jukebox_count++;
+				break;
+			case 0:
+				global.egg_count++;
+				break;
+			default:
+				break;
+		}
 	}
 }
 function instance_number_string(object_string) {

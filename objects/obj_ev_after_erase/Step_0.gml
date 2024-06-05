@@ -5,3 +5,6 @@ if time == 0 {
 	room_goto(asset_get_index("rm_ev_editor"))
 	
 }
+outer_circle_size = lerp(outer_circle_size, 70, 0.08)
+if (time < (start_time - 30) && outer_circle_alpha > 0)
+    outer_circle_alpha -= 0.05

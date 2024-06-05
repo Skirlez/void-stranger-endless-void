@@ -158,7 +158,7 @@ function level_content_sha1(level) {
 
 
 function get_level_version_from_string(level_string) {
-	return int64_safe(read_string_until(level_string, 0, "|"), -1)
+	return int64_safe(read_string_until(level_string, 1, "|").substr, -1)
 }
 
 function get_level_name_from_string(level_string) {

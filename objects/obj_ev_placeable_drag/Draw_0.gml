@@ -31,6 +31,8 @@ if selected {
 	draw_set_color(c_black)
 	draw_line_width(x - 0.5, y - 0.5, mouse_x, mouse_y, 1)	
 	draw_circle(x - 0.5, y - 0.5, dsin(global.editor_time) / 2 + 2, false)
+	
+	draw_circle(mouse_x, mouse_y, 0.5, false)
 
 	
 

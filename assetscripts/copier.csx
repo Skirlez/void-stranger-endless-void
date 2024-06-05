@@ -74,7 +74,7 @@ void exportSpriteTexture(UndertaleTexturePageItem texture, string spriteDir, str
 
 }
 
-string[] tilesetSprites = {"spr_tile_bg_1", "spr_tile_edges"};
+string[] tilesetSprites = {"spr_tile_bg_1", "spr_tile_edges", "spr_tile_bg_void", "spr_tile_edges_true", "spr_tile_bg_secret", "spr_tile_bg_true"};
 string[] sprites = getAssetNames(endlessVoidPath + "/sprites");
 foreach (string spriteName in sprites) {
     UndertaleSprite sprite = Data.Sprites.ByName(spriteName);

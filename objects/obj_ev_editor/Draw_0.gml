@@ -37,11 +37,20 @@ if (room == global.editor_room) {
 			
 			if state.tile.cube_type == cube_types.uniform
 				ev_draw_cube(sprite, 0, 27, draw_y, 7, spin_h, spin_v)		
-			else if state.tile.cube_type == cube_types.edge {
+			else if state.tile.cube_type == cube_types.uniform_constant
+				ev_draw_cube(state.tile.spr_ind, 0, 27, draw_y, 7, spin_h, spin_v)	
+			else {
+				
+				var spr;
+				if state.tile.cube_type == cube_types.edge
+					spr = sprite;
+				else if state.tile.cube_type == cube_types.edge_constant
+					spr = state.tile.spr_ind
+
 				var edge_sprite = asset_get_index("spr_floor")
 				var black_bottom_sprite = asset_get_index("spr_ev_tile_hitbox");
 				ev_draw_cube_multisprite(
-					[edge_sprite, edge_sprite, edge_sprite, edge_sprite, state.tile.spr_ind,
+					[edge_sprite, edge_sprite, edge_sprite, edge_sprite, spr,
 						black_bottom_sprite], [1, 1, 1, 1, 0, 0], 27, draw_y, 7, spin_h, spin_v)			
 			}
 			
