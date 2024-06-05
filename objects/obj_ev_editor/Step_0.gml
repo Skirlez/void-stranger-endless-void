@@ -153,7 +153,7 @@ else if (room == global.level_room) {
 	global.spider_count = instance_number_string(spider_obj)
 	global.orb_count = instance_number_string(orb_obj)
 	global.scaredeer_count = instance_number_string(scaredeer_obj)
-	with (asset_get_index(player_obj)) {
+	with (asset_get_index("obj_player")) {
 		global.player_x = x div 16;
 		global.player_y = y div 16;
 	}
