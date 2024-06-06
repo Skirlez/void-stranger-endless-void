@@ -74,7 +74,7 @@ function create_base_buttons(mode) {
 			empty_text : "Branefuck Program",
 			txt : add_properties.pgm,
 			allow_alphanumeric : false,
-			exceptions : ".+-[]><?0123456789",
+			exceptions : ".+-[]><?0123456789#",
 			base_scale_x : 8,
 		})
 		add_child(program_text)

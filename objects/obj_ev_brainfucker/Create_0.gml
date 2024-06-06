@@ -1,3 +1,16 @@
+command_functions = []
+
+command_functions[0] = function(){
+	ev_notify("command 0 successful")
+}
+
+command_functions[1] = function(){
+	ev_notify("command 1 successful")
+}
+
+command_functions[2] = function(){
+	ev_notify("command 2 successful")
+}
 
 function string_to_array(str) {
 	var arr = array_create(string_length(str))
@@ -120,6 +133,10 @@ function execute(program, input_1, input_2, destroy_value) {
 				return (memory[pointer])
 			case "?":
 				memory[pointer] = sign(memory[pointer])
+				i++;
+				break;
+			case "#":
+				command_functions[memory[pointer] % array_length(command_functions)]()
 				i++;
 				break;
 			default:
