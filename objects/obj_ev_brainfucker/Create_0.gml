@@ -1,21 +1,22 @@
-command_functions = []
+command_functions = ds_map_create();
 
-command_functions[0] = function(memory, pointer){
+command_functions[? 0] = function(memory, pointer){
 	ev_notify("command 0 successful")
 }
 
-command_functions[1] = function(memory, pointer){
+command_functions[? 1] = function(memory, pointer){
 	ev_notify("command 1 successful")
 }
 
-command_functions[2] = function(memory, pointer){
+command_functions[? 2] = function(memory, pointer){
 	ev_notify("command 2 successful")
 }
 
-command_functions[3] = function(memory, pointer){
+command_functions[? 3] = function(memory, pointer){
 	var params = get_command_parameters(memory, pointer, 2)
 	ev_notify("command 3's parameters are " + string(params[0]) + ", " + string(params[1]))
 }
+
 
 function get_command_parameters(memory, pointer, param_count){
 	var params = array_create(param_count)
@@ -156,7 +157,12 @@ function execute(program, input_1, input_2, destroy_value) {
 				i++;
 				break;
 			case "#":
-				command_functions[memory[pointer] % array_length(command_functions)](memory, pointer)
+				if ds_exists(command_functions, ds_type_map){
+					var s = memory[pointer]
+					if ds_map_exists(command_functions, s) {
+						command_functions[? s](memory, pointer)
+					}
+				}
 				i++;
 				break;
 			default:
