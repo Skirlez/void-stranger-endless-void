@@ -1,7 +1,49 @@
+//Data for command functions below
+#region command_tiles
+command_tiles = ds_map_create();
+// 0 will be the special case for the pit
+command_tiles[? 1] = {
+	is_solid : false,
+	is_wall_tile : false,
+	obj_name : "obj_floor",
+	tile_index : 0,
+	layer: "Floor",
+}
+command_tiles[? 2] = {
+	is_solid : false,
+	is_wall_tile : false,
+	obj_name : "obj_glassfloor",
+	tile_index : 0,
+	layer: "Floor_INS",
+}
+command_tiles[? 101] = {
+	is_solid : true,
+	is_wall_tile : true,
+	obj_name : "",
+	tile_index : 3,
+	layer: "Tiles_Wall",
+}
+command_tiles[? 102] = {
+	is_solid : true,
+	is_wall_tile : true,
+	obj_name : "",
+	tile_index : 4,
+	layer: "Tiles_Wall",
+}
+command_tiles[? 103] = {
+	is_solid : true,
+	is_wall_tile : true,
+	obj_name : "",
+	tile_index : 5,
+	layer: "Tiles_Wall",
+}
+#endregion
+
+//Command functions below
 command_functions = ds_map_create();
 
 command_functions[? 0] = function(memory, pointer){
-	ev_notify("command 0 successful")
+	ev_notify("random tests lol")
 }
 
 command_functions[? 1] = function(memory, pointer){
@@ -9,12 +51,89 @@ command_functions[? 1] = function(memory, pointer){
 }
 
 command_functions[? 2] = function(memory, pointer){
-	ev_notify("command 2 successful")
+	var test_a = instance_number(asset_get_index("obj_collision"))
+	
+	ev_notify(string("obj_collision count:  {0}", test_a))
 }
 
+//set_tile(x, y, index)
+//Sets a tile at a given position to one from an custom array at a given index
 command_functions[? 3] = function(memory, pointer){
-	var params = get_command_parameters(memory, pointer, 2)
-	ev_notify("command 3's parameters are " + string(params[0]) + ", " + string(params[1]))
+	var params = get_command_parameters(memory, pointer, 3)
+	var cell_x = params[0]
+	var cell_y = params[1]
+	var tile_index = params[2]
+	
+	ev_notify(string("Params: ({0}, {1}) {2}", cell_x, cell_y, tile_index))
+	
+	//Out of range of level, exit early
+	//TODO: Determine if this should do something like a DIS error or an ev_notify
+	if (cell_x < 0 || cell_x > 13 || cell_y < 0 || cell_y > 8){
+		return
+	}
+	
+	//tile_index not found
+	if !ds_map_exists(command_tiles, tile_index) {
+		return
+	}
+	
+	var tile_x = cell_x * 16 + 8
+	var tile_y = cell_y * 16 + 8
+	
+	//Destroy any floor instances already there
+	var _list = ds_list_create();
+	var _num = instance_position_list(tile_x, tile_y, all, _list, false);
+	if _num > 0 {
+		for (var i = 0; i < _num; ++i;) {
+			if (_list[| i].layer == layer_get_id("Floor")
+			 || _list[| i].layer == layer_get_id("Floor_INS")){
+				instance_destroy(_list[| i]);
+			}
+		}
+	}
+	ds_list_destroy(_list);
+	
+	//Destroy any wall tiles already there
+	//layers and layers and layers...
+	var tile_layers = ["Tiles_Wall", "Tiles_Edge", "Tiles_DIS_Edge", "Tiles_Mon_Wall", "Tiles_DIS_Wall", "Tiles_EX_Wall", "Tiles_1", "Tiles_2"]
+	
+	for (var i = 0; i < array_length(tile_layers); ++i;) {
+		var lay_id = layer_get_id(tile_layers[i])
+		var map_id = layer_tilemap_get_id(lay_id)
+		var data = tilemap_get(map_id, cell_x, cell_y)
+		data = tile_set_empty(data)
+		tilemap_set(map_id, data, cell_x, cell_y)
+	}
+	
+	//Destroy wall collision
+	var collision = instance_position(tile_x, tile_y, asset_get_index("obj_collision"))
+	with (instance_position(tile_x, tile_y, asset_get_index("obj_collision")))
+		instance_destroy(collision)
+	
+	//Finally set tile
+	if tile_index == 0 {
+		// Pits are a special case, since they don't fit cleanly into the whole command_tiles thing
+		instance_create_layer(tile_x, tile_y, "Pit", asset_get_index("obj_pit"))
+		return
+	}
+	else if command_tiles[? tile_index].is_wall_tile {
+		var lay_id = layer_get_id(command_tiles[? tile_index].layer)
+		var map_id = layer_tilemap_get_id(lay_id)
+		tilemap_set(map_id, command_tiles[? tile_index].tile_index, cell_x, cell_y)
+	}
+	else{
+		instance_create_layer(tile_x, tile_y, command_tiles[? tile_index].layer, asset_get_index(command_tiles[? tile_index].obj_name))
+	}
+	
+	//Clear pit tiles
+	var pit_tile = instance_position(tile_x, tile_y, asset_get_index("obj_pit"))
+	with (instance_position(tile_x, tile_y, asset_get_index("obj_pit")))
+		instance_destroy(pit_tile)
+	
+	//Set solid collision if applicable
+	if command_tiles[? tile_index].is_solid{
+		instance_create_layer(tile_x, tile_y, "Instances", asset_get_index("obj_collision"))
+	}
 }
 
 
