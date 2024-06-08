@@ -45,6 +45,7 @@ function create_base_buttons(mode) {
 			txt : add_properties.in1,
 			exceptions : "_-",
 			base_scale_x : 2.5,
+			allow_newlines : false,
 		})
 		add_child(input_1_text)
 		destroy_value_text = instance_create_layer(112, 72 - 20, "WindowElements", asset_get_index("obj_ev_textbox"), {
@@ -52,6 +53,7 @@ function create_base_buttons(mode) {
 			txt : add_properties.val,
 			exceptions : "_-",
 			base_scale_x : 6,
+			allow_newlines : false,
 		})
 		add_child(destroy_value_text)	
 	}
@@ -61,6 +63,7 @@ function create_base_buttons(mode) {
 			txt : add_properties.in1,
 			exceptions : "_-",
 			base_scale_x : 3.5,
+			allow_newlines : false,
 		})
 		add_child(input_1_text)
 		input_2_text = instance_create_layer(112 + 32, 72 - 40, "WindowElements", asset_get_index("obj_ev_textbox"), {
@@ -68,6 +71,7 @@ function create_base_buttons(mode) {
 			txt : add_properties.in2,
 			exceptions : "_-",
 			base_scale_x : 3.5,
+			allow_newlines : false,
 		})
 		add_child(input_2_text)
 		program_text = instance_create_layer(112, 72 - 20, "WindowElements", asset_get_index("obj_ev_textbox"), {
@@ -75,6 +79,8 @@ function create_base_buttons(mode) {
 			txt : add_properties.pgm,
 			allow_alphanumeric : false,
 			exceptions : ".+-[]><?0123456789#",
+			char_limit : 260,
+			opened_y : 72,
 			base_scale_x : 8,
 		})
 		add_child(program_text)
@@ -83,6 +89,7 @@ function create_base_buttons(mode) {
 			txt : add_properties.val,
 			exceptions : "_-",
 			base_scale_x : 6,
+			allow_newlines : false,	
 		})
 		add_child(destroy_value_text)
 	}
