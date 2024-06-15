@@ -200,7 +200,7 @@ for (var i = 0; i < array_length(wall_tile_indices); i++) {
 //Normal Edges
 for (var i = 0; i < 46; i++) {
 	command_tiles[? 201 + i] = {
-		is_solid : true,
+		is_solid : false,
 		is_wall_tile : false,
 		is_edge_tile : true,
 		obj_name : "",
@@ -213,7 +213,7 @@ for (var i = 0; i < 46; i++) {
 //DIS Edges
 for (var i = 0; i < 46; i++) {
 	command_tiles[? 247 + i] = {
-		is_solid : true,
+		is_solid : false,
 		is_wall_tile : false,
 		is_edge_tile : true,
 		obj_name : "",
