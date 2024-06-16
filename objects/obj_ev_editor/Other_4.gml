@@ -57,3 +57,5 @@ if (room == asset_get_index("rm_ev_startup")) {
 if (room == asset_get_index("rm_ev_level")) {
 	global.level_time = 0;	
 }
+
+global.turn_frames = 0
