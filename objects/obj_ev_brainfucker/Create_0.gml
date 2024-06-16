@@ -239,10 +239,119 @@ command_functions[? 1] = function(memory, pointer){
 	ev_notify(string("Params: ({0}, {1}) {2}", params[0], params[1], params[2]))
 }
 
+//move(direction)
 command_functions[? 2] = function(memory, pointer){
-	var test_a = instance_number(asset_get_index("obj_collision"))
+	var params = get_command_parameters(memory, pointer, 1)
+	var p_move_x = 0
+	var p_move_y = 0
+	switch params[0]{
+		case 0: //Right
+			p_move_x = 16
+			break
+		case 1: //Up
+			p_move_y = -16
+			break
+		case 2: //Left
+			p_move_x = -16
+			break
+		case 3: //Down
+			p_move_y = 16
+			break
+	}
+	// Invalid direction?  Exit.
+	if p_move_x == 0 && p_move_y == 0{
+		return
+	}
 	
-	ev_notify(string("obj_collision count:  {0}", test_a))
+	with(add_inst){
+	    if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_collision"))
+	    {
+			//Collided, don't move
+			//Removed the sound that played here cause it was really bad when it spammed....
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder"))
+	    {
+	        var b_push_x = p_move_x
+	        var b_push_y = p_move_y
+	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder")))
+	        {
+	            o_move_x += b_push_x
+	            o_move_y += b_push_y
+	            o_state = (10 << 0)
+	        }
+	        //state = (7 << 0)
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue"))
+	    {
+	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue")))
+	            o_state = (10 << 0)
+	        //state = (7 << 0)
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori"))
+	    {
+	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori")))
+	            o_state = (10 << 0)
+	        //state = (7 << 0)
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert"))
+	    {
+	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert")))
+	            o_state = (10 << 0)
+	        //state = (7 << 0)
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk"))
+	    {
+	        var n_push_x = p_move_x
+	        var n_push_y = p_move_y
+	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk")))
+	        {
+	            o_move_x += n_push_x
+	            o_move_y += n_push_y
+	            o_state = (10 << 0)
+	        }
+	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_rest")))
+	            counter = 0
+	        //state = (7 << 0)
+	    }
+	    else if (place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_enemy_parent")) || place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_parent")))
+	    {
+	        x += p_move_x
+	        y += p_move_y
+			
+			//TODO: Crush enemy/NPC??
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_pit"))
+	    {
+	        x += p_move_x
+	        y += p_move_y
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_player"))
+	    {
+			//tl;dr, mimics pushing boulders into the player just causes a collision
+			//gonna use that as the behaviour here I guess....
+	    }
+	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_fakewall"))
+	    {
+			//Collide with the fake hologram rockeggs, similar to other boulders/statues
+	    }
+	    else
+	    {
+	        //didyamuv = true
+	        var _explofloor_stepped = instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_explofloor"))
+	        if (_explofloor_stepped == noone)
+	        {
+	            //can_float = true
+	            //float_state = 0
+	        }
+	        else
+	        {
+	            with (_explofloor_stepped)
+	                self.fnc_explofloor__check_if_stepped_on()
+	        }
+	        x += p_move_x
+	        y += p_move_y
+	    }
+	}
 }
 
 //set_tile(x, y, index)
