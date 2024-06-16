@@ -235,6 +235,15 @@ if mouse_check_button_released(mb_right) {
 	global.mouse_right_held = false;	
 }
 
+with (asset_get_index("obj_player")) {
+	if (enemyturn_countdown <= 0 && enemy_cycle == 0) {
+		global.turn_frames += 1
+	} else{
+		global.turn_frames = 0
+	}
+}
+
+
 if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 	sprite_delete(stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten)
 	stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone
