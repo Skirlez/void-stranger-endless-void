@@ -275,29 +275,27 @@ command_functions[? 2] = function(memory, pointer){
 	        var b_push_y = p_move_y
 	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder")))
 	        {
-	            o_move_x += b_push_x
-	            o_move_y += b_push_y
-	            o_state = (10 << 0)
+				if (shaken == false){
+		            o_move_x += b_push_x
+		            o_move_y += b_push_y
+		            o_state = (10 << 0)
+				}
 	        }
-	        //state = (7 << 0)
 	    }
 	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue"))
 	    {
 	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue")))
 	            o_state = (10 << 0)
-	        //state = (7 << 0)
 	    }
 	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori"))
 	    {
 	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori")))
 	            o_state = (10 << 0)
-	        //state = (7 << 0)
 	    }
 	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert"))
 	    {
 	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert")))
 	            o_state = (10 << 0)
-	        //state = (7 << 0)
 	    }
 	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk"))
 	    {
@@ -305,20 +303,19 @@ command_functions[? 2] = function(memory, pointer){
 	        var n_push_y = p_move_y
 	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk")))
 	        {
-	            o_move_x += n_push_x
-	            o_move_y += n_push_y
-	            o_state = (10 << 0)
+				if (shaken == false){
+		            o_move_x += n_push_x
+		            o_move_y += n_push_y
+		            o_state = (10 << 0)
+				}
 	        }
 	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_rest")))
 	            counter = 0
-	        //state = (7 << 0)
 	    }
 	    else if (place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_enemy_parent")) || place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_parent")))
 	    {
 	        x += p_move_x
 	        y += p_move_y
-			
-			//TODO: Crush enemy/NPC??
 	    }
 	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_pit"))
 	    {
@@ -336,14 +333,8 @@ command_functions[? 2] = function(memory, pointer){
 	    }
 	    else
 	    {
-	        //didyamuv = true
 	        var _explofloor_stepped = instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_explofloor"))
-	        if (_explofloor_stepped == noone)
-	        {
-	            //can_float = true
-	            //float_state = 0
-	        }
-	        else
+	        if (_explofloor_stepped != noone)
 	        {
 	            with (_explofloor_stepped)
 	                self.fnc_explofloor__check_if_stepped_on()
