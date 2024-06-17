@@ -145,53 +145,53 @@ var wall_tile_indices = [3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 16, 17]
 // Normal Walls
 for (var i = 0; i < array_length(wall_tile_indices); i++) {
   command_tiles[? 101 + i] = {
-      is_solid : true,
-      is_wall_tile : true,
-      is_edge_tile : false,
-      obj_name : "",
-      tile_index : wall_tile_indices[i],
-      obj_layer: "",
-      wall_type: wall_types.normal,
-      edge_type: 0,
+	  is_solid : true,
+	  is_wall_tile : true,
+	  is_edge_tile : false,
+	  obj_name : "",
+	  tile_index : wall_tile_indices[i],
+	  obj_layer: "",
+	  wall_type: wall_types.normal,
+	  edge_type: 0,
   }
 }
 // EX Walls
 for (var i = 0; i < array_length(wall_tile_indices); i++) {
   command_tiles[? 113 + i] = {
-      is_solid : true,
-      is_wall_tile : true,
-      is_edge_tile : false,
-      obj_name : "",
-      tile_index : wall_tile_indices[i],
-      obj_layer: "",
-      wall_type: wall_types.ex,
-      edge_type: 0,
+	  is_solid : true,
+	  is_wall_tile : true,
+	  is_edge_tile : false,
+	  obj_name : "",
+	  tile_index : wall_tile_indices[i],
+	  obj_layer: "",
+	  wall_type: wall_types.ex,
+	  edge_type: 0,
   }
 }
 // DIS Walls
 for (var i = 0; i < array_length(wall_tile_indices); i++) {
   command_tiles[? 125 + i] = {
-      is_solid : true,
-      is_wall_tile : true,
-      is_edge_tile : false,
-      obj_name : "",
-      tile_index : wall_tile_indices[i],
-      obj_layer: "",
-      wall_type: wall_types.dis,
-      edge_type: 0,
+	  is_solid : true,
+	  is_wall_tile : true,
+	  is_edge_tile : false,
+	  obj_name : "",
+	  tile_index : wall_tile_indices[i],
+	  obj_layer: "",
+	  wall_type: wall_types.dis,
+	  edge_type: 0,
   }
 }
 // Mon Walls
 for (var i = 0; i < array_length(wall_tile_indices); i++) {
   command_tiles[? 137 + i] = {
-      is_solid : true,
-      is_wall_tile : true,
-      is_edge_tile : false,
-      obj_name : "",
-      tile_index : wall_tile_indices[i],
-      obj_layer: "",
-      wall_type: wall_types.mon,
-      edge_type: 0,
+	  is_solid : true,
+	  is_wall_tile : true,
+	  is_edge_tile : false,
+	  obj_name : "",
+	  tile_index : wall_tile_indices[i],
+	  obj_layer: "",
+	  wall_type: wall_types.mon,
+	  edge_type: 0,
   }
 }
 #endregion
@@ -264,84 +264,84 @@ command_functions[? 2] = function(memory, pointer){
 	}
 	
 	with(add_inst){
-	    if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_collision"))
-	    {
+		if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_collision"))
+		{
 			//Collided, don't move
 			//Removed the sound that played here cause it was really bad when it spammed....
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder"))
-	    {
-	        var b_push_x = p_move_x
-	        var b_push_y = p_move_y
-	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder")))
-	        {
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder"))
+		{
+			var b_push_x = p_move_x
+			var b_push_y = p_move_y
+			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder")))
+			{
 				if (shaken == false){
-		            o_move_x += b_push_x
-		            o_move_y += b_push_y
-		            o_state = (10 << 0)
+					o_move_x += b_push_x
+					o_move_y += b_push_y
+					o_state = (10 << 0)
 				}
-	        }
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue"))
-	    {
-	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue")))
-	            o_state = (10 << 0)
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori"))
-	    {
-	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori")))
-	            o_state = (10 << 0)
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert"))
-	    {
-	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert")))
-	            o_state = (10 << 0)
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk"))
-	    {
-	        var n_push_x = p_move_x
-	        var n_push_y = p_move_y
-	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk")))
-	        {
+			}
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue"))
+		{
+			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue")))
+				o_state = (10 << 0)
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori"))
+		{
+			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori")))
+				o_state = (10 << 0)
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert"))
+		{
+			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert")))
+				o_state = (10 << 0)
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk"))
+		{
+			var n_push_x = p_move_x
+			var n_push_y = p_move_y
+			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk")))
+			{
 				if (shaken == false){
-		            o_move_x += n_push_x
-		            o_move_y += n_push_y
-		            o_state = (10 << 0)
+					o_move_x += n_push_x
+					o_move_y += n_push_y
+					o_state = (10 << 0)
 				}
-	        }
-	        with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_rest")))
-	            counter = 0
-	    }
-	    else if (place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_enemy_parent")) || place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_parent")))
-	    {
-	        x += p_move_x
-	        y += p_move_y
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_pit"))
-	    {
-	        x += p_move_x
-	        y += p_move_y
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_player"))
-	    {
+			}
+			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_rest")))
+				counter = 0
+		}
+		else if (place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_enemy_parent")) || place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_parent")))
+		{
+			x += p_move_x
+			y += p_move_y
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_pit"))
+		{
+			x += p_move_x
+			y += p_move_y
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_player"))
+		{
 			//tl;dr, mimics pushing boulders into the player just causes a collision
 			//gonna use that as the behaviour here I guess....
-	    }
-	    else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_fakewall"))
-	    {
+		}
+		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_fakewall"))
+		{
 			//Collide with the fake hologram rockeggs, similar to other boulders/statues
-	    }
-	    else
-	    {
-	        var _explofloor_stepped = instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_explofloor"))
-	        if (_explofloor_stepped != noone)
-	        {
-	            with (_explofloor_stepped)
-	                self.fnc_explofloor__check_if_stepped_on()
-	        }
-	        x += p_move_x
-	        y += p_move_y
-	    }
+		}
+		else
+		{
+			var _explofloor_stepped = instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_explofloor"))
+			if (_explofloor_stepped != noone)
+			{
+				with (_explofloor_stepped)
+					self.fnc_explofloor__check_if_stepped_on()
+			}
+			x += p_move_x
+			y += p_move_y
+		}
 	}
 }
 
