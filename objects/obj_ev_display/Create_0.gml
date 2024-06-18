@@ -238,12 +238,7 @@ ind = 0
 
 voidrod_sprite = asset_get_index("spr_voidrod_icon")
 stackrod_sprite = asset_get_index("spr_voidrod_icon2")
-if global.stranger == 2
-    burdens_sprite = asset_get_index("spr_items_cif")
-else if global.stranger == 4
-    burdens_sprite = asset_get_index("spr_items_special")
-else
-    burdens_sprite = asset_get_index("spr_items")
+burdens_sprite = asset_get_index("spr_items")
 border_sprite = asset_get_index("spr_ev_display_border")
 
 draw_name = !edit;

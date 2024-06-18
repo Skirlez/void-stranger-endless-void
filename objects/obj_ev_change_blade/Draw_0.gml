@@ -1,0 +1,1 @@
+draw_sprite_part_ext(sprite_index, 0, 48, 0, 16, 16, x - 8, y - 8, scale_x, scale_y, image_blend, image_alpha)
