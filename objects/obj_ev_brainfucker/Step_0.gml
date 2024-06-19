@@ -1,6 +1,9 @@
 if (!instance_exists(add_inst)|| array_length(program) == 0)
 	return;
 
+global.add_current_x = floor(add_inst.x/16)
+global.add_current_y = floor(add_inst.y/16)
+
 var input_1 = evaluate_input(input_1_str)
 var input_2 = evaluate_input(input_2_str)
 var destroy_value = evaluate_input(destroy_value_str)
