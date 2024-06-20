@@ -11,10 +11,18 @@ current_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 
 global.death_count = current_deaths - asset_get_index("obj_ev_editor").starting_deaths
 
 if (global.death_count != asset_get_index("obj_ev_editor").last_death_count){
-	ev_notify("Player Has Just Died!")
-	//Player has died
-	global.death_x = floor(asset_get_index("obj_player").x/16)
-	global.death_y = floor(asset_get_index("obj_player").y/16)
+	//Player has just died
+	current_death_x = floor(asset_get_index("obj_player").x/16)
+	current_death_y = floor(asset_get_index("obj_player").y/16)
+	
+	if (global.death_x == current_death_x && global.death_y == current_death_y){
+		global.annoyance_count += 1
+	} else{
+		global.annoyance_count = 1
+	}
+	
+	global.death_x = current_death_x
+	global.death_y = current_death_y
 }
 
 asset_get_index("obj_ev_editor").last_death_count = global.death_count

@@ -63,6 +63,7 @@ if play_transition != -1 {
 		global.death_count = 0
 		global.death_x = -1
 		global.death_y = -1
+		global.annoyance_count = 0
 		
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(asset_get_index("rm_ev_level"))
