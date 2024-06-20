@@ -23,6 +23,7 @@ if (global.death_count != asset_get_index("obj_ev_editor").last_death_count){
 	
 	global.death_x = current_death_x
 	global.death_y = current_death_y
+	global.death_frames = 0
 }
 
 asset_get_index("obj_ev_editor").last_death_count = global.death_count

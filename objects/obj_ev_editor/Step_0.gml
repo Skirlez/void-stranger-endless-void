@@ -253,6 +253,9 @@ with (asset_get_index("obj_player")) {
 	}
 }
 
+if(global.death_count > 0){
+	global.death_frames += 1
+}
 
 if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 	sprite_delete(stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten)
