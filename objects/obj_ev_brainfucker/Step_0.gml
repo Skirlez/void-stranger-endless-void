@@ -10,6 +10,15 @@ current_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 
 current_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
 global.death_count = current_deaths - asset_get_index("obj_ev_editor").starting_deaths
 
+if (global.death_count != asset_get_index("obj_ev_editor").last_death_count){
+	ev_notify("Player Has Just Died!")
+	//Player has died
+	global.death_x = floor(asset_get_index("obj_player").x/16)
+	global.death_y = floor(asset_get_index("obj_player").y/16)
+}
+
+asset_get_index("obj_ev_editor").last_death_count = global.death_count
+
 var input_1 = evaluate_input(input_1_str)
 var input_2 = evaluate_input(input_2_str)
 var destroy_value = evaluate_input(destroy_value_str)
