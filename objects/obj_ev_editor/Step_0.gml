@@ -55,6 +55,12 @@ if play_transition != -1 {
 	if play_transition == -1 {
 		if (room == global.editor_room)
 			global.playtesting = true;
+
+		starting_deaths = 0
+		starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 5)
+		starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
+		global.death_count = 0
+		
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(asset_get_index("rm_ev_level"))
 		if (!audio_is_playing(asset_get_index(global.level.music)))
