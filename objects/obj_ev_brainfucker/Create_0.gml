@@ -231,7 +231,7 @@ for (var i = 0; i < 46; i++) {
 command_functions = ds_map_create();
 
 command_functions[? 0] = function(memory, pointer){
-	ev_notify("random tests lol")
+	ev_notify(string("Add Coords: ({0}, {1})", global.add_current_x, global.add_current_y))
 }
 
 command_functions[? 1] = function(memory, pointer){
@@ -342,7 +342,11 @@ command_functions[? 2] = function(memory, pointer){
 			x += p_move_x
 			y += p_move_y
 		}
+		//Update global variables for the statue's location
+		global.add_current_x = floor(x/16)
+		global.add_current_y = floor(y/16)
 	}
+	
 }
 
 //set_tile(x, y, index)
@@ -500,6 +504,7 @@ function execute(program, input_1, input_2, destroy_value) {
 			ev_notify("BF code ran for too long!")
 			return destroy_value;
 		}
+		
 		switch (command) {
 			case "<": 
 				var ret = get_bf_multiplier(program, i)

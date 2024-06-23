@@ -55,6 +55,16 @@ if play_transition != -1 {
 	if play_transition == -1 {
 		if (room == global.editor_room)
 			global.playtesting = true;
+
+		starting_deaths = 0
+		starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 5)
+		starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
+		last_death_count = 0
+		global.death_count = 0
+		global.death_x = -1
+		global.death_y = -1
+		global.annoyance_count = 0
+		
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(asset_get_index("rm_ev_level"))
 		if (!audio_is_playing(asset_get_index(global.level.music)))
@@ -243,6 +253,9 @@ with (asset_get_index("obj_player")) {
 	}
 }
 
+if(global.death_count > 0){
+	global.death_frames += 1
+}
 
 if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 	sprite_delete(stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten)
