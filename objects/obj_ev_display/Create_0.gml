@@ -172,6 +172,7 @@ function handle_click(tile_i, tile_j) {
 					place_placeable(new_tile_i, new_tile_j, tile_state.tile, struct_copy(tile_state.properties), false)
 				}
 			}
+			return;
 		default:
 			return;
 			

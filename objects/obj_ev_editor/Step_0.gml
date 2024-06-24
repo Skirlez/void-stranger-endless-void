@@ -245,11 +245,14 @@ if mouse_check_button_released(mb_right) {
 	global.mouse_right_held = false;	
 }
 
-with (asset_get_index("obj_player")) {
-	if (enemyturn_countdown <= 0 && enemy_cycle == 0) {
-		global.turn_frames += 1
-	} else{
-		global.turn_frames = 0
+if global.compiled_for_merge {
+	with (asset_get_index("obj_player")) {
+		if (enemyturn_countdown <= 0 && enemy_cycle == 0) {
+			global.turn_frames += 1
+		} 
+		else {
+			global.turn_frames = 0
+		}
 	}
 }
 

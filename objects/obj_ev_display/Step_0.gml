@@ -82,9 +82,14 @@ if (edit && ev_is_mouse_on_me()) {
 				return false;
 			}
 			if (!global.tile_mode 
+					&& (global.selected_thing == thing_picker
+						|| global.selected_thing == thing_plucker
+						|| global.selected_thing == thing_eraser)
 					&& !region_has_objects(small_tile_i, small_tile_j, tile_i, tile_j)
-					&& region_has_tiles(small_tile_i, small_tile_j, tile_i, tile_j))
+					&& region_has_tiles(small_tile_i, small_tile_j, tile_i, tile_j)) 
+			{
 				global.editor_instance.switch_tile_mode(true)
+			}
 			
 			global.editor_instance.add_undo()
 			handle_click_before(tile_i, tile_j)
