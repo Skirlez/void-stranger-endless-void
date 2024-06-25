@@ -212,9 +212,20 @@ function on_fail(error_str = "") {
 	post_level_id = noone
 	update_level_id = noone
 	delete_level_id = noone
-	error_message = error_str
 	upload_timeout = 0;
 	state = 3
+	
+	error_textbox = instance_create_layer(112, 80, "WindowElements", asset_get_index("obj_ev_textbox"), 
+	{
+		txt : error_str,
+		base_scale_x : 6,
+		base_scale_y : 1,
+		layer_num : 1,
+		allow_deletion : false,
+		char_limit : 0,	
+	})
+	add_child(error_textbox)
+	
 	create_finish_buttons("Oh damn")
 }
 
