@@ -31,12 +31,27 @@ draw_text(12 * 16, 9 * 16 + 1, "V?")
 draw_text(13 * 16, 9 * 16 + 1, "?")
 draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
 
-
 var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
 draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
 for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
-	if lvl.burdens[i]
+	if lvl.burdens[i] {
+	    switch i {
+        case 2:
+            if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
+		    else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
+            break
+        case 1:
+            burdens_sprite = ev_get_burden_sprite(global.wings_style)
+            break
+        case 0:
+            burdens_sprite = ev_get_burden_sprite(global.memory_style)
+            break
+        default:
+            burdens_sprite = asset_get_index("spr_items")
+            break
+        }
 		draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)	
+	}
 }
 
 for (var i = 0; i < 9; i++)	{

@@ -5,6 +5,9 @@ function ev_save(){
 	ini_write_string("options", "brand", global.author.brand)
 	ini_write_string("options", "server_ip", global.server_ip)
 	ini_write_string("options", "stranger", global.stranger)
+	ini_write_string("options", "memory", global.memory_style)
+	ini_write_string("options", "wings", global.wings_style)
+	ini_write_string("options", "blade", global.blade_style)
 	ini_close()
 }
 function ev_load() {
@@ -13,6 +16,9 @@ function ev_load() {
 	global.author.brand = int64(ini_read_string("options", "brand", 0))
 	global.server_ip = ini_read_string("options", "server_ip", "skirlez.com")
 	global.stranger = ini_read_real("options", "stranger", 0)
+	global.memory_style = ini_read_real("options", "memory", 0)
+	global.wings_style = ini_read_real("options", "wings", 0)
+	global.blade_style = ini_read_real("options", "blade", 0)
 	ini_close()
 	ev_update_vars()
 }

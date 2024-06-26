@@ -2,15 +2,13 @@
 scr_steam_achievement_get()> { /* do nothing*/ }
 // TARGET: STRING
 scr_steam_achievement_clear()> { /* do nothing*/ }
+// TARGET: STRING
+spr_wings = 2595> { /* do nothing*/ }
+// TARGET: STRING
+spr_blade = 1700> { /* do nothing*/ }
 
 // TARGET: LINENUMBER
-// 98
-if global.level.burdens[1] 
-	spr_wings = 2561
-if global.level.burdens[2] 
-	spr_blade = 1685
-// TARGET: LINENUMBER
-// 114
+// 108
 else if (global.stranger == 5) {
     spr_m_right = spr_prin_wed_r
     spr_m_up = spr_prin_wed_u
@@ -63,4 +61,40 @@ else if (global.stranger == 7) {
     spr_a_down = spr_ev_bee_attack_d
 	voice = snd_baal
     wake_speed = 6
+}
+switch global.wings_style
+{
+    case 4:
+        spr_wings = spr_ev_void_wings_two
+        break
+    case 3:
+        spr_wings = spr_ev_void_wings_one
+        break
+    case 2:
+        spr_wings = spr_ev_void_wings_lev
+        break
+    case 1:
+        spr_wings = spr_void_wings_cif
+        break
+    default:
+        spr_wings = spr_void_wings
+        break
+}
+switch global.blade_style
+{
+    case 4:
+        spr_blade = spr_ev_void_sword_two
+        break
+    case 3:
+        spr_blade = spr_ev_void_sword_one
+        break
+    case 2:
+        spr_blade = spr_ev_void_sword_lev
+        break
+    case 1:
+        spr_blade = spr_void_sword_cif
+        break
+    default:
+        spr_blade = spr_void_sword
+        break
 }
