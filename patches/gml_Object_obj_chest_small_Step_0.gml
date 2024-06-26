@@ -198,389 +198,374 @@ if (empty == false)
     }
     else if (contents == 2)
     {
-        if (global.stranger == 2)
+        if (global.blade_get == 0)
         {
-            switch global.blade_style
+            if (global.stranger == 2)
             {
-                case 4:
-                    text[0] = "[You acquired a strange drill]"
-                    text[1] = "[It burns to the touch and has a heft to it]"
-                    text[2] = "[Seems you'll have to bear with it for now]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = scrScript(189)
-                    text[1] = "[Something feels very, very different]"
-                    text[2] = "[It's almost as if you're wielding creation itself]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = "[You found Lev's sword]"
-                    text[1] = "[...]"
-                    text[2] = "[They always did look up to Add...]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = "[You reclaimed your sword]"
-                    text[1] = "[...]"
-                    text[2] = "[Is there an end to this?]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(243)
-                    text[1] = scrScript(244)
-                    text[2] = scrScript(245)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
+                switch global.blade_style
+                {
+                    case 3:
+                        text[0] = scrScript(189)
+                        text[1] = "[Something feels very, very different]"
+                        text[2] = "[It's almost as if you're wielding creation itself]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = "[You reclaimed your sword]"
+                        text[1] = "[...]"
+                        text[2] = "[Is there an end to this?]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 0:
+                        text[0] = scrScript(243)
+                        text[1] = scrScript(244)
+                        text[2] = scrScript(245)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = "[...!?]"
+                        text[1] = "[...]"
+                        text[2] = "[You shouldn't have this]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
 
-        }
-        else if (global.stranger == 7)
-        {
-            switch global.blade_style
+            }
+            else if (global.stranger == 7)
             {
-                case 4:
-                    text[0] = "[You acquired a strange drill]"
-                    text[1] = "[Something feels very, very different]"
-                    text[2] = "[Let's get fired up!]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = scrScript(189)
-                    text[1] = "[It feels as if the sword itself is rejecting you]"
-                    text[2] = "[Time to teach it a lesson or two]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = "[You found Lev's sword]"
-                    text[1] = "[...]"
-                    text[2] = "[They certainly won't be needing it]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = "[You found Cif's sword]"
-                    text[1] = "[...]"
-                    text[2] = "[Small sword, big horns...]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(243)
-                    text[1] = scrScript(244)
-                    text[2] = "[Better not poke myself with it!]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
+                switch global.blade_style
+                {
+                    case 4:
+                        text[0] = "[You have restored a strange drill]"
+                        text[1] = "[Something feels very, very different]"
+                        text[2] = "[Let's get fired up!]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = "[You found Cif's sword]"
+                        text[1] = "[...]"
+                        text[2] = "[Fatty horns with a thin sword, huh?]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 0:
+                        text[0] = scrScript(243)
+                        text[1] = scrScript(244)
+                        text[2] = "[Better not poke myself with it!]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = "[...!?]"
+                        text[1] = "[...]"
+                        text[2] = "[You shouldn't have this]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
 
+            }
+            else
+            {
+                switch global.blade_style
+                {
+                    case 4:
+                        text[0] = "[You have restored a strange sword]"
+                        text[1] = "[Honestly, it's a stretch to call it a sword at all]"
+                        text[2] = "[Nevertheless, maybe it'll come in handy in the long run]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 3:
+                        text[0] = "[You have restored a strange sword]"
+                        text[1] = "[Its size suggests it was meant for something much bigger than you]"
+                        text[2] = "[Nevertheless, maybe it'll come in handy in the long run]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 2:
+                        text[0] = scrScript(189)
+                        text[1] = "[Its heavy weight makes it rather inconvenient to use]"
+                        text[2] = scrScript(175)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = scrScript(189)
+                        text[1] = "[Its specialized balance makes it rather unwieldy to use]"
+                        text[2] = scrScript(175)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = scrScript(189)
+                        text[1] = scrScript(190)
+                        text[2] = scrScript(175)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
+
+            }
         }
         else
         {
-            switch global.blade_style
-            {
-                case 4:
-                    text[0] = scrScript(189)
-                    text[1] = "[Honestly, it's a stretch to call it a sword at all]"
-                    text[2] = "[Nevertheless, maybe it'll come in handy in the long run]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = scrScript(189)
-                    text[1] = "[All of the weight is focused towards the hilt]"
-                    text[2] = scrScript(175)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = scrScript(189)
-                    text[1] = "[Its shoddy craftsmanship neccessitates careful usage]"
-                    text[2] = scrScript(175)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = scrScript(189)
-                    text[1] = "[Its lacking balance makes it rather difficult to use]"
-                    text[2] = scrScript(175)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(189)
-                    text[1] = scrScript(190)
-                    text[2] = scrScript(175)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
-
+            text[0] = "[...!?]"
+            text[1] = "[...]"
+            text[2] = "[You shouldn't have this]"
+            moods = [neutral, neutral, neutral]
+            speakers = [id, id, id]
         }
     }
     else if (contents == 3)
     {
-        if (global.stranger == 2)
+        if (global.wings_get == 0)
         {
-            switch global.wings_style
+            if (global.stranger == 2)
             {
-                case 4:
-                    text[0] = "[You acquired a strange pair of wings]"
-                    text[1] = "[Their metallic sheen seems otherworldly]"
-                    text[2] = "[Naturally, they're poor fitting]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = "[You acquired a strange pair of wings]"
-                    text[1] = "[Their metallic sheen seems otherworldly]"
-                    text[2] = "[Despite that, they're perfect for you]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = "[You found Lev's wings]"
-                    text[1] = "[...]"
-                    text[2] = "[Better hold onto them]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = "[You reclaimed your wings]"
-                    text[1] = "[...]"
-                    text[2] = "[Just what kind of place is this?]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(233)
-                    text[1] = scrScript(234)
-                    text[2] = "[Can't think about it now...]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
+                switch global.wings_style
+                {
+                    case 3:
+                        text[0] = "[You have restored a pair of strange wings]"
+                        text[1] = "[...]"
+                        text[2] = "[They feel as if they could propel you towards a brighter future]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = "[You reclaimed your wings]"
+                        text[1] = "[...]"
+                        text[2] = "[Just what kind of place is this?]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 0:
+                        text[0] = scrScript(233)
+                        text[1] = scrScript(234)
+                        text[2] = "[Can't think about it now...]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = "[...!?]"
+                        text[1] = "[...]"
+                        text[2] = "[You shouldn't have this]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
 
-        }
-        else if (global.stranger == 7)
-        {
-            switch global.wings_style
+            }
+            else if (global.stranger == 7)
             {
-                case 4:
-                    text[0] = "[You acquired a strange pair of wings]"
-                    text[1] = "[Their metallic sheen seems otherworldly]"
-                    text[2] = "[Yet, they're what you've always wanted]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = "[You acquired a strange pair of wings]"
-                    text[1] = "[Their metallic sheen seems otherworldly]"
-                    text[2] = "[Just looking at them feels limiting]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = "[You found Lev's wings]"
-                    text[1] = "[...]"
-                    text[2] = "[They'll do]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = "[You found Cif's wings]"
-                    text[1] = "[Better try not to get caught using them]"
-                    text[2] = "[It's more than likely]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(233)
-                    text[1] = scrScript(234)
-                    text[2] = "[Well, if nobody's watching...]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
+                switch global.wings_style
+                {
+                    case 4:
+                        text[0] = "[You have restored a pair of strange wings]"
+                        text[1] = "[...]"
+                        text[2] = "[Can't stop blazing!!]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = "[You found Cif's wings]"
+                        text[1] = "[Better try not to get caught using them]"
+                        text[2] = "[It's more than likely]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 0:
+                        text[0] = scrScript(233)
+                        text[1] = scrScript(234)
+                        text[2] = "[Well, if nobody's watching...]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = "[...!?]"
+                        text[1] = "[...]"
+                        text[2] = "[You shouldn't have this]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
 
+            }
+            else
+            {
+                switch global.wings_style
+                {
+                    case 4:
+                        text[0] = "[You have restored a pair of strange wings]"
+                        text[1] = "[They have a versatile power output]"
+                        text[2] = scrScript(194)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 3:
+                        text[0] = "[You have restored a pair of strange wings]"
+                        text[1] = "[They have a focused power output]"
+                        text[2] = scrScript(194)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 2:
+                        text[0] = scrScript(192)
+                        text[1] = "[They feel rough and unwieldy]"
+                        text[2] = scrScript(194)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = scrScript(192)
+                        text[1] = "[They feel like nothing but warmth]"
+                        text[2] = scrScript(194)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = scrScript(192)
+                        text[1] = scrScript(193)
+                        text[2] = scrScript(194)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
+
+            }
         }
         else
         {
-            switch global.wings_style
-            {
-                case 4:
-                    text[0] = "[You acquired a strange pair of wings]"
-                    text[1] = "[They feel bulky, yet dangerously loose]"
-                    text[2] = scrScript(194)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = "[You acquired a strange pair of wings]"
-                    text[1] = "[They feel clunky and restrictive]"
-                    text[2] = scrScript(194)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = scrScript(192)
-                    text[1] = "[They feel rough and unwieldy]"
-                    text[2] = scrScript(194)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = scrScript(192)
-                    text[1] = "[They feel like nothing but warmth]"
-                    text[2] = scrScript(194)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(192)
-                    text[1] = scrScript(193)
-                    text[2] = scrScript(194)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
-
+            text[0] = "[...!?]"
+            text[1] = "[...]"
+            text[2] = "[You shouldn't have this]"
+            moods = [neutral, neutral, neutral]
+            speakers = [id, id, id]
         }
     }
     else if (contents == 4)
     {
-        if (global.stranger == 2)
+        if (global.memory_get == 0)
         {
-            switch global.memory_style
+            if (global.stranger == 2)
             {
-                case 4:
-                    text[0] = "[You acquired a strange power]"
-                    text[1] = "[Simply holding it makes you feel *****ish]"
-                    text[2] = "[...it's not for you]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = "[You acquired a strange power]"
-                    text[1] = "[Simply holding it makes you feel *****ish]"
-                    text[2] = "[...it can't be]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = "[You found Lev's core]"
-                    text[1] = "[...]"
-                    text[2] = "[Can't leave it here]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = "[You reclaimed your slave unit]"
-                    text[1] = "[...]"
-                    text[2] = "[Frankly, you don't recall losing it]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(237)
-                    text[1] = scrScript(238)
-                    text[2] = "[Is this what you wanted...?]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
+                switch global.memory_style
+                {
+                    case 3:
+                        text[0] = "[You have restored a strange power]"
+                        text[1] = "[...]"
+                        text[2] = "[None of this is really here, is it...?]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = "[You reclaimed your slave unit]"
+                        text[1] = "[...]"
+                        text[2] = "[Just when did you lose this...?]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 0:
+                        text[0] = scrScript(237)
+                        text[1] = scrScript(238)
+                        text[2] = "[Is this what you wanted...?]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = "[...!?]"
+                        text[1] = "[...]"
+                        text[2] = "[You shouldn't have this]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
 
-        }
-        else if (global.stranger == 7)
-        {
-            switch global.memory_style
+            }
+            else if (global.stranger == 7)
             {
-                case 4:
-                    text[0] = "[You acquired a strange power]"
-                    text[1] = "[Simply holding it makes you feel *****ish]"
-                    text[2] = "[...feels familiar]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = "[You acquired a strange power]"
-                    text[1] = "[Simply holding it makes you feel *****ish]"
-                    text[2] = "[...it's not for you]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 2:
-                    text[0] = "[You found Lev's core]"
-                    text[1] = "[...]"
-                    text[2] = "[Good night]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = "[You found Cif's core]"
-                    text[1] = "[...]"
-                    text[2] = "[Time to find Cif!]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(237)
-                    text[1] = scrScript(238)
-                    text[2] = "[Why did you leave...?]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
+                switch global.memory_style
+                {
+                    case 4:
+                        text[0] = "[You have restored a strange power]"
+                        text[1] = "[...]"
+                        text[2] = "[Something is different, in a good way]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = "[You found Cif's core]"
+                        text[1] = "[...]"
+                        text[2] = "[Time to find Cif!]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 0:
+                        text[0] = scrScript(237)
+                        text[1] = scrScript(238)
+                        text[2] = "[Why did you leave...?]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = "[...!?]"
+                        text[1] = "[...]"
+                        text[2] = "[You shouldn't have this]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
 
+            }
+            else
+            {
+                switch global.memory_style
+                {
+                    case 4:
+                    case 3:
+                        text[0] = "[You have restored a strange power]"
+                        text[1] = "[Your mind feels *****ish]"
+                        text[2] = "[So this is the power of ...]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 2:
+                        text[0] = scrScript(196)
+                        text[1] = scrScript(197)
+                        text[2] = "[... You're overcome by envy]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    case 1:
+                        text[0] = scrScript(196)
+                        text[1] = scrScript(197)
+                        text[2] = "[... You feel a sense of pride]"
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                    default:
+                        text[0] = scrScript(196)
+                        text[1] = scrScript(197)
+                        text[2] = scrScript(198)
+                        moods = [neutral, neutral, neutral]
+                        speakers = [id, id, id]
+                        break
+                }
+
+            }
         }
         else
         {
-            switch global.memory_style
-            {
-                case 4:
-                    text[0] = "[You acquired a strange power]"
-                    text[1] = "[Simply holding it makes you feel *****ish]"
-                    text[2] = "[...it's not for you]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 3:
-                    text[0] = "[You acquired a strange power]"
-                    text[1] = "[Simply holding it makes you feel *****ish]"
-                    text[2] = "[...it's not for you]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = scrScript(196)
-                    text[1] = scrScript(197)
-                    text[2] = "[... You're overcome by envy]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                case 1:
-                    text[0] = scrScript(196)
-                    text[1] = scrScript(197)
-                    text[2] = "[... You feel a sense of pride]"
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-                default:
-                    text[0] = scrScript(196)
-                    text[1] = scrScript(197)
-                    text[2] = scrScript(198)
-                    moods = [neutral, neutral, neutral]
-                    speakers = [id, id, id]
-                    break
-            }
-
+            text[0] = "[...!?]"
+            text[1] = "[...]"
+            text[2] = "[You shouldn't have this]"
+            moods = [neutral, neutral, neutral]
+            speakers = [id, id, id]
         }
     }
     else if (contents == 6)
@@ -862,6 +847,12 @@ if (active_textbox == noone)
     active_textbox = tbox
     if (empty == false && contents == 1 && global.locust == true && locust_overflow == false)
         instance_destroy(active_textbox)
+    else if (empty == false && contents == 2 && global.blade_get == true)
+        instance_destroy(active_textbox)
+    else if (empty == false && contents == 3 && global.wings_get == true)
+        instance_destroy(active_textbox)
+    else if (empty == false && contents == 4 && global.memory_get == true)
+        instance_destroy(active_textbox)
     else if (empty == false && contents == 6 && global.luckylocust != 0 && locust_overflow == false)
         instance_destroy(active_textbox)
 }
@@ -916,23 +907,20 @@ else if (!instance_exists(active_textbox))
     if (contents == 6)
         global.luckylocust = 1
     active_textbox = -4
-    if (global.stranger == 99)
-    {
-        if (empty == false)
-        {
-            if (contents == 2 || contents == 3 || contents == 4)
-            {
-                empty = false
-                image_speed = 0
-            }
-            else
-                empty = true
-        }
-        else
-            empty = true
-    }
-    else
-        empty = true
     show_contents = false
     checking = false
+    switch contents
+    {
+        case 2:
+            global.blade_get = true
+            break
+        case 3:
+            global.wings_get = true
+            break
+        case 4:
+            global.memory_get = true
+            break
+    }
+
 }
+

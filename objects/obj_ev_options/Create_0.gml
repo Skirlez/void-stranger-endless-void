@@ -50,12 +50,14 @@ add_child(author_brand)
 
 change_character = instance_create_layer(112 - 30, 72 + 10, "Instances", asset_get_index("obj_ev_change_character"));
 add_child(change_character)
+/* Maybe one day, but today ain't the day
 change_memory = instance_create_layer(112 - 46, 72 + 30, "Instances", asset_get_index("obj_ev_change_memory"));
 add_child(change_memory)
 change_wings = instance_create_layer(112 - 30, 72 + 30, "Instances", asset_get_index("obj_ev_change_wings"));
 add_child(change_wings)
 change_blade = instance_create_layer(112 - 14, 72 + 30, "Instances", asset_get_index("obj_ev_change_blade"));
 add_child(change_blade)
+*/
 
 author_textbox = instance_create_layer(112, 72 - 20, "Instances", asset_get_index("obj_ev_textbox"), 
 {

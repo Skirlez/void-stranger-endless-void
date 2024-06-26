@@ -1,7 +1,5 @@
 event_inherited()
 
-
-
 if global.blade_style == 0
 	global.blade_style = 1
 else if global.blade_style == 1
