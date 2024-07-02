@@ -260,8 +260,15 @@ function import_process_tiles(tile_string, level, height, failsafe_tile, version
 	}
 }
 
-
-
+function save_level(lvl)
+{
+	var file = file_text_open_write(global.levels_directory + lvl.save_name + "." + "vsl")
+	if (file == -1)
+		return;
+	var str = export_level(lvl)
+	file_text_write_string(file, str)
+	file_text_close(file)
+}
 /*
 function consider_multiplier(str, pointer, previous_string) {
 	if string_copy(str, pointer, 1) != MULTIPLIER_CHAR

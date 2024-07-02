@@ -39,8 +39,8 @@ function get_all_files(dir, ext) {
 	var files = [];
 	var file_name = string_replace(file_find_first(dir + "*." + ext, 0), "." + ext, "");
 	while (file_name != "") {
-	    array_push(files, file_name);
-	    file_name = string_replace(file_find_next(),  "." + ext, "");
+		array_push(files, file_name);
+		file_name = string_replace(file_find_next(),  "." + ext, "");
 	}
 	file_find_close(); 
 	return files;
@@ -76,7 +76,7 @@ function ev_string_split_buffer(str, delimiter, approx_average_substr_length) {
 	
 	var size = string_length(str) + 1;
 	var buf = buffer_create(size, buffer_fixed, 1);
-    buffer_write(buf, buffer_string, str);
+	buffer_write(buf, buffer_string, str);
 	buffer_seek(buf, buffer_seek_start, 0);
 	
 	var arr = []

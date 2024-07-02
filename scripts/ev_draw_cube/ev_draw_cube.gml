@@ -29,17 +29,17 @@ function ev_draw_cube_multisprite(sprites, subimgs, draw_x, draw_y, size, spin_h
 	
 		var node = nodes[i];
 
-	    var _x = node[0];
-	    var _y = node[1];
-	    var _z = node[2];
+		var _x = node[0];
+		var _y = node[1];
+		var _z = node[2];
  
-	    node[0] = _x * cos_x - _z * sin_x;
-	    node[2] = _z * cos_x + _x * sin_x;
+		node[0] = _x * cos_x - _z * sin_x;
+		node[2] = _z * cos_x + _x * sin_x;
  
-	    _z = node[2];
+		_z = node[2];
  
-	    node[1] = _y * cos_y - _z * sin_y;
-	    node[2] = _z * cos_y + _y * sin_y;
+		node[1] = _y * cos_y - _z * sin_y;
+		node[2] = _z * cos_y + _y * sin_y;
 	
 		nodes[i] = node;
 	};

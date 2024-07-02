@@ -138,7 +138,7 @@ enum cube_types {
 global.placeable_name_map = ds_map_create()
 
 function editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer = "Floor", flags = 0) constructor {
-    self.display_name = display_name
+	self.display_name = display_name
 	self.spr_ind = spr_ind
 	self.obj_name = obj_name
 	self.obj_layer = obj_layer
@@ -1404,7 +1404,7 @@ function read_beaten_levels() {
 	
 	var arr = []
 	while (!file_text_eof(file)) {
-	    array_push(arr, file_text_readln(file));
+		array_push(arr, file_text_readln(file));
 	}
 	
 	for (var i = 0; i < array_length(arr); i++) {
@@ -1440,7 +1440,7 @@ function save_beaten_levels() {
 	for (var i = 0; i < size - 1; i++;) {
 		key = ds_map_find_next(global.beaten_levels_map, key);
 		value = ds_map_find_value(global.beaten_levels_map, key)		
-	    str += ("\n" + key + "|" + string(value))
+		str += ("\n" + key + "|" + string(value))
 	}
 	var file = file_text_open_write(global.levels_directory + "beaten_levels.txt")
 	file_text_write_string(file, str)

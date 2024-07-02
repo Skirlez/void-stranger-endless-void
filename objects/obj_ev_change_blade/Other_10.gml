@@ -3,7 +3,7 @@ event_inherited()
 if global.blade_style == 0
 	global.blade_style = 1
 else if global.blade_style == 1
-    global.blade_style = 2
+	global.blade_style = 2
 else if global.blade_style == 2
 	global.blade_style = 3
 else if global.blade_style == 3

@@ -53,6 +53,19 @@ var textbox_offset;
 if (!global.online_mode) {
 	date_textbox = noone
 	
+	var edit = instance_create_layer(192, 73, "LevelHighlightButtons", asset_get_index("obj_ev_edit_button"))
+	edit.layer_num = 1
+	edit.lvl = lvl
+	edit.display_instance = display_instance
+	edit.highlighter = id
+	edit.image_alpha = 0
+	
+	var claim = instance_create_layer(208, 73, "LevelHighlightButtons", asset_get_index("obj_ev_claim_button"))
+	claim.layer_num = 1
+	claim.lvl = lvl
+	claim.highlighter = id
+	claim.image_alpha = 0
+	
 	var deleteb = instance_create_layer(192, 90, "LevelHighlightButtons", asset_get_index("obj_ev_delete_button"))
 	deleteb.layer_num = 1
 	deleteb.level_select = instance_find(asset_get_index("obj_ev_level_select"), 0)
@@ -64,16 +77,11 @@ if (!global.online_mode) {
 	upload.lvl = lvl;
 	upload.image_alpha = 0
 
-	var edit = instance_create_layer(200, 73, "LevelHighlightButtons", asset_get_index("obj_ev_edit_button"))
-	edit.layer_num = 1
-	edit.lvl = lvl
-	edit.display_instance = display_instance;
-	edit.highlighter = id;
-	edit.image_alpha = 0
 
 
 
 	textbox_offset = 20;
+	add_child(claim)
 	add_child(deleteb)
 	add_child(upload)
 	add_child(edit)

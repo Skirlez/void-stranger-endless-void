@@ -35,21 +35,21 @@ var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprit
 draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
 for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
 	if lvl.burdens[i] {
-	    switch i {
-        case 2:
-            if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
-		    else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
-            break
-        case 1:
-            burdens_sprite = ev_get_burden_sprite(global.wings_style)
-            break
-        case 0:
-            burdens_sprite = ev_get_burden_sprite(global.memory_style)
-            break
-        default:
-            burdens_sprite = asset_get_index("spr_items")
-            break
-        }
+		switch i {
+		case 2:
+			if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
+			else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
+			break
+		case 1:
+			burdens_sprite = ev_get_burden_sprite(global.wings_style)
+			break
+		case 0:
+			burdens_sprite = ev_get_burden_sprite(global.memory_style)
+			break
+		default:
+			burdens_sprite = asset_get_index("spr_items")
+			break
+		}
 		draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)	
 	}
 }
@@ -127,7 +127,7 @@ draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 
 
 
 if draw_brand {
-	if !surface_exists(brand_surface) {
+	if !surface_exists(brand_surface) || cached_author_brand != lvl.author_brand {
 		brand_surface = surface_create(8, 8)
 		surface_set_target(brand_surface)
 		draw_clear_alpha(c_black, 1)
@@ -140,6 +140,7 @@ if draw_brand {
 		ev_draw_brand(lvl.author_brand, 1, 1)
 		
 		surface_reset_target()
+		cached_author_brand = lvl.author_brand
 	}	
 	var size = 1;
 	draw_surface_ext(brand_surface, x + sprite_width - 4 * size,

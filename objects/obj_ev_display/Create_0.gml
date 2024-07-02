@@ -251,6 +251,7 @@ draw_set_font(global.ev_font)
 game_surface = noone
 name_surface = noone
 brand_surface = noone
+cached_author_brand = lvl.author_brand;
 
 highlighted = false
 

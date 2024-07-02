@@ -25,10 +25,8 @@ function can_upload_level(level) {
 }
 
 
-error_message = ""
 
-are_you_sure_upload_text = "Are you sure you want to\n upload this" + ((int64(irandom($7fffffffffffffff)) == 40) ? " stupid " : " ") + "level?"
-are_you_sure_delete_text = "Are you sure you want to\n delete this level? It will\nnot be deleted locally."
+are_you_sure_upload_text = "This" + ((irandom($7fffffffffffffff) == 40) ? " stupid " : " ") + "level is not uploaded.\nDo you want to upload it?"
 doing_the_thing_text = "Doing the thing..."
 verifying_text = "Verifying upload..."
 done_text = "Done!\nThe thing you tried doing\nwas successful!"

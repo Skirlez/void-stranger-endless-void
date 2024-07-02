@@ -1,15 +1,15 @@
 if ds_map_find_value(async_load, "id") == post_level_id
 {
 	var http_status = ds_map_find_value(async_load, "http_status");
-    if ds_map_find_value(async_load, "status") == 0
-    {
+	if ds_map_find_value(async_load, "status") == 0
+	{
 		if (http_status == 201) {
-	        var key = ds_map_find_value(async_load, "result");
+			var key = ds_map_find_value(async_load, "result");
 			on_finish_upload(key);
 		}
 		else
 			on_fail(ds_map_find_value(async_load, "result"))
-    }
+	}
 	else
 		on_fail("No idea tbh")
 }
