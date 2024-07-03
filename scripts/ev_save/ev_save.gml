@@ -5,6 +5,7 @@ function ev_save(){
 	ini_write_string("options", "brand", global.author.brand)
 	ini_write_string("options", "server_ip", global.server_ip)
 	ini_write_string("options", "stranger", global.stranger)
+	
 	ini_write_string("options", "memory", global.memory_style)
 	ini_write_string("options", "wings", global.wings_style)
 	ini_write_string("options", "blade", global.blade_style)
@@ -31,5 +32,15 @@ function ev_update_vars() {
 	if (global.compiled_for_merge)
 		asset_get_index("scr_menueyecatch")(0)
 
+}
+
+function save_level(lvl)
+{
+	var file = file_text_open_write(global.levels_directory + lvl.save_name + "." + "vsl")
+	if (file == -1)
+		return;
+	var str = export_level(lvl)
+	file_text_write_string(file, str)
+	file_text_close(file)
 }
 

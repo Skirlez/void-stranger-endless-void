@@ -142,7 +142,7 @@ function handle_click(tile_i, tile_j) {
 					audio_play_sound(pick_sound, 10, false, 1.2)
 				
 				global.selected_thing = thing_placeable
-				switch_held_tile(final_state)
+				switch_held_tile(new tile_with_state(final_state.tile, struct_copy(final_state.properties)))
 				global.mouse_held = false;
 				
 

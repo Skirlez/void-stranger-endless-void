@@ -1,11 +1,10 @@
-if (global.tile_mode) {
-	var tile = global.editor_instance.tiles_list[tile_ind]
+
+var tile = global.editor_instance.current_list[object_ind]
+if (tile == global.editor_instance.object_player)
+	sprite_index = ev_get_stranger_down_sprite(global.stranger)
+else
 	sprite_index = tile.spr_ind
-}
-else {
-	var object = global.editor_instance.objects_list[object_ind]
-	sprite_index = object.spr_ind
-}
+
 
 if selected {
 	var alpha = (dsin(global.editor_time * 4) / 5) + 0.75

@@ -107,6 +107,6 @@ else if (room == global.startup_room) {
 	draw_set_font(global.ev_font)
 	draw_set_halign(fa_center)
 	draw_set_valign(fa_middle)
-	draw_text_transformed(112, 72, "Communicating with server...", 1, 1, 0)
+	draw_text_transformed(112, 72, $"Communicating with server...\nTasks left: {startup_actions_count}", 1, 1, 0)
 }
 

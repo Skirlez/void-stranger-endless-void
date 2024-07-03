@@ -1,10 +1,10 @@
 {
   "FolderOrderSettings": [
+    {"name":"Unused","order":49,"path":"folders/Objects/Unused.yy",},
     {"name":"Bee","order":3,"path":"folders/Sprites/Bee.yy",},
     {"name":"Items","order":43,"path":"folders/Sprites/Items.yy",},
     {"name":"TilesetSprites","order":1,"path":"folders/Sprites/TilesetSprites.yy",},
     {"name":"Void Stranger Sprites","order":2,"path":"folders/Sprites/Void Stranger Sprites.yy",},
-    {"name":"Unused","order":49,"path":"folders/Objects/Unused.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"obj_ev_executing_button","order":5,"path":"objects/obj_ev_executing_button/obj_ev_executing_button.yy",},

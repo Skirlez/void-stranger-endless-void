@@ -4,7 +4,7 @@
 
 randomize()
 global.latest_lvl_format = 2;
-global.ev_version = "0.89";
+global.ev_version = "0.90";
 
 global.compiled_for_merge = (asset_get_index("obj_game") != -1)
 
@@ -1465,3 +1465,4 @@ global.death_count = 0
 
 global.turn_frames = 0
 global.death_frames = -1
+

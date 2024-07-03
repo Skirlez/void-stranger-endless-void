@@ -27,6 +27,7 @@ function can_upload_level(level) {
 
 
 are_you_sure_upload_text = "This" + ((irandom($7fffffffffffffff) == 40) ? " stupid " : " ") + "level is not uploaded.\nDo you want to upload it?"
+are_you_sure_delete_text = "Are you sure you want to\n delete this level? It will\nnot be deleted locally."
 doing_the_thing_text = "Doing the thing..."
 verifying_text = "Verifying upload..."
 done_text = "Done!\nThe thing you tried doing\nwas successful!"
