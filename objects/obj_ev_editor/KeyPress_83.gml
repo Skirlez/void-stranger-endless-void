@@ -1,5 +1,5 @@
-/// @description export level as a gameboy save
-// You can write your code in this editor
+if room != global.editor_room
+	exit
 
 if global.mouse_layer != 0
 	exit
@@ -25,10 +25,6 @@ var entities = [];
 // why do x and y not work as vars here?
 for(var i=0; i < 14; i++) {
 	for(var j=0; j < 9; j++) {
-		
-		
-		
-		
 		var tile = global.level.tiles[j][i].tile.tile_id; 
 		// wtf is noone?
 		var entity = global.level.objects[j][i] == noone ? "em" : global.level.objects[j][i].tile.tile_id;

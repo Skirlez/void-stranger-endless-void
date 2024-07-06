@@ -1,6 +1,8 @@
 global.mouse_layer = 0
 global.mouse_held = false;
 global.mouse_pressed = false;
+
+
 if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level_select") {
 	history = []
 	var music = global.menu_music;

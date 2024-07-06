@@ -68,7 +68,7 @@ function ev_draw_cube_multisprite(sprites, subimgs, draw_x, draw_y, size, spin_h
 
 function ev_draw_face(draw_x, draw_y, size, face) {
 	draw_sprite_pos(face.sprite, face.subimg, draw_x + (face.p2[0] * size), draw_y + (face.p2[1] * size), draw_x + (face.p1[0] * size), draw_y + (face.p1[1] * size),
-			draw_x + (face.p3[0] * size), draw_y + (face.p3[1] * size), draw_x + (face.p4[0] * size), draw_y + (face.p4[1] * size), 1)
+			draw_x + (face.p3[0] * size), draw_y + (face.p3[1] * size), draw_x + (face.p4[0] * size), draw_y + (face.p4[1] * size), draw_get_alpha())
 }
 
 function ev_cube_face(p1, p2, p3, p4, sprite, subimg) constructor {

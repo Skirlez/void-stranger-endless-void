@@ -7,8 +7,6 @@ if (string_pos("rm_ev_", room_get_name(room)) != 0 && room != rm_ev_level) {
 			surface_resize(surface_final, 224 * ratio, 144 * ratio)
     }
 	global.clear_black = 2
-	if (room == rm_ev_editor)
-		global.is_in_editor = true;
 }
 else {
     if surface_get_width(application_surface) != 224 {
@@ -17,6 +15,4 @@ else {
 			surface_resize(surface_final, 224, 144)
 	}
 	global.clear_black = 2
-	if (room != rm_ev_editor)
-		global.is_in_editor = false;
 }

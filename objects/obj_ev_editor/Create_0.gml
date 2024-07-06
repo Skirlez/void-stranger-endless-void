@@ -16,9 +16,10 @@ if (!global.compiled_for_merge) {
 	global.debug = false;
 	global.pause = false;
 	global.music = -4;
+	
 }
 
-window_set_fullscreen(true)
+
 
 #macro level_extension "vsl"
 

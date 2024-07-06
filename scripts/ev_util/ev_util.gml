@@ -124,3 +124,12 @@ function real_safe(value, failsafe = 0) {
 function num_to_string(num, length) {
 	return string_replace(string_format(num, length, 0), " ", 0)	
 }
+
+function ds_list_to_array(list) {
+	var size = ds_list_size(list);
+	var arr = array_create(size)
+	for (var i = 0; i < size; i++) {
+		arr[i] = list[| i];	
+	}
+	return arr;
+}

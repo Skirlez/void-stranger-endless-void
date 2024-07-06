@@ -95,7 +95,7 @@ if (room == asset_get_index("rm_ev_menu")) {
 	draw_set_font(global.ev_font)
 	draw_set_halign(fa_center)
 	draw_set_valign(fa_middle)
-	draw_text_transformed(112, 72 + 50, "Packs coming whenever..", 0.5, 0.5, 0)
+	
 	
 	if global.there_is_a_newer_version
 		draw_text_transformed(112, 72 + 64, "THERE IS A NEWER VERSION!!!" + "\nYou are on " + global.ev_version + ", latest is " + global.newest_version, 0.5, 0.5, 0)

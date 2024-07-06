@@ -9,6 +9,9 @@ function ev_save(){
 	ini_write_string("options", "memory", global.memory_style)
 	ini_write_string("options", "wings", global.wings_style)
 	ini_write_string("options", "blade", global.blade_style)
+	
+	ini_write_string("stats", "grube", global.highest_grube_stack)
+	
 	ini_close()
 }
 function ev_load() {
@@ -20,6 +23,8 @@ function ev_load() {
 	global.memory_style = ini_read_real("options", "memory", 0)
 	global.wings_style = ini_read_real("options", "wings", 0)
 	global.blade_style = ini_read_real("options", "blade", 0)
+	
+	global.highest_grube_stack = ini_read_real("stats", "grube", 0)
 	ini_close()
 	ev_update_vars()
 }
