@@ -15,7 +15,7 @@ else {
 	scroll_accel = 0
 }	
 
-ypos = clamp(ypos, -5700, 0)
+ypos = clamp(ypos, 0, 5552)
 
 camera_set_view_pos(view_camera[0], camera_get_view_x(view_camera[0]), ypos)
 grube_button.y = ypos + 30

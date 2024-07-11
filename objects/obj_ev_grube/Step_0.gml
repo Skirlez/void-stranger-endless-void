@@ -1,3 +1,4 @@
+
 if death_timer != -1 {
 	death_timer++
 	

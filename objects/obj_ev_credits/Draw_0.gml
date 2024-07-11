@@ -15,7 +15,7 @@ if grube_mode {
 	draw_set_color(c_black)
 	ev_draw_rectangle(20, camera_y + 5, 25, camera_y + 30, false)
 	draw_set_color(c_white)
-	var elevation = camera_y / -5700
+	var elevation = 1 - camera_y / 5552
 	
 	var slider_height = 5;
 	var slider_y = lerp(30 - slider_height, 5, elevation)
@@ -72,7 +72,7 @@ Thursday/Saturday - eebrozgi - Stealie Feelies (slowed down)
 
 
 
-var draw_y = 5
+var draw_y = 5552
 
 var size = 0.35
 draw_set_color(c_black)

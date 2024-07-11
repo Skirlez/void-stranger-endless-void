@@ -2,8 +2,8 @@ if !surface_exists(erasing_surface)
 	erasing_surface = surface_create(224, 144)
 surface_set_target(erasing_surface)
 draw_clear_alpha(c_black, 0)
-var surface_x = x - room_width / 2
-var surface_y = y - room_height / 2
+var surface_x = x - 224 / 2
+var surface_y = y - 144 / 2
 
 var t = start_time - time
 draw_set_color(c_white)

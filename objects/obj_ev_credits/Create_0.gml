@@ -1,7 +1,10 @@
 event_inherited()
 
+
+var camera_y = camera_get_view_y(view_camera[0]);
+
 grube_mode = false
-grube_button = instance_create_layer(200, 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
 	txt : "Grube",
 	base_scale_x : 1.2,
 	base_scale_y : 0.9,
@@ -33,9 +36,9 @@ grube_button = instance_create_layer(200, 30, "WindowElements", asset_get_index(
 			instance_create_layer(mouse_x, mouse_y, "Plucker", asset_get_index("obj_ev_plucker"))
 			
 			with (window) {
-				var t = instance_create_layer(200, 72, "Textbox", asset_get_index("obj_ev_textbox"), {
+				var t = instance_create_layer(200, camera_get_view_y(view_camera[0]) + 72, "Textbox", asset_get_index("obj_ev_textbox"), {
 					opened_x : 112,
-					opened_y : 72,
+					opened_y : 72 + camera_get_view_y(view_camera[0]),
 					txt : "Stack the grubes!\nLeft click to grab, right click to destroy. " 
 						+ "You can scroll with the scroll wheel or the up/down keys."
 						+ "\nCAREFUL: Grubes under too much pressure may be destroyed...\n"
