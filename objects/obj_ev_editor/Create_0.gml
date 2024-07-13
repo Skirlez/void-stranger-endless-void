@@ -30,6 +30,7 @@ global.author = { username : "Anonymous", brand : int64(irandom_range(0, $FFFFFF
 global.stranger = 0;
 
 if !file_exists(global.save_directory + "ev_options.ini") {
+	ev_load()
 	ev_save();
 	ev_update_vars()
 }
