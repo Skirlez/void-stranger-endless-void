@@ -9,6 +9,60 @@ if global.mouse_layer != 0
 // for reasons unknown to the gods, the working directory means nothing :)
 // actually written to \AppData\Local\void_stranger_endless_void
 
+enum EntityType {
+	Entity,
+
+	Player,
+
+	Leech,
+	Maggot,
+	Eye,
+	Bull,
+	Chester,
+
+	Mimic,
+	WhiteMimic,
+	GrayMimic,
+	BlackMimic,
+
+	Diamond,
+	Shadow,
+
+	Boulder,
+	Chest,
+
+	AddStatue,
+	EusStatue,
+	BeeStatue,
+	MonStatue,
+	TanStatue,
+	GorStatue,
+	LevStatue,
+	CifStatue,
+	JukeBox,
+
+	Interactable,
+
+	// i am not sure if this is the best way to do this, but I am going with it
+	EmptyChest
+};
+
+
+enum TileType {
+	Pit,
+	Floor,
+	Glass,
+	Bomb,
+	Death,
+	Copy,
+	Exit,
+	Switch,
+	WordTile,
+	RodTile,
+	LocustTile,
+	SpriteTile,
+	HalfBomb,
+};
 
 show_debug_message("writing gba save");
 
@@ -37,30 +91,60 @@ for(var i=0; i < 14; i++) {
 			
 			case "ur":
 			case "pt":
-				output = 0;
+				output = TileType.Pit;
 				break;
+			case "wh":
 			case "fl":
-				 output = 1;
-				 break;
+				output = TileType.Floor;
+				break;
 			case "gl":
-				output = 2;
+				output = TileType.Glass;
 				break;
 			case "mn":
-				output = 3;
+				output = TileType.Bomb;
 				break;
 			case "fs":
-				output = 7;
+				output = TileType.Switch;
 				break;
 			case "cr":
-				output = 5;
+				output = TileType.Copy;
 				break;
 			case "ex":
-				output = 6;
+				output = TileType.Exit;
 				break;
 			case "df":
-				output = 4;
+				output = TileType.Death;
+				break;
+			case "xp":
+				output = TileType.HalfBomb
 				break;
 			
+			// -----
+			
+			case "st":
+				// this is for a chest. oh no.
+				output = TileType.Floor; // put a floor under it 
+				array_push(entities, [EntityType.Chest, i, j]);
+				break;
+			
+			// -----
+			
+			// ill care some other time
+			case "mw":
+			case "dw":
+			case "ew":
+			case "de":
+			case "wa":
+			case "ed":
+				collisionTiles[j * 14 + i] = 3;
+				break;
+				
+			case "bl":
+				output = TileType.Floor;
+				break;
+				
+			
+			// -----
 			
 			default:
 				output = 0;
@@ -75,33 +159,75 @@ for(var i=0; i < 14; i++) {
 			switch(entity) {
 			
 				case "pl":
-					output = 1;
+					output = EntityType.Player;
 					break;
 				case "cl":
-					output = 2;
+					output = EntityType.Leech;
 					break;
 				case "cc":
-					output = 3;
+					output = EntityType.Maggot;
 					break;
 				case "cg":
-					output = 5;
+					output = EntityType.Bull;
 					break;
 				case "cs":
-					output = 6;
+					output = EntityType.Chester;
 					break;
 				case "ch":
-					output = 4;
+					output = EntityType.Eye;
 					break;
 				case "cm":
-					output = 7;
+					output = EntityType.Mimic;
 					break;
-
+				case "co":
+					output = EntityType.Diamond;
+					break;
+					
+				// -----
+					
+				case "eg":
+					output = EntityType.Boulder;
+					break;
+				case "ad":
+					output = EntityType.AddStatue;
+					break;
+				case "cf":
+					output = EntityType.CifStatue;
+					break;
+				case "be":
+					output = EntityType.BeeStatue;
+					break;
+				case "tn":
+					output = EntityType.TanStatue;
+					break;
+				case "lv":
+					output = EntityType.LevStatue;
+					break;
+				case "mo":
+					output = EntityType.MonStatue;
+					break;
+				case "go":
+					output = EntityType.GorStatue;
+					break;
+				case "jb":
+					output = EntityType.JukeBox;
+					break;
+				case "eu":
+					output = EntityType.EusStatue;
+					break;
+				
+				// -----
+				
 				default:
 					show_debug_message("unknown entity type of: " + entity + " at x=" + string(i) + " y=" + string(j));
 					break;
 			}
 			
 			if(output == 0) {
+				continue;
+			}
+			
+			if(output == 1) {
 				array_insert(entities, 0, [output, i, j]);
 			} else {
 				array_push(entities, [output, i, j]);
@@ -200,18 +326,6 @@ function writeShort(short) {
 }
 
 function writeUnsigned(int) {
-	//file_bin_write_byte(global.binf, (int >> 24) & 255);
-	//file_bin_write_byte(global.binf, (int >> 16) & 255);
-	//file_bin_write_byte(global.binf, (int >> 8) & 255);
-	//file_bin_write_byte(global.binf, (int & 255));
-	//array_push(global.outputBuffer, (int >> 24) & 255);
-	//array_push(global.outputBuffer, (int >> 16) & 255);
-	//array_push(global.outputBuffer, (int >> 8) & 255);
-	//array_push(global.outputBuffer, (int & 255));
-	//global.binOffset+=4;
-	
-	// is the gba big or little endian??
-	
 	writeByte( (int >> 24) & 255);
 	writeByte( (int >> 16) & 255);
 	writeByte( (int >> 8) & 255);
@@ -238,10 +352,20 @@ function writeArray(arr) {
 // header 
 writeUnsigned(42);
 
+// burden state 
+var tempBurdenState = 0;
+for(var i=0; i<4; i++) {
+	tempBurdenState |= global.level.burdens[i] << i;
+}
+writeByte(tempBurdenState);
+
 var roomCount = 1;
 
 // room count 
 writeUnsigned(roomCount);
+
+// end header
+var headerLength = 4 + 1 + 4;
 
 // placeholders for room offsets.
 for(var i=0; i<roomCount; i++) {
@@ -271,12 +395,18 @@ for(var i=0; i<roomCount; i++) {
 	
 	var startOffset = global.binOffset;
 	
-	// length of entities
-	writeShort(len(entities));
+	// the +8 is because of the 4 shorts. 
+	// the collision offset is defined as the one after those 4 shorts
+	
 	// offset of details
 	writeShort(startOffset + 8 + len(compressedCollision));
+	
 	// offset of floor 
-	writeShort(startOffset + 8 + len(compressedCollision) + len(compressedDetails));
+	writeShort(startOffset + 8+ len(compressedCollision) + len(compressedDetails));
+	
+	// length of entities
+	writeShort(len(entities));
+	
 	// offset of entities
 	writeShort(startOffset + 8 + len(compressedCollision) + len(compressedDetails) + len(compressedFloor));
 	
@@ -286,20 +416,11 @@ for(var i=0; i<roomCount; i++) {
 	writeArray(compressedDetails);
 	writeArray(compressedFloor);
 	
-	/*
-	for(var j=0; j<floor(len(entities) / 3); j++) {
-		writeUnsigned(entities[j + 0]);
-		writeShort(entities[j + 1]);
-		writeShort(entities[j + 2]);
-	}
-	*/
 	for(var j=0; j<len(entities); j++) {
 		writeByte(entities[j][0])		
 		writeByte(entities[j][1])		
 		writeByte(entities[j][2])		
 	}
-	
-	
 	
 }
 
@@ -307,7 +428,7 @@ for(var i=0; i<roomCount; i++) {
 
 
 // set actual room offsets.
-global.binOffset = 8;
+global.binOffset = headerLength;
 for(var i=0; i<roomCount; i++) {
 	writeShort(roomOffsets[i]);
 }
@@ -322,3 +443,4 @@ for(var i=0; i<len(global.outputBuffer); i++) {
 
 file_bin_close(binf);
 
+show_debug_message("gba save written successfully")
