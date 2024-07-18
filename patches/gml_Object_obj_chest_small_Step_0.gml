@@ -908,6 +908,7 @@ else if (!instance_exists(active_textbox))
         global.luckylocust = 1
     active_textbox = -4
     show_contents = false
+    empty = true
     checking = false
     switch contents
     {
