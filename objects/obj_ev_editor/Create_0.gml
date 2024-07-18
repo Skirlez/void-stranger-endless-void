@@ -496,6 +496,8 @@ function make_wall_tile(name, tid, type) {
 		write : tilemap_tile_write,
 		place : function(tile_state, i, j, wall_tilemaps, edge_tilemaps) {
 			tilemap_set(wall_tilemaps[tile_state.tile.wall_type], tile_state.properties.ind, j, i)
+			if global.editor_instance.tile_state_has_edge(tile_state)
+				instance_create_layer(j * 16 + 8, i * 16 + 8, "Pit", asset_get_index("obj_ev_pit_drawer"))
 		}
 	}
 
@@ -589,8 +591,10 @@ tile_chest.iostruct = {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
 		inst.persistent = false;
 		inst.contents = global.editor_instance.chest_get_contents_num(tile_state.properties.itm)
-		//if (tile_state.properties.itm == chest_items.sword)
-		//	inst.sprite_index = asset_get_index("spr_chest_small")
+		
+		// For the edge to appear if a glass tile is below the chest, 
+		// we create a normal tile. This is consistent with the base game.
+		instance_create_layer(j * 16 + 8, i * 16 + 8, "Floor", asset_get_index(default_tile_obj))
 	}
 }
 

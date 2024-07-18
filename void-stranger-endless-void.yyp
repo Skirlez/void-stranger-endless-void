@@ -263,6 +263,7 @@
     {"id":{"name":"spr_ev_menu_continue_lily","path":"sprites/spr_ev_menu_continue_lily/spr_ev_menu_continue_lily.yy",},},
     {"id":{"name":"spr_ev_window","path":"sprites/spr_ev_window/spr_ev_window.yy",},},
     {"id":{"name":"msc_001","path":"sounds/msc_001/msc_001.yy",},},
+    {"id":{"name":"obj_ev_pit_drawer","path":"objects/obj_ev_pit_drawer/obj_ev_pit_drawer.yy",},},
     {"id":{"name":"spr_ev_star","path":"sprites/spr_ev_star/spr_ev_star.yy",},},
     {"id":{"name":"spr_ev_online_switch","path":"sprites/spr_ev_online_switch/spr_ev_online_switch.yy",},},
     {"id":{"name":"msc_gotstaff","path":"sounds/msc_gotstaff/msc_gotstaff.yy",},},

@@ -1,6 +1,6 @@
 {
   "FolderOrderSettings": [
-    {"name":"Unused","order":50,"path":"folders/Objects/Unused.yy",},
+    {"name":"Unused","order":51,"path":"folders/Objects/Unused.yy",},
     {"name":"Bee","order":3,"path":"folders/Sprites/Bee.yy",},
     {"name":"Items","order":44,"path":"folders/Sprites/Items.yy",},
     {"name":"TilesetSprites","order":1,"path":"folders/Sprites/TilesetSprites.yy",},
@@ -220,6 +220,7 @@
     {"name":"spr_ev_bee_gblink_u","order":11,"path":"sprites/spr_ev_bee_gblink_u/spr_ev_bee_gblink_u.yy",},
     {"name":"spr_ev_menu_continue_lily","order":37,"path":"sprites/spr_ev_menu_continue_lily/spr_ev_menu_continue_lily.yy",},
     {"name":"spr_ev_window","order":10,"path":"sprites/spr_ev_window/spr_ev_window.yy",},
+    {"name":"obj_ev_pit_drawer","order":50,"path":"objects/obj_ev_pit_drawer/obj_ev_pit_drawer.yy",},
     {"name":"spr_ev_star","order":16,"path":"sprites/spr_ev_star/spr_ev_star.yy",},
     {"name":"spr_ev_online_switch","order":26,"path":"sprites/spr_ev_online_switch/spr_ev_online_switch.yy",},
     {"name":"msc_gotstaff","order":11,"path":"sounds/msc_gotstaff/msc_gotstaff.yy",},
