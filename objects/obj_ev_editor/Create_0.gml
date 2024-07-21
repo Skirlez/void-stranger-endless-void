@@ -329,6 +329,7 @@ function tile_state_has_edge(tile_state) {
 	if tile == tile_pit || tile == tile_glass
 			|| tile == tile_edge || tile == tile_edge_dis
 		return false;
+		
 	if tile == tile_mon_wall || tile == tile_ex_wall {
 		if (tile_state.properties.ind == 9 || tile_state.properties.ind == 11 || tile_state.properties.ind == 10)
 			return false;
@@ -497,7 +498,7 @@ function make_wall_tile(name, tid, type) {
 		place : function(tile_state, i, j, wall_tilemaps, edge_tilemaps) {
 			tilemap_set(wall_tilemaps[tile_state.tile.wall_type], tile_state.properties.ind, j, i)
 			if global.editor_instance.tile_state_has_edge(tile_state)
-				instance_create_layer(j * 16 + 8, i * 16 + 8, "Pit", asset_get_index("obj_ev_pit_drawer"))
+				instance_create_layer(j * 16 + 8, i * 16 + 8, "More_Pit", asset_get_index("obj_ev_pit_drawer"))
 		}
 	}
 
