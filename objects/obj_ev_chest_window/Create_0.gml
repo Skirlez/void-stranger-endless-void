@@ -14,6 +14,7 @@ function get_item_name(item_id) {
 		case chest_items.wings: return "Wings";
 		case chest_items.sword: return "Sword";
 		case chest_items.opened: return "Opened";
+		case chest_items.swapper: return "Idol";		
 		default: return "IDK";
 	}
 }

@@ -18,5 +18,6 @@ switch burden_ind
 		break
 }
 stackrod_sprite = asset_get_index("spr_voidrod_icon2")
+swapper_sprite = asset_get_index("spr_ev_swapper")
 
 snd = asset_get_index("snd_ev_togglebox_click")

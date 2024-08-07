@@ -33,6 +33,7 @@ draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
 
 var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
 draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
+if (lvl.burdens[burden_swapper]) draw_sprite(asset_get_index("spr_ev_swapper"), 0, 16 * 6 + 16, 8 * 16) //I'm bad at math.
 for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
 	if lvl.burdens[i] {
 		switch i {
@@ -47,10 +48,10 @@ for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
 			burdens_sprite = ev_get_burden_sprite(global.memory_style)
 			break
 		default:
-			burdens_sprite = asset_get_index("spr_items")
+			burdens_sprite = asset_get_index("spr_ev_items_lev") //Avoid displaying the diamond thing
 			break
 		}
-		draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)	
+		if (i != 4) draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)		
 	}
 }
 
