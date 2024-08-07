@@ -66,6 +66,7 @@ global.mouse_held = false;
 #macro burden_wings 1
 #macro burden_sword 2 
 #macro burden_stackrod 3
+#macro burden_swapper 4
 
 global.editor_room = asset_get_index("rm_ev_editor");
 global.level_room = asset_get_index("rm_ev_level");
@@ -539,6 +540,7 @@ enum chest_items {
 	sword,
 	empty,
 	opened,
+	swapper,
 	size // cool trick!
 }
 
@@ -574,6 +576,7 @@ function chest_get_contents_num(item_id) {
 		case chest_items.sword: return 2;
 		case chest_items.empty: return 0;
 		case chest_items.opened: return 5;
+		case chest_items.swapper: return 495;		
 		default: return 1;
 	}
 }

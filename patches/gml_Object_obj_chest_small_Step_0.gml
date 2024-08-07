@@ -646,6 +646,14 @@ if (empty == false)
             speakers = [id, id, id]
         }
     }
+	else if (contents == 495)
+	{
+        text[0] = "[...!?]"
+        text[1] = "[...]"
+        text[2] = "[You shouldn't have this]"
+        moods = [neutral, neutral, neutral]
+        speakers = [id, id, id]	
+	}
 }
 if (empty == true)
 {
@@ -855,6 +863,8 @@ if (active_textbox == noone)
         instance_destroy(active_textbox)
     else if (empty == false && contents == 6 && global.luckylocust != 0 && locust_overflow == false)
         instance_destroy(active_textbox)
+    else if (empty == false && contents == 495 && global.swapper_get == true)
+        instance_destroy(active_textbox)
 }
 else if (!instance_exists(active_textbox))
 {
@@ -921,6 +931,9 @@ else if (!instance_exists(active_textbox))
         case 4:
             global.memory_get = true
             break
+        case 495:
+            global.swapper_get = true
+            break			
     }
 
 }

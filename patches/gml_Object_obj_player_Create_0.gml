@@ -7,9 +7,9 @@ spr_wings = 2595> { /* do nothing*/ }
 // TARGET: STRING
 spr_blade = 1700> { /* do nothing*/ }
 
-// TARGET: LINENUMBER
-// 108
-else if (global.stranger == 5) {
+// TARGET: LINENUMBER_REPLACE
+// 109
+} else if (global.stranger == 5) {
     spr_m_right = spr_prin_wed_r
     spr_m_up = spr_prin_wed_u
     spr_m_left = spr_prin_wed_l
@@ -98,3 +98,5 @@ switch global.blade_style
         spr_blade = spr_void_sword
         break
 }
+swap_stage = 0
+swapper_flash_counter = 0

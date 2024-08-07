@@ -1,6 +1,7 @@
 // Inherit the parent event
 event_inherited();
 
+draw_sprite(asset_get_index("spr_ev_swapper"),0, 112 - 70, 72 + 22)
 draw_sprite_part_ext(ev_get_burden_sprite(global.memory_style), 0, 16, 0, 16, 16, 112 - 54, 72 + 22, 1, 1, image_blend, image_alpha)
 draw_sprite_part_ext(ev_get_burden_sprite(global.wings_style), 0, 32, 0, 16, 16, 112 - 38, 72 + 22, 1, 1, image_blend, image_alpha)
 if global.blade_style == 2 

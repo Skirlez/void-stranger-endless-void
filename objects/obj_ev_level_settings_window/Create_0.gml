@@ -6,7 +6,7 @@ function commit() {
 		global.level.name = name_textbox.txt
 		global.level.description = description_textbox.txt
 		global.level.music = global.music_names[music_select.index]
-		for (var i = 0; i < 4; i++) {
+		for (var i = 0; i < 5; i++) {
 			global.level.burdens[i] = burdens[i].image_index
 		}
 	}
@@ -67,8 +67,8 @@ add_child(save_and_quit_button)
 add_child(name_textbox)
 add_child(description_textbox)
 	
-burdens = array_create(4)
-for (var i = 0; i < 4; i++) {
+burdens = array_create(5)
+for (var i = 0; i < 5; i++) {
 	burdens[i] = instance_create_layer(112 - 72 + i * 16, 72 + 30, "WindowElements", asset_get_index("obj_ev_burden_toggle"), 
 	{
 		burden_ind : i,

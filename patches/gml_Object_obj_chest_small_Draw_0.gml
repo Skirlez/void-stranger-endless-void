@@ -54,4 +54,6 @@ else if (contents == 9)
 }
 else if (contents == 10)
     draw_sprite_part(ev_get_burden_sprite(global.blade_style), 0, 48, 0, 16, 16, (x - 8), (y - 8 + cont_y))
+else if (contents == 495)
+    draw_sprite(spr_ev_swapper, 0, (x - 8), (y - 8 + cont_y))
 

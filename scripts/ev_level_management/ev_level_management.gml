@@ -11,7 +11,7 @@ function level_struct() constructor {
 	name = ""
 	description = ""
 	music = global.music_names[1]
-	burdens = [false, false, false, false]
+	burdens = [false, false, false, false, false]
 	author = "Anonymous"
 	author_brand = int64(0)
 	tiles = array_create(9);
@@ -69,7 +69,7 @@ function export_level_arr(level) {
 	var music_string = base64_encode(level.music)	
 	var author_string = base64_encode(level.author)
 	var author_brand_string = string(level.author_brand)
-	var burdens_string = string(level.burdens[0] + level.burdens[1] * 2 + level.burdens[2] * 4 + level.burdens[3] * 8);
+	var burdens_string = string(level.burdens[0] + level.burdens[1] * 2 + level.burdens[2] * 4 + level.burdens[3] * 8 + level.burdens[4] * 16);
 	var upload_date_string = "";
 	var last_edit_date_string = "";
 
@@ -208,7 +208,7 @@ function import_level(level_string) {
 	
 	var burdens = int64(strings[8]);
 
-	for (var i = 0; i < 4; i++)
+	for (var i = 0; i < 5; i++)
 		level.burdens[i] = (burdens & (1 << i) != 0)
 
 	var tile_string = strings[9]

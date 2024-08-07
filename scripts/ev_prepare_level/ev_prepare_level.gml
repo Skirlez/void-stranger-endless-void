@@ -4,9 +4,11 @@ function ev_prepare_level(level) {
 	global.memory_backup = 0
 	global.wings_backup = 0
 	global.blade_backup = 0	
+    global.swapper_backup = 0	
 	ds_grid_set(inv.ds_equipment, 0, 0, 0)
 	ds_grid_set(inv.ds_equipment, 0, 1, 0)
 	ds_grid_set(inv.ds_equipment, 0, 2, 0)
+    ds_grid_set(inv.ds_equipment, 0, 4, 0)	
 	ds_grid_set(inv.ds_player_info, 10, 2, 4)
 
 
@@ -18,6 +20,8 @@ function ev_prepare_level(level) {
 		ds_grid_set(inv.ds_equipment, 0, 2, 3)
 	if (global.level.burdens[3])
 		ds_grid_set(inv.ds_player_info, 10, 2, 999)
+	if (global.level.burdens[4])
+		ds_grid_set(inv.ds_equipment, 0, 4, 1)		
 
 
 	ds_grid_set(inv.ds_player_info, 0, 2, "V???")
