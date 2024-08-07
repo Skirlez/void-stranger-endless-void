@@ -98,6 +98,15 @@ foreach (UndertaleScript script in endlessVoidData.Scripts)
 
 
 foreach (UndertaleGameObject gameObject in endlessVoidData.GameObjects) {
+	if (!gameObject.Name.Content.StartsWith("obj_ev_"))
+		continue;
+	UndertaleGameObject parent = gameObject.ParentId;
+	if (parent != null) {
+		UndertaleGameObject parentFromVS = Data.GameObjects.ByName(parent.Name.Content);
+		if (parentFromVS != null) {
+			gameObject.ParentId = parentFromVS;
+		}
+	}
     Data.GameObjects.Add(gameObject);
 }
 
