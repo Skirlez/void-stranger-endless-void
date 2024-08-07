@@ -1,0 +1,48 @@
+if (array_length(elements) == 0) {
+	instance_destroy(id)
+	ev_notify("Selector created without elements!")
+}
+
+enum selector_states {
+	displaying,
+	selecting,
+	animating
+}
+
+state = selector_states.displaying;
+animation_time = 0;
+
+animation_length = 45;
+animation_elements_progress = 0;
+
+function get_selected_element() {
+	return elements[selected_element];	
+}
+function get_selected_index() {
+	return selected_element;	
+}
+
+function start_return_sequence(index) {
+	var instance = element_objects[index]
+	array_delete(element_objects, index, 1)
+	array_push(element_objects, instance)
+	selected_element = index;
+	state = selector_states.animating;
+}
+
+bounce_text = ""
+bounces = 0;
+function return_bounce(instance) {
+	var pitch = (bounces == array_length(element_objects) - 1) ? 1.6 : 1.2
+	var gain = (bounces == array_length(element_objects) - 1) ? 1 : 0.8
+	audio_play_sound(asset_get_index("snd_ev_textbox_click"), 10, false, gain, 0, pitch)
+	vsp = 3
+	y_bounce = 0;
+	bounce_text = instance.txt
+	bounces++;
+}
+
+vsp = 0
+y_bounce = 0;
+
+element_objects = [];

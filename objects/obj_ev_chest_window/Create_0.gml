@@ -1,10 +1,12 @@
 event_inherited()
 
-item_textbox = instance_create_layer(112, 72 - 10, "WindowElements", asset_get_index("obj_ev_textbox"), {
-	base_scale_x : 4,
-	allow_edit : false
-})
-add_child(item_textbox)
+selector = instance_create_layer(112, 72, "WindowElements", asset_get_index("obj_ev_selector"), {
+	elements : ["Locust", "Memory", "Wings", "Sword", "Empty", "Opened", "Idol"],
+	
+	selected_element : chest_properties.itm,
+	max_radius : 60
+});
+add_child(selector)
 
 function get_item_name(item_id) {
 	switch (item_id) {
@@ -18,6 +20,15 @@ function get_item_name(item_id) {
 		default: return "IDK";
 	}
 }
+/*
+
+item_textbox = instance_create_layer(112, 72 - 10, "WindowElements", asset_get_index("obj_ev_textbox"), {
+	base_scale_x : 4,
+	allow_edit : false
+})
+add_child(item_textbox)
+
+
 item_textbox.txt = get_item_name(chest_properties.itm)
 
 

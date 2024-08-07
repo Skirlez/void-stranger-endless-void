@@ -16,6 +16,8 @@ function ev_mouse_right_pressed() {
 function ev_mouse_released() {
 	return mouse_check_button_released(mb_left)
 }
+
+// This could be cached...
 function ev_is_mouse_on_me() {
 	if layer_num != global.mouse_layer
 		return false
