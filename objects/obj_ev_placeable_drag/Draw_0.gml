@@ -1,5 +1,11 @@
 
-var tile = global.editor_instance.current_list[object_ind]
+var tile;
+if(global.tile_mode) {
+	tile = global.editor_instance.current_list[tile_ind]
+} else {
+	tile = global.editor_instance.current_list[object_ind]
+}
+
 if (tile == global.editor_instance.object_player)
 	sprite_index = ev_get_stranger_down_sprite(global.stranger)
 else
