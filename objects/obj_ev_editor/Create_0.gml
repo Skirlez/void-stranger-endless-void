@@ -7,8 +7,6 @@ global.latest_lvl_format = 2;
 global.ev_version = "0.90";
 
 global.compiled_for_merge = (asset_get_index("obj_game") != -1)
-
-
 if (!global.compiled_for_merge) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
@@ -18,8 +16,6 @@ if (!global.compiled_for_merge) {
 	global.music = -4;
 	
 }
-
-
 
 #macro level_extension "vsl"
 
@@ -37,6 +33,23 @@ if !file_exists(global.save_directory + "ev_options.ini") {
 else
 	ev_load()
 
+
+// Since there is no destructor for structs, we need to create a map
+// to track structs that use maps so we can destroy them when they're garbage collected.
+// This function is ran every second in alarm 0.
+global.struct_map_cleaner = ds_map_create()
+function clean_struct_maps() {
+	var keys = ds_map_keys_to_array(global.struct_map_cleaner)
+	for (var i = 0; i < array_length(keys); i++) {
+		if weak_ref_alive(keys[i])
+			continue;
+		var map = ds_map_find_value(global.struct_map_cleaner, keys[i])
+		ds_map_destroy(map);
+	}
+}
+alarm[0] = 60;
+
+
 window_set_cursor(cr_default)
 
 // global.level is used for the level currently being edited / played.
@@ -44,12 +57,21 @@ window_set_cursor(cr_default)
 global.level = noone;
 global.level_sha = ""
 
+global.pack = noone;
+
 global.editor_time = int64(0)
 global.level_time = int64(0)
 
 global.selected_thing_time = 0
+
 global.mouse_pressed = false;
 global.mouse_held = false;
+global.mouse_released = false;
+
+global.mouse_right_pressed = false;
+global.mouse_right_held = false;
+global.mouse_right_released = false;
+
 #macro thing_nothing -1
 #macro thing_plucker 0
 #macro thing_eraser 1
@@ -1194,7 +1216,7 @@ global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_
 	"msc_gorcircle_lo", "msc_levcircle", "msc_escapewithfriend", "msc_cifcircle", "msc_006", "msc_beesong", "msc_themeofcif",
 	"msc_monstrail", "msc_endless", "msc_stg_extraboss", "msc_rytmi2", "msc_test2"]
 
-function reset_everything() {
+function reset_global_level() {
 	global.tile_mode = false
 	global.mouse_layer = 0
 	global.selected_thing = -1 
@@ -1208,9 +1230,13 @@ function reset_everything() {
 	current_placeables = global.level.objects
 	current_empty_tile = object_empty
 }
+reset_global_level()
 
-reset_everything()
 
+function reset_global_pack() {
+	global.pack = new pack_struct()
+}
+reset_global_level()
 
 
 function switch_tile_mode(new_tile_mode) {
@@ -1459,7 +1485,7 @@ function save_beaten_levels() {
 
 
 global.there_is_a_newer_version = false;
-global.newest_version = "0.875";
+global.newest_version = "0.90";
 
 global.startup_room = asset_get_index("rm_ev_startup")
 global.playtesting = false;
@@ -1476,3 +1502,4 @@ global.death_count = 0
 global.turn_frames = 0
 global.death_frames = -1
 
+global.instance_touching_mouse = noone;

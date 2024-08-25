@@ -11,29 +11,18 @@ function ev_mouse_right_held() {
 function ev_mouse_right_pressed() {
 	return global.mouse_right_pressed
 }
-
-
 function ev_mouse_released() {
-	return mouse_check_button_released(mb_left)
+	return global.mouse_released
+}
+function ev_mouse_right_released() {
+	return global.mouse_right_released
 }
 
-// This could be cached...
+
 function ev_is_mouse_on_me() {
 	if layer_num != global.mouse_layer
 		return false
-	var list = ds_list_create()
-	var length = instance_position_list(mouse_x, mouse_y, all, list, false)
-	var min_depth = infinity
-	var min_inst = noone
-	for (var i = 0; i < length; i++) {
-		var inst = list[| i]
-		if (inst.depth < min_depth) {
-			min_inst = inst
-			min_depth = inst.depth	
-		}
-	}
-	ds_list_destroy(list)
-	return min_inst == id
+	return global.instance_touching_mouse == id
 }
 
 function ev_is_action_pressed() {

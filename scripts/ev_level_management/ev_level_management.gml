@@ -218,7 +218,6 @@ function import_level(level_string) {
 	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit, version)
 	import_process_tiles(object_string, level, 8,  global.editor_instance.object_empty, version)
 	
-	
 	return level
 }
 function import_process_tiles(tile_string, level, height, failsafe_tile, version) {

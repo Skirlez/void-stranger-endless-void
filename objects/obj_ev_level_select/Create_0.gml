@@ -7,24 +7,62 @@ function delete_level(save_name) {
 	file_delete(global.levels_directory + save_name + "." + level_extension)	
 }
 
-instance_create_layer(200, 16, "Instances", asset_get_index("obj_ev_main_menu_button"), {
-	base_scale_x : 1,
-	base_scale_y : 0.7,
-	txt : "Back",
-	room_name : "rm_ev_menu",
-});
+if !pack_selector {
+	var back_button = instance_create_layer(200, 16, buttons_layer, asset_get_index("obj_ev_main_menu_button"), {
+		base_scale_x : 1,
+		base_scale_y : 0.7,
+		txt : "Back",
+		room_name : "rm_ev_menu",
+	});
 
-new_button = instance_create_layer(24, 16, "Instances", asset_get_index("obj_ev_executing_button"), {
-	base_scale_x : 0.9,
-	base_scale_y : 0.8,
-	txt : "NEW",
-	func : function () {
-		global.editor_instance.reset_everything();
-		ev_claim_level(global.level)
-		room_goto(asset_get_index("rm_ev_editor"))	
+	var new_button = instance_create_layer(24, 16, buttons_layer, asset_get_index("obj_ev_executing_button"), {
+		base_scale_x : 0.9,
+		base_scale_y : 0.8,
+		txt : "NEW",
+		func : function () {
+			global.editor_instance.reset_global_level();
+			ev_claim_level(global.level)
+			room_goto(asset_get_index("rm_ev_editor"))	
+		}
+	});
+	
+
+	var online_switch = instance_create_layer(112 + 29, 12, buttons_layer, asset_get_index("obj_ev_online_switch"), {
+	level_select_instance : id,	
+	});
+	var refresh_button = instance_create_layer(112 + 56, 12, buttons_layer, asset_get_index("obj_ev_refresh"), {
+		level_select_instance : id,	
+	});
+	add_child(back_button)
+	add_child(new_button)
+	add_child(online_switch)
+	add_child(refresh_button)
+}
+
+function level_clicked(display_inst) {
+	if !pack_selector {
+		with (display_inst) {
+			global.mouse_layer = -1;
+			global.editor_instance.preview_level_transition(display_inst.lvl, display_inst.lvl_sha, display_inst)
+			highlighted = true;	
+		}
 	}
-});
-
+	else {
+		var lvl = display_inst.lvl;
+		instance_destroy(id)
+		
+		instance_create_layer(50, 50, "PackLevels", display_object, {
+			lvl : lvl,
+			layer_num : 0,
+			draw_beaten : false,
+			no_spoiling : true,
+			display_context : display_contexts.pack_editor,
+			image_xscale : 0.2,
+			image_yscale : 0.2
+		})
+	}
+	
+}
 
 function destroy_displays(except = noone) {
 	for (var i = 0; i < array_length(children); i++) {
@@ -80,7 +118,9 @@ function create_displays() {
 		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
 			lvl : lvl_struct,
 			lvl_sha : sha,
+			layer_num : layer_num,
 			draw_beaten : beat_value,
+			display_context : display_contexts.level_select,
 			no_spoiling : true,
 			image_xscale : 0.2,
 			image_yscale : 0.2
@@ -101,13 +141,13 @@ function create_displays() {
 
 
 
-search_box = instance_create_layer(112 - 30, 12, "Instances", asset_get_index("obj_ev_textbox"), 
+search_box = instance_create_layer(112 - 30, 12, buttons_layer, asset_get_index("obj_ev_textbox"), 
 {
 	empty_text : "Search...",
 	allow_newlines : false,
 	automatic_newline : false,
 	char_limit : 50,
-	layer_num : 0,
+	layer_num : layer_num,
 	base_scale_x : 5,
 	change_func : function () {
 		asset_get_index("obj_ev_level_select").create_displays();
@@ -116,14 +156,8 @@ search_box = instance_create_layer(112 - 30, 12, "Instances", asset_get_index("o
 
 search_box.depth--;
 
-var online_switch = instance_create_layer(112 + 29, 12, "Instances", asset_get_index("obj_ev_online_switch"), {
-	level_select_instance : id,	
-});
-var refresh_button = instance_create_layer(112 + 56, 12, "Instances", asset_get_index("obj_ev_refresh"), {
-	level_select_instance : id,	
-});
 
-online_levels = copy_array(global.online_levels)
+
 function switch_mode(new_mode) {
 	global.level_start = 0
 	if (new_mode == 0)
@@ -134,8 +168,7 @@ function switch_mode(new_mode) {
 }
 
 
-add_child(online_switch)
-add_child(refresh_button)
+
 add_child(search_box)
 
 
@@ -168,8 +201,17 @@ function sort_online_levels() {
 
 
 offline_levels = read_offline_levels();
-online_levels = copy_array(global.online_levels)
-sort_online_levels()
+if !pack_selector { 
+	online_levels = copy_array(global.online_levels)
+	sort_online_levels()
+	
+	levels = global.online_mode ? online_levels : offline_levels;
+}
+else {
+	levels = offline_levels
+}
+
+
 
 function on_level_update() {
 	if (global.online_mode) {
@@ -186,6 +228,16 @@ function on_level_update() {
 
 }
 
-levels = global.online_mode ? online_levels : offline_levels;
+
+
+
 
 create_displays()
+
+
+var scroll_up = instance_create_layer(194, 61, buttons_layer, asset_get_index("obj_ev_level_select_scroll"), {
+	image_index : 1,
+})
+var scroll_down = instance_create_layer(194, 95, buttons_layer, asset_get_index("obj_ev_level_select_scroll"));
+add_child(scroll_up)
+add_child(scroll_down)

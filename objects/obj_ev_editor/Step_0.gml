@@ -1,5 +1,21 @@
 if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(!window_get_fullscreen())
+
+
+var list = ds_list_create()
+var length = instance_position_list(mouse_x, mouse_y, all, list, false)
+var min_depth = infinity
+var min_inst = noone
+for (var i = 0; i < length; i++) {
+	var inst = list[| i]
+	if (inst.depth < min_depth) {
+		min_inst = inst
+		min_depth = inst.depth	
+	}
+}
+ds_list_destroy(list)
+global.instance_touching_mouse = min_inst;
+
 if room == asset_get_index("rm_ev_level") {
 	if !global.pause { 
 		if (ev_is_leave_key_pressed()) {
@@ -29,7 +45,7 @@ if global.erasing != -1 {
 		history = [] 
 		var retain_save_name = global.level.save_name
 		ev_stop_music()
-		reset_everything()
+		reset_global_level()
 		ev_claim_level(global.level)
 		global.level.save_name = retain_save_name
 		audio_play_sound(global.goes_sound, 10, false)	
@@ -233,7 +249,10 @@ else
 	global.mouse_pressed = false;
 if mouse_check_button_released(mb_left) {
 	global.mouse_held = false;	
+	global.mouse_released = true;
 }
+else
+	global.mouse_released = false;
 
 if mouse_check_button_pressed(mb_right) {
 	global.mouse_right_pressed = true;
@@ -242,8 +261,11 @@ if mouse_check_button_pressed(mb_right) {
 else
 	global.mouse_right_pressed = false;
 if mouse_check_button_released(mb_right) {
-	global.mouse_right_held = false;	
+	global.mouse_right_held = false;
+	global.mouse_right_released = true;
 }
+else
+	global.mouse_right_released = false;
 
 if global.compiled_for_merge {
 	with (asset_get_index("obj_player")) {

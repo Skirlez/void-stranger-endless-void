@@ -1,4 +1,4 @@
-// Object purpose: Display a level struct, and if edit == true, allow editing it.
+// Object purpose: Display a level struct, and do different things depending on the display_context.
 
 
 last_clicked_i = -1;
@@ -233,18 +233,21 @@ scale_y_start = image_yscale
 
 base_ui = asset_get_index("spr_ev_base_ui")
 
-
 ind = 0
-
 
 voidrod_sprite = asset_get_index("spr_voidrod_icon")
 stackrod_sprite = asset_get_index("spr_voidrod_icon2")
 burdens_sprite = asset_get_index("spr_items")
 border_sprite = asset_get_index("spr_ev_display_border")
 
-draw_name = !edit;
-draw_brand = !edit;
+enum display_contexts {
+	level_editor,
+	level_select,
+	pack_editor,
+}
 
+draw_name = display_context != display_contexts.level_editor;
+draw_brand = display_context != display_contexts.level_editor;
 
 draw_set_font(global.ev_font)
 
@@ -255,3 +258,8 @@ cached_author_brand = lvl.author_brand;
 
 highlighted = false
 
+outside_view = false;
+mouse_moving = false;
+
+connecting_exit = false;
+exit_instances = []

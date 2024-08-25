@@ -93,14 +93,14 @@ if (edit_transition != -1) {
 if (room == asset_get_index("rm_ev_menu")) {
 	draw_set_color(c_white)
 	draw_set_font(global.ev_font)
-	draw_set_halign(fa_center)
+	draw_set_halign(fa_left)
 	draw_set_valign(fa_middle)
 	
 	
 	if global.there_is_a_newer_version
-		draw_text_transformed(112, 72 + 64, "THERE IS A NEWER VERSION!!!" + "\nYou are on " + global.ev_version + ", latest is " + global.newest_version, 0.5, 0.5, 0)
+		draw_text_transformed(6, 72 + 62, "THERE IS A NEWER VERSION!!!" + "\nYou are on " + global.ev_version + ", latest is " + global.newest_version, 0.5, 0.5, 0)
 	else
-		draw_text_transformed(112, 72 + 67, global.ev_version, 0.5, 0.5, 0)
+		draw_text_transformed(6, 72 + 65, global.ev_version, 0.5, 0.5, 0)
 }
 else if (room == global.startup_room) {
 	draw_set_color(c_white)

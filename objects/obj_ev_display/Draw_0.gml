@@ -1,10 +1,33 @@
+
+
+if display_context == display_contexts.pack_editor {
+	var center_x = x + 112 * image_xscale; 
+	var center_y = y + 72 * image_yscale;
+	if connecting_exit {
+		draw_line_width(center_x, center_y,	mouse_x, mouse_y, 2)
+	}
+
+	for (var i = 0; i < array_length(exit_instances); i++) {
+		var display_inst = exit_instances[i];
+		
+		draw_set_color(c_black)
+		var other_center_x = display_inst.x + 112 * display_inst.image_xscale;
+		var other_center_y = display_inst.y + 72 * display_inst.image_yscale;
+
+		draw_line_width(center_x, center_y,	other_center_x, other_center_y, 2)
+	}
+}
+
+if outside_view
+	exit;
+
 if !surface_exists(game_surface)
 	game_surface = surface_create(224, 144);
 
 surface_set_target(game_surface)
 draw_clear_alpha(c_black, 1)
 
-var tile_mode = edit ? global.tile_mode : false
+var tile_mode = display_context == display_contexts.level_editor ? global.tile_mode : false
 
 
 function draw_tile_state(i, j, tile_state, preview = false) {
@@ -72,7 +95,7 @@ for (var i = 0; i < 9; i++)	{
 }
 
 
-if (edit && ev_is_mouse_on_me()) {
+if (display_context == display_contexts.level_editor && ev_is_mouse_on_me()) {
 	var tile_j = floor((mouse_x - x) / (16 * image_xscale))
 	var tile_i = floor((mouse_y - y) / (16 * image_yscale))
 
@@ -187,3 +210,4 @@ else if draw_beaten == 2 {
 	draw_sprite(spr, time, x + sprite_width - 9, y + sprite_height)
 	
 }
+
