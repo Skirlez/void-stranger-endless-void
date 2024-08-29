@@ -46,7 +46,7 @@ function get_all_files(dir, ext) {
 	return files;
 }
 
-function array_contains(arr, value) {
+function ev_array_contains(arr, value) {
 	for (var i = 0; i < array_length(arr); i++) {
 		if (arr[@ i] == value)
 			return true;

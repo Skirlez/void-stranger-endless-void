@@ -165,7 +165,7 @@ switch (display_context) {
 		if ev_mouse_right_released() && connecting_exit {
 			connecting_exit = false
 			var display_inst = instance_position(mouse_x, mouse_y, object_index)
-			if instance_exists(display_inst) && display_inst != id && !array_contains(exit_instances, display_inst)
+			if instance_exists(display_inst) && display_inst != id && !ev_array_contains(exit_instances, display_inst)
 				array_push(exit_instances, display_inst)
 		}
 		if (mouse_moving) {

@@ -20,3 +20,8 @@ if dragging_camera {
 
 previous_mouse_x = mouse_x;
 previous_mouse_y = mouse_y;
+
+if mouse_wheel_down()
+	camera_set_view_size(view_camera[0], camera_get_view_width(view_camera[0]) * 1.2, camera_get_view_height(view_camera[0]) * 1.2)
+if mouse_wheel_up()
+	camera_set_view_size(view_camera[0], camera_get_view_width(view_camera[0]) / 1.2, camera_get_view_height(view_camera[0]) / 1.2)

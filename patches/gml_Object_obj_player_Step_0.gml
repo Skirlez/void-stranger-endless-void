@@ -645,7 +645,7 @@ else if (state == (11 << 0))
         else
         {
             with (_explofloor_stepped)
-                self.fnc_explofloor__check_if_stepped_on()
+                script_execute(fnc_explofloor__check_if_stepped_on)
         }
         if (float == 1)
         {

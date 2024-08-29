@@ -55,7 +55,7 @@ function level_clicked(display_inst) {
 			lvl : lvl,
 			layer_num : 0,
 			draw_beaten : false,
-			no_spoiling : true,
+			no_spoiling : false,
 			display_context : display_contexts.pack_editor,
 			image_xscale : 0.2,
 			image_yscale : 0.2

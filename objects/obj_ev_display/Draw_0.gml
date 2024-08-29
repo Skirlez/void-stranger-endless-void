@@ -10,11 +10,10 @@ if display_context == display_contexts.pack_editor {
 	for (var i = 0; i < array_length(exit_instances); i++) {
 		var display_inst = exit_instances[i];
 		
-		draw_set_color(c_black)
 		var other_center_x = display_inst.x + 112 * display_inst.image_xscale;
 		var other_center_y = display_inst.y + 72 * display_inst.image_yscale;
 
-		draw_line_width(center_x, center_y,	other_center_x, other_center_y, 2)
+		ev_draw_pack_line(center_x, center_y, other_center_x, other_center_y)
 	}
 }
 

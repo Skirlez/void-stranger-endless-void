@@ -1,4 +1,4 @@
-function draw_text_shadow(_x, _y, txt, shadow_color){
+function draw_text_shadow(_x, _y, txt, shadow_color = c_black) {
 	var save = draw_get_color()
 	draw_set_color(shadow_color)
 	draw_text(_x + 1, _y, txt)

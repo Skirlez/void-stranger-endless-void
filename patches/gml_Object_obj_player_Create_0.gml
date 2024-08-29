@@ -1,12 +1,3 @@
-// TARGET: STRING
-scr_steam_achievement_get()> { /* do nothing*/ }
-// TARGET: STRING
-scr_steam_achievement_clear()> { /* do nothing*/ }
-// TARGET: STRING
-spr_wings = 2595> { /* do nothing*/ }
-// TARGET: STRING
-spr_blade = 1700> { /* do nothing*/ }
-
 // TARGET: LINENUMBER_REPLACE
 // 109
 } else if (global.stranger == 5) {
@@ -100,3 +91,13 @@ switch global.blade_style
 }
 swap_stage = 0
 swapper_flash_counter = 0
+
+
+// TARGET: STRING
+scr_steam_achievement_get()> { /* do nothing*/ }
+// TARGET: STRING
+scr_steam_achievement_clear()> { /* do nothing*/ }
+// TARGET: STRING
+spr_wings = 2595> { /* do nothing*/ }
+// TARGET: STRING
+spr_blade = 1700> { /* do nothing*/ }

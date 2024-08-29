@@ -257,6 +257,10 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 #macro chest_obj "obj_chest_small"
 #macro chest_name "Chest"
 
+#macro number_floor_id "nm"
+#macro number_floor_obj "obj_floor_hpn"
+#macro number_floor_name "Numbered Tile"
+
 #macro empty_id "em"
 
 #macro player_id "pl"
@@ -429,10 +433,10 @@ tile_deathfloor = new editor_tile(deathfloor_name, asset_get_index("spr_deathflo
 tile_deathfloor.cube_type = cube_types.edge
 
 
-tilemap_tile_read = function(tile, lvl_str, pos) {
+tilemap_tile_read = function(tile_id, lvl_str, pos) {
 	var read_ind = string_copy(lvl_str, pos, 2)
 	var ind = clamp(int64_safe(read_ind, 0), 0, 255)
-	var t = new tile_with_state(tile, { ind : ind });
+	var t = new tile_with_state(tile_id, { ind : ind });
 	return { value : t, offset : 2 };
 }
 tilemap_tile_write = function(tile_state) {
@@ -624,9 +628,74 @@ tile_chest.iostruct = {
 	}
 }
 
+// code slightly modified from gml_Object_obj_floor_hpn_Draw_0, line ~162
+function numbered_tile_draw_text(num, pos_x, pos_y) {
+	draw_set_halign(fa_left)
+	draw_set_valign(fa_top)
+	draw_set_font(global.ev_font)
+	var num_str;
+	if (num < 10)
+		num_str = "0" + string(num);
+	else
+		num_str = string(num);
+	for (var i = 0; i < string_length(num_str); i++)
+	{
+		var char = string_char_at(num_str, i + 1);
+		var x_offset = (char == "1") ? 1 : 0;
+		draw_text_color(pos_x - 8 + (i * 8) + x_offset, pos_y - 8, char, c_black, c_black, c_black, c_black, 1);
+	}
+	
+
+}
+
+var numbered_tile_surface = surface_create(16, 16)
+surface_set_target(numbered_tile_surface)
+draw_sprite(asset_get_index("spr_floor_white"), 0, 8, 8)
+numbered_tile_draw_text(99, 8, 8)
+var numbered_tile_sprite = sprite_create_from_surface(numbered_tile_surface, 0, 0, 16, 16, false, false, 8, 8)
+surface_reset_target()
+surface_free(numbered_tile_surface)	
+
+tile_number_floor = new editor_tile(number_floor_name, numbered_tile_sprite, number_floor_id, number_floor_obj, "Floor")
+tile_number_floor.properties_generator = function () {
+	return { num : 99 }
+}
+tile_number_floor.iostruct = {
+	read : function(tile_id, lvl_str, pos) {
+	var read_num = string_copy(lvl_str, pos, 2)
+	var num = clamp(int64_safe(read_num, 0), 0, 99)
+	var t = new tile_with_state(tile_id, { num : num });
+	return { value : t, offset : 2 };
+	},
+	write : function(tile_state) {
+		return tile_state.tile.tile_id + num_to_string(tile_state.properties.num, 2);
+	},
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		inst.dummy_value = tile_state.properties.num;
+		return inst;
+	}	
+}
+
+tile_number_floor.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
+	static white_floor_sprite = asset_get_index("spr_floor_white");
+	draw_sprite(white_floor_sprite, 0, j * 16 + 8, i * 16 + 8)	
+
+	var num = tile_state.properties.num;
+	numbered_tile_draw_text(num, j * 16 + 8, i * 16 + 8);
+}
+tile_number_floor.zed_function = function(tile_state) {
+	new_window(6, 6, asset_get_index("obj_ev_number_tile_window"), { 
+		tile_properties : tile_state.properties,
+	})	
+	global.mouse_layer = 1
+}
+tile_number_floor.cube_type = cube_types.edge
+
 
 tile_unremovable = new editor_tile(no_name, asset_get_index("spr_floor_white"), unremovable_id, unremovable_obj, "Floor", flag_unremovable|flag_unplaceable)
 tile_unremovable.draw_function = empty_function;
+
 
 object_empty = new editor_object(no_name, noone, empty_id, no_obj, "Instances", flag_unplaceable)
 object_empty.draw_function = empty_function;
@@ -1205,7 +1274,7 @@ for (var i = 0; i < 7; i++) {
 
 
 tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch, tile_copyfloor, tile_exit, 
-	tile_deathfloor, tile_black_floor, tile_white, tile_wall, tile_mon_wall, tile_dis_wall, tile_ex_wall, tile_edge, tile_edge_dis, tile_chest]
+	tile_deathfloor, tile_black_floor, tile_number_floor, tile_white, tile_wall, tile_mon_wall, tile_dis_wall, tile_ex_wall, tile_edge, tile_edge_dis, tile_chest]
 	
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_hungry_man, object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor, 

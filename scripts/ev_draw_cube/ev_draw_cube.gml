@@ -51,7 +51,7 @@ function ev_draw_cube_multisprite(sprites, subimgs, draw_x, draw_y, size, spin_h
 		new ev_cube_face(nodes[5], nodes[4], nodes[7], nodes[6], sprites[2], subimgs[2]), // left
 		new ev_cube_face(nodes[0], nodes[1], nodes[2], nodes[3], sprites[3], subimgs[3]), // right
 
-		new ev_cube_face(nodes[0], nodes[1], nodes[4], nodes[5], sprites[4], subimgs[4]), // top
+		new ev_cube_face(nodes[1], nodes[0], nodes[5], nodes[4], sprites[4], subimgs[4]), // top
 		new ev_cube_face(nodes[2], nodes[3], nodes[6], nodes[7], sprites[5], subimgs[5]), // bottom
 	];
 	
