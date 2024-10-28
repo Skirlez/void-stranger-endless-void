@@ -8,9 +8,15 @@ if ev_mouse_released()
 	mouse_moving = false;
 if ev_mouse_right_released() && connecting_exit {
 	connecting_exit = false
-	display_inst = instance_position(mouse_x, mouse_y, display_object)
+	var node_inst = get_node_at_position(mouse_x, mouse_y)
+	
+	if (instance_exists(node_inst) && node_inst.can_connect_to_me && array_length(exit_instances) < max_exits) {
+		array_push(exit_instances, node_inst)	
+	}
 }
 if (mouse_moving) {
 	x = mouse_x
 	y = mouse_y
+	center_x = x;
+	center_y = y;
 }

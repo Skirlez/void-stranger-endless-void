@@ -263,3 +263,7 @@ mouse_moving = false;
 
 connecting_exit = false;
 exit_instances = []
+center_x = x + 112 * image_xscale
+center_y = y + 72 * image_yscale
+max_exits = -1;
+can_connect_to_me = true;

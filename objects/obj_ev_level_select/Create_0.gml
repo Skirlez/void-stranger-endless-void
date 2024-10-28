@@ -28,7 +28,7 @@ if !pack_selector {
 	
 
 	var online_switch = instance_create_layer(112 + 29, 12, buttons_layer, asset_get_index("obj_ev_online_switch"), {
-	level_select_instance : id,	
+		level_select_instance : id,	
 	});
 	var refresh_button = instance_create_layer(112 + 56, 12, buttons_layer, asset_get_index("obj_ev_refresh"), {
 		level_select_instance : id,	
@@ -51,15 +51,18 @@ function level_clicked(display_inst) {
 		var lvl = display_inst.lvl;
 		instance_destroy(id)
 		
-		instance_create_layer(50, 50, "PackLevels", display_object, {
-			lvl : lvl,
-			layer_num : 0,
-			draw_beaten : false,
-			no_spoiling : false,
-			display_context : display_contexts.pack_editor,
-			image_xscale : 0.2,
-			image_yscale : 0.2
-		})
+		instance_create_layer(
+			mouse_x - 224 * 0.2 / 2, 
+			mouse_y - 144 * 0.2 / 2, "PackLevels", display_object, 
+			{
+				lvl : lvl,
+				layer_num : 0,
+				draw_beaten : false,
+				no_spoiling : false,
+				display_context : display_contexts.pack_editor,
+				image_xscale : 0.2,
+				image_yscale : 0.2
+			})
 	}
 	
 }

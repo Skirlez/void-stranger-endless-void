@@ -1,20 +1,7 @@
 
 
 if display_context == display_contexts.pack_editor {
-	var center_x = x + 112 * image_xscale; 
-	var center_y = y + 72 * image_yscale;
-	if connecting_exit {
-		draw_line_width(center_x, center_y,	mouse_x, mouse_y, 2)
-	}
 
-	for (var i = 0; i < array_length(exit_instances); i++) {
-		var display_inst = exit_instances[i];
-		
-		var other_center_x = display_inst.x + 112 * display_inst.image_xscale;
-		var other_center_y = display_inst.y + 72 * display_inst.image_yscale;
-
-		ev_draw_pack_line(center_x, center_y, other_center_x, other_center_y)
-	}
 }
 
 if outside_view

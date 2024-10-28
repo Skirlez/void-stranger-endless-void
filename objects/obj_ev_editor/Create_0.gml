@@ -6,6 +6,10 @@ randomize()
 global.latest_lvl_format = 2;
 global.ev_version = "0.90";
 
+global.fb_ancient = 1;
+global.server_obj = 2;
+show_debug_message(global.fb_ancient)
+
 global.compiled_for_merge = (asset_get_index("obj_game") != -1)
 if (!global.compiled_for_merge) {
 	var ratio = display_get_height() / 144	
@@ -95,6 +99,7 @@ global.level_room = asset_get_index("rm_ev_level");
 
 global.editor_instance = id;
 global.display_object = asset_get_index("obj_ev_display");
+global.node_object = asset_get_index("obj_ev_pack_node");
 
 global.selection_sprite = asset_get_index("spr_ev_selection")
 global.white_floor_sprite = asset_get_index("spr_floor_white")
@@ -965,9 +970,9 @@ function voidlord_io(b_form) {
 }	
 
 object_add = new editor_object(add_name, asset_get_index("spr_voider"), add_id, egg_statue_obj)
-object_add.draw_function = function(tile_state, i, j) {
+object_add.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)
-	if tile_state.properties.mde != 0 {
+	if tile_state.properties.mde != 0 && !no_spoilers {
 		static branefucked = asset_get_index("spr_ev_branefucked")
 		draw_sprite(branefucked, 0, j * 16 + 8, i * 16 + 8)
 	}
@@ -1273,9 +1278,11 @@ for (var i = 0; i < 7; i++) {
 }
 
 
+// These are the list of tiles and objects that are read by obj_ev_placeable_selection. If you
+// want your tile to be placable in the editor, it should be included here.
 tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch, tile_copyfloor, tile_exit, 
 	tile_deathfloor, tile_black_floor, tile_number_floor, tile_white, tile_wall, tile_mon_wall, tile_dis_wall, tile_ex_wall, tile_edge, tile_edge_dis, tile_chest]
-	
+
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_hungry_man, object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor, 
 	object_jukebox, object_egg, object_hologram, object_memory_crystal, object_secret_exit,
@@ -1305,7 +1312,7 @@ reset_global_level()
 function reset_global_pack() {
 	global.pack = new pack_struct()
 }
-reset_global_level()
+reset_global_pack()
 
 
 function switch_tile_mode(new_tile_mode) {

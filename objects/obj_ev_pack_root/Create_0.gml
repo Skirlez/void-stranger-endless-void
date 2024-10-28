@@ -1,9 +1,6 @@
+event_inherited();
 spin_time_h = 0;
 spin_time_v = 0;
-sprite_index = spr_co_idle
+sprite_index = asset_get_index("spr_co_idle")
 image_speed = 0.1
-
-mouse_moving = false;
-connecting_exit = false;
-
-display_object = asset_get_index("obj_ev_display")
+can_connect_to_me = false;

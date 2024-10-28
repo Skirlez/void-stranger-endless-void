@@ -21,8 +21,8 @@ else if !grube {
 
 	draw_set_alpha((t - 60) / 60)
 	draw_set_font(global.ev_font)
-	draw_set_halign(fa_middle)
-	draw_set_valign(fa_center)
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_middle)
 	
 	var text_x = 112
 	if time < 8

@@ -164,13 +164,26 @@ switch (display_context) {
 			mouse_moving = false;
 		if ev_mouse_right_released() && connecting_exit {
 			connecting_exit = false
-			var display_inst = instance_position(mouse_x, mouse_y, object_index)
-			if instance_exists(display_inst) && display_inst != id && !ev_array_contains(exit_instances, display_inst)
-				array_push(exit_instances, display_inst)
+			var node_inst = get_node_at_position(mouse_x, mouse_y)
+			if instance_exists(node_inst) && node_inst.can_connect_to_me && !ev_array_contains(exit_instances, node_inst)
+				array_push(exit_instances, node_inst)
 		}
 		if (mouse_moving) {
-			x = mouse_x - 112 * image_xscale
-			y = mouse_y - 72 * image_yscale
+			var width = 224 * image_xscale
+			var height = 144 * image_yscale
+			x = mouse_x - width / 2
+			y = mouse_y - height / 2
+			
+			if (y < 0)
+				y = 0
+			if (y > room_height - height)
+				y = room_height - height
+			if (x < 0)
+				x = 0
+			if (x > room_width - width)
+				x = room_width - width
+			center_x = mouse_x
+			center_y = mouse_y
 		}
 		break;
 }

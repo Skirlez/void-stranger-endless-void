@@ -8,7 +8,7 @@ var min_depth = infinity
 var min_inst = noone
 for (var i = 0; i < length; i++) {
 	var inst = list[| i]
-	if (inst.depth < min_depth) {
+	if (inst.depth < min_depth && inst.visible) {
 		min_inst = inst
 		min_depth = inst.depth	
 	}

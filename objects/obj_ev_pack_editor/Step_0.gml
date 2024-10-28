@@ -12,6 +12,7 @@ if dragging_camera {
 	var cam_width = camera_get_view_width(view_camera[0])
 	var cam_height = camera_get_view_height(view_camera[0])
 	
+	
 	var target_x = clamp(cam_x + previous_mouse_x - mouse_x, 0, room_width - cam_width)
 	var target_y = clamp(cam_y + previous_mouse_y - mouse_y, 0, room_height - cam_height)
 	
@@ -21,7 +22,19 @@ if dragging_camera {
 previous_mouse_x = mouse_x;
 previous_mouse_y = mouse_y;
 
-if mouse_wheel_down()
-	camera_set_view_size(view_camera[0], camera_get_view_width(view_camera[0]) * 1.2, camera_get_view_height(view_camera[0]) * 1.2)
-if mouse_wheel_up()
-	camera_set_view_size(view_camera[0], camera_get_view_width(view_camera[0]) / 1.2, camera_get_view_height(view_camera[0]) / 1.2)
+
+var prev_zoom = zoom
+if mouse_wheel_down() {
+	zoom += 1;
+}
+if mouse_wheel_up() {
+	zoom -= 1;
+}
+
+if (prev_zoom != zoom) {
+	calculate_zoom()
+}
+
+if keyboard_check_pressed(ord("S")) {
+	var room_nodes = convert_room_nodes_to_structs()
+}

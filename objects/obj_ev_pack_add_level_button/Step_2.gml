@@ -8,3 +8,5 @@ image_xscale = ratio_x * base_scale_x_start
 image_yscale = ratio_y * base_scale_y_start
 x = cam_x + xstart * ratio_x;
 y = cam_y + ystart * ratio_y;
+
+pressable = visible;
