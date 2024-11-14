@@ -33,12 +33,16 @@
   "properties": [
     {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"display_inst","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"noone","varType":0,},
     {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"layer_num","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"0","varType":0,},
+    {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"program","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"\"\"","varType":2,},
   ],
   "solid": false,
   "spriteId": {
     "name": "spr_ev_dancing_man",
     "path": "sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",
   },
-  "spriteMaskId": null,
+  "spriteMaskId": {
+    "name": "spr_ev_tile_hitbox",
+    "path": "sprites/spr_ev_tile_hitbox/spr_ev_tile_hitbox.yy",
+  },
   "visible": true,
 }

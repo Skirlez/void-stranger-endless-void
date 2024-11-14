@@ -1,14 +1,3 @@
-function get_node_at_position(pos_x, pos_y) {
-	var display_inst = instance_position(mouse_x, mouse_y, global.display_object)
-	if instance_exists(display_inst) && display_inst != id
-		return display_inst
-	var node_inst = instance_position(mouse_x, mouse_y, global.node_object)
-	if node_inst == id
-		return noone;
-	return node_inst;
-}
-
-
 function ev_draw_pack_line(x1, y1, x2, y2) {
 	draw_set_color(c_black)
 	draw_line_width(x1, y1,	x2, y2, 2)
@@ -43,4 +32,10 @@ function ev_draw_pack_line(x1, y1, x2, y2) {
 		pos_x + 9 * dcos(angle_target + 90), 
 		pos_y - 9 * dsin(angle_target + 90) - 4, "1", 0, 300, scale * 0.5, scale * 0.5, 0)
 	*/
+}
+function pack_editor_inst() {
+	static index = asset_get_index("obj_ev_pack_editor")
+	if instance_exists(index)
+		return index;
+	return noone
 }

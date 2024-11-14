@@ -24,17 +24,16 @@ else if instance_exists(display_inst) {
 }
 */
 
-spin_time_h += 0.45 + random_range(-0.05, 0.05)
-spin_time_v += 0.38 + random_range(-0.05, 0.05)
-	
-var spin_h = (dsin(spin_time_h) + 1) / 2;
-var spin_v = (dcos(spin_time_v) + 1) / 2;
+
+
 
 ev_draw_cube(sprite_index, i_imageframe, x, y, 5, spin_h, spin_v)
-draw_set_color(c_white)
-draw_set_halign(fa_center)
-draw_set_valign(fa_middle)
-draw_set_font(global.ev_font)
+if !in_menu {
+	draw_set_color(c_white)
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_middle)
+	draw_set_font(global.ev_font)
 
-draw_text_shadow(x, y + 16, text)
+	draw_text_shadow(x, y + 16, text)
+}
 

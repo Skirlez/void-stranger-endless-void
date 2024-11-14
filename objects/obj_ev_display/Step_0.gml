@@ -154,36 +154,6 @@ switch (display_context) {
 			|| y > cam_y + cam_height + 144 * image_yscale)
 		if outside_view
 			break;
-		if (ev_is_mouse_on_me()) {
-			if ev_mouse_pressed()
-				mouse_moving = true;
-			if ev_mouse_right_pressed()
-				connecting_exit = true;
-		}
-		if ev_mouse_released()
-			mouse_moving = false;
-		if ev_mouse_right_released() && connecting_exit {
-			connecting_exit = false
-			var node_inst = get_node_at_position(mouse_x, mouse_y)
-			if instance_exists(node_inst) && node_inst.can_connect_to_me && !ev_array_contains(exit_instances, node_inst)
-				array_push(exit_instances, node_inst)
-		}
-		if (mouse_moving) {
-			var width = 224 * image_xscale
-			var height = 144 * image_yscale
-			x = mouse_x - width / 2
-			y = mouse_y - height / 2
-			
-			if (y < 0)
-				y = 0
-			if (y > room_height - height)
-				y = room_height - height
-			if (x < 0)
-				x = 0
-			if (x > room_width - width)
-				x = room_width - width
-			center_x = mouse_x
-			center_y = mouse_y
-		}
+		node_instance_step()
 		break;
 }

@@ -39,6 +39,9 @@
     "name": "spr_ev_dancing_man",
     "path": "sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",
   },
-  "spriteMaskId": null,
+  "spriteMaskId": {
+    "name": "spr_ev_tile_hitbox",
+    "path": "sprites/spr_ev_tile_hitbox/spr_ev_tile_hitbox.yy",
+  },
   "visible": true,
 }

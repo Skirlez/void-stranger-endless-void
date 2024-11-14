@@ -1,4 +1,4 @@
-if ev_mouse_pressed() && global.instance_touching_mouse == noone {
+if ev_mouse_pressed() && global.instance_touching_mouse == noone && global.mouse_layer == 0 {
 
 	dragging_camera = true;
 }
@@ -37,4 +37,7 @@ if (prev_zoom != zoom) {
 
 if keyboard_check_pressed(ord("S")) {
 	var room_nodes = convert_room_nodes_to_structs()
+	global.pack.starting_node_states = room_nodes;
+	var str = export_pack_arr(global.pack)
+	show_debug_message(str)
 }

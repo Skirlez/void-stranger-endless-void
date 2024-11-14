@@ -56,7 +56,6 @@ function level_clicked(display_inst) {
 			mouse_y - 144 * 0.2 / 2, "PackLevels", display_object, 
 			{
 				lvl : lvl,
-				layer_num : 0,
 				draw_beaten : false,
 				no_spoiling : false,
 				display_context : display_contexts.pack_editor,
