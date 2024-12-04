@@ -263,3 +263,32 @@ mouse_moving = false;
 
 
 node_instance_setup(-1, 112 * image_xscale, 72 * image_yscale)
+
+function destroy() {
+	audio_play_sound(asset_get_index("snd_stainedglass_break"), 10, false, 1, 0, random_range(0.9, 1));
+	
+	static shard_sprite = asset_get_index("spr_ev_display_shards");
+	static shard_object = asset_get_index("obj_ev_display_shard");
+	static shard_manager = asset_get_index("obj_ev_shard_manager");
+	
+	
+	new_game_surface = surface_create(224, 144);
+	surface_copy(new_game_surface, 0, 0, game_surface);
+	
+	var manager = instance_create_depth(x, y, 0, shard_manager, {
+		game_surface : new_game_surface	,
+		count : sprite_get_number(shard_sprite)
+	});
+	
+	for (var i = 0; i < sprite_get_number(shard_sprite); i++) {
+		instance_create_layer(x, y, layer,
+			shard_object, { 
+				game_surface : new_game_surface,
+				manager : manager,
+				image_index : i,
+				image_xscale : image_xscale,
+				image_yscale : image_yscale,
+			});
+	}
+	instance_destroy(id)
+}

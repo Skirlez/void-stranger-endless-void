@@ -18,7 +18,7 @@ function node_with_state(node, pos_x, pos_y, properties = node.properties_genera
 		}
 		
 		
-		return node.node_id + "#" + position_string + "#" + exits_string + "#" + properties_string + "#";
+		return node.node_id + "#" + position_string + "#" + exits_string + "#" + properties_string;
 	}
 	
 	function write_instance() {

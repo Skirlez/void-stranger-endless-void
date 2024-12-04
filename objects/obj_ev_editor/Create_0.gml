@@ -338,6 +338,10 @@ function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "In
 #macro hologram_obj "obj_fakewall"
 #macro hologram_name "Fake Egg"
 
+#macro tree_id "tr"
+#macro tree_obj "obj_rest"
+#macro tree_name "Tree"
+
 #macro secret_exit_id "se"
 #macro secret_exit_obj "obj_na_secret_exit"
 #macro secret_exit_name "Secret Exit"
@@ -1106,7 +1110,24 @@ object_gor.iostruct = voidlord_io(5)
 object_jukebox = new editor_object(jukebox_name, asset_get_index("spr_jb"), jukebox_id, egg_statue_obj)
 object_jukebox.iostruct = voidlord_io(9)
 
+
+var surface_tree = surface_create(16, 16)
+surface_set_target(surface_tree)
+draw_sprite(asset_get_index("spr_birch"), 0, 8, 8 - 24)
+surface_reset_target()
+var tree_sprite = sprite_create_from_surface(surface_tree, 0, 0, 16, 16, false, false, 8, 8);
+surface_free(surface_tree)
+
+object_tree = new editor_object(tree_name, tree_sprite, tree_id, tree_obj);
+object_tree.draw_function = function(tile_state, i, j) {
+	// offset by 24 upwards so the stump is where the tile is placed
+	static full_sprite = asset_get_index("spr_birch");
+	draw_sprite(full_sprite, 0, j * 16 + 8, i * 16 + 8 - 24)	
+}
+
+
 object_secret_exit = new editor_object(secret_exit_name, asset_get_index("spr_ev_secret_exit_arrow"), secret_exit_id, secret_exit_obj)
+
 
 // 0 - invisible, 1 - stars, 2 - stink lines
 object_secret_exit.properties_generator = function () {
@@ -1285,7 +1306,7 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch,
 
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_hungry_man, object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor, 
-	object_jukebox, object_egg, object_hologram, object_memory_crystal, object_secret_exit,
+	object_jukebox, object_egg, object_hologram, object_tree, object_memory_crystal, object_secret_exit,
 	object_spider, object_scaredeer, object_orb]
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
@@ -1392,11 +1413,13 @@ global.menu_music = asset_get_index(get_menu_music_name())
 
 
 play_transition = -1
-max_play_transition = 20
+max_play_transition = 25
 play_transition_display = noone
+play_transition_surface = noone;
+
 
 preview_transition = -1
-max_preview_transition = 20
+max_preview_transition = 25
 preview_transition_display = noone
 preview_transition_highlight = noone
 
@@ -1428,9 +1451,14 @@ function play_level_transition(lvl, lvl_sha, display_instance) {
 	global.level_sha = lvl_sha
 	play_transition = max_play_transition
 	play_transition_display = display_instance
+	play_transition_surface = display_instance.game_surface;
 	display_instance.draw_brand = false;
 	display_instance.draw_beaten = 0;
 	global.mouse_layer = -1
+}
+
+function play_pack_transition(lvl, lvl_sha, display_instance) {
+	//TODO
 }
 
 function edit_level_transition(lvl, display_instance) {

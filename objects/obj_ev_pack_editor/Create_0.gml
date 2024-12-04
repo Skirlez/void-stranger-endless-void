@@ -29,24 +29,11 @@ enum pack_things {
 	selector,
 }
 
+
+select_tool_event = new ev_event();
 function select(thing) {
-	static hammer = asset_get_index("obj_ev_pack_hammer")
-	static node_button = asset_get_index("obj_ev_pack_node_button")
 	selected_thing = thing;
-	switch (thing) {
-		case pack_things.nothing:
-			hammer.selected = false;
-			node_button.selected = false;
-			break;
-		case pack_things.hammer:
-			hammer.selected = true;
-			node_button.selected = false;
-			break;
-		case pack_things.selector:
-			hammer.selected = false;
-			node_button.selected = true;
-			break;
-	}
+	select_tool_event.trigger({ new_selected_thing : selected_thing })
 }
 
 selected_thing = pack_things.nothing;

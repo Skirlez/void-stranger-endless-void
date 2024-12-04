@@ -10,9 +10,19 @@ grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset
 	base_scale_y : 0.9,
 	count : 0,
 	func : function () {
-		var grube = instance_create_layer(200 + irandom_range(-20, 20), y + 42, "Grube", asset_get_index("obj_ev_grube"))
+		static grube_obj = asset_get_index("obj_ev_grube");
+		var grube = instance_create_layer(200 + irandom_range(-20, 20), y + 42, "Grube", grube_obj)
 		grube.window = window;
 		array_push(window.grubes, grube)
+		if txt == "?" {
+			grube.sprite_index =
+				global.editor_instance.objects_list[irandom_range(0, array_length(global.editor_instance.objects_list))].spr_ind
+			txt = "Grube"
+		}
+		else if count > 5 {
+			if irandom(10) == 0
+				txt = "?";
+		}
 		count++;
 		if count == 5 {
 			window.grube_mode = true;

@@ -24,7 +24,7 @@ function update_node_instances_positions() {
 	for (var i = 0; i < array_length(node_instances); i++) {
 		node_instances[i].x = pos_x;
 		node_instances[i].y = pos_y;
-		pos_x += 16;
+		pos_x += 16 * window_size;
 		
 	}
 }
@@ -38,3 +38,14 @@ function pick(node_inst) {
 }
 
 update_node_instances_positions()
+
+
+pack_editor_inst().select_tool_event.subscribe(function (struct) {
+	selected = (struct.new_selected_thing == pack_things.selector)
+	
+	if (array_length(node_instances) != 0) {
+		for (var i = 0; i < array_length(node_instances); i++)
+			instance_destroy(node_instances[i])
+		node_instances = []
+	}
+})

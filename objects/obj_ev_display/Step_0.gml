@@ -9,7 +9,8 @@ switch (display_context) {
 				if (last_clicked_i != tile_i || last_clicked_j != tile_j) {
 		
 					if painting = false {
-						global.editor_instance.add_undo()
+						if (global.selected_thing != thing_nothing && global.selected_thing != thing_picker) // these do not change level state
+							global.editor_instance.add_undo()
 						painting = true;
 					}
 		
@@ -93,7 +94,8 @@ switch (display_context) {
 					{
 						global.editor_instance.switch_tile_mode(true)
 					}
-			
+					
+					
 					global.editor_instance.add_undo()
 					handle_click_before(tile_i, tile_j)
 			

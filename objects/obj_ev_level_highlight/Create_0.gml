@@ -70,6 +70,7 @@ if (!global.online_mode) {
 	deleteb.layer_num = 1
 	deleteb.level_select = instance_find(asset_get_index("obj_ev_level_select"), 0)
 	deleteb.save_name = lvl.save_name
+	deleteb.display_instance = display_instance
 	deleteb.image_alpha = 0
 
 	var upload = instance_create_layer(208, 90, "LevelHighlightButtons", asset_get_index("obj_ev_upload_button"))

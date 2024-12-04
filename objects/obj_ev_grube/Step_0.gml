@@ -4,7 +4,7 @@ if death_timer != -1 {
 	
 	if death_timer > 140 || !audio_is_playing(death_sound) {
 		audio_stop_sound(death_sound)
-		audio_play_sound(asset_get_index("snd_ex_enemyexplosion_009"), 0, false)
+		audio_play_sound(asset_get_index("snd_ex_enemyexplosion_009"), 0, false, 0.8)
 		for (var i = 0; i < array_length(window.grubes); i++) {
 			var grube = window.grubes[i]
 			if !instance_exists(grube)
@@ -12,13 +12,23 @@ if death_timer != -1 {
 			if grube == id
 				continue;
 			
-			var diff_x = grube.x - x;
-			var diff_y = grube.y - y;
 			
-			var length = diff_x * diff_x + diff_y * diff_y;
 			
-			grube.phy_speed_x = (diff_x / length) * 120
-			grube.phy_speed_y = (diff_y / length) * 120
+
+			var length = point_distance(x, y, grube.x, grube.y)
+			var angle = point_direction(x, y, grube.x, grube.y)
+			
+			
+			var cutoff = 240
+			var max_force = 10;
+			
+			if (length > cutoff)
+				continue;
+			
+			var effect = (cutoff - length) / cutoff;
+			
+			grube.phy_speed_x = dcos(angle) * effect * max_force;
+			grube.phy_speed_y = -dsin(angle) * effect * max_force;
 				
 		}
 		instance_create_layer(x, y, "Explosion", asset_get_index("obj_ev_after_erase"), {

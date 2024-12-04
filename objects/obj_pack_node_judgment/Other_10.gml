@@ -14,7 +14,10 @@ function remove_connections_to_node(node) {
 switch (judgment_type) {
 	case judgment_types.destroy_node:
 		remove_connections_to_node(node_inst)
-		instance_destroy(node_inst)
+		if (node_inst.object_index == global.display_object)
+			node_inst.destroy();
+		else
+			instance_destroy(node_inst)
 		break;
 	case judgment_types.close_connection:
 		for (var i = 0; i < array_length(node_inst.exit_instances); i++) {

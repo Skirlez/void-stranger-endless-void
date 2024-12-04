@@ -13,3 +13,5 @@ new_window(cam_x, cam_y, asset_get_index("obj_ev_level_select"), {
 	layer_num : global.mouse_layer,
 	buttons_layer : "LevelSelectWindowElements"
 })
+
+pack_editor_inst().select(pack_things.nothing)

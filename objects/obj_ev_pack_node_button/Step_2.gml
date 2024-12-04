@@ -15,12 +15,5 @@ y = cam_y + ystart * ratio_y;
 
 
 
-if (array_length(node_instances) != 0 && pack_editor_inst().selected_thing != pack_things.selector) {
-	for (var i = 0; i < array_length(node_instances); i++) {
-		instance_destroy(node_instances[i])
-		
-	}
-	node_instances = []
-}
 
 update_node_instances_positions()

@@ -17,7 +17,7 @@ if deleting {
 		
 		if (number < 1) {
 			level_select.delete_level(save_name);
-			audio_play_sound(asset_get_index("snd_ev_erase"), 0, false)
+			display_instance.destroy();
 			room_restart()
 		}
 		else

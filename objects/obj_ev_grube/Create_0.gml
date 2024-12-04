@@ -20,3 +20,5 @@ function die() {
 	layer = layer_get_id("Explosion")
 	death_sound = audio_play_sound(asset_get_index("snd_ex_vacuumcomes"), 10, false, 1.3, 0, 1.2)
 }
+
+sprite_index = global.editor_instance.object_player.spr_ind;
