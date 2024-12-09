@@ -8,3 +8,6 @@ laser_direction = 0
 laser_length = 0
 swap_object = -4
 lifetime = -1
+
+
+tree_index = asset_get_index("obj_rest")

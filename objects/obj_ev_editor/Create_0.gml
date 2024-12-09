@@ -1124,7 +1124,14 @@ object_tree.draw_function = function(tile_state, i, j) {
 	static full_sprite = asset_get_index("spr_birch");
 	draw_sprite(full_sprite, 0, j * 16 + 8, i * 16 + 8 - 24)	
 }
-
+object_tree.iostruct = {
+	read : default_reader,
+	write : default_writer,
+	place : function (tile_state, i, j) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8 - 24, tile_state.tile.obj_layer, asset_get_index(tile_state.tile.obj_name));
+		inst.persistent = false;
+	},
+}
 
 object_secret_exit = new editor_object(secret_exit_name, asset_get_index("spr_ev_secret_exit_arrow"), secret_exit_id, secret_exit_obj)
 
@@ -1413,7 +1420,7 @@ global.menu_music = asset_get_index(get_menu_music_name())
 
 
 play_transition = -1
-max_play_transition = 25
+max_play_transition = 20
 play_transition_display = noone
 play_transition_surface = noone;
 

@@ -6,6 +6,9 @@ with (swap_object)
     swap_y = y
     x = asset_get_index("obj_player").x
     y = asset_get_index("obj_player").y
+	if (object_index == other.tree_index)
+		y -= 24
+	
     with (instance_place(x, y, asset_get_index("obj_glassfloor")))
         didplayermove = false
     with (instance_place(x, y, asset_get_index("obj_bombfloor")))
@@ -15,6 +18,8 @@ with (asset_get_index("obj_player"))
 {
     x = swap_x
     y = swap_y
+	if (other.swap_object.object_index == other.tree_index)
+		y += 24;
     if (float == 1 && (!(instance_place(x, y, asset_get_index("obj_pit")))))
     {
         float = 0

@@ -31,7 +31,7 @@ function get_node_at_position(pos_x, pos_y) {
 }
 
 function node_instance_step() {
-	static judgment_object = asset_get_index("obj_pack_node_judgment")
+	static judgment_object = asset_get_index("obj_ev_pack_node_judgment")
 	static root_node_obj = asset_get_index("obj_ev_pack_root")
 				
 	if (ev_is_mouse_on_me()) {

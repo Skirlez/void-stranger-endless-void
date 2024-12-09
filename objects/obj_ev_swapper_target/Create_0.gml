@@ -23,3 +23,5 @@ counter = 0
 target_color = 16777215
 color_counter = 0
 target_object = -4
+
+tree_index = asset_get_index("obj_rest")

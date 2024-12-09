@@ -4,6 +4,8 @@ if !fade_away && instance_exists(target_object)
 {
     x = target_object.x
     y = target_object.y
+	if (target_object.object_index == tree_index)
+		y += 24;
 }	
 color_counter++
 switch color_counter
