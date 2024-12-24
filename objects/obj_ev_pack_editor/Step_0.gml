@@ -38,6 +38,9 @@ if (prev_zoom != zoom) {
 if keyboard_check_pressed(ord("S")) {
 	var room_nodes = convert_room_nodes_to_structs()
 	global.pack.starting_node_states = room_nodes;
-	var str = export_pack_arr(global.pack)
+	var str = export_pack(global.pack)
 	show_debug_message(str)
+	
+	var pack = import_pack(str);
+	place_pack_into_room(pack);
 }

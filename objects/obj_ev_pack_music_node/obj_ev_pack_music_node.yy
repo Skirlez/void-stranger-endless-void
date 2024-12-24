@@ -37,8 +37,8 @@
   ],
   "solid": false,
   "spriteId": {
-    "name": "spr_ev_dancing_man",
-    "path": "sprites/spr_ev_dancing_man/spr_ev_dancing_man.yy",
+    "name": "spr_ev_music_node",
+    "path": "sprites/spr_ev_music_node/spr_ev_music_node.yy",
   },
   "spriteMaskId": {
     "name": "spr_ev_tile_hitbox",

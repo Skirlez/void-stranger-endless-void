@@ -8,7 +8,11 @@
 // All instances of this struct are instantiated here.
 
 // Node state - a struct that represents a node in the pack editor. (defined in ev_node_with_state) 
-// Its type, position, and "exits" (outwards connections). There is one for each node a user creates in the editor.
+
+
+// Both node states and instances have some form of id, position, and list of exits 
+// (outwards connections). There is one of each for each node a user creates in the editor.
+
 
 destinations = ds_map_create()
 
@@ -90,42 +94,7 @@ function calculate_zoom() {
 }
 
 
-function read_node_state(pack_str, pos) {
-	var original_pos = pos;
-	
-	var node_id = string_copy(pack_str, pos, 2)
-	pos += 2
-	var node = ds_map_find_value(global.id_node_map, node_id)
 
-	// skip over hash
-	pos++;
-	
-	var pos_x;
-	
-	var result_1 = read_string_until(pack_str, pos, ",")
-	var pos_x = read_uint(result_2.substr, 0);
-	pos += result_1.offset + 1;
-	
-	var result_2 = read_string_until(pack_str, pos, "#")
-	var pos_y = read_uint(result_2.substr, 0);
-	pos += result_1.offset + 1;
-	
-	var node_state = new node_with_state(node, pos_x, pos_y, noone)
-	
-	
-	
-	if string_copy(pack_str, pos, 1) == "#" {
-		// has exits
-		pos++;
-	}
-	
-	node.read_properties() {
-		
-	}
-		
-	
-	return { value : node_state, offset : pos - original_pos}
-}
 
 
 // read node properties from instance
@@ -133,7 +102,7 @@ default_instance_reader = function (inst) {
 	return global.empty_struct;
 }
 // read node properties from string
-default_reader = function (pack_str, pos /*, version */) {
+default_reader = function (properties_str /*, version */) {
 	return { value : global.empty_struct, offset : 0 };
 }
 // write node properties to string
@@ -180,9 +149,9 @@ brand_node = new node_struct("br", "obj_ev_pack_brand_node");
 brand_node.properties_generator = function () {
 	return { brand : global.author.brand }	
 }
-brand_node.read_function = function (pack_str, pos /*, version */) {
-	var result = read_uint(pack_str, pos);
-	return { value : { brand : result.number }, offset : result.offset }; 
+brand_node.read_function = function (properties_str /*, version */) {
+	var brand = int64_safe(properties_str, 0);
+	return { brand : brand }; 
 }
 brand_node.read_instance_function = function (inst) {
 	return { brand : inst.brand }
@@ -199,11 +168,9 @@ level_node = new node_struct("lv", "obj_ev_display");
 level_node.properties_generator = function () {
 	return { lvl : new level_struct() }	
 }
-level_node.read_function = function (pack_str, pos /*, version */) {
-	var result = read_string_until(pack_str, pos, "$")
-	var level = import_level(result.substr)
-	
-	return { value : { level : level }, offset : result.offset + 1 }; 
+level_node.read_function = function (properties_str /*, version */) {
+	var level = import_level(properties_str)
+	return { level : level }; 
 }
 level_node.read_instance_function = function (node_inst) {
 	return { level : node_inst.lvl } 
@@ -212,7 +179,7 @@ level_node.write_function = function (node_state) {
 	return export_level(node_state.properties.level)
 }
 level_node.write_instance_function = function (node_state) {
-	return instance_create_layer(node_state.pos_x, node_state.pos_y, "PackLevels", object_ind, 
+	return instance_create_layer(node_state.pos_x, node_state.pos_y, "PackLevels", node_state.node.object_ind, 
 	{ 
 		lvl : node_state.properties.level,
 		draw_beaten : false,
@@ -227,9 +194,8 @@ music_node = new node_struct("mu", "obj_ev_pack_music_node");
 music_node.properties_generator = function () {
 	return { music : "" }	
 }
-music_node.read_function = function (pack_str, pos /*, version */) {
-	var result = read_string_until(pack_str, pos, "#");
-	return { value : { music : base64_decode(result.substr) }, offset : result.offset }; 
+music_node.read_function = function (properties_str /*, version */) {
+	return { music : base64_decode(properties_str) }; 
 }
 music_node.read_instance_function = function (inst) {
 	return { music : inst.music }
@@ -246,9 +212,8 @@ branefuck_node = new node_struct("bf", "obj_ev_pack_branefuck_node");
 branefuck_node.properties_generator = function () {
 	return { program : "" }	
 }
-branefuck_node.read_function = function (pack_str, pos /*, version */) {
-	var result = read_string_until(pack_str, pos, "#");
-	return { value : { program : base64_decode(result.substr) }, offset : result.offset }; 
+branefuck_node.read_function = function (properties_str /*, version */) {
+	return { program : base64_decode(properties_str) }; 
 }
 branefuck_node.read_instance_function = function (inst) {
 	return { program : inst.program }
@@ -261,7 +226,10 @@ branefuck_node.write_instance_function = function (node_state) {
 		{ program : node_state.properties.program })
 }
 
+thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node");
+
+
 
 
 // List of all the nodes a user should be able to create
-nodes_list = [brand_node, music_node, branefuck_node];
+nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node];

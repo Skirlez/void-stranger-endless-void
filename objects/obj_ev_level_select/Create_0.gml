@@ -1,30 +1,48 @@
 event_inherited()
 
 
-
+enum level_selector_modes {
+	levels,
+	packs,
+	selecting_level_for_pack
+}
 
 function delete_level(save_name) {
 	file_delete(global.levels_directory + save_name + "." + level_extension)	
 }
 
-if !pack_selector {
+if mode != level_selector_modes.selecting_level_for_pack {
 	var back_button = instance_create_layer(200, 16, buttons_layer, asset_get_index("obj_ev_main_menu_button"), {
 		base_scale_x : 1,
 		base_scale_y : 0.7,
 		txt : "Back",
 		room_name : "rm_ev_menu",
 	});
-
-	var new_button = instance_create_layer(24, 16, buttons_layer, asset_get_index("obj_ev_executing_button"), {
-		base_scale_x : 0.9,
-		base_scale_y : 0.8,
-		txt : "NEW",
-		func : function () {
-			global.editor_instance.reset_global_level();
-			ev_claim_level(global.level)
-			room_goto(asset_get_index("rm_ev_editor"))	
-		}
-	});
+	
+	var new_button;
+	if (mode == level_selector_modes.levels) {
+		new_button = instance_create_layer(24, 16, buttons_layer, asset_get_index("obj_ev_executing_button"), {
+			base_scale_x : 0.9,
+			base_scale_y : 0.8,
+			txt : "NEW",
+			func : function () {
+				global.editor_instance.reset_global_level();
+				ev_claim_level(global.level)
+				room_goto(asset_get_index("rm_ev_editor"))	
+			}
+		});
+	}
+	else {
+		new_button = instance_create_layer(24, 16, buttons_layer, asset_get_index("obj_ev_executing_button"), {
+			base_scale_x : 0.9,
+			base_scale_y : 0.8,
+			txt : "NEW",
+			func : function () {
+				global.editor_instance.reset_global_pack();
+				room_goto(asset_get_index("rm_ev_pack_editor"))	
+			}
+		});
+	}
 	
 
 	var online_switch = instance_create_layer(112 + 29, 12, buttons_layer, asset_get_index("obj_ev_online_switch"), {
@@ -38,9 +56,22 @@ if !pack_selector {
 	add_child(online_switch)
 	add_child(refresh_button)
 }
+else {
+	var back_button = instance_create_layer(200, 16, buttons_layer, asset_get_index("obj_ev_executing_button"), {
+		base_scale_x : 1,
+		base_scale_y : 0.7,
+		txt : "Back",
+		func : function () {
+			instance_destroy(window);
+		}
+		
+	});	
+	add_child(back_button);
+}
+
 
 function level_clicked(display_inst) {
-	if !pack_selector {
+	if mode != level_selector_modes.selecting_level_for_pack {
 		with (display_inst) {
 			global.mouse_layer = -1;
 			global.editor_instance.preview_level_transition(display_inst.lvl, display_inst.lvl_sha, display_inst)
@@ -58,6 +89,7 @@ function level_clicked(display_inst) {
 				lvl : lvl,
 				draw_beaten : false,
 				no_spoiling : false,
+				no_redraw : true,
 				display_context : display_contexts.pack_editor,
 				image_xscale : 0.2,
 				image_yscale : 0.2
@@ -97,8 +129,6 @@ function create_displays() {
 	
 	var start = (search_box.txt == "" ? global.level_start * 6 : 0)
 	for (var i = start; i < array_length(levels) && count < 6; i++) {
-
-
 		var lvl_string = levels[i];
 		var lvl_version = get_level_version_from_string(lvl_string)
 		if (lvl_version == -1 || lvl_version > global.latest_lvl_format)
@@ -160,7 +190,7 @@ search_box.depth--;
 
 
 
-function switch_mode(new_mode) {
+function switch_internet_mode(new_mode) {
 	global.level_start = 0
 	if (new_mode == 0)
 		levels = offline_levels 
@@ -178,6 +208,8 @@ add_child(search_box)
 display_object = asset_get_index("obj_ev_display")
 files = []
 function read_offline_levels() {
+	if (mode == level_selector_modes.packs) 
+		return [];
 	files = get_all_files(global.levels_directory, level_extension)
 	var offline_levels = array_create(array_length(files));
 	for (var i = 0; i < array_length(files); i++) {
@@ -188,6 +220,8 @@ function read_offline_levels() {
 	
 	}
 	return offline_levels
+
+	
 }
 function sort_online_levels() {	
 	array_sort(online_levels, function (lvl_str_1, lvl_str_2) {
@@ -203,7 +237,7 @@ function sort_online_levels() {
 
 
 offline_levels = read_offline_levels();
-if !pack_selector { 
+if mode != level_selector_modes.selecting_level_for_pack { 
 	online_levels = copy_array(global.online_levels)
 	sort_online_levels()
 	

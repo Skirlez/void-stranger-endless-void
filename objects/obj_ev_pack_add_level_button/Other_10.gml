@@ -9,7 +9,7 @@ with (asset_get_index("obj_ev_pack_editor"))
 
 
 new_window(cam_x, cam_y, asset_get_index("obj_ev_level_select"), {
-	pack_selector : true,
+	mode : level_selector_modes.selecting_level_for_pack,
 	layer_num : global.mouse_layer,
 	buttons_layer : "LevelSelectWindowElements"
 })

@@ -23,8 +23,8 @@ function ev_load() {
 	global.memory_style = ini_read_real("options", "memory", 0)
 	global.wings_style = ini_read_real("options", "wings", 0)
 	global.blade_style = ini_read_real("options", "blade", 0)
-	
 	global.highest_grube_stack = ini_read_real("stats", "grube", 0)
+	
 	ini_close()
 	ev_update_vars()
 }
@@ -33,7 +33,7 @@ function ev_update_vars() {
 	global.server = "http://" + global.server_ip + ":3000/voyager"
 	var folder = string_lettersdigits(global.server_ip);
 	global.levels_directory = game_save_id + folder + "\\levels\\"
-	
+	global.packs_directory = game_save_id + folder + "\\packs\\"
 	if (global.compiled_for_merge)
 		asset_get_index("scr_menueyecatch")(0)
 

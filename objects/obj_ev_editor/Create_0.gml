@@ -4,6 +4,7 @@
 
 randomize()
 global.latest_lvl_format = 2;
+global.latest_pack_format = 1;
 global.ev_version = "0.90";
 
 global.fb_ancient = 1;
