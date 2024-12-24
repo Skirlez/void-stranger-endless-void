@@ -24,7 +24,7 @@ function level_struct() constructor {
 		objects[i] = array_create(14, new tile_with_state(global.editor_instance.object_empty))	
 		
 	// This name will be used for when the file is saved.
-	save_name = generate_level_save_name()
+	save_name = generate_save_name()
 	upload_date = "";
 	last_edit_date = "";
 	
@@ -40,7 +40,7 @@ function place_placeholder_tiles(level) {
 }
 
 
-function generate_level_save_name() {
+function generate_save_name() {
 	return base64_encode(date_string() + string(irandom($7fffffffffffffff)));	
 }
 function date_string() {

@@ -13,9 +13,6 @@
 // Both node states and instances have some form of id, position, and list of exits 
 // (outwards connections). There is one of each for each node a user creates in the editor.
 
-
-destinations = ds_map_create()
-
 previous_mouse_x = mouse_x;
 previous_mouse_y = mouse_y;
 
@@ -23,6 +20,7 @@ dragging_camera = false;
 
 zoom = 0;
 
+pack_room = asset_get_index("rm_ev_pack_editor")
 
 // for development...
 //ev_play_music(asset_get_index("msc_beecircle"))

@@ -41,7 +41,7 @@ function ev_update_vars() {
 
 function save_level(lvl)
 {
-	var file = file_text_open_write(global.levels_directory + lvl.save_name + "." + "vsl")
+	var file = file_text_open_write(global.levels_directory + lvl.save_name + "." + level_extension)
 	if (file == -1)
 		return;
 	var str = export_level(lvl)
@@ -49,3 +49,12 @@ function save_level(lvl)
 	file_text_close(file)
 }
 
+function save_pack(pack)
+{
+	var file = file_text_open_write(global.packs_directory + pack.save_name + "." + pack_extension)
+	if (file == -1)
+		return;
+	var str = export_pack(pack)
+	file_text_write_string(file, str)
+	file_text_close(file)
+}

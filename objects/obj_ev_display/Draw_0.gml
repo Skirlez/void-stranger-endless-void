@@ -171,7 +171,7 @@ if draw_brand {
 
 if draw_name {
 	if (!surface_exists(name_surface)) {
-		var txt = lvl.name
+		var txt = lvl.name;
 		name_surface = surface_create((string_width(txt) + 2), (string_height(txt) + 2));	
 		surface_set_target(name_surface)
 		draw_clear_alpha(c_black, 0)

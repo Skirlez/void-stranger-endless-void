@@ -208,8 +208,19 @@ add_child(search_box)
 display_object = asset_get_index("obj_ev_display")
 files = []
 function read_offline_levels() {
-	if (mode == level_selector_modes.packs) 
-		return [];
+	if (mode == level_selector_modes.packs) { 
+		files = get_all_files(global.packs_directory, pack_extension)
+		var offline_levels = array_create(array_length(files));
+		for (var i = 0; i < array_length(files); i++) {
+			var file = file_text_open_read(global.packs_directory + files[i] + "." + pack_extension)
+			var pack_string = file_text_read_string(file)
+			lvl_string = get_thumbnail_level_string_from_pack_string(pack_string);
+			offline_levels[i] = lvl_string
+			file_text_close(file)
+	
+		}
+		return offline_levels
+	}
 	files = get_all_files(global.levels_directory, level_extension)
 	var offline_levels = array_create(array_length(files));
 	for (var i = 0; i < array_length(files); i++) {

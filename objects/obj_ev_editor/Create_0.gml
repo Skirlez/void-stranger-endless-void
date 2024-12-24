@@ -23,6 +23,7 @@ if (!global.compiled_for_merge) {
 }
 
 #macro level_extension "vsl"
+#macro pack_extension "vspk"
 
 global.save_directory = game_save_id
 global.server_ip = "skirlez.com"

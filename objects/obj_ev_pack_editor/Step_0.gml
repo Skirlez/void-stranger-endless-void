@@ -1,3 +1,6 @@
+if room != pack_room
+	exit;
+
 if ev_mouse_pressed() && global.instance_touching_mouse == noone && global.mouse_layer == 0 {
 
 	dragging_camera = true;

@@ -3,12 +3,9 @@ function pack_struct() constructor {
 	description = ""
 	author = "Anonymous"
 	author_brand = int64(0)
-	
 	starting_node_states = []
-
 	// This name will be used for when the file is saved
-	save_name = generate_level_save_name()
-	
+	save_name = generate_save_name()
 	upload_date = "";
 	last_edit_date = "";	
 }
@@ -89,6 +86,19 @@ function convert_room_nodes_to_structs() {
 }
 
 
+function import_pack_nodeless(pack_string) {
+	var pack = new pack_struct();
+	var arr = ev_string_split(pack_string, "&")
+	pack.version = int64_safe(arr[0], 1);
+	pack.name = base64_decode(arr[1])
+	pack.description = base64_decode(arr[2])
+	pack.author = base64_decode(arr[3])
+	pack.author_brand = int64_safe(arr[4], 0);
+	pack.upload_date = arr[5]
+	pack.last_edit_date = arr[6];
+	return pack;
+}
+
 function import_pack(pack_string) {
 	var pack = new pack_struct();
 	
@@ -139,6 +149,66 @@ function import_pack(pack_string) {
 	return pack;
 }
 
+
+function read_node_struct_from_state_string(str) {
+	var node_id = string_copy(str, 1, 2);
+	return ds_map_find_value(global.id_node_map, node_id);
+}
+function read_node_properties_from_state_string(str) {
+	var hash_count = 0;
+	var pos = 1
+	while (hash_count < 3 && pos <= string_length(str)) {
+		if string_char_at(str, pos) == "#"
+			hash_count++;
+		pos++;
+	}
+	var properties_str = string_copy(str, pos, string_length(str) - pos + 1);
+	return properties_str;
+}
+
+function read_node_state(str) {
+	var pos = 1;
+	var node_id = string_copy(str, pos, 2)
+	pos += 2
+	var node = ds_map_find_value(global.id_node_map, node_id)
+
+	// skip over hash
+	pos++;
+	
+	var pos_x;
+	
+	var result_1 = read_string_until(str, pos, ",")
+	var pos_x = int64_safe(result_1.substr, 0);
+	pos += result_1.offset + 1;
+	
+	var result_2 = read_string_until(str, pos, "#")
+	var pos_y = int64_safe(result_2.substr, 0);
+	pos += result_2.offset + 1;
+	
+	var node_state = new node_with_state(node, pos_x, pos_y, noone)
+	
+	
+	// TODO: this sucks
+	if (string_copy(str, pos, 1) != "#") {
+		while (true) {
+			var read_num = read_uint(str, pos);
+			array_push(node_state.intermediary_numbered_exits, read_num.number);
+			pos += read_num.offset;
+			if (string_copy(str, pos, 1) == "#")
+				break;
+			pos++;
+		}
+	}
+	// skip over hash
+	pos++; 
+	
+	var properties_str = string_copy(str, pos, string_length(str) - pos + 1);
+	node_state.properties = node.read_function(properties_str, global.newest_version);
+	
+	return node_state;
+}
+
+
 function export_pack_arr(pack) {
 	var version_string = string(global.latest_pack_format);
 	var name_string = base64_encode(pack.name)	
@@ -185,48 +255,6 @@ function export_pack_arr(pack) {
 	
 }
 
-function read_node_state(str) {
-	var pos = 1;
-	var node_id = string_copy(str, pos, 2)
-	pos += 2
-	var node = ds_map_find_value(global.id_node_map, node_id)
-
-	// skip over hash
-	pos++;
-	
-	var pos_x;
-	
-	var result_1 = read_string_until(str, pos, ",")
-	var pos_x = int64_safe(result_1.substr, 0);
-	pos += result_1.offset + 1;
-	
-	var result_2 = read_string_until(str, pos, "#")
-	var pos_y = int64_safe(result_2.substr, 0);
-	pos += result_2.offset + 1;
-	
-	var node_state = new node_with_state(node, pos_x, pos_y, noone)
-	
-	
-	// TODO: this sucks
-	if (string_copy(str, pos, 1) != "#") {
-		while (true) {
-			var read_num = read_uint(str, pos);
-			array_push(node_state.intermediary_numbered_exits, read_num.number);
-			pos += read_num.offset;
-			if (string_copy(str, pos, 1) == "#")
-				break;
-			pos++;
-		}
-	}
-	// skip over hash
-	pos++; 
-	
-	var properties_str = string_copy(str, pos, string_length(str) - pos + 1);
-	node_state.properties = node.read_function(properties_str, global.newest_version);
-	
-	return node_state;
-}
-
 
 function export_pack(pack) {
 	var arr = export_pack_arr(pack)
@@ -236,4 +264,39 @@ function export_pack(pack) {
 	}
 	
 	return str;
+}
+
+
+function get_thumbnail_level_string_from_pack_string(pack_string) {
+	var arr = ev_string_split(pack_string, "&")
+	// the seventh section contains all the nodes
+	var node_string = arr[7];
+	
+	var node_state_strings = ev_string_split(node_string, "$");
+	for (var i = 0; i < array_length(node_state_strings); i++) {
+		var node = read_node_struct_from_state_string(node_state_strings[i]);
+		if (node != pack_editor_inst().thumbnail_node) 
+			continue;
+		var node_state = read_node_state(node_state_strings[i]);
+		if (array_length(node_state.intermediary_numbered_exits) != 1) 
+			continue;
+		var index = node_state.intermediary_numbered_exits[0];
+		
+		var level_node_string = node_state_strings[index];
+		if (read_node_struct_from_state_string(level_node_string) != pack_editor_inst().level_node)
+			continue;
+			
+		var level_string = read_node_properties_from_state_string(level_node_string);
+		return level_string;
+	}
+	// haven't got any thumbnail nodes connected to levels. just use any level we find
+	for (var i = 0; i < array_length(node_state_strings); i++) {
+		var node = read_node_struct_from_state_string(node_state_strings[i]);
+		if (node == pack_editor_inst().level_node) {
+			var level_string = read_node_properties_from_state_string(node_state_strings[i]);
+			return level_string;
+		}
+	}
+	// fuck
+	return noone;
 }

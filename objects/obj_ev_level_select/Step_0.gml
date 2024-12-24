@@ -7,7 +7,7 @@ if keyboard_check(vk_control) && keyboard_check_pressed(ord("V")) && !global.onl
 		exit;
 	
 	try {
-		var file = file_text_open_write(global.levels_directory + generate_level_save_name() + "." + level_extension)
+		var file = file_text_open_write(global.levels_directory + generate_save_name() + "." + level_extension)
 		file_text_write_string(file, str);
 		file_text_close(file)
 		ev_notify("Level pasted!")
