@@ -42,7 +42,7 @@ if global.erasing != -1 {
 	if global.erasing == -1 {
 		// previously i actually added an additional add_undo() here so you could 
 		// undo erasing the level, but now i'd have to implement metadata undoing, and i don't want to
-		history = [] 
+		history = []
 		var retain_save_name = global.level.save_name
 		ev_stop_music()
 		reset_global_level()
@@ -146,6 +146,10 @@ else if (edit_transition != -1) {
 		global.mouse_layer = 0;
 		room_goto(asset_get_index("rm_ev_editor"));
 	}
+}
+else if (edit_pack_transition != -1) {
+	edit_pack_transition--;
+
 }
 
 if room == global.editor_room { 

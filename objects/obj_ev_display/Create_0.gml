@@ -243,11 +243,9 @@ border_sprite = asset_get_index("spr_ev_display_border")
 enum display_contexts {
 	level_editor,
 	level_select,
+	level_select_pack,
 	pack_editor,
 }
-
-draw_name = display_context != display_contexts.level_editor;
-draw_brand = display_context != display_contexts.level_editor;
 
 draw_set_font(global.ev_font)
 

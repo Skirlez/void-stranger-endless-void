@@ -8,12 +8,14 @@
 
 
 function level_struct() constructor {
+
 	name = ""
 	description = ""
-	music = global.music_names[1]
-	burdens = [false, false, false, false, false]
+	music = global.music_names[1];
 	author = "Anonymous"
 	author_brand = int64(0)
+	
+	burdens = [false, false, false, false, false]
 	tiles = array_create(9);
 	objects = array_create(9);
 	for (var i = 0; i < array_length(tiles) - 1; i++)
@@ -178,6 +180,8 @@ function get_level_date_from_string(level_string) {
 	var str = string_copy(level_string, start, string_pos_ext("|", level_string, start) - start);
 	return str;
 }
+
+
 
 
 

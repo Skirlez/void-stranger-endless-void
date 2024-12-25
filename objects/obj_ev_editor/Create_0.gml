@@ -42,7 +42,7 @@ else
 
 // Since there is no destructor for structs, we need to create a map
 // to track structs that use maps so we can destroy them when they're garbage collected.
-// This function is ran every second in alarm 0.
+// This function is ran every set interval in alarm 0.
 global.struct_map_cleaner = ds_map_create()
 function clean_struct_maps() {
 	var keys = ds_map_keys_to_array(global.struct_map_cleaner)
@@ -53,7 +53,7 @@ function clean_struct_maps() {
 		ds_map_destroy(map);
 	}
 }
-alarm[0] = 60;
+alarm[0] = 120;
 
 
 window_set_cursor(cr_default)
@@ -1339,10 +1339,6 @@ function reset_global_level() {
 reset_global_level()
 
 
-function reset_global_pack() {
-	global.pack = new pack_struct()
-}
-reset_global_pack()
 
 
 function switch_tile_mode(new_tile_mode) {
@@ -1421,10 +1417,13 @@ global.menu_music = asset_get_index(get_menu_music_name())
 
 
 
-play_transition = -1
-max_play_transition = 20
-play_transition_display = noone
-play_transition_surface = noone;
+
+
+
+move_curve = animcurve_get_channel(ac_play_transition, "move")
+grow_curve = animcurve_get_channel(ac_play_transition, "grow")
+preview_curve = animcurve_get_channel(ac_preview_curve, 0)
+edit_curve = animcurve_get_channel(ac_edit_curve, 0)
 
 
 preview_transition = -1
@@ -1432,15 +1431,6 @@ max_preview_transition = 25
 preview_transition_display = noone
 preview_transition_highlight = noone
 
-
-edit_transition = -1
-max_edit_transition = 30
-edit_transition_display = noone
-
-move_curve = animcurve_get_channel(ac_play_transition, "move")
-grow_curve = animcurve_get_channel(ac_play_transition, "grow")
-preview_curve = animcurve_get_channel(ac_preview_curve, 0)
-edit_curve = animcurve_get_channel(ac_edit_curve, 0)
 
 function preview_level_transition(lvl, lvl_sha, display_instance) {
 	global.mouse_layer = -1
@@ -1455,13 +1445,33 @@ function preview_level_transition(lvl, lvl_sha, display_instance) {
 	})
 }
 
+function preview_level_pack_transition(nodeless_pack, display_instance) {
+	global.mouse_layer = -1
+	display_instance.layer = layer_get_id("HighlightedLevel")
+	preview_transition = max_preview_transition
+	preview_transition_display = display_instance
+	preview_transition_highlight = instance_create_layer(0, 0, "LevelHighlight", asset_get_index("obj_ev_pack_highlight"), {
+		nodeless_pack : nodeless_pack,
+		display_instance : display_instance,
+		alpha : 0
+	})
+}
+
+
+
+
+play_transition = -1
+max_play_transition = 20
+play_transition_display = noone
+play_transition_surface = noone;
+
 function play_level_transition(lvl, lvl_sha, display_instance) {
 	global.level = lvl;
 	global.level_sha = lvl_sha
 	play_transition = max_play_transition
 	play_transition_display = display_instance
 	play_transition_surface = display_instance.game_surface;
-	display_instance.draw_brand = false;
+	display_instance.brand = 0;
 	display_instance.draw_beaten = 0;
 	global.mouse_layer = -1
 }
@@ -1470,15 +1480,38 @@ function play_pack_transition(lvl, lvl_sha, display_instance) {
 	//TODO
 }
 
+edit_transition = -1
+max_edit_transition = 30
+edit_transition_display = noone
+
 function edit_level_transition(lvl, display_instance) {
 	global.level = lvl;
 	ev_stop_music()
 	edit_transition = max_edit_transition
 	edit_transition_display = display_instance
-	display_instance.draw_brand = false;
+	display_instance.brand = 0;
 	display_instance.draw_beaten = 0;
 	global.mouse_layer = -1
 }
+
+edit_pack_transition = -1
+max_edit_pack_transition = 1
+edit_pack_transition_display = noone
+
+function edit_level_pack_transition(nodeless_pack, display_instance) {
+	var pack_string = read_pack_string_from_file(nodeless_pack.save_name)
+	var pack = import_pack(pack_string)
+	pack.save_name = nodeless_pack.save_name;
+	room_goto(asset_get_index("rm_ev_pack_editor"))
+	
+	global.pack = pack;
+	edit_pack_transition = max_edit_pack_transition
+	edit_pack_transition_display = display_instance
+	display_instance.draw_beaten = 0;
+	global.mouse_layer = -1
+}
+
+
 
 // used in obj_ev_level_select, is essentially the level "page". we want this to be global so it persists
 global.level_start = 0;
@@ -1514,9 +1547,6 @@ function remove_level_key(level_save_name) {
 	ds_map_delete(global.key_level_map, key)
 	ds_map_delete(global.level_key_map, level_save_name)
 }
-
-
-
 function on_server_validate_startup(valid_str) {
 	var arr_ind = 0;
 	for (var i = 1; i <= string_length(valid_str); i++) {

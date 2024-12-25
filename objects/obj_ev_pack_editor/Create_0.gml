@@ -94,7 +94,6 @@ function calculate_zoom() {
 
 
 
-
 // read node properties from instance
 default_instance_reader = function (inst) {
 	return global.empty_struct;
@@ -180,6 +179,8 @@ level_node.write_instance_function = function (node_state) {
 	return instance_create_layer(node_state.pos_x, node_state.pos_y, "PackLevels", node_state.node.object_ind, 
 	{ 
 		lvl : node_state.properties.level,
+		name : node_state.properties.level.name,
+		brand : node_state.properties.level.author_brand,
 		draw_beaten : false,
 		no_spoiling : false,
 		display_context : display_contexts.pack_editor,
@@ -231,3 +232,12 @@ thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node");
 
 // List of all the nodes a user should be able to create
 nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node];
+
+
+function reset_global_pack() {
+	global.pack = new pack_struct()
+	array_push(global.pack.starting_node_states, 
+		new node_with_state(root_node,
+		 350, 1440 / 2))
+}
+reset_global_pack();

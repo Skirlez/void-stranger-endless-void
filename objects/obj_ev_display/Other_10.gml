@@ -4,5 +4,4 @@ event_inherited()
 if (global.mouse_layer != layer_num)
 	exit
 
-
 window.level_clicked(id);

@@ -19,20 +19,24 @@ function place_pack_into_room(pack) {
 		instance_destroy(node_instances[i]);	
 	}
 	
-	function place_node_and_exits(node_state) {
+	var map = ds_map_create();
+	function place_node_and_exits(node_state, explored_structs_map) {
+		if (ds_map_exists(explored_structs_map, node_state))
+			return ds_map_find_value(explored_structs_map, node_state);
 		var instance = node_state.write_instance();
+		ds_map_set(explored_structs_map, node_state, instance);
 		
 		for (var i = 0; i < array_length(node_state.exits); i++) {
-			var exit_instance = place_node_and_exits(node_state.exits[i])
+			var exit_instance = place_node_and_exits(node_state.exits[i], explored_structs_map)
 			array_push(instance.exit_instances, exit_instance)
 		}
 		return instance;
 	}
 	
 	for (var i = 0; i < array_length(pack.starting_node_states); i++) {
-		place_node_and_exits(pack.starting_node_states[i]);
+		place_node_and_exits(pack.starting_node_states[i], map);
 	}
-	
+	ds_map_destroy(map);
 }
 
 // returns an array of all the starting nodes as structs with all the nodes they're connected to also converted to structs and linked to each other
@@ -85,7 +89,6 @@ function convert_room_nodes_to_structs() {
 	return starting_node_states;
 }
 
-
 function import_pack_nodeless(pack_string) {
 	var pack = new pack_struct();
 	var arr = ev_string_split(pack_string, "&")
@@ -115,9 +118,6 @@ function import_pack(pack_string) {
 	
 	var all_node_states = [];
 	
-	
-
-
 	
 	// $ is reserved for this purpose - it cannot be used anywhere else but delimiting node state strings
 	var node_state_strings = ev_string_split(node_string, "$");
@@ -299,4 +299,11 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 	}
 	// fuck
 	return noone;
+}
+
+function read_pack_string_from_file(save_name) {
+	var file = file_text_open_read(global.packs_directory + save_name + "." + pack_extension)
+	var pack_string = file_text_read_string(file)
+	file_text_close(file)
+	return pack_string;
 }

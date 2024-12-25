@@ -39,7 +39,8 @@ save_and_quit_button = instance_create_layer(112 + 45, 72 - 34, "WindowElements"
 {
 	txt : "Save & Quit",
 	func : function() {
-		on_press_save_button();
+		with (window)
+			on_press_save_button();
 		room_goto(asset_get_index("rm_ev_pack_select"))
 	},
 	base_scale_x : 2.5,

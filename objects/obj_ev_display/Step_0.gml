@@ -144,6 +144,7 @@ switch (display_context) {
 		}
 		break;
 	case display_contexts.level_select:
+	case display_contexts.level_select_pack:
 		break;
 	case display_contexts.pack_editor:
 		var cam_x = camera_get_view_x(view_camera[0])

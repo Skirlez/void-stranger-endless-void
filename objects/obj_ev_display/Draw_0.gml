@@ -146,7 +146,7 @@ draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
 draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 1)
 
 
-if draw_brand {
+if brand != 0 {
 	if !surface_exists(brand_surface) || cached_author_brand != lvl.author_brand {
 		brand_surface = surface_create(8, 8)
 		surface_set_target(brand_surface)
@@ -157,7 +157,7 @@ if draw_brand {
 		
 		draw_set_color(c_white)
 		
-		ev_draw_brand(lvl.author_brand, 1, 1)
+		ev_draw_brand(brand, 1, 1)
 		
 		surface_reset_target()
 		cached_author_brand = lvl.author_brand
@@ -169,9 +169,9 @@ if draw_brand {
 
 
 
-if draw_name {
+if name != "" {
 	if (!surface_exists(name_surface)) {
-		var txt = lvl.name;
+		var txt = name;
 		name_surface = surface_create((string_width(txt) + 2), (string_height(txt) + 2));	
 		surface_set_target(name_surface)
 		draw_clear_alpha(c_black, 0)

@@ -1,2 +1,2 @@
 clean_struct_maps();
-alarm[0] = 60;
+alarm[0] = 120;

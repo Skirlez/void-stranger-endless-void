@@ -38,7 +38,9 @@ if mode != level_selector_modes.selecting_level_for_pack {
 			base_scale_y : 0.8,
 			txt : "NEW",
 			func : function () {
-				global.editor_instance.reset_global_pack();
+				pack_editor_inst().reset_global_pack();
+				ev_claim_pack(global.pack)
+				
 				room_goto(asset_get_index("rm_ev_pack_editor"))	
 			}
 		});
@@ -73,10 +75,12 @@ else {
 function level_clicked(display_inst) {
 	if mode != level_selector_modes.selecting_level_for_pack {
 		with (display_inst) {
-			global.mouse_layer = -1;
-			global.editor_instance.preview_level_transition(display_inst.lvl, display_inst.lvl_sha, display_inst)
 			highlighted = true;	
 		}
+		if (other.mode == level_selector_modes.packs)
+			global.editor_instance.preview_level_pack_transition(display_inst.nodeless_pack, display_inst)
+		else
+			global.editor_instance.preview_level_transition(display_inst.lvl, display_inst.lvl_sha, display_inst)
 	}
 	else {
 		var lvl = display_inst.lvl;
@@ -87,6 +91,8 @@ function level_clicked(display_inst) {
 			mouse_y - 144 * 0.2 / 2, "PackLevels", display_object, 
 			{
 				lvl : lvl,
+				name : lvl.name,
+				brand : lvl.author_brand,
 				draw_beaten : false,
 				no_spoiling : false,
 				no_redraw : true,
@@ -138,26 +144,48 @@ function create_displays() {
 			continue;
 		
 		var lvl_struct = import_level(lvl_string)
-		if (!global.online_mode)
-			lvl_struct.save_name = files[i]
 		
-		var sha = level_string_content_sha1(lvl_string)
-		var beat_value;
-		if ds_map_exists(global.beaten_levels_map, sha)
-			beat_value = ds_map_find_value(global.beaten_levels_map, sha)
-		else
-			beat_value = 0;
-		var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
-			lvl : lvl_struct,
-			lvl_sha : sha,
-			layer_num : layer_num,
-			draw_beaten : beat_value,
-			display_context : display_contexts.level_select,
-			no_spoiling : true,
-			image_xscale : 0.2,
-			image_yscale : 0.2
-		});
-		add_child(display);
+		if mode == level_selector_modes.packs {
+			var nodeless_pack = nodeless_packs[i];
+			
+			var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
+				lvl : lvl_struct,
+				name : nodeless_pack.name,
+				brand : nodeless_pack.author_brand,
+				nodeless_pack : nodeless_pack,
+				layer_num : layer_num,
+				display_context : display_contexts.level_select,
+				no_spoiling : true,
+				image_xscale : 0.2,
+				image_yscale : 0.2
+			});
+			add_child(display);		
+		}
+		else {
+			if (!global.online_mode)
+				lvl_struct.save_name = files[i]
+		
+			var sha = level_string_content_sha1(lvl_string)
+			var beat_value;
+			if ds_map_exists(global.beaten_levels_map, sha)
+				beat_value = ds_map_find_value(global.beaten_levels_map, sha)
+			else
+				beat_value = 0;
+			
+			var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
+				lvl : lvl_struct,
+				lvl_sha : sha,
+				name : lvl_struct.name,
+				brand : lvl_struct.author_brand,
+				layer_num : layer_num,
+				draw_beaten : beat_value,
+				display_context : display_contexts.level_select,
+				no_spoiling : true,
+				image_xscale : 0.2,
+				image_yscale : 0.2
+			});
+			add_child(display);
+		}
 
 	
 		pos++;
@@ -207,16 +235,23 @@ add_child(search_box)
 
 display_object = asset_get_index("obj_ev_display")
 files = []
+nodeless_packs = [];
 function read_offline_levels() {
 	if (mode == level_selector_modes.packs) { 
 		files = get_all_files(global.packs_directory, pack_extension)
+		nodeless_packs = array_create(array_length(files));
 		var offline_levels = array_create(array_length(files));
 		for (var i = 0; i < array_length(files); i++) {
-			var file = file_text_open_read(global.packs_directory + files[i] + "." + pack_extension)
-			var pack_string = file_text_read_string(file)
+			var pack_string = read_pack_string_from_file(files[i])
+			
+			var pack = import_pack_nodeless(pack_string);
+			pack.save_name = files[i];
+			
+			nodeless_packs[i] = pack;
+			
 			lvl_string = get_thumbnail_level_string_from_pack_string(pack_string);
 			offline_levels[i] = lvl_string
-			file_text_close(file)
+			
 	
 		}
 		return offline_levels
@@ -228,7 +263,6 @@ function read_offline_levels() {
 		var lvl_string = file_text_read_string(file)
 		offline_levels[i] = lvl_string
 		file_text_close(file)
-	
 	}
 	return offline_levels
 
@@ -257,8 +291,6 @@ if mode != level_selector_modes.selecting_level_for_pack {
 else {
 	levels = offline_levels
 }
-
-
 
 function on_level_update() {
 	if (global.online_mode) {
