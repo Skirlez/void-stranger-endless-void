@@ -16,4 +16,3 @@ spin_h = 0
 spin_v = 0
 image_speed = 0.1
 animate = true
-

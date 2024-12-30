@@ -43,6 +43,7 @@ selected_thing = pack_things.nothing;
 menu_remember_x = 0;
 menu_remember_y = 0;
 
+
 function on_menu_create() {
 	menu_remember_x = camera_get_view_x(view_camera[0])
 	menu_remember_y = camera_get_view_y(view_camera[0])
@@ -131,14 +132,20 @@ function node_struct(node_id, object_name) constructor {
 	self.properties_generator = global.editor_instance.return_noone;
 	self.properties = {};
 	
-	
 	self.read_function = pack_editor_inst().default_reader;
 	self.read_instance_function = pack_editor_inst().default_instance_reader;
 	self.write_function = pack_editor_inst().default_writer;
 	self.write_instance_function = pack_editor_inst().default_instance_writer;
+	
+	// called when judged with the hammer
+	// (node_instance)
+	self.on_judge_function = global.editor_instance.empty_function;
+	
+	// called when judgment stops
+	
+	// (node_instance, judgment_type)
+	self.on_stop_judge_function = global.editor_instance.empty_function;
 }
-
-
 
 root_node = new node_struct("ro", "obj_ev_pack_root");
 
@@ -223,6 +230,26 @@ branefuck_node.write_function = function (node_state) {
 branefuck_node.write_instance_function = function (node_state) {
 	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
 		{ program : node_state.properties.program })
+}
+branefuck_node.on_judge_function = function (node_instance) {
+	node_instance.textbox_instance = instance_create_layer(node_instance.x, node_instance.y + 20, "NodeJudgments", asset_get_index("obj_ev_textbox"), {
+		empty_text : "Branefuck Program",
+		txt : "",
+		allow_alphanumeric : false,
+		exceptions : global.branefuck_characterset,
+		char_limit : 260,
+		base_scale_x : 8,
+	});
+	node_instance.textbox_window = new_window(0, 0, asset_get_index("obj_ev_window"), {
+		layer_num : 0,	
+	});
+	node_instance.textbox_window.add_child(node_instance.textbox_instance);
+}
+branefuck_node.on_stop_judge_function = function(node_instance, judgment_type) {
+	if (judgment_type == judgment_types.spare) {
+		properties.program = node_instance.textbox_instance.txt
+		instance_destroy(node_instance.textbox_window)
+	}
 }
 
 thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node");

@@ -121,7 +121,7 @@ return_noone = function() {
 	return noone;
 }
 
-empty_function = function(tile_state, i, j) { };
+empty_function = function() { };
 
 return_tile_state_function = function(tile_state) { 
 	return tile_state 
@@ -975,6 +975,8 @@ function voidlord_io(b_form) {
 	};
 }	
 
+global.branefuck_characterset = ".+-[]><?0123456789";
+
 object_add = new editor_object(add_name, asset_get_index("spr_voider"), add_id, egg_statue_obj)
 object_add.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)
@@ -1513,7 +1515,7 @@ function edit_level_pack_transition(nodeless_pack, display_instance) {
 
 
 
-// used in obj_ev_level_select, is essentially the level "page". we want this to be global so it persists
+// used in obj_ev_level_select, is essentially the level/pack "page". we want this to be global so it persists
 global.level_start = 0;
 
 

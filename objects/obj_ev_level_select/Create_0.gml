@@ -1,11 +1,14 @@
 event_inherited()
 
 
+
+
 enum level_selector_modes {
 	levels,
 	packs,
 	selecting_level_for_pack
 }
+
 
 function delete_level(save_name) {
 	file_delete(global.levels_directory + save_name + "." + level_extension)	
@@ -84,6 +87,17 @@ function level_clicked(display_inst) {
 	}
 	else {
 		var lvl = display_inst.lvl;
+		
+		// no reason for us to store these things
+		lvl.description = ""
+		lvl.music = ""
+		lvl.author = ""
+		lvl.burdens = [false, false, false, false, false]
+		
+		lvl.upload_date = ""
+		lvl.last_edit_date = ""
+		lvl.save_name = ""
+		
 		instance_destroy(id)
 		
 		instance_create_layer(
@@ -215,7 +229,7 @@ search_box = instance_create_layer(112 - 30, 12, buttons_layer, asset_get_index(
 })
 
 search_box.depth--;
-
+add_child(search_box)
 
 
 function switch_internet_mode(new_mode) {
@@ -227,9 +241,9 @@ function switch_internet_mode(new_mode) {
 	create_displays();
 }
 
-
-
-add_child(search_box)
+// TODO
+if (mode == level_selector_modes.packs)
+	global.online_mode = false;
 
 
 

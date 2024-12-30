@@ -10,6 +10,8 @@ function node_instance_setup(max_exits, center_x_offset, center_y_offset) {
 	can_connect_to_me = true;
 	being_judged = true;
 	in_menu = false;
+	
+	node_type = global.object_node_map[? object_index];
 }
 
 function with_all_nodes(func, args) {
@@ -76,6 +78,8 @@ function node_instance_step() {
 							}
 						)
 					}
+					
+					node_type.on_judge_function(id);
 				}
 				else
 					being_judged = false;

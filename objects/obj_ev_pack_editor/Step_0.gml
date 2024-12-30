@@ -2,7 +2,6 @@ if room != pack_room
 	exit;
 
 if ev_mouse_pressed() && global.instance_touching_mouse == noone && global.mouse_layer == 0 {
-
 	dragging_camera = true;
 }
 else if ev_mouse_released()
@@ -25,19 +24,20 @@ if dragging_camera {
 previous_mouse_x = mouse_x;
 previous_mouse_y = mouse_y;
 
+if global.mouse_layer == 0 {
+	var prev_zoom = zoom
+	if mouse_wheel_down() {
+		zoom += 1;
+	}
+	if mouse_wheel_up() {
+		zoom -= 1;
+	}
 
-var prev_zoom = zoom
-if mouse_wheel_down() {
-	zoom += 1;
+	if (prev_zoom != zoom) {
+		calculate_zoom()
+	}
 }
-if mouse_wheel_up() {
-	zoom -= 1;
-}
-
-if (prev_zoom != zoom) {
-	calculate_zoom()
-}
-
+/*
 if keyboard_check_pressed(ord("S")) {
 	var room_nodes = convert_room_nodes_to_structs()
 	global.pack.starting_node_states = room_nodes;
