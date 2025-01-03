@@ -20,15 +20,11 @@ switch (image_index) {
 	case 4: // undo
 		global.editor_instance.undo();
 		break;
-	case 5: // settings
-		new_window(12, 8, asset_get_index("obj_ev_level_settings_window"))	
-		global.mouse_layer = 1
-		break;
-	case 6: // trash bin
+	case 5: // trash bin
 		global.erasing = 350;
 		audio_play_sound(comes_sound, 10, false, 1, 0, 1)
 		break;
-	case 7: // picker
+	case 6: // picker
 		if (global.selected_thing != thing_picker)
 			global.selected_thing = thing_picker
 		else

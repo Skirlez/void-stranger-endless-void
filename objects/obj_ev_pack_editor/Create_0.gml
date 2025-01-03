@@ -27,7 +27,8 @@ pack_room = asset_get_index("rm_ev_pack_editor")
 
 enum pack_things {
 	nothing,
-	hammer,	
+	hammer,
+	wrench,
 	selector,
 }
 
@@ -137,21 +138,16 @@ function node_struct(node_id, object_name) constructor {
 	self.write_function = pack_editor_inst().default_writer;
 	self.write_instance_function = pack_editor_inst().default_instance_writer;
 	
-	// called when judged with the hammer
-	// (node_instance)
-	self.on_judge_function = global.editor_instance.empty_function;
-	
-	// called when judgment stops
-	
-	// (node_instance, judgment_type)
-	self.on_stop_judge_function = global.editor_instance.empty_function;
+	// called when wrench is used
+	// params: (node_instance)
+	self.on_config = global.editor_instance.empty_function;
 }
 
 root_node = new node_struct("ro", "obj_ev_pack_root");
 
 brand_node = new node_struct("br", "obj_ev_pack_brand_node");
 brand_node.properties_generator = function () {
-	return { brand : global.author.brand }	
+	return { brand : int64(irandom_range(0, $FFFFFFFFF)) }	
 }
 brand_node.read_function = function (properties_str /*, version */) {
 	var brand = int64_safe(properties_str, 0);
@@ -167,7 +163,13 @@ brand_node.write_instance_function = function (node_state) {
 	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
 		{ brand : node_state.properties.brand })
 }
-
+brand_node.on_config = function (node_instance) {
+	global.mouse_layer = 1;
+	new_window_with_pos(node_instance.x, node_instance.y, 5, 5, asset_get_index("obj_ev_brand_node_window"), {
+		node_instance : node_instance
+	});
+}
+	
 level_node = new node_struct("lv", "obj_ev_display");
 level_node.properties_generator = function () {
 	return { lvl : new level_struct() }	
@@ -219,7 +221,7 @@ branefuck_node.properties_generator = function () {
 	return { program : "" }	
 }
 branefuck_node.read_function = function (properties_str /*, version */) {
-	return { program : base64_decode(properties_str) }; 
+	return { program : properties_str }; 
 }
 branefuck_node.read_instance_function = function (inst) {
 	return { program : inst.program }
@@ -231,34 +233,20 @@ branefuck_node.write_instance_function = function (node_state) {
 	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
 		{ program : node_state.properties.program })
 }
-branefuck_node.on_judge_function = function (node_instance) {
-	node_instance.textbox_instance = instance_create_layer(node_instance.x, node_instance.y + 20, "NodeJudgments", asset_get_index("obj_ev_textbox"), {
-		empty_text : "Branefuck Program",
-		txt : "",
-		allow_alphanumeric : false,
-		exceptions : global.branefuck_characterset,
-		char_limit : 260,
-		base_scale_x : 8,
+branefuck_node.on_config = function (node_instance) {
+	global.mouse_layer = 1;
+	new_window_with_pos(node_instance.x, node_instance.y, 10, 6, asset_get_index("obj_ev_branefuck_node_window"), {
+		node_instance : node_instance
 	});
-	node_instance.textbox_window = new_window(0, 0, asset_get_index("obj_ev_window"), {
-		layer_num : 0,	
-	});
-	node_instance.textbox_window.add_child(node_instance.textbox_instance);
 }
-branefuck_node.on_stop_judge_function = function(node_instance, judgment_type) {
-	if (judgment_type == judgment_types.spare) {
-		properties.program = node_instance.textbox_instance.txt
-		instance_destroy(node_instance.textbox_window)
-	}
-}
-
 thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node");
 
+count_node = new node_struct("ct", "obj_ev_pack_count_node");
 
 
 
 // List of all the nodes a user should be able to create
-nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node];
+nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node, count_node];
 
 
 function reset_global_pack() {

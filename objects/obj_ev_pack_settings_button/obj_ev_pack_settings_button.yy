@@ -1,7 +1,7 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_ev_pack_settings",
+  "name": "obj_ev_pack_settings_button",
   "eventList": [
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":2,"eventType":3,"isDnD":false,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
@@ -35,8 +35,8 @@
   ],
   "solid": false,
   "spriteId": {
-    "name": "spr_ev_tools",
-    "path": "sprites/spr_ev_tools/spr_ev_tools.yy",
+    "name": "spr_ev_gear",
+    "path": "sprites/spr_ev_gear/spr_ev_gear.yy",
   },
   "spriteMaskId": null,
   "visible": true,

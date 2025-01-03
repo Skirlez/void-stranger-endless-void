@@ -83,7 +83,7 @@ global.mouse_right_released = false;
 #macro thing_eraser 1
 #macro thing_placeable 2
 #macro thing_multiplaceable 3
-#macro thing_picker 7
+#macro thing_picker 6
 
 #macro flag_unremovable 1
 #macro flag_only_one 2

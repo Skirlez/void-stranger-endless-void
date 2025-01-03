@@ -93,10 +93,12 @@ function level_clicked(display_inst) {
 		lvl.music = ""
 		lvl.author = ""
 		lvl.burdens = [false, false, false, false, false]
-		
 		lvl.upload_date = ""
 		lvl.last_edit_date = ""
 		lvl.save_name = ""
+		
+		// don't display brand (it hides level number)
+		lvl.author_brand = 0;
 		
 		instance_destroy(id)
 		

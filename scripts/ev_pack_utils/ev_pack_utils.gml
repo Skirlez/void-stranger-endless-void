@@ -3,7 +3,7 @@ function ev_draw_pack_line(x1, y1, x2, y2) {
 	draw_line_width(x1, y1,	x2, y2, 2)
 	static arrow_sprite = asset_get_index("spr_pack_arrow")
 	
-	var t = (global.editor_time % 200) / 200
+	var t = get_pack_line_arrow_progress();
 	var pos_x = lerp(x1, x2, t)
 	var pos_y = lerp(y1, y2, t)
 
@@ -33,6 +33,12 @@ function ev_draw_pack_line(x1, y1, x2, y2) {
 		pos_y - 9 * dsin(angle_target + 90) - 4, "1", 0, 300, scale * 0.5, scale * 0.5, 0)
 	*/
 }
+
+function get_pack_line_arrow_progress() {
+	return (global.editor_time % 200) / 200;	
+}
+
+
 function pack_editor_inst() {
 	static index = asset_get_index("obj_ev_pack_editor")
 	if instance_exists(index)

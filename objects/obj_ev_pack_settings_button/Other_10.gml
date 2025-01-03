@@ -10,3 +10,4 @@ new_window(14, 9, asset_get_index("obj_ev_pack_settings_window"), {
 })
 
 pack_editor_inst().select(pack_things.nothing)
+

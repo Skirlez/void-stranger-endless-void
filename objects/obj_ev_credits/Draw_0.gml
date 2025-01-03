@@ -56,8 +56,8 @@ Skirlez
 KyuuMetis
 Pyredrid - Branefuck functions
 Meepster99 - GBAStranger export
-gullwingdoors - Pencil Icon
-juliascythe - Helping with eventually creating the Grube
+gullwingdoors - Pencil icon
+juliascythe - Helping with 3D cube rendering and the Grube
 
 Music Credits:
 Sunday - crappyblue - astra_jam (...ad astra)
@@ -67,8 +67,12 @@ Wednesday - gooeyPhantasm - Blossom (Dancing lesson, Blossom chime)
 Friday - gooeyPhantasm - Endless Void (Voided)
 Thursday/Saturday - eebrozgi - Stealie Feelies (slowed down) 
 
+SFX Credits:
+
 Clicking Seatbelt.wav by fatboy94 -- https://freesound.org/s/535807/ 
 -- License: Creative Commons 0
+toy rattle 2.aiff by SubUnit_FieldRec -- https://freesound.org/s/262380/ 
+-- License: Attribution NonCommercial 4.0
 
 ";
 

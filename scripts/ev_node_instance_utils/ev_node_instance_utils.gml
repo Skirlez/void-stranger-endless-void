@@ -1,17 +1,18 @@
 function node_instance_setup(max_exits, center_x_offset, center_y_offset) {
-	id.center_x_offset = center_x_offset
-	id.center_y_offset = center_y_offset
+	id.center_x_offset = center_x_offset;
+	id.center_y_offset = center_y_offset;
 	center_x = x + center_x_offset;
 	center_y = y + center_y_offset;
 	mouse_moving = false;
 	connecting_exit = false;
-	exit_instances = []
+	exit_instances = [];
 	id.max_exits = max_exits;
 	can_connect_to_me = true;
 	being_judged = true;
 	in_menu = false;
-	
 	node_type = global.object_node_map[? object_index];
+	
+	properties = node_type.properties_generator();
 }
 
 function with_all_nodes(func, args) {
@@ -36,7 +37,7 @@ function node_instance_step() {
 	static judgment_object = asset_get_index("obj_ev_pack_node_judgment")
 	static root_node_obj = asset_get_index("obj_ev_pack_root")
 	
-
+	
 	if (ev_is_mouse_on_me()) {
 		if in_menu && pack_editor_inst().selected_thing == pack_things.selector {
 			// TODO
@@ -78,11 +79,16 @@ function node_instance_step() {
 							}
 						)
 					}
-					
-					node_type.on_judge_function(id);
 				}
 				else
 					being_judged = false;
+			}
+		}
+		else if pack_editor_inst().selected_thing == pack_things.wrench {
+			if ev_mouse_pressed() {
+				static wrench_sound = asset_get_index("snd_ev_use_wrench");
+				node_type.on_config(id);	
+				audio_play_sound(wrench_sound, 10, false, 1, 0, random_range(0.9, 1.1))
 			}
 		}
 	}
@@ -104,6 +110,10 @@ function node_instance_step() {
 				array_push(exit_instances, node_inst)
 				var connect_sound = asset_get_index("snd_ev_node_connect")
 				audio_play_sound(connect_sound, 10, false, 1, 0, random_range(0.9, 1.1))
+				
+				if (node_type == pack_editor_inst().count_node) {
+					
+				}
 			}
 		}
 	}
