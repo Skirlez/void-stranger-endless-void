@@ -1,4 +1,3 @@
-
 event_inherited();
 
 enum judgment_types {

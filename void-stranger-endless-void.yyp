@@ -339,7 +339,7 @@
     {"id":{"name":"obj_ev_swapper_target","path":"objects/obj_ev_swapper_target/obj_ev_swapper_target.yy",},},
     {"id":{"name":"spr_ev_lily_attack_r","path":"sprites/spr_ev_lily_attack_r/spr_ev_lily_attack_r.yy",},},
     {"id":{"name":"obj_ev_info","path":"objects/obj_ev_info/obj_ev_info.yy",},},
-    {"id":{"name":"spr_pack_arrow","path":"sprites/spr_pack_arrow/spr_pack_arrow.yy",},},
+    {"id":{"name":"spr_ev_pack_arrow","path":"sprites/spr_ev_pack_arrow/spr_ev_pack_arrow.yy",},},
     {"id":{"name":"spr_ev_void_sword_flash_two","path":"sprites/spr_ev_void_sword_flash_two/spr_ev_void_sword_flash_two.yy",},},
     {"id":{"name":"obj_ev_change_wings","path":"objects/obj_ev_change_wings/obj_ev_change_wings.yy",},},
     {"id":{"name":"spr_deathfloor","path":"sprites/spr_deathfloor/spr_deathfloor.yy",},},

@@ -301,7 +301,7 @@
     {"name":"obj_ev_swapper_target","order":1,"path":"objects/obj_ev_swapper_target/obj_ev_swapper_target.yy",},
     {"name":"spr_ev_lily_attack_r","order":1,"path":"sprites/spr_ev_lily_attack_r/spr_ev_lily_attack_r.yy",},
     {"name":"obj_ev_info","order":46,"path":"objects/obj_ev_info/obj_ev_info.yy",},
-    {"name":"spr_pack_arrow","order":45,"path":"sprites/spr_pack_arrow/spr_pack_arrow.yy",},
+    {"name":"spr_ev_pack_arrow","order":45,"path":"sprites/spr_ev_pack_arrow/spr_ev_pack_arrow.yy",},
     {"name":"spr_ev_void_sword_flash_two","order":10,"path":"sprites/spr_ev_void_sword_flash_two/spr_ev_void_sword_flash_two.yy",},
     {"name":"obj_ev_change_wings","order":1,"path":"objects/obj_ev_change_wings/obj_ev_change_wings.yy",},
     {"name":"spr_deathfloor","order":26,"path":"sprites/spr_deathfloor/spr_deathfloor.yy",},

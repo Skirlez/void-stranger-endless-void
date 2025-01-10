@@ -7,11 +7,12 @@ if !doing_animation {
 		selector.start_return_sequence(index)
 		audio_play_sound(asset_get_index("snd_ev_textbox_click"), 10, false, 1, 0, 0.9)
 		vsp = -3;
+		animation_power = 2;
 	}
 }
 else {
 	animation_time++;
-	radius = animcurve_channel_evaluate(curve, animation_time / 15) * animation_radius
+	radius = animcurve_channel_evaluate(curve, power(animation_time / 15, animation_power)) * animation_radius
 
 	if animation_time == 15 {
 		

@@ -22,3 +22,4 @@ pos_y = y;
 
 y_bounce = 0;
 vsp = 0;
+animation_power = 1;

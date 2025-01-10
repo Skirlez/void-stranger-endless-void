@@ -1,7 +1,7 @@
 function ev_draw_pack_line(x1, y1, x2, y2) {
 	draw_set_color(c_black)
 	draw_line_width(x1, y1,	x2, y2, 2)
-	static arrow_sprite = asset_get_index("spr_pack_arrow")
+	static arrow_sprite = asset_get_index("spr_ev_pack_arrow")
 	
 	var t = get_pack_line_arrow_progress();
 	var pos_x = lerp(x1, x2, t)

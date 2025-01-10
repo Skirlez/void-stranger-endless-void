@@ -33,10 +33,11 @@ function start_return_sequence(index) {
 bounce_text = ""
 bounces = 0;
 function return_bounce(instance) {
-	var pitch = (bounces == array_length(element_objects) - 1) ? 1.6 : 1.2
-	var gain = (bounces == array_length(element_objects) - 1) ? 1 : 0.8
+	var last = (bounces == array_length(element_objects) - 1);
+	var pitch = last ? 1.6 : 1.2
+	var gain = last ? 1 : 0.8
 	audio_play_sound(asset_get_index("snd_ev_textbox_click"), 10, false, gain, 0, pitch)
-	vsp = 3
+	vsp = last ? 4 : 3
 	y_bounce = 0;
 	bounce_text = instance.txt
 	bounces++;

@@ -34,7 +34,6 @@ function get_node_at_position(pos_x, pos_y) {
 }
 
 function node_instance_step() {
-	static judgment_object = asset_get_index("obj_ev_pack_node_judgment")
 	static root_node_obj = asset_get_index("obj_ev_pack_root")
 	
 	
@@ -58,24 +57,30 @@ function node_instance_step() {
 		}
 		else if pack_editor_inst().selected_thing == pack_things.hammer {
 			if ev_mouse_pressed() {
+				static judgment_object = asset_get_index("obj_ev_pack_node_judgment");
+				
 				instance_destroy(judgment_object)
 				
 				if !being_judged {
+					static hammer_sound = asset_get_index("snd_ev_hammer_judge")
+					audio_play_sound(hammer_sound, 10, false, 1, 0, random_range(0.9, 1.1))
 					being_judged = true;
 					if (object_index != root_node_obj) {
-						instance_create_layer(center_x, center_y - sprite_height / 2 - 10, "NodeJudgments", judgment_object, {
+						instance_create_layer(center_x, center_y, "NodeJudgments", judgment_object, {
 							node_inst : id,
-							judgment_type : judgment_types.destroy_node
+							judgment_type : judgment_types.destroy_node,
+							target_y : center_y - sprite_height / 2 - 10,
 						})
 					}
 					for (var i = 0; i < array_length(exit_instances); i++) {
-						instance_create_layer(
-							lerp(center_x, exit_instances[i].center_x, 0.5),
-							lerp(center_y, exit_instances[i].center_y, 0.5), "NodeJudgments", judgment_object, {
+						var exit_instance = exit_instances[i];
+						instance_create_layer(center_x, center_y, "NodeJudgments", judgment_object, {
 								node_inst : id,
 								judgment_type : judgment_types.close_connection,
 								connection_to_destroy : exit_instances[i],
-								silent : true
+								silent : true,
+								target_x : lerp(center_x, exit_instance.center_x, 0.5),
+								target_y : lerp(center_y, exit_instance.center_y, 0.5)
 							}
 						)
 					}

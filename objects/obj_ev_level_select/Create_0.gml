@@ -1,8 +1,5 @@
 event_inherited()
 
-
-
-
 enum level_selector_modes {
 	levels,
 	packs,

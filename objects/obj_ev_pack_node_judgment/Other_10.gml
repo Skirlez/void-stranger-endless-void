@@ -3,8 +3,8 @@ event_inherited();
 function create_funny_arrow(node_instance, other_node_instance) {
 	var t = get_pack_line_arrow_progress();
 	instance_create_layer(
-		lerp(node_instance.x, other_node_instance.x, t),
-		lerp(node_instance.y, other_node_instance.y, t),
+		lerp(node_instance.center_x, other_node_instance.center_x, t),
+		lerp(node_instance.center_y, other_node_instance.center_y, t),
 		"ConnectingLines",
 		asset_get_index("obj_ev_funny_arrow"))
 }

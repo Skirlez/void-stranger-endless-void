@@ -30,8 +30,8 @@
   "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "spr_pack_arrow",
-    "path": "sprites/spr_pack_arrow/spr_pack_arrow.yy",
+    "name": "spr_ev_pack_arrow",
+    "path": "sprites/spr_ev_pack_arrow/spr_ev_pack_arrow.yy",
   },
   "spriteMaskId": null,
   "visible": true,
