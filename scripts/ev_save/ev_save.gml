@@ -32,8 +32,8 @@ function ev_load() {
 function ev_update_vars() {
 	global.server = "http://" + global.server_ip + ":3000/voyager"
 	var folder = string_lettersdigits(global.server_ip);
-	global.levels_directory = game_save_id + folder + "\\levels\\"
-	global.packs_directory = game_save_id + folder + "\\packs\\"
+	global.levels_directory = game_save_id + folder + "/levels/"
+	global.packs_directory = game_save_id + folder + "/packs/"
 	if (global.compiled_for_merge)
 		asset_get_index("scr_menueyecatch")(0)
 
