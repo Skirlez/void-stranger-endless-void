@@ -9,5 +9,3 @@ base_scale_y = lerp(base_scale_y, 1, 0.5)
 image_xscale = base_scale_x;
 image_yscale = base_scale_y;
 event_inherited()
-
-show_debug_message(scale_x)

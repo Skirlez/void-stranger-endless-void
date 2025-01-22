@@ -11,6 +11,8 @@ function node_instance_setup(max_exits, center_x_offset, center_y_offset) {
 	being_judged = true;
 	in_menu = false;
 	node_type = global.object_node_map[? object_index];
+	shake_seconds = 0;
+	shake_x_offset = 0;
 	
 	properties = node_type.properties_generator();
 }
@@ -35,7 +37,7 @@ function get_node_at_position(pos_x, pos_y) {
 
 function node_instance_step() {
 	static root_node_obj = asset_get_index("obj_ev_pack_root")
-	
+	static not_possible_sound = asset_get_index("snd_lorddamage")
 	
 	if (ev_is_mouse_on_me()) {
 		if in_menu && pack_editor_inst().selected_thing == pack_things.selector {
@@ -52,8 +54,14 @@ function node_instance_step() {
 		if pack_editor_inst().selected_thing == pack_things.nothing {
 			if ev_mouse_pressed()
 				mouse_moving = true;
-			if ev_mouse_right_pressed()
-				connecting_exit = true;
+			if ev_mouse_right_pressed() {
+				if max_exits == 0 {
+					shake_seconds = 0.5;
+					audio_play_sound(not_possible_sound, 10, false);	
+				}
+				else
+					connecting_exit = true;
+			}
 		}
 		else if pack_editor_inst().selected_thing == pack_things.hammer {
 			if ev_mouse_pressed() {
@@ -61,10 +69,9 @@ function node_instance_step() {
 				
 				instance_destroy(judgment_object)
 				
-				if !being_judged {
+				if !(pack_editor_inst().judging_node == id) {
 					static hammer_sound = asset_get_index("snd_ev_hammer_judge")
 					audio_play_sound(hammer_sound, 10, false, 1, 0, random_range(0.9, 1.1))
-					being_judged = true;
 					if (object_index != root_node_obj) {
 						instance_create_layer(center_x, center_y, "NodeJudgments", judgment_object, {
 							node_inst : id,
@@ -84,9 +91,15 @@ function node_instance_step() {
 							}
 						)
 					}
+					if (instance_exists(judgment_object)) // root node might not have anything to judge
+						pack_editor_inst().judging_node = id;
+					else {
+						shake_seconds = 0.5;
+						audio_play_sound(not_possible_sound, 10, false);
+					}
 				}
 				else
-					being_judged = false;
+					pack_editor_inst().judging_node = noone;
 			}
 		}
 		else if pack_editor_inst().selected_thing == pack_things.wrench {
@@ -94,6 +107,12 @@ function node_instance_step() {
 				static wrench_sound = asset_get_index("snd_ev_use_wrench");
 				node_type.on_config(id);	
 				audio_play_sound(wrench_sound, 10, false, 1, 0, random_range(0.9, 1.1))
+			}
+		}
+		else if pack_editor_inst().selected_thing == pack_things.play {
+			if ev_mouse_pressed() {
+				global.mouse_layer = 1;
+				pack_editor_inst().start_play_transition(id)
 			}
 		}
 	}
@@ -109,15 +128,19 @@ function node_instance_step() {
 		else if ev_mouse_right_released() {
 			connecting_exit = false
 			var node_inst = get_node_at_position(mouse_x, mouse_y)
-			if (instance_exists(node_inst) && node_inst.can_connect_to_me
-					&& (array_length(exit_instances) < max_exits || max_exits == -1))
-					&& !ev_array_contains(exit_instances, node_inst) {
-				array_push(exit_instances, node_inst)
-				var connect_sound = asset_get_index("snd_ev_node_connect")
-				audio_play_sound(connect_sound, 10, false, 1, 0, random_range(0.9, 1.1))
-				
-				if (node_type == pack_editor_inst().count_node) {
-					
+			if instance_exists(node_inst) {
+				if (!node_inst.can_connect_to_me) {
+					node_inst.shake_seconds = 0.5;
+					audio_play_sound(not_possible_sound, 10, false);
+				}
+				else if (array_length(exit_instances) >= max_exits && max_exits != -1) {
+					shake_seconds = 0.5;
+					audio_play_sound(not_possible_sound, 10, false);
+				}
+				else if (!ev_array_contains(exit_instances, node_inst)) {
+					array_push(exit_instances, node_inst)
+					var connect_sound = asset_get_index("snd_ev_node_connect")
+					audio_play_sound(connect_sound, 10, false, 1, 0, random_range(0.9, 1.1))
 				}
 			}
 		}
@@ -136,5 +159,10 @@ function node_instance_step() {
 			x = room_width - sprite_width
 		center_x = x + center_x_offset
 		center_y = y + center_y_offset
-	}	
+	}
+	
+	if (shake_seconds > 0) {
+		shake_seconds -= 1/60;
+		shake_x_offset = sin(16 * shake_seconds * pi) * 3;
+	}
 }

@@ -1,6 +1,5 @@
 hspeed = random_range(-3 * image_xscale, 3 * image_yscale)
-vspeed = random_range(-7 * image_xscale, 2 * image_xscale)
-
+vspeed = random_range(-7 * image_xscale, 2 * image_yscale)
 
 
 surface_invert = noone

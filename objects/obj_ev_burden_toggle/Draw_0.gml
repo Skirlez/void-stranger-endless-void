@@ -1,4 +1,4 @@
-draw_self()
+event_inherited()
 if burden_ind == burden_swapper 
 	draw_sprite(swapper_sprite, 1, x - 8, y + 8)
 else if burden_ind == burden_stackrod

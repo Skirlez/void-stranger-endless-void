@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ev_event",
+  "name": "ev_play_void_radio",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

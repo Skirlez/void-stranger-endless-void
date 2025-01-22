@@ -3,12 +3,12 @@ global.mouse_held = false;
 global.mouse_pressed = false;
 
 
-if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level_select") {
+if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level_select") || room == asset_get_index("rm_ev_pack_select") {
 	history = []
+	global.level_sha = "";
 	var music = global.menu_music;
 	if !audio_is_playing(music)
 		ev_play_music(music)
-	global.level_sha = "";
 	global.jukebox_song = 0;
 }
 if room == asset_get_index("rm_ev_editor") {
@@ -56,7 +56,7 @@ if (room == asset_get_index("rm_ev_startup")) {
 	request_version_string()
 }
 
-if (room == asset_get_index("rm_ev_level")) {
+if (is_gameplay_room(room)) {
 	global.level_time = 0;	
 }
 

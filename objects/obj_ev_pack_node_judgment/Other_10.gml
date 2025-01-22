@@ -42,7 +42,10 @@ switch (judgment_type) {
 			}
 		}
 		audio_play_sound(asset_get_index("snd_ev_node_disconnect"), 10, false, 1, 0, random_range(0.9, 1.1))
+		if instance_number(object_index) == 1 // i'm the last one left
+			pack_editor_inst().judging_node = noone;
 		instance_destroy(id)
+
 		break;
 	
 }

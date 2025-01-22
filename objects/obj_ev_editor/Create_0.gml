@@ -9,7 +9,6 @@ global.ev_version = "0.90";
 
 global.fb_ancient = 1;
 global.server_obj = 2;
-show_debug_message(global.fb_ancient)
 
 global.compiled_for_merge = (asset_get_index("obj_game") != -1)
 if (!global.compiled_for_merge) {
@@ -18,7 +17,8 @@ if (!global.compiled_for_merge) {
 	audio_group_load(VoidStrangerAudio)
 	global.debug = false;
 	global.pause = false;
-	global.music = -4;
+	global.music_inst = noone;
+	global.music_is_looping = false;
 	
 }
 
@@ -97,7 +97,9 @@ global.mouse_right_released = false;
 #macro burden_swapper 4
 
 global.editor_room = asset_get_index("rm_ev_editor");
+global.pack_editor_room = asset_get_index("rm_ev_pack_editor");
 global.level_room = asset_get_index("rm_ev_level");
+global.pack_level_room = asset_get_index("rm_ev_pack_level");
 
 global.editor_instance = id;
 global.display_object = asset_get_index("obj_ev_display");
@@ -1648,3 +1650,5 @@ global.turn_frames = 0
 global.death_frames = -1
 
 global.instance_touching_mouse = noone;
+
+global.happenings = ds_map_create();

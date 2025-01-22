@@ -27,22 +27,11 @@ grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset
 		if count == 5 {
 			window.grube_mode = true;
 			
-			if global.compiled_for_merge {
-				audio_sound_gain(global.music_inst, 0, 1000)
-				global.music_inst = noone
-				ev_play_music(asset_get_index("msc_stg_extraboss"))
-				audio_sound_gain(global.music_inst, 0, 0)
-				audio_sound_gain(global.music_inst, 1, 1000)
-				
-			}
-			else {
-				audio_sound_gain(global.music, 0, 1000)
-				global.music = noone
-				ev_play_music(asset_get_index("msc_stg_extraboss"))
-				audio_sound_gain(global.music, 0, 0)
-				audio_sound_gain(global.music, 1, 1000)
-			}
-		
+			audio_sound_gain(global.music_inst, 0, 1000)
+			global.music_inst = noone
+			ev_play_music(asset_get_index("msc_stg_extraboss"))
+			audio_sound_gain(global.music_inst, 0, 0)
+			audio_sound_gain(global.music_inst, 1, 1000)
 			instance_create_layer(mouse_x, mouse_y, "Plucker", asset_get_index("obj_ev_plucker"))
 			
 			with (window) {

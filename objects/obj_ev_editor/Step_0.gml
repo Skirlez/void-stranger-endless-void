@@ -2,6 +2,9 @@ if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(!window_get_fullscreen())
 
 
+
+
+
 var list = ds_list_create()
 var length = instance_position_list(mouse_x, mouse_y, all, list, false)
 var min_depth = infinity
@@ -16,7 +19,7 @@ for (var i = 0; i < length; i++) {
 ds_list_destroy(list)
 global.instance_touching_mouse = min_inst;
 
-if room == asset_get_index("rm_ev_level") {
+if room == global.level_room {
 	if !global.pause { 
 		if (ev_is_leave_key_pressed()) {
 			ev_leave_level()
@@ -54,8 +57,6 @@ if global.erasing != -1 {
 }
 
 if play_transition != -1 {
-
-	
 	with (play_transition_display) {
 		
 		var t = (other.max_play_transition - other.play_transition) 
@@ -87,7 +88,7 @@ if play_transition != -1 {
 		global.annoyance_count = 0
 		
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
-		room_goto(asset_get_index("rm_ev_level"))
+		room_goto(global.level_room)
 		if (!audio_is_playing(asset_get_index(global.level.music)))
 			ev_play_music(asset_get_index(global.level.music))	
 	}
@@ -296,3 +297,11 @@ if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 	stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone
 }
 
+if !global.compiled_for_merge {
+	var file = asset_get_index(audio_get_name(global.music_inst))
+	var endpoint = ev_get_real_song_end(file)
+	if !global.music_is_looping
+		&& audio_sound_get_track_position(global.music_inst) > endpoint {
+			audio_stop_sound(global.music_inst);
+	}
+}	

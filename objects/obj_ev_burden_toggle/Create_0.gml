@@ -1,5 +1,5 @@
+event_inherited()
 image_speed = 0
-
 burdens_sprite = asset_get_index("spr_items")
 switch burden_ind
 {

@@ -7,7 +7,10 @@ function pack_struct() constructor {
 	// This name will be used for when the file is saved
 	save_name = generate_save_name()
 	upload_date = "";
-	last_edit_date = "";	
+	last_edit_date = "";
+	
+	
+	current_node = noone;
 }
 
 

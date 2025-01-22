@@ -41,8 +41,8 @@
   ],
   "solid": false,
   "spriteId": {
-    "name": "spr_ev_pack_node_judgments",
-    "path": "sprites/spr_ev_pack_node_judgments/spr_ev_pack_node_judgments.yy",
+    "name": "spr_ev_delete_level",
+    "path": "sprites/spr_ev_delete_level/spr_ev_delete_level.yy",
   },
   "spriteMaskId": null,
   "visible": true,

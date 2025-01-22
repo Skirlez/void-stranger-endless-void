@@ -99,9 +99,10 @@ function level_clicked(display_inst) {
 		
 		instance_destroy(id)
 		
+		var level_size = pack_editor_inst().level_size;
 		instance_create_layer(
-			mouse_x - 224 * 0.2 / 2, 
-			mouse_y - 144 * 0.2 / 2, "PackLevels", display_object, 
+			mouse_x - 224 * level_size / 2, 
+			mouse_y - 144 * level_size / 2, "PackLevels", display_object, 
 			{
 				lvl : lvl,
 				name : lvl.name,
@@ -110,8 +111,8 @@ function level_clicked(display_inst) {
 				no_spoiling : false,
 				no_redraw : true,
 				display_context : display_contexts.pack_editor,
-				image_xscale : 0.2,
-				image_yscale : 0.2
+				image_xscale : level_size,
+				image_yscale : level_size
 			})
 	}
 	
@@ -264,8 +265,6 @@ function read_offline_levels() {
 			
 			lvl_string = get_thumbnail_level_string_from_pack_string(pack_string);
 			offline_levels[i] = lvl_string
-			
-	
 		}
 		return offline_levels
 	}
@@ -278,8 +277,6 @@ function read_offline_levels() {
 		file_text_close(file)
 	}
 	return offline_levels
-
-	
 }
 function sort_online_levels() {	
 	array_sort(online_levels, function (lvl_str_1, lvl_str_2) {

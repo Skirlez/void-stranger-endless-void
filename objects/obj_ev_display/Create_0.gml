@@ -215,8 +215,6 @@ function handle_click_after(tile_i, tile_j) {
 				}	
 			}
 				
-		
-		
 			var sound = (global.selected_thing == thing_plucker) ? pluck_sound : pick_sound;
 			audio_play_sound(sound, 10, false, 1.2, 0, random_range(0.75, 0.85))
 			
