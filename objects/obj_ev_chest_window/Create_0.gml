@@ -1,7 +1,7 @@
 event_inherited()
 
 selector = instance_create_layer(112, 72, "WindowElements", asset_get_index("obj_ev_selector"), {
-	elements : ["Locust", "Memory", "Wings", "Sword", "Empty", "Opened", "Idol"],
+	elements : ["Locust", "Memory", "Wings", "Sword", "Empty", "Opened", "Idol", "Endless"],
 	
 	selected_element : chest_properties.itm,
 	max_radius : 60
@@ -16,7 +16,8 @@ function get_item_name(item_id) {
 		case chest_items.wings: return "Wings";
 		case chest_items.sword: return "Sword";
 		case chest_items.opened: return "Opened";
-		case chest_items.swapper: return "Idol";		
+		case chest_items.swapper: return "Idol";
+		case chest_items.endless: return "Endless";
 		default: return "IDK";
 	}
 }

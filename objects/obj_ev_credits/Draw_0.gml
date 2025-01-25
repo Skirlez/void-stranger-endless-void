@@ -58,6 +58,7 @@ Pyredrid - Branefuck functions
 Meepster99 - GBAStranger export
 gullwingdoors - Pencil icon
 juliascythe - Helping with 3D cube rendering and the Grube
+cyrelouyea - Endless void rod option in chests
 
 Music Credits:
 Sunday - crappyblue - astra_jam (...ad astra)

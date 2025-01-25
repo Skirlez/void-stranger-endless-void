@@ -580,6 +580,7 @@ enum chest_items {
 	empty,
 	opened,
 	swapper,
+	endless,
 	size // cool trick!
 }
 
@@ -615,7 +616,8 @@ function chest_get_contents_num(item_id) {
 		case chest_items.sword: return 2;
 		case chest_items.empty: return 0;
 		case chest_items.opened: return 5;
-		case chest_items.swapper: return 495;		
+		case chest_items.swapper: return 495;
+		case chest_items.endless: return 7;
 		default: return 1;
 	}
 }
