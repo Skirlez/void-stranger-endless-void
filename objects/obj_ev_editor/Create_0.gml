@@ -78,6 +78,8 @@ global.mouse_right_pressed = false;
 global.mouse_right_held = false;
 global.mouse_right_released = false;
 
+global.void_radio_on = false;
+
 #macro thing_nothing -1
 #macro thing_plucker 0
 #macro thing_eraser 1

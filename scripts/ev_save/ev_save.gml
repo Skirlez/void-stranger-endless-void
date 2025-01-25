@@ -5,7 +5,6 @@ function ev_save(){
 	ini_write_string("options", "brand", global.author.brand)
 	ini_write_string("options", "server_ip", global.server_ip)
 	ini_write_string("options", "stranger", global.stranger)
-	ini_write_real("options", "void_radio", global.void_radio_on)
 	
 	ini_write_string("options", "memory", global.memory_style)
 	ini_write_string("options", "wings", global.wings_style)
@@ -25,7 +24,6 @@ function ev_load() {
 	global.wings_style = ini_read_real("options", "wings", 0)
 	global.blade_style = ini_read_real("options", "blade", 0)
 	global.highest_grube_stack = ini_read_real("stats", "grube", 0)
-	global.void_radio_on = ini_read_real("stats", "void_radio", 1)
 	
 	ini_close()
 	ev_update_vars()
