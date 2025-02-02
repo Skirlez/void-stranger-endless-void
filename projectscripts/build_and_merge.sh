@@ -53,7 +53,7 @@ $IGOR_PATH \
 
 cp ./output/void-stranger-endless-void/package/assets/game.unx ./data.win
 if [ $? -eq 0 ]; then
-    echo "Compilation finished."
+    echo "Building finished."
 else
     echo "Something failed. Could not find game.unx."
     exit 1

@@ -1,8 +1,7 @@
 # These variables will be used by build.sh, copy_assets.sh and clean_assets.sh
 # When filling in folders, do not include a `/` at the end.
 
-
-# Needed for all scripts
+# These 3 are needed for all scripts
 
 # The path to Endless Void's project folder
 EV_PROJECT_PATH=""
@@ -15,8 +14,7 @@ UNDERTALEMODCLI_PATH=""
 VOID_STRANGER_PATH=""
 
 
-
-# Needed for build.sh
+# These 2 are only needed for build.sh
 
 # Likely is /home/user/.local/share/GameMakerStudio2/Cache
 GAMEMAKER_CACHE_PATH=""

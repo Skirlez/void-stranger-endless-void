@@ -14,3 +14,5 @@ projectscripts/cache
 projectscripts/data.win
 projectscripts/output
 projectscripts/variables.sh
+projectscripts/variables.bat
+projectscripts/*.plist
