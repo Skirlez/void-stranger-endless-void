@@ -8,7 +8,8 @@ using System.Linq;
 EnsureDataLoaded();
 
 // Replace with your own
-string endlessVoidPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void";
+string runningDirectory = Path.GetDirectoryName(ScriptPath);
+string endlessVoidPath = Path.GetFullPath(Path.Combine(runningDirectory, "..", ".."));
 
 string[] getAssetNames(string path) {
     string[] assetPaths = Directory.GetDirectories(path);

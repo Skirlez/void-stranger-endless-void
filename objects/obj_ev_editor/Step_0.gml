@@ -184,17 +184,21 @@ if room == global.editor_room {
 	}
 }
 else if (room == global.level_room) {
-	global.leech_count = instance_number_string(leech_obj)
-	global.maggot_count = instance_number_string(maggot_obj)
-	global.beaver_count = instance_number_string(bull_obj)
-	global.smile_count = instance_number_string(gobbler_obj)
-	global.eye_count = instance_number_string(hand_obj)
-	global.mimic_count = instance_number_string(mimic_obj)
-	global.octahedron_count = instance_number_string(diamond_obj)
-	global.spider_count = instance_number_string(spider_obj)
-	global.orb_count = instance_number_string(orb_obj)
-	global.scaredeer_count = instance_number_string(scaredeer_obj)
-	with (asset_get_index("obj_player")) {
+	global.floor_count = instance_number_string(tile_default.obj_name)
+	global.glass_count = instance_number_string(tile_glass.obj_name)
+	
+	global.leech_count = instance_number_string(object_leech.obj_name)
+	global.maggot_count = instance_number_string(object_maggot.obj_name)
+	global.beaver_count = instance_number_string(object_bull.obj_name)
+	global.smile_count = instance_number_string(object_gobbler.obj_name)
+	global.eye_count = instance_number_string(object_hand.obj_name)
+	global.mimic_count = instance_number_string(object_mimic.obj_name)
+	global.octahedron_count = instance_number_string(object_diamond.obj_name)
+	global.spider_count = instance_number_string(object_spider.obj_name)
+	global.orb_count = instance_number_string(object_orb.obj_name)
+	global.scaredeer_count = instance_number_string(object_scaredeer.obj_name)
+	
+	with (agi("obj_player")) {
 		global.player_x = x div 16;
 		global.player_y = y div 16;
 	}
@@ -248,7 +252,7 @@ else if (room == global.level_room) {
 	}
 }
 function instance_number_string(object_string) {
-	return instance_number(asset_get_index(object_string))
+	return instance_number(agi(object_string))
 }
 
 if mouse_check_button_pressed(mb_left) {

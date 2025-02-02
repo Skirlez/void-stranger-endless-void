@@ -1,11 +1,13 @@
 
-function ev_play_music(track, looping = true) {
+// for_menu parameter controls whether or not the music is meant to be played in an EV menu
+// if true, it will not substitute the EX track with a different one by trying to read the amount of burdens
+function ev_play_music(track, looping = true, for_menu = false) {
 	ev_stop_music()
 	if (track == -1) {
 		return;
 	}
 	if global.compiled_for_merge {
-		if ((room == global.editor_room || room == global.level_room) && audio_get_name(track) == "msc_test2") {
+		if (!for_menu && audio_get_name(track) == "msc_test2") {
 			track = ev_get_elysium_music(global.level)
 			asset_get_index("scr_play_music")(track, looping, 1)
 		}

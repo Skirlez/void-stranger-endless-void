@@ -7,12 +7,11 @@ using UndertaleModLib.Decompiler;
 // ImportGraphics.csx
 
 EnsureDataLoaded();
-//SyncBinding("Strings, Code, CodeLocals, Scripts, GlobalInitScripts, GameObjects, Functions, Variables", true);
 
+string runningDirectory = Path.GetDirectoryName(ScriptPath);
 
-// Replace with your own
-string endlessVoidDataPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void/merge/data.win";
-string endlessVoidPatchesPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void/patches";
+string endlessVoidPatchesPath = Path.GetFullPath(Path.Combine(runningDirectory, "..", "..", "patches"));
+string endlessVoidDataPath = Path.GetFullPath(Path.Combine(runningDirectory, "..", "data.win"));
 
 int stringListLength = Data.Strings.Count;
 
@@ -33,7 +32,7 @@ foreach (UndertaleEmbeddedTexture embeddedTexture in endlessVoidData.EmbeddedTex
 	UndertaleEmbeddedTexture newTexture = new UndertaleEmbeddedTexture();
 	lastTexturePage++;
 	newTexture.Name = new UndertaleString("Texture " + lastTexturePage);
-	newTexture.TextureData.TextureBlob = (byte[])embeddedTexture.TextureData.TextureBlob.Clone();
+	newTexture.TextureData.Image = embeddedTexture.TextureData.Image;
 	Data.EmbeddedTextures.Add(newTexture);
 
 	dict.Add(embeddedTexture, lastTexturePage);
@@ -205,4 +204,4 @@ Data.GeneralInfo.DisplayName = endlessVoidData.GeneralInfo.DisplayName;
 
 //DisableAllSyncBindings();
 
-ScriptMessage("i'm done");
+ScriptMessage("Done! Endless Void has been merged!");

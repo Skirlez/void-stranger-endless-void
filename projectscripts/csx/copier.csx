@@ -2,16 +2,16 @@ using UndertaleModLib.Models;
 using UndertaleModLib.Util;
 using UndertaleModLib.Decompiler;
 using System.Linq;
-using System.Text.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
 
+// A script to copy all required Void Stranger assets into Endless Void.
 
 EnsureDataLoaded();
 
 // Replace with your own
-string endlessVoidPath = "C:/Users/David/Documents/GameMakerStudio2/void-stranger-endless-void";
-
-// A script to copy all required Void Stranger assets into Endless Void.
+string runningDirectory = Path.GetDirectoryName(ScriptPath);
+string endlessVoidPath = Path.GetFullPath(Path.Combine(runningDirectory, "..", ".."));
 
 // Scripts used for reference:
 // ExportAllSounds.csx
@@ -83,24 +83,24 @@ foreach (string spriteName in sprites) {
 
     string spriteDir = $"{endlessVoidPath}/sprites/{spriteName}";
     string yy = File.ReadAllText($"{spriteDir}/{spriteName}.yy");
-    JsonDocument json = JsonDocument.Parse(yy, new JsonDocumentOptions { AllowTrailingCommas = true });
-    JsonElement frames = json.RootElement.GetProperty("frames");
-    JsonElement layers = json.RootElement.GetProperty("layers");
-    if (layers.GetArrayLength() != 1) {
+    JObject json = JObject.Parse(yy);
+    JArray frames = (JArray)json["frames"];
+    JArray layers = (JArray)json["layers"];
+    if (layers.Count != 1) {
         ScriptMessage(spriteName + " has more than one layer, not copying.");
         continue;
     }
-    string layerName = layers[0].GetProperty("name").GetString();
+    string layerName = (string)layers[0]["name"];
 
     if (tilesetSprites.Contains(spriteName)) {
         UndertaleBackground tileset = Data.Backgrounds.ByName(spriteName.Substring(4));
-        string name = frames[0].GetProperty("name").GetString();
+        string name = (string)frames[0]["name"];
         exportSpriteTexture(tileset.Texture, spriteDir, name, layerName);
         continue;
     }
 
-    for (int i = 0; i < frames.GetArrayLength(); i++) {
-        string name = frames[i].GetProperty("name").GetString();
+    for (int i = 0; i < frames.Count; i++) {
+        string name = (string)frames[i]["name"];
         exportSpriteTexture(sprite.Textures[i].Texture, spriteDir, name, layerName);
     }
 }

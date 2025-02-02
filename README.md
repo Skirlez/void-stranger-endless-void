@@ -4,7 +4,7 @@ Endless Void is a fully functional level builder for Void Stranger.
 You can create your own levels with it, and upload them to a server (a [Voyager](https://github.com/hexfae/voyager) instance).
 
 This repository contains its project file, the UndertaleModTool script used to merge it into the game (`merger.csx`), 
-UndertaleModTool scripts to add and remove game assets from the project (located in the `/assetscripts` folder), and patches applied to the game on-merge (`/patches`).
+UndertaleModTool scripts to add and remove game assets from the project (all located in the `/projectscripts/csx` folder), and patches applied to the game on-merge (`/patches`).
 
 The project is set up like this, as opposed to just a plain UndertaleModTool mod, for several reasons:
 - Much faster iteration
@@ -21,19 +21,8 @@ To install this mod, you'll need an application that can do xdelta patching. I r
 
 Your save file will not be touched by the mod, and you can install and uninstall the mod without anything happening to it. Have fun!
 
-## Compiling
-Endless Void targets [UndertaleModTool 0.6.1.0](https://github.com/UnderminersTeam/UndertaleModTool/releases/tag/0.6.1.0). I'd recommend not getting the SingleFile version
-as it has caused issues for some in the past. ***Make sure to replace the paths at the top of the UMT scripts with your own!***
-
-To compile Endless Void:
-- Download and install GameMaker 2023.4.0.84 from GameMaker's legacy [release notes](https://gms.yoyogames.com/ReleaseNotes.html) page. Void Stranger was compiled with the 2023.4 runtime
-- Run the `copier.csx` script on Void Stranger's data.win from the `/assetscripts` folder to copy all the required Void Stranger assets into the GameMaker project
-- From this point you can build and run the editor on its own inside GameMaker. You won't be able to play levels, but it is useful when developing the UI
-- To merge the editor into the game, build Endless Void in GameMaker and extract its data.win, run the `merger.csx` script on Void Stranger's data.win, and save it when it's done
-- You have compiled Endless Void
-
-For developers on Linux:
-- an Ubuntu build of 2023.4.0.84 does seem to exist and function! The button for it on the release notes page is just missing, for some mysterious reason. Obtain it by changing the extension in macOS release link to `.deb` (or click [here](https://gms.yoyogames.com/GameMaker-2023.4.0.84.deb))
+## Building
+See [Building Endless Void](https://github.com/Skirlez/void-stranger-endless-void/wiki/Building-Endless-Void) on the Wiki
 
 ## Things of note about the code
 - Indices of objects, sprites, sounds, etc. become mismatched when merging with Void Stranger, so references to them are always obtained with `asset_get_index()`.

@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Shell script to build Endless Void's GameMaker project and merge it with Void Stranger
+
+if [ ! -f "variables.sh" ]; then
+  cp .variables.structure.sh variables.sh
+  echo "variables.sh created. Please fill in all of the empty variables, then rerun this script."
+  exit 1
+fi
+
+source variables.sh
+
+cd "$EV_PROJECT_PATH/projectscripts"
+
+if [ -z "$GAMEMAKER_CACHE_PATH" ] || [ -z "$USER_DIRECTORY_PATH" ] || [ -z "$EV_PROJECT_PATH" ] || [ -z "$UNDERTALEMODCLI_PATH" ] || [ -z "$VOID_STRANGER_PATH" ]; then
+    echo "Some variables are empty. Please fill in all of the variables."
+    exit 1
+fi
+
+
+if [ ! -f "$VOID_STRANGER_PATH/clean_data.win" ]; then
+  echo "First run detected. Please make sure the data.win in $VOID_STRANGER_PATH is not modified."
+  read -p "Continue? (y/n): " answer
+  if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
+      echo "I believe you... Copying clean_data.win"
+      cp "$VOID_STRANGER_PATH/data.win" "$VOID_STRANGER_PATH/clean_data.win"
+  else
+      exit 1
+  fi
+fi
+
+
+IGOR_PATH="$GAMEMAKER_CACHE_PATH/runtimes/runtime-2023.4.0.113/bin/igor/linux/x64/Igor"
+RUNTIME_PATH="$GAMEMAKER_CACHE_PATH/runtimes/runtime-2023.4.0.113"
+
+if [ -f "./data.win" ]; then
+  echo "Removing old data.win"
+  rm ./data.win
+fi
+
+echo "-------------------------------"
+echo "Building EV's GameMaker project"
+echo "-------------------------------"
+
+$IGOR_PATH \
+    -j=8 \
+    --user="$USER_DIRECTORY_PATH" \
+    --project="$EV_PROJECT_PATH/void-stranger-endless-void.yyp" \
+    --runtimePath="$RUNTIME_PATH" \
+    --tf="void-stranger-endless-void.zip" \
+    --temp="./temp/" \
+    -- Linux Package
+
+cp ./output/void-stranger-endless-void/package/assets/game.unx ./data.win
+if [ $? -eq 0 ]; then
+    echo "Compilation finished."
+else
+    echo "Something failed. Could not find game.unx."
+    exit 1
+fi
+
+if [ -d "./output" ]; then
+  echo "Removing output folder and zip"
+  rm -rf ./output
+  rm void-stranger-endless-void.zip
+fi
+
+
+
+echo "--------------------------"
+echo "Merging into Void Stranger"
+echo "--------------------------"
+
+$UNDERTALEMODCLI_PATH load "$VOID_STRANGER_PATH/clean_data.win" --scripts "./csx/merger.csx" --output "$VOID_STRANGER_PATH/data.win"
+
+echo "All done!"

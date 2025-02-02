@@ -9,4 +9,8 @@ sounds/**/*.wav
 # Ignore all images in the tilesets folder
 tilesets/**/*.png
 
-merge/
+projectscripts/temp
+projectscripts/cache
+projectscripts/data.win
+projectscripts/output
+projectscripts/variables.sh

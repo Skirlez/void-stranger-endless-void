@@ -38,7 +38,7 @@ function ev_play_void_radio() {
 	} until (sum_seconds >= seconds);
 	
 	var time = audio_sound_length(song) - (sum_seconds - seconds)
-	ev_play_music(song, false)
+	ev_play_music(song, false, true)
 	audio_sound_set_track_position(global.music_inst, time);
 	
 	// fade in
