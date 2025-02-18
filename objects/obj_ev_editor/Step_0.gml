@@ -2,9 +2,6 @@ if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(!window_get_fullscreen())
 
 
-
-
-
 var list = ds_list_create()
 var length = instance_position_list(mouse_x, mouse_y, all, list, false)
 var min_depth = infinity
@@ -160,7 +157,6 @@ if room == global.editor_room {
 	}
 
 	if keyboard_check(vk_control) && global.mouse_layer == 0 {
-
 		if keyboard_check_pressed(ord("Z")) {
 			undo_repeat = undo_repeat_frames_start
 			undo();

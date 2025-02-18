@@ -7,9 +7,6 @@ global.latest_lvl_format = 3;
 global.latest_pack_format = 1;
 global.ev_version = "0.90";
 
-global.fb_ancient = 1;
-global.server_obj = 2;
-
 global.compiled_for_merge = (agi("obj_game") != -1)
 if (!global.compiled_for_merge) {
 	var ratio = display_get_height() / 144	
@@ -19,7 +16,6 @@ if (!global.compiled_for_merge) {
 	global.pause = false;
 	global.music_inst = noone;
 	global.music_is_looping = false;
-	
 }
 
 #macro level_extension "vsl"
@@ -38,7 +34,6 @@ if !file_exists(global.save_directory + "ev_options.ini") {
 }
 else
 	ev_load()
-
 
 // Since there is no destructor for structs, we need to create a map
 // to track structs that use maps so we can destroy them when they're garbage collected.
@@ -979,32 +974,55 @@ object_tree.iostruct = {
 	},
 }
 
+
 object_secret_exit = new editor_object("Secret Exit", agi("spr_ev_secret_exit_arrow"), "se", "obj_na_secret_exit")
 
 enum secret_exit_types {
-	invisible,
+	hidden,
 	stars,
 	stink,
 }
 
 object_secret_exit.properties_generator = function () {
-	return { typ : secret_exit_types.invisible }
+	return { typ : secret_exit_types.hidden, ofx : 0, ofy : 0 }
 }
+#macro PROPERTY_SEPARATOR_CHAR "+"
 object_secret_exit.iostruct = {
 	read : function(tile_id, lvl_str, pos, version) {
 		if (version == 1) {
-			var t = new tile_with_state(tile_id, { typ : 0 })
+			var t = new tile_with_state(tile_id, { typ : 0, ofx : 0, ofy : 0 })
 			return { value : t, offset : 0 };	
 		}
+		if version == 2 {
+			var read_type = string_copy(lvl_str, pos, 1)
+			var type = clamp(int64_safe(read_type, 0), 0, 2)
+			var t = new tile_with_state(tile_id, { typ : type, ofx : 0, ofy : 0 })
+		}
+		// version 3
+		var start_pos = pos;
 		var read_type = string_copy(lvl_str, pos, 1)
-		var type = clamp(int64_safe(read_type, 0), 0, 2)
-		var t = new tile_with_state(tile_id, { typ : type })
-		return { value : t, offset : 1 };
+		var type = clamp(int64_safe(read_type, 0), 0, 2);
+		pos += 2; // skip type, property sep
+		var read_offset_x = read_int(lvl_str, pos)
+		var ofx = read_offset_x.number;
+		pos += read_offset_x.offset + 1;
+		
+		var read_offset_y = read_int(lvl_str, pos)
+		var ofy = read_offset_y.number;
+		pos += read_offset_y.offset;
+		
+		var t = new tile_with_state(tile_id, { typ : type, ofx : ofx, ofy : ofy })
+		return { value : t, offset : pos - start_pos };
 	},
 	write : function(tile_state) {
-		return tile_state.tile.tile_id + string(tile_state.properties.typ);
+		return tile_state.tile.tile_id 
+			+ string(tile_state.properties.typ) + PROPERTY_SEPARATOR_CHAR
+			+ string(tile_state.properties.ofx) + PROPERTY_SEPARATOR_CHAR
+			+ string(tile_state.properties.ofy);
 	},
 	place : function (tile_state, i, j) {
+		i += tile_state.properties.ofy;
+		j += tile_state.properties.ofx;
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		
 		var type = tile_state.properties.typ;
@@ -1017,29 +1035,35 @@ object_secret_exit.iostruct = {
 		return inst;
 	}
 }
-
+function draw_offset_arrow(i, j, ofx, ofy) {
+	if (ofx == 0 && ofy == 0)
+		return;
+	var angle = darctan2(-ofy, ofx);
+	angle = round(angle / 45) * 45
+	draw_sprite_ext(agi("spr_ev_tile_offset_arrow"), 0, j * 16 + 8, i * 16 + 8, 1, 1, angle, c_white, 1)
+}
 object_secret_exit.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	if (no_spoilers)
 		return;
 	static stinklines_sprite = agi("spr_stinklines")
 	static stars_sprite = agi("spr_soulstar_spark")
-	
+	draw_sprite(object_secret_exit.spr_ind, 0, j * 16 + 8, i * 16 + 8)
 	var type = tile_state.properties.typ;
-	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
-		
 	if type == 1 {
-		draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
+		draw_sprite(object_secret_exit.spr_ind, 0, j * 16 + 8, i * 16 + 8)	
 		draw_sprite(stars_sprite, 2, j * 16 + 5, i * 16 + 10)	
 		draw_sprite(stars_sprite, 3, j * 16 + 13, i * 16 + 5)	
 	}
 	else if type == 2
-		draw_sprite(stinklines_sprite, global.editor_time / 10, j * 16 + 8, i * 16 + 8)
+		draw_sprite(stinklines_sprite, global.editor_time / 10, j * 16 + 8, i * 16 + 8)	
+	draw_offset_arrow(i, j, tile_state.properties.ofx, tile_state.properties.ofy)
 }
 
 object_secret_exit.zed_function = function(tile_state) {
-	tile_state.properties.typ++;
-	if tile_state.properties.typ > 2
-		tile_state.properties.typ = 0;
+	new_window(10, 8, agi("obj_ev_secret_exit_window"), {
+		secret_exit_properties : tile_state.properties
+	})	
+	global.mouse_layer = 1
 }
 
 object_hungry_man = new editor_object("Famished Man", agi("spr_fam_u"), "hu", "obj_npc_famished")

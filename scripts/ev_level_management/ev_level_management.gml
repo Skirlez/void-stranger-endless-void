@@ -6,7 +6,6 @@
 #macro MULTIPLIER_CHAR "X"
 
 
-
 function level_struct() constructor {
 
 	name = ""

@@ -19,6 +19,6 @@ spin_h = (dsin(spin_time_h) + 1) / 2;
 spin_v = (dcos(spin_time_v) + 1) / 2;
 
 if additional_spin > 0
-	additional_spin *= 0.9
+	additional_spin *= 0.92
 else
 	additional_spin = 0;

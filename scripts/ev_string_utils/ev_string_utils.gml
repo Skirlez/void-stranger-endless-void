@@ -44,6 +44,7 @@ function read_int(str, i) {
 	if (string_char_at(str, i) == "-") {
 		mult = -1;
 		i++;
+		count++;
 	}
 	else
 		mult = 1

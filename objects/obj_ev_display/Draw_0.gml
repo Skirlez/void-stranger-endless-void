@@ -1,5 +1,3 @@
-
-
 if display_context == display_contexts.pack_editor {
 
 }
@@ -16,8 +14,7 @@ function draw() {
 
 
 	function draw_tile_state(i, j, tile_state, preview = false) {
-		var tile = tile_state.tile
-		tile.draw_function(tile_state, i, j, preview, lvl, no_spoiling)
+		tile_state.tile.draw_function(tile_state, i, j, preview, lvl, no_spoiling)
 	}
 
 	draw_sprite(base_ui, 0, 0, 8 * 16)
@@ -41,25 +38,27 @@ function draw() {
 
 	var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
 	draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
-	if (lvl.burdens[burden_swapper]) draw_sprite(asset_get_index("spr_ev_swapper"), 0, 16 * 6 + 16, 8 * 16) //I'm bad at math.
+	if (lvl.burdens[burden_swapper]) 
+		draw_sprite(asset_get_index("spr_ev_swapper"), 0, 16 * 6 + 16, 8 * 16) //I'm bad at math.
 	for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
 		if lvl.burdens[i] {
 			switch i {
-			case 2:
-				if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
-				else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
-				break
-			case 1:
-				burdens_sprite = ev_get_burden_sprite(global.wings_style)
-				break
-			case 0:
-				burdens_sprite = ev_get_burden_sprite(global.memory_style)
-				break
-			default:
-				burdens_sprite = asset_get_index("spr_ev_items_lev") //Avoid displaying the diamond thing
-				break
+				case 2:
+					if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
+					else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
+					break
+				case 1:
+					burdens_sprite = ev_get_burden_sprite(global.wings_style)
+					break
+				case 0:
+					burdens_sprite = ev_get_burden_sprite(global.memory_style)
+					break
+				default:
+					burdens_sprite = asset_get_index("spr_ev_items_lev") //Avoid displaying the diamond thing
+					break
 			}
-			if (i != 4) draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)		
+			if (i != 4) 
+				draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)		
 		}
 	}
 
@@ -69,7 +68,6 @@ function draw() {
 				var tile_state = lvl.tiles[i][j]
 				draw_tile_state(i, j, tile_state)
 			}
-	
 			if (tile_mode)
 				draw_set_alpha(0.3)
 			var object_state = lvl.objects[i][j]

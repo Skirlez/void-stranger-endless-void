@@ -19,7 +19,11 @@ To install this mod, you'll need an application that can do xdelta patching. I r
 - Go to the [latest release](https://github.com/Skirlez/void-stranger-endless-void/releases/latest) and grab the .xdelta file which matches your copy (Steam/itch.io).
 - Apply the xdelta patch to Void Stranger's data.win file, which is found in its installation folder.  (On Steam, right-click the game, Manage->Browse local files) **Make sure it's the original, vanilla data.win. If you previously installed this mod, or any other mod, restore the original data.win first.** in order to uninstall the mod, bring back the original data.win in any way (either keep a backup, or on Steam, find and press the "verify integrity of the game files" button).
 
+
+On Steam only, you can keep your original data.win by patching a copy of it, naming it "ev_data.win", and adding -game "path/to/ev_data.win".
+
 Your save file will not be touched by the mod, and you can install and uninstall the mod without anything happening to it. Have fun!
+
 
 ## Building
 See [Building Endless Void](https://github.com/Skirlez/void-stranger-endless-void/wiki/Building-Endless-Void) on the Wiki

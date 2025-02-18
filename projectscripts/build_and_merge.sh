@@ -10,13 +10,12 @@ fi
 
 source variables.sh
 
-cd "$EV_PROJECT_PATH/projectscripts"
-
 if [ -z "$GAMEMAKER_CACHE_PATH" ] || [ -z "$USER_DIRECTORY_PATH" ] || [ -z "$EV_PROJECT_PATH" ] || [ -z "$UNDERTALEMODCLI_PATH" ] || [ -z "$VOID_STRANGER_PATH" ]; then
     echo "Some variables are empty. Please fill in all of the variables."
     exit 1
 fi
 
+cd "$EV_PROJECT_PATH/projectscripts"
 
 if [ ! -f "$VOID_STRANGER_PATH/clean_data.win" ]; then
   echo "First run detected. Please make sure the data.win in $VOID_STRANGER_PATH is not modified."

@@ -32,9 +32,6 @@ function new_window_with_pos(pos_x, pos_y, scale_x, scale_y, window_object, addi
 	if (pos_y + scale_x * 8 > cam_bottom_y)
 		pos_y = cam_bottom_y - scale_y * 8;
 
-
-
-	
 	var variable_struct = {
 		image_xscale : scale_x,
 		image_yscale : scale_y
