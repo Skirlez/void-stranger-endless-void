@@ -77,7 +77,7 @@ function create_base_buttons(mode) {
 		program_text = instance_create_layer(112, 72 - 20, "WindowElements", asset_get_index("obj_ev_textbox"), {
 			empty_text : "Branefuck Program",
 			txt : add_properties.pgm,
-			allow_alphanumeric : false,
+			allow_alphanumeric : true,
 			exceptions : global.branefuck_characterset,
 			char_limit : 260,
 			opened_y : 72,

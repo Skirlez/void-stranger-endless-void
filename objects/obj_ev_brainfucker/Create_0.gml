@@ -1,3 +1,8 @@
+#macro ADD_STATUE_MEMORY_AMOUNT 23
+persistent_memory = array_create(ADD_STATUE_MEMORY_AMOUNT)
+for (var i = 0; i < ADD_STATUE_MEMORY_AMOUNT; i++)
+	persistent_memory[i] = int64(0);
+	
 //Data for command functions below
 #region command_tiles
 
@@ -482,16 +487,10 @@ function evaluate_input(input) {
 program = string_to_array(program_str)
 
 function execute(program, input_1, input_2, destroy_value) {
-	var memory = array_create(23)
-	var memory_length = array_length(memory);
-	
-	
-	memory[0] = input_1
-	memory[1] = input_2
-	for (var i = 2; i < memory_length; i++)
-		memory[i] = int64(0);	
-	
-	
+	var temporary_memory = array_create(ADD_STATUE_MEMORY_AMOUNT)
+	for (var i = 0; i < ADD_STATUE_MEMORY_AMOUNT; i++)
+		temporary_memory[i] = int64(0);	
+	var memory = temporary_memory;
 	
 	var program_length = array_length(program);
 	var pointer = 0
@@ -500,7 +499,7 @@ function execute(program, input_1, input_2, destroy_value) {
 	while (i < program_length) {
 		var command = program[i];
 		count++;
-		if (count > 100000) {
+		if (count > 10000) {
 			ev_notify("BF code ran for too long!")
 			return destroy_value;
 		}
@@ -508,25 +507,25 @@ function execute(program, input_1, input_2, destroy_value) {
 		switch (command) {
 			case "<": 
 				var ret = get_bf_multiplier(program, i)
-				ret.mult %= memory_length;
+				ret.mult %= ADD_STATUE_MEMORY_AMOUNT;
 				pointer -= ret.mult;
 				if (pointer < 0)
-					pointer += memory_length;
+					pointer += ADD_STATUE_MEMORY_AMOUNT;
 				i += ret.offset + 1;
 				break;
 			case ">":
 				var ret = get_bf_multiplier(program, i)
-				pointer = (pointer + ret.mult) % memory_length;
+				pointer = (pointer + ret.mult) % ADD_STATUE_MEMORY_AMOUNT;
 				i += ret.offset + 1;
 				break;
 			case "+":
 				var ret = get_bf_multiplier(program, i)
-				memory[pointer] += ret.mult;
+				memory[@ pointer] += ret.mult;
 				i += ret.offset + 1;
 				break;
 			case "-":
 				var ret = get_bf_multiplier(program, i)
-				memory[pointer] -= ret.mult;
+				memory[@ pointer] -= ret.mult;
 				i += ret.offset + 1;
 				break;
 			case "[": 
@@ -574,7 +573,7 @@ function execute(program, input_1, input_2, destroy_value) {
 			case ".":
 				return (memory[pointer])
 			case "?":
-				memory[pointer] = sign(memory[pointer])
+				memory[@ pointer] = sign(memory[pointer])
 				i++;
 				break;
 			case "#":
@@ -586,6 +585,31 @@ function execute(program, input_1, input_2, destroy_value) {
 				}
 				i++;
 				break;
+			case "^":
+				persistent_memory[@ pointer] = temporary_memory[pointer];
+				memory = persistent_memory;
+				i++;
+				break;
+			case "v":
+			case "V":
+				temporary_memory[@ pointer] = persistent_memory[pointer];
+				memory = temporary_memory;
+				i++;
+				break;
+			case ",":
+				var expression = "";
+				i++;
+				if i >= program_length
+					return destroy_value;
+				while (program[i] != ",") {
+					expression += program[i];
+					i++;
+					if i >= program_length
+						return destroy_value;
+				}
+				i++;
+				memory[@ pointer] = evaluate_expression(expression);
+				break;
 			default:
 				i++;
 		}
@@ -593,6 +617,52 @@ function execute(program, input_1, input_2, destroy_value) {
 	return memory[pointer];
 }
 
+function evaluate_expression(expr) {
+	var read_base = read_string_until(expr, 1, ".");
+	var base_name = read_base.substr;
+	var i = 1 + read_base.offset + 1;
+	
+	var remainder = string_copy(expr, i, string_length(expr) - i + 1);
+
+	var base;
+	if base_name == "g" || base_name == "global"
+		base = global;
+	else if asset_get_type(base_name) == asset_object {
+		base = instance_nearest(x, y, asset_get_index(base_name));
+	}
+	else
+		return noone;
+	return evaluate_expression_recursive(remainder, base);
+}
+function evaluate_expression_recursive(expr, base) {
+	if expr == ""
+		return base;
+
+	var read_vari = read_string_until(expr, 1, ".");
+	var vari_name = read_vari.substr;
+	var i = 1 + read_vari.offset + 1;
+	var remainder = string_copy(expr, i, string_length(expr) - i + 1);
+	
+	if is_array(base) {
+		if !string_is_uint(vari_name)
+			return noone;
+		return evaluate_expression_recursive(remainder, base[int64(vari_name)])
+	}
+	if is_struct(base) {
+		return evaluate_expression_recursive(remainder, variable_struct_get(base, vari_name))
+	}
+	if instance_exists(base) {
+		if (!variable_instance_exists(base, vari_name))
+			return noone;
+		return evaluate_expression_recursive(remainder, variable_instance_get(base, vari_name))
+	}
+	
+	return noone;
+}
+
+function is_alphanumeric(char) {
+	return string_lettersdigits(char) != "";
+}
 
 // get the multiplier following this character, if it exists.
 function get_bf_multiplier(program, i) {

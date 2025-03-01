@@ -61,21 +61,55 @@ function draw() {
 				draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)		
 		}
 	}
-
+	
+	// this array is made static, so it is reused between all instances, and its contents are never cleaned,
+	// but it has a limit it can expand to, so i think this will improve performance
+	static those_who_offset = [];
+	var last_offset_index = -1;
+	
 	for (var i = 0; i < 9; i++)	{
 		for (var j = 0; j < 14; j++) {
 			if i != 8 {
 				var tile_state = lvl.tiles[i][j]
 				draw_tile_state(i, j, tile_state)
 			}
-			if (tile_mode)
-				draw_set_alpha(0.3)
-			var object_state = lvl.objects[i][j]
-			draw_tile_state(i, j, object_state)
-			if (tile_mode)
-				draw_set_alpha(1)
+			if lvl.objects[i][j].tile.has_offset() {
+				var object_state = lvl.objects[i][j];
+				last_offset_index++;
+				those_who_offset[last_offset_index] = {
+					pos_i : i + object_state.properties.ofy,
+					pos_j : j + object_state.properties.ofx,
+					state : object_state
+				};
+			}
 		}
 	}
+	
+	var alpha = tile_mode ? 0.3 : 1;
+	draw_set_alpha(alpha);
+	
+	for (var i = 0; i <= last_offset_index; i++) {
+		var struct = those_who_offset[i];
+		draw_tile_state(struct.pos_i, struct.pos_j, struct.state)
+	}
+	
+	
+	for (var i = 0; i < 9; i++)	{
+		for (var j = 0; j < 14; j++) {
+			var object_state = lvl.objects[i][j]
+			if object_state.tile.has_offset() {
+				if no_spoiling
+					continue;
+				draw_set_alpha(alpha * 0.5)
+				draw_tile_state(i, j, object_state)
+				draw_set_alpha(alpha)
+			}
+			else
+				draw_tile_state(i, j, object_state)
+		}
+	}
+	
+	draw_set_alpha(1)
 
 
 	if (display_context == display_contexts.level_editor && ev_is_mouse_on_me()) {
@@ -102,9 +136,22 @@ function draw() {
 		}
 	
 		else if global.selected_thing == thing_placeable 
-		&& held_tile_state.tile != global.editor_instance.object_empty {
-			draw_set_alpha((dsin(global.editor_time * 3) / 4) + 0.75)
-			draw_tile_state(tile_i, tile_j, held_tile_state, true)
+				&& held_tile_state.tile != global.editor_instance.object_empty {
+			var alpha = ((dsin(global.editor_time * 3) / 4) + 0.75);
+			if held_tile_state.tile.has_offset() {
+				draw_set_alpha(alpha / 2)
+				draw_tile_state(tile_i, tile_j, held_tile_state, true)
+				draw_set_alpha(alpha)
+				draw_tile_state(
+					tile_i + held_tile_state.properties.ofy,
+					tile_j + held_tile_state.properties.ofx,
+					held_tile_state, true)
+			}
+			else {
+				draw_set_alpha(alpha)
+				draw_tile_state(tile_i, tile_j, held_tile_state, true)
+			}
+		
 			draw_set_alpha(1)
 		}
 		else if global.selected_thing == thing_multiplaceable {
@@ -132,13 +179,17 @@ function draw() {
 
 if !surface_exists(game_surface) {
 	game_surface = surface_create(224, 144);
-	if (no_redraw) {
-		draw();
-	}
+	draw();
 }
 
-if (!no_redraw)
+if (display_context != display_contexts.pack_editor)
 	draw();
+else if global.compiled_for_merge {
+	var zoom = pack_editor_inst().zoom;
+	if !outside_view && zoom <= 1
+		draw();
+	show_debug_message(zoom)
+}
 	
 draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
 draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 1)

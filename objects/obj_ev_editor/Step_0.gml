@@ -55,7 +55,6 @@ if global.erasing != -1 {
 
 if play_transition != -1 {
 	with (play_transition_display) {
-		
 		var t = (other.max_play_transition - other.play_transition) 
 			/ other.max_play_transition
 		var move = animcurve_channel_evaluate(other.move_curve, t)	
@@ -64,9 +63,6 @@ if play_transition != -1 {
 		image_yscale = lerp(scale_y_start, 1, grow)
 		x = lerp(xstart, (room_width / 2) - (sprite_width / 2), move)
 		y = lerp(ystart, (room_height / 2) - (sprite_height / 2), move)
-		
-		
-		
 	}
 	
 	play_transition--;
@@ -300,8 +296,12 @@ if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 if !global.compiled_for_merge {
 	var file = asset_get_index(audio_get_name(global.music_inst))
 	var endpoint = ev_get_real_song_end(file)
-	if !global.music_is_looping
-		&& audio_sound_get_track_position(global.music_inst) > endpoint {
-			audio_stop_sound(global.music_inst);
+	if audio_sound_get_track_position(global.music_inst) > endpoint {
+		if global.music_is_looping {
+			var startpoint = ev_get_real_song_start(global.music_inst);
+			audio_sound_set_track_position(global.music_inst, startpoint);	
+		}
+		else
+			audio_stop_sound(global.music_inst);	
 	}
 }	

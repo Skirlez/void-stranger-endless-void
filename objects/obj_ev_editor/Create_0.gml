@@ -183,10 +183,20 @@ function editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer = "Floo
 	self.iostruct = global.editor_instance.default_tile_io;
 	self.cube_type = cube_types.uniform;
 	global.placeable_name_map[? tile_id] = self;
+	
+	function has_offset() {
+		return false;	
+	}
 } 
 function editor_object(display_name, spr_ind, tile_id, obj_name, obj_layer = "Instances", flags = 0) 
 		: editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer, flags) constructor {
 	self.editor_type = editor_types.object;
+	
+	function has_offset() {
+		return has_offset_properties;	
+	}
+	// this flag must be set manually for the displays to render an object's offset
+	has_offset_properties = false;
 } 
 
 #macro agi asset_get_index 
@@ -552,9 +562,7 @@ object_empty.draw_function = empty_function;
 object_empty.iostruct = {
 	read: default_reader,
 	write : default_writer,
-	place : function () {
-		
-	}
+	place : function () { }
 }
 
 sweat_sprite = agi("spr_sweat")
@@ -799,8 +807,7 @@ object_cif.iostruct = {
 }
 
 
-global.branefuck_characterset = ".+-[]><?0123456789";
-
+global.branefuck_characterset = ".,+-[]><?0123456789^_\" ";
 
 object_add = new editor_object("Add Statue", agi("spr_voider"), "ad", egg_statue_obj)
 object_add.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
@@ -986,6 +993,7 @@ enum secret_exit_types {
 object_secret_exit.properties_generator = function () {
 	return { typ : secret_exit_types.hidden, ofx : 0, ofy : 0 }
 }
+object_secret_exit.has_offset_properties = true;
 #macro PROPERTY_SEPARATOR_CHAR "+"
 object_secret_exit.iostruct = {
 	read : function(tile_id, lvl_str, pos, version) {
@@ -1045,6 +1053,7 @@ function draw_offset_arrow(i, j, ofx, ofy) {
 object_secret_exit.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	if (no_spoilers)
 		return;
+	
 	static stinklines_sprite = agi("spr_stinklines")
 	static stars_sprite = agi("spr_soulstar_spark")
 	draw_sprite(object_secret_exit.spr_ind, 0, j * 16 + 8, i * 16 + 8)
@@ -1056,7 +1065,7 @@ object_secret_exit.draw_function = function(tile_state, i, j, preview, lvl, no_s
 	}
 	else if type == 2
 		draw_sprite(stinklines_sprite, global.editor_time / 10, j * 16 + 8, i * 16 + 8)	
-	draw_offset_arrow(i, j, tile_state.properties.ofx, tile_state.properties.ofy)
+	//draw_offset_arrow(i, j, tile_state.properties.ofx, tile_state.properties.ofy)
 }
 
 object_secret_exit.zed_function = function(tile_state) {

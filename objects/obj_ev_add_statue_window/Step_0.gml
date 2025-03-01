@@ -11,3 +11,13 @@ for (var i = 0; i < array_length(children); i++) {
 	else
 		child.depth = elements_depth
 }
+
+if keyboard_check_pressed(ord("T")) {
+	instance_create_depth(x, y, depth, agi("obj_ev_brainfucker"), {
+		add_inst : noone,
+		input_1_str : input_1_text.txt,
+		input_2_str : input_2_text.txt,
+		destroy_value_str : destroy_value_text.txt,
+		program_str : program_text.txt,	
+	});
+}

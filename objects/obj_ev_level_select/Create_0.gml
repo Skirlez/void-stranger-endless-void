@@ -109,7 +109,6 @@ function level_clicked(display_inst) {
 				brand : lvl.author_brand,
 				draw_beaten : false,
 				no_spoiling : false,
-				no_redraw : true,
 				display_context : display_contexts.pack_editor,
 				image_xscale : level_size,
 				image_yscale : level_size
