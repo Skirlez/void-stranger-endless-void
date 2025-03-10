@@ -8,11 +8,32 @@ if [ ! -f "variables.sh" ]; then
   exit 1
 fi
 
+echo "Reading variables.sh"
 source variables.sh
 
 if [ -z "$GAMEMAKER_CACHE_PATH" ] || [ -z "$USER_DIRECTORY_PATH" ] || [ -z "$EV_PROJECT_PATH" ] || [ -z "$UNDERTALEMODCLI_PATH" ] || [ -z "$VOID_STRANGER_PATH" ]; then
+    echo "Could not build EV:"
     echo "Some variables are empty. Please fill in all of the variables."
     exit 1
+fi
+
+if [ ! -x "$UNDERTALEMODCLI_PATH" ]; then
+  echo ""
+  echo "UndertaleModCli not set as executable. Please run"
+  echo "chmod +x path/to/UndertaleModCli"
+
+  read -p "Try running the command? (y/n): " answer
+  if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
+      chmod +x "$UNDERTALEMODCLI_PATH";
+      if [ ! -x "$UNDERTALEMODCLI_PATH" ]; then
+         echo "Could not build EV:"
+         echo "Couldn't set UndertaleModCli as an executable. Do it yourself."
+      else
+        echo "Success. Proceeding with script."
+      fi
+  else
+      exit 1
+  fi
 fi
 
 cd "$EV_PROJECT_PATH/projectscripts"
@@ -54,6 +75,7 @@ cp ./output/void-stranger-endless-void/package/assets/game.unx ./data.win
 if [ $? -eq 0 ]; then
     echo "Building finished."
 else
+    echo "Could not build EV:"
     echo "Something failed. Could not find game.unx."
     exit 1
 fi
