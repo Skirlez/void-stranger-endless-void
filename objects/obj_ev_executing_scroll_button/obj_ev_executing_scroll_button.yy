@@ -1,10 +1,8 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_ev_level_select_scroll",
+  "name": "obj_ev_executing_scroll_button",
   "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":10,"eventType":7,"isDnD":false,},
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,},
   ],
   "managed": true,
@@ -14,8 +12,8 @@
     "path": "folders/Objects.yy",
   },
   "parentObjectId": {
-    "name": "obj_ev_button",
-    "path": "objects/obj_ev_button/obj_ev_button.yy",
+    "name": "obj_ev_executing_button",
+    "path": "objects/obj_ev_executing_button/obj_ev_executing_button.yy",
   },
   "persistent": false,
   "physicsAngularDamping": 0.1,
@@ -33,8 +31,8 @@
   "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "spr_ev_ls_scroll",
-    "path": "sprites/spr_ev_ls_scroll/spr_ev_ls_scroll.yy",
+    "name": "spr_ev_scroll_button",
+    "path": "sprites/spr_ev_scroll_button/spr_ev_scroll_button.yy",
   },
   "spriteMaskId": null,
   "visible": true,

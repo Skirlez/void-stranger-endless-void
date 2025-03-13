@@ -608,7 +608,7 @@ function execute(program, input_1, input_2, destroy_value) {
 						return destroy_value;
 				}
 				i++;
-				memory[@ pointer] = evaluate_expression(expression);
+				memory[@ pointer] = evaluate_expression(expression, temporary_memory);
 				break;
 			default:
 				i++;
@@ -617,8 +617,8 @@ function execute(program, input_1, input_2, destroy_value) {
 	return memory[pointer];
 }
 
-function evaluate_expression(expr) {
-	var read_base = read_string_until(expr, 1, ".");
+function evaluate_expression(expr, temporary_memory) {
+	var read_base = read_string_until(expr, 1, ":");
 	var base_name = read_base.substr;
 	var i = 1 + read_base.offset + 1;
 	
@@ -627,9 +627,14 @@ function evaluate_expression(expr) {
 	var base;
 	if base_name == "g" || base_name == "global"
 		base = global;
-	else if asset_get_type(base_name) == asset_object {
+	else if base_name == "s" || base_name == "self" || base_name == "id"
+		base = id;
+	else if base_name == "t"
+		base = temporary_memory;
+	else if base_name == "p"
+		base = persistent_memory;
+	else if asset_get_type(base_name) == asset_object
 		base = instance_nearest(x, y, asset_get_index(base_name));
-	}
 	else
 		return noone;
 	return evaluate_expression_recursive(remainder, base);
@@ -638,7 +643,7 @@ function evaluate_expression_recursive(expr, base) {
 	if expr == ""
 		return base;
 
-	var read_vari = read_string_until(expr, 1, ".");
+	var read_vari = read_string_until(expr, 1, ":");
 	var vari_name = read_vari.substr;
 	var i = 1 + read_vari.offset + 1;
 	var remainder = string_copy(expr, i, string_length(expr) - i + 1);

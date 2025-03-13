@@ -322,10 +322,27 @@ function on_level_update() {
 
 create_displays()
 
+var scrolling_function = function () {
 
-var scroll_up = instance_create_layer(194, 61, buttons_layer, asset_get_index("obj_ev_level_select_scroll"), {
+}
+var scroll_up = instance_create_layer(194, 61, buttons_layer, asset_get_index("obj_ev_executing_scroll_button"), {
 	image_index : 1,
+	func : function () {
+		global.level_start -= 1
+		y = ystart - 7
+		with (agi("obj_ev_level_select")) {
+			create_displays()	
+		}	
+	},
 })
-var scroll_down = instance_create_layer(194, 95, buttons_layer, asset_get_index("obj_ev_level_select_scroll"));
+var scroll_down = instance_create_layer(194, 95, buttons_layer, asset_get_index("obj_ev_executing_scroll_button"), {
+	func : function () {
+		global.level_start += 1
+		y = ystart + 7
+		with (agi("obj_ev_level_select")) {
+			create_displays()	
+		}	
+	},
+});
 add_child(scroll_up)
 add_child(scroll_down)

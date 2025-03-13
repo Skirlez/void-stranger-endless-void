@@ -53,6 +53,15 @@ function ev_array_contains(arr, value) {
 	}
 	return false;
 }
+function ev_array_remove(arr, value) {
+	for (var i = 0; i < array_length(arr); i++) {
+		if (arr[@ i] == value) {
+			array_delete(arr, i, 1);
+			return;	
+		}
+	}
+}
+
 
 
 function ev_string_split(str, delimiter) {

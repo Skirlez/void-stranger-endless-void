@@ -5,6 +5,9 @@ function add_child(obj) {
 	obj.layer_num = layer_num
 	array_push(children, obj)	
 }
+function remove_child(obj) {
+	ev_array_remove(children, obj)
+}
 
 function add_x_button() {
 	var inst = instance_create_layer(x + image_xscale * 8 - 8, y - image_yscale * 8 + 8, "WindowElements", asset_get_index("obj_ev_close_window"))

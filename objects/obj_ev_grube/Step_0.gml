@@ -19,7 +19,7 @@ if death_timer != -1 {
 			var angle = point_direction(x, y, grube.x, grube.y)
 			
 			
-			var cutoff = 240
+			var cutoff = 100
 			var max_force = 10;
 			
 			if (length > cutoff)
@@ -86,3 +86,45 @@ if follow {
 }
 position_history[0] = phy_position_x;
 position_history[1] = phy_position_y;
+
+function for_every_collision_run(func) {
+	var list = ds_list_create();
+	var count = instance_place_list(phy_position_x, phy_position_y, object_index, list, false)	
+	for (var i = 0; i < count; i++) {
+		var inst = list[| i];
+		func(inst);
+	}
+	ds_list_destroy(list);
+}
+if type == ev_grube_types.leech_cube {
+	for_every_collision_run(function (instance) {
+		with (instance) {
+
+			if player_cube && !touched_leech_cube {
+				sprite_index = hit_sprite;
+				touched_leech_cube = true;
+				audio_play_sound(agi("snd_player_damage"), 10, false);
+
+			}
+		}	
+	})
+}
+if type == ev_grube_types.egg_cube && phy_speed > 4 {
+	for_every_collision_run(function (instance) {
+		with (instance) {
+			if type == ev_grube_types.leech_cube {
+				instance_destroy(id)
+				audio_play_sound(agi("snd_enemy_explosion"), 10, false);
+				if global.compiled_for_merge {
+					// leech death code
+					var ienemydeath_fx = instance_create_depth(x, y, depth, agi("obj_enemydeath_fx"))
+					var ideathsprite = agi("spr_cl_falling")
+					with (ienemydeath_fx)
+					    enemy_sprite = ideathsprite
+					instance_create_depth(x, y, 10, agi("obj_explosion_001"))
+					instance_create_depth(x, y, 5, agi("obj_bloodtrail_fx"))
+				}
+			}
+		}	
+	})
+}

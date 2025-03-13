@@ -43,7 +43,7 @@ function calculate_scale() {
 
 #macro CHARACTER_THAT_CANT_BE_TYPED "\r"
 
-function filter_text(txt, cursor = false) {
+function filter_text(txt, cursor = false, newline_insert_char = "\n") {
 	if (string_length(txt) >= char_limit && !allow_deletion)
 		cursor = false;
 	draw_set_font(global.ev_font)
@@ -74,7 +74,7 @@ function filter_text(txt, cursor = false) {
 					ind_to_newline = i
 
 						
-				new_txt = string_insert("\n", new_txt, ind_to_newline)
+				new_txt = string_insert(newline_insert_char, new_txt, ind_to_newline)
 		
 				var str = string_copy(new_txt, ind_to_newline, i - ind_to_newline + 1)
 				accum_width = string_width(str)

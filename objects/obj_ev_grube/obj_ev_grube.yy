@@ -36,12 +36,16 @@
   "physicsStartAwake": true,
   "properties": [
     {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"layer_num","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"0","varType":0,},
+    {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"type","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"0","varType":0,},
   ],
-  "solid": true,
+  "solid": false,
   "spriteId": {
-    "name": "spr_ev_delete_level",
-    "path": "sprites/spr_ev_delete_level/spr_ev_delete_level.yy",
+    "name": "spr_ev_grube_non_phy_collision_box",
+    "path": "sprites/spr_ev_grube_non_phy_collision_box/spr_ev_grube_non_phy_collision_box.yy",
   },
-  "spriteMaskId": null,
+  "spriteMaskId": {
+    "name": "spr_ev_grube_non_phy_collision_box",
+    "path": "sprites/spr_ev_grube_non_phy_collision_box/spr_ev_grube_non_phy_collision_box.yy",
+  },
   "visible": true,
 }

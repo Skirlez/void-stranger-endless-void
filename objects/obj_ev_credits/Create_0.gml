@@ -11,30 +11,24 @@ grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset
 	count : 0,
 	func : function () {
 		static grube_obj = asset_get_index("obj_ev_grube");
-		var grube = instance_create_layer(200 + irandom_range(-20, 20), y + 42, "Grube", grube_obj)
+		var type;
+		if count < 5
+			type = ev_grube_types.gray_cube;
+		else
+			type = choose(ev_grube_types.gray_cube, irandom_range(0, ev_grube_types.size - 1));
+		var grube = instance_create_layer(200 + irandom_range(-20, 20), y + 42, "Grube", grube_obj, {
+			type : type
+		})
 		grube.window = window;
 		array_push(window.grubes, grube)
-		if txt == "?" {
-			grube.sprite_index =
-				global.editor_instance.objects_list[irandom_range(0, array_length(global.editor_instance.objects_list))].spr_ind
-			txt = "Grube"
-		}
-		else if count > 5 {
-			if irandom(10) == 0
-				txt = "?";
-		}
 		count++;
 		if count == 5 {
-			window.grube_mode = true;
-			
-			audio_sound_gain(global.music_inst, 0, 1000)
-			global.music_inst = noone
-			ev_play_music(asset_get_index("msc_stg_extraboss"), true, true)
-			audio_sound_gain(global.music_inst, 0, 0)
-			audio_sound_gain(global.music_inst, 1, 1000)
-			instance_create_layer(mouse_x, mouse_y, "Plucker", asset_get_index("obj_ev_plucker"))
-			
 			with (window) {
+				grube_mode = true;
+				remove_child(scroll_button_up)
+				remove_child(scroll_button_down)
+				instance_destroy(scroll_button_up)
+				instance_destroy(scroll_button_down)
 				var t = instance_create_layer(200, camera_get_view_y(view_camera[0]) + 72, "Textbox", asset_get_index("obj_ev_textbox"), {
 					opened_x : 112,
 					opened_y : 72 + camera_get_view_y(view_camera[0]),
@@ -49,12 +43,46 @@ grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset
 				})
 				add_child(t)
 			}
+			
+			
+			
+			audio_sound_gain(global.music_inst, 0, 1000)
+			global.music_inst = noone
+			ev_play_music(asset_get_index("msc_stg_extraboss"), true, true)
+			audio_sound_gain(global.music_inst, 0, 0)
+			audio_sound_gain(global.music_inst, 1, 1000)
+			instance_create_layer(mouse_x, mouse_y, "Plucker", asset_get_index("obj_ev_plucker"))
 		}
 		
 
 	}
 })
 add_child(grube_button)
+
+
+scroll_button_down = instance_create_layer(200, camera_y + 88, "WindowElements", agi("obj_ev_executing_scroll_button"), {
+	func : function () {
+		with (window) {
+			current_page_index++;
+			if current_page_index >= array_length(credits)
+				current_page_index = 0;
+			load_credits_page(current_page_index)
+		}
+	}
+})
+scroll_button_up = instance_create_layer(200, camera_y + 56, "WindowElements", agi("obj_ev_executing_scroll_button"), {
+	image_index : 1,
+	func : function () {
+		with (window) {
+			current_page_index--;
+			if current_page_index < 0 
+				current_page_index = array_length(credits) - 1;
+			load_credits_page(current_page_index)
+		}
+	}
+})
+add_child(scroll_button_up)
+add_child(scroll_button_down)
 
 max_stack = 0;
 grubes = []
@@ -67,3 +95,118 @@ timer_hold_highest_stack = 0;
 potential_new_highest_stack = 0;
 
 scroll_accel = 0;
+credits_surface_width = 165;
+
+function ev_credits_entry(txt) constructor {
+	self.txt = txt;
+	self.step = function () { };
+	self.draw = function() { };
+	self.reset = function () { };
+	self.time_until_active = -1;
+	self.skip_active_timing = false;
+	self.activate_sound = noone;
+}
+
+function ev_credits_header(txt) : ev_credits_entry(txt) constructor {
+	self.step = method(self, function() {
+		line_width_progress = lerp(line_width_progress, 1.0, 0.15)	
+	});
+	self.draw = method(self, function (draw_x, draw_y) {
+		draw_y += 14
+		ev_draw_rectangle(draw_x, draw_y, draw_x + credits_surface_width * 0.6 * line_width_progress, draw_y + 1, false);
+		draw_y -= 14;
+		draw_text_shadow(draw_x, draw_y, txt)
+		draw_y += 16;
+		return draw_y;
+	})
+	self.reset = method(self, function () {
+		line_width_progress = 0;
+	})
+	self.line_width_progress = 0;
+	
+	self.credits_surface_width = agi("obj_ev_credits").credits_surface_width;
+	self.activate_sound = agi("snd_ev_place")
+}
+
+function ev_credits_text(txt) : ev_credits_entry(txt) constructor {
+	self.draw = method(self, function (draw_x, draw_y) {
+		draw_text_shadow(draw_x, draw_y, txt)
+		draw_y += 14
+		return draw_y;
+	})
+	self.activate_sound = agi("snd_ev_drag")
+}
+function ev_credits_spacing(spacing = 8) : ev_credits_entry("") constructor {
+	self.draw = method(self, function (draw_x, draw_y) {
+		return draw_y + spacing;
+	})
+	self.spacing = spacing;
+	self.skip_active_timing = true;
+}
+
+credits = [
+	[
+		new ev_credits_header("Contributors"),
+		new ev_credits_text("skirlez"),
+		new ev_credits_text("KyuuMetis"),
+		new ev_credits_text("Pyredrid"),
+		new ev_credits_text("Meepster99"),
+		new ev_credits_text("cyrelouyea"),
+		new ev_credits_text("Fayti1703"),
+		new ev_credits_text("gullwingdoors"),
+		new ev_credits_text("juliascythe"),
+	],
+	[
+		new ev_credits_header("Server Development"),
+		new ev_credits_text("hexfae"),
+		new ev_credits_spacing(),
+		new ev_credits_header("Music"),
+		new ev_credits_text("astra_jam (Sun)"),
+		new ev_credits_text("by crappyblue"),
+		new ev_credits_text("Monsday (Mon)"),
+		new ev_credits_text("by skirlez"),
+		new ev_credits_text("Tail's Lullaby (Tue)"),
+		new ev_credits_text("by 8bitavo"),
+	],
+	[
+		new ev_credits_header("Music"),
+		new ev_credits_text("Blossom (Wed)"),
+		new ev_credits_text("by gooeyPhantasm"),
+		new ev_credits_text("Endless Void (Fri)"),
+		new ev_credits_text("by gooeyPhantasm"),
+		new ev_credits_text("Stealie Feelies (Thu/Sat)"),
+		new ev_credits_text("And the rest of the OST"),
+		new ev_credits_text("by eebrozgi"),
+	],
+	[
+		new ev_credits_header("SFX"),
+		new ev_credits_text("fatboy94"),
+		new ev_credits_text("SubUnit_FieldRec"),
+		new ev_credits_spacing(),
+		new ev_credits_text("Links and licenses"),
+		new ev_credits_text("available in credits.txt"),
+	],
+]
+
+
+
+function load_credits_page(page_index) {
+	for (var i = 0; i < array_length(current_page); i++) {
+		current_page[i].reset();
+	}
+	current_page = credits[page_index];
+	var accum_time = 0;
+	for (var i = 0; i < array_length(current_page); i++) {
+		if current_page[i].skip_active_timing
+			continue;
+		accum_time += 5;
+		current_page[i].time_until_active = accum_time;
+		
+	}
+}
+current_page = []
+current_page_index = 0;
+load_credits_page(current_page_index);
+
+
+credits_surface = noone;
