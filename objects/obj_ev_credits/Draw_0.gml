@@ -90,44 +90,12 @@ draw_set_color(c_white)
 
 
 var draw_x = 4;
-var draw_y = 4;
+var draw_y = 2;
 for (var i = 0; i < array_length(current_page); i++) {
 	var entry = current_page[i];
 	if entry.time_until_active <= 0
 		draw_y = entry.draw(draw_x, draw_y);
 }
-/*
-for (var i = 0; i < EV_CREDITS_PAGE_ENTRY_AMOUNT; i++) {
-	if (appear_timers[i] != 0)
-		break;
-	var index = current_credits_indices[i];
-	if (index >= array_length(credits_entries))
-		break;
-		
-	var offset_x = 4;
-	var entry = credits_entries[index]
-	draw_text_shadow(offset_x, draw_y, entry.title)
-	draw_y += 16	
-	ev_draw_rectangle(offset_x, draw_y, offset_x + credits_surface_width * 0.6 * line_width_progresses[i], draw_y + 1, false);
-	draw_y += 2
-	if (string_width(entry.subtitle) + offset_x) < credits_surface_width
-		draw_text_shadow(offset_x, draw_y, entry.subtitle)
-	else {
-		// +20 adds some spacing between the two drawn texts
-		var text_width = string_width(entry.subtitle) + 20;
-		
-		draw_text_shadow(
-			offset_x - lerp(0, text_width, credits_wraparound_progress), 
-			draw_y, 
-			entry.subtitle)
-		draw_text_shadow(
-			offset_x - lerp(-text_width, 0, credits_wraparound_progress), 
-			draw_y, 
-			entry.subtitle)
-	}
-	draw_y += 20
-}
-*/
 surface_reset_target();
 
 var surface_y = 5552
@@ -141,17 +109,3 @@ var page_string = string(page + 1) + "/" + string(max_pages)
 draw_set_halign(fa_center)
 draw_set_valign(fa_middle)
 draw_text_shadow(200, surface_y + 88 - 16, page_string)
-
-
-
-/*
-var size = 0.35
-draw_set_color(c_black)
-draw_text_transformed(4 + size, draw_y, long_text, size, size, 0)
-draw_text_transformed(4 - size, draw_y, long_text, size, size, 0)
-draw_text_transformed(4, draw_y + size, long_text, size, size, 0)
-draw_text_transformed(4, draw_y - size, long_text, size, size, 0)
-
-draw_set_color(c_white)
-draw_text_transformed(4, draw_y, long_text, size, size, 0)
-

@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ev_room_should_play_ambience",
+  "name": "ev_room_questions",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

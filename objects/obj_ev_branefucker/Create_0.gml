@@ -486,7 +486,7 @@ function evaluate_input(input) {
 
 program = string_to_array(program_str)
 
-function execute(program, input_1, input_2, destroy_value) {
+function execute(program, exit_value) {
 	var temporary_memory = array_create(ADD_STATUE_MEMORY_AMOUNT)
 	for (var i = 0; i < ADD_STATUE_MEMORY_AMOUNT; i++)
 		temporary_memory[i] = int64(0);	
@@ -499,9 +499,9 @@ function execute(program, input_1, input_2, destroy_value) {
 	while (i < program_length) {
 		var command = program[i];
 		count++;
-		if (count > 10000) {
+		if (count > 50000) {
 			ev_notify("BF code ran for too long!")
-			return destroy_value;
+			return exit_value;
 		}
 		
 		switch (command) {
@@ -600,12 +600,12 @@ function execute(program, input_1, input_2, destroy_value) {
 				var expression = "";
 				i++;
 				if i >= program_length
-					return destroy_value;
+					return exit_value;
 				while (program[i] != ",") {
 					expression += program[i];
 					i++;
 					if i >= program_length
-						return destroy_value;
+						return exit_value;
 				}
 				i++;
 				memory[@ pointer] = evaluate_expression(expression, temporary_memory);

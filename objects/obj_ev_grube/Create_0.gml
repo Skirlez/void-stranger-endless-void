@@ -22,10 +22,8 @@ function die() {
 }
 
 enum ev_grube_types {
-	gray_cube,
-	lillie_cube,
-	cif_cube,
-	leech_cube,
+	player_cube,
+	enemy_cube,
 	egg_cube,
 	size,
 }
@@ -42,27 +40,31 @@ physics_fixture_set_friction(fix, 0.2);
 
 
 
-player_cube = false;
-hit_sprite = noone;
+
 
 switch (type) {
-	case ev_grube_types.gray_cube:
-		sprite_index = agi("spr_player_down");
-		hit_sprite = agi("spr_player_hit");
-		player_cube = true;
+	case ev_grube_types.player_cube:
+		touched_enemy_cube = false;
+		hit_sprite = noone;
+		var stranger = choose(0, irandom_range(0, 2));
+		switch (stranger) {
+			case 0:
+				sprite_index = agi("spr_player_down");
+				hit_sprite = agi("spr_player_hit");
+				break;
+			case 1:
+				sprite_index = agi("spr_lil_down");
+				hit_sprite = agi("spr_lil_hit");
+				break;
+			case 2:
+				sprite_index = agi("spr_cif_down");
+				hit_sprite = agi("spr_cif_hit");
+				break;
+		}
 		break;
-	case ev_grube_types.lillie_cube:
-		sprite_index = agi("spr_lil_down");
-		hit_sprite = agi("spr_lil_hit");
-		player_cube = true;
-		break;
-	case ev_grube_types.cif_cube:
-		sprite_index = agi("spr_cif_down");
-		hit_sprite = agi("spr_cif_hit");
-		player_cube = true;
-		break;
-	case ev_grube_types.leech_cube:
-		sprite_index = global.editor_instance.object_leech.spr_ind;
+	case ev_grube_types.enemy_cube:
+		sprite_index = agi("spr_cl_right")
+		fall_sprite = agi("spr_cl_falling");
 		break;
 	case ev_grube_types.egg_cube:
 		sprite_index = global.editor_instance.object_egg.spr_ind
@@ -76,5 +78,5 @@ switch (type) {
 phy_active = true;
 physics_fixture_bind(fix, id);
 
-touched_leech_cube = false;
+
 leech_sprite = global.editor_instance.object_leech.spr_ind;

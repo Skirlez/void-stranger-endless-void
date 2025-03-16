@@ -38,7 +38,7 @@ if mode != level_selector_modes.selecting_level_for_pack {
 			base_scale_y : 0.8,
 			txt : "NEW",
 			func : function () {
-				pack_editor_inst().reset_global_pack();
+				global.pack_editor_instance.reset_global_pack();
 				ev_claim_pack(global.pack)
 				
 				room_goto(asset_get_index("rm_ev_pack_editor"))	
@@ -99,7 +99,7 @@ function level_clicked(display_inst) {
 		
 		instance_destroy(id)
 		
-		var level_size = pack_editor_inst().level_size;
+		var level_size = global.pack_editor_instance.level_size;
 		instance_create_layer(
 			mouse_x - 224 * level_size / 2, 
 			mouse_y - 144 * level_size / 2, "PackLevels", display_object, 
@@ -329,7 +329,6 @@ var scroll_up = instance_create_layer(194, 61, buttons_layer, asset_get_index("o
 	image_index : 1,
 	func : function () {
 		global.level_start -= 1
-		y = ystart - 7
 		with (agi("obj_ev_level_select")) {
 			create_displays()	
 		}	
@@ -338,7 +337,6 @@ var scroll_up = instance_create_layer(194, 61, buttons_layer, asset_get_index("o
 var scroll_down = instance_create_layer(194, 95, buttons_layer, asset_get_index("obj_ev_executing_scroll_button"), {
 	func : function () {
 		global.level_start += 1
-		y = ystart + 7
 		with (agi("obj_ev_level_select")) {
 			create_displays()	
 		}	

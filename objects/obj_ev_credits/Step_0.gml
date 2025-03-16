@@ -14,35 +14,7 @@ if !grube_mode {
 				step();
 		}
 	}
-	/*
-	for (var i = 0; i < EV_CREDITS_PAGE_ENTRY_AMOUNT; i++) {
-		if appear_timers[i] > 0 {
-			appear_timers[i]--;
-			if appear_timers[i] == 0 && current_credits_indices[i] < array_length(credits_entries) {
-				audio_stop_sound(agi("snd_ev_place"))
-				audio_play_sound(agi("snd_ev_place"), 10, false, 1, 0, random_range(0.8, 1.2))	
-			}
-		}
-		else
-			line_width_progresses[i] = lerp(line_width_progresses[i], 1.0, 0.15)
-	}
-	
-	if (credits_wraparound_delay > 0)
-		credits_wraparound_delay--;
-	else {
-		if (credits_wraparound_ease < 1)
-			credits_wraparound_ease += credits_wraparound_ease_speed
-		if credits_wraparound_ease >= 1
-			credits_wraparound_ease = 1;
-			
-		credits_wraparound_progress += credits_wraparound_speed * credits_wraparound_ease
-		if credits_wraparound_progress >= 1
-			credits_wraparound_progress -= 1;
-	}
-	
-	
 	exit
-	*/
 }
 var ypos = camera_get_view_y(view_camera[0])
 if mouse_wheel_down() || ev_get_vertical_held() == 1 {

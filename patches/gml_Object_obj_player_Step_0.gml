@@ -1,4 +1,6 @@
 // TARGET: REPLACE
+// This patch adds some code for the Void Idol/Swapper,
+// and adds some functionality so exits can remember their number if moved.
 if (draw_infinity == 1)
 {
     if (inf_dis != 256)
@@ -762,6 +764,9 @@ else if (state == (13 << 0))
                     }
                     with (floor_tile)
                     {
+                        if (object_index == obj_exit) {
+                            array_push(other.ev_exit_numbers, ev_exit_number)
+                        }
                         destroyer_id = 1
                         instance_destroy()
                     }
@@ -862,7 +867,12 @@ else if (state == (13 << 0))
                             instance_create_layer((x + p_move_x), (y + p_move_y), "Floor", obj_floorswitch)
                             break
                         case 5:
-                            instance_create_layer((x + p_move_x), (y + p_move_y), "Floor", obj_exit)
+                            var inst = instance_create_layer((x + p_move_x), (y + p_move_y), "Floor", obj_exit)
+                            // Restore EV exit number
+                            if (array_length(ev_exit_numbers) != 0) {
+                                var number = array_pop(ev_exit_numbers);
+                                inst.ev_exit_number = number;
+                            }
                             break
                         case 6:
                             instance_create_layer((x + p_move_x), (y + p_move_y), "Floor", obj_copyfloor)

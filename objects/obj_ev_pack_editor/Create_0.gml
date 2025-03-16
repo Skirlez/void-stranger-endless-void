@@ -1,25 +1,26 @@
 // Object purpose: Managing things relating to the pack room, such as the camera and editor state.
-// It also holds structs relating to nodes.
+// It also holds structs relating to nodes. It is created at the start of the game so these structs
+// may be accessed outside the pack editor.
+
 // There's some similar terminology used in the code, so I should write this down:
 
 // Node instance - a GameMaker object instance associated with a node (like obj_ev_pack_music_node)
+// These are the ones you actually see with your eyes.
 
 // Node struct - a struct representing a node type. It has several instances, like brand_node.
 // All instances of this struct are instantiated here.
 
 // Node state - a struct that represents a node in the pack editor. (defined in ev_node_with_state) 
 
-
 // Both node states and instances have some form of id, position, and list of exits 
 // (outwards connections). There is one of each for each node a user creates in the editor.
 
+global.pack_editor_instance = id;
+
 previous_mouse_x = mouse_x;
 previous_mouse_y = mouse_y;
-
 dragging_camera = false;
-
 zoom = 0;
-
 enum pack_things {
 	nothing,
 	hammer,
@@ -150,10 +151,10 @@ function node_struct(node_id, object_name) constructor {
 	self.properties_generator = global.editor_instance.return_noone;
 	self.properties = {};
 	
-	self.read_function = pack_editor_inst().default_reader;
-	self.read_instance_function = pack_editor_inst().default_instance_reader;
-	self.write_function = pack_editor_inst().default_writer;
-	self.write_instance_function = pack_editor_inst().default_instance_writer;
+	self.read_function = global.pack_editor_instance.default_reader;
+	self.read_instance_function = global.pack_editor_instance.default_instance_reader;
+	self.write_function = global.pack_editor_instance.default_writer;
+	self.write_instance_function = global.pack_editor_instance.default_instance_writer;
 	
 	// called when wrench is used
 	// params: (node_instance)
@@ -223,9 +224,7 @@ level_node.write_instance_function = function (node_state) {
 }
 level_node.play_evaluate = function (node_state) {
 	global.level = node_state.properties.level;
-	ev_prepare_level(global.level)
 	ev_place_level_instances(global.level)
-
 	return noone;
 };
 
@@ -270,6 +269,9 @@ branefuck_node.on_config = function (node_instance) {
 		node_instance : node_instance
 	});
 }
+branefuck_node.play_evaluate = function(node_state) {
+	var program = node_state.properties.program;
+}
 
 thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node");
 count_node = new node_struct("ct", "obj_ev_pack_count_node");
@@ -300,9 +302,29 @@ comment_node.on_config = function (node_instance) {
 }
 
 
+comment_node.read_function = function (properties_str /*, version */) {
+	return { comment : properties_str }; 
+}
+comment_node.read_instance_function = function (inst) {
+	return { comment : inst.comment }
+}
+comment_node.write_function = function (node_state) {
+	return string(node_state.properties.comment)
+}
+comment_node.write_instance_function = function (node_state) {
+	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
+		{ comment : node_state.properties.comment })
+}
+comment_node.on_config = function (node_instance) {
+	global.mouse_layer = 1;
+	new_window_with_pos(node_instance.x, node_instance.y, 10, 6, asset_get_index("obj_ev_comment_node_window"), {
+		node_instance : node_instance
+	});
+}
 
+oob_node = new node_struct("ob", "obj_ev_pack_oob_node");
 // List of all the nodes a user should be able to create
-nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node, count_node, comment_node];
+nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node, count_node, comment_node, oob_node];
 
 
 function reset_global_pack() {

@@ -45,7 +45,7 @@ function pick(node_inst) {
 update_node_instances_positions()
 
 
-pack_editor_inst().select_tool_happening.subscribe(function (struct) {
+global.pack_editor_instance.select_tool_happening.subscribe(function (struct) {
 	selected = (struct.new_selected_thing == pack_things.selector)
 	
 	if (array_length(node_instances) != 0) {

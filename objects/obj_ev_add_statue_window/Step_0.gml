@@ -13,7 +13,7 @@ for (var i = 0; i < array_length(children); i++) {
 }
 
 if keyboard_check_pressed(ord("T")) {
-	instance_create_depth(x, y, depth, agi("obj_ev_brainfucker"), {
+	instance_create_depth(x, y, depth, agi("obj_ev_branefucker"), {
 		add_inst : noone,
 		input_1_str : input_1_text.txt,
 		input_2_str : input_2_text.txt,

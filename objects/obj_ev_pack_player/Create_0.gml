@@ -1,3 +1,8 @@
+ev_prepare_level()
+// don't display locusts
+
+ds_grid_set(agi("obj_inventory").ds_player_info, 0, 1, 0)
+
 current_node_state = noone;
 function move_to_node_state(state) {
 	current_node_state = state;
@@ -5,11 +10,6 @@ function move_to_node_state(state) {
 }
 
 function on_room_create() {
-	if room != global.pack_level_room {
-		instance_destroy(id)
-		return;	
-	}
-
 	if current_node_state == noone
 		current_node_state = global.pack.starting_node_states[0];
 

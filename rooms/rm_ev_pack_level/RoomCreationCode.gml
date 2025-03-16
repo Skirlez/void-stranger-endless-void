@@ -1,4 +1,4 @@
-var asset = asset_get_index("obj_ev_pack_player")
+var asset = agi("obj_ev_pack_player")
 if asset == -1
 	exit
 with (asset)

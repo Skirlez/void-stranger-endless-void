@@ -185,14 +185,17 @@ if !surface_exists(game_surface) {
 if (display_context != display_contexts.pack_editor)
 	draw();
 else if global.compiled_for_merge {
-	var zoom = pack_editor_inst().zoom;
+	var zoom = global.pack_editor_instance.zoom;
 	if !outside_view && zoom <= 1
 		draw();
 	show_debug_message(zoom)
 }
-	
-draw_surface_ext(game_surface, x, y, image_xscale, image_yscale, 0, c_white, 1)
-draw_sprite_ext(border_sprite, 0, x, y, image_xscale, image_yscale, 0, c_white, 1)
+
+var draw_x = x;
+if display_context == display_contexts.pack_editor
+	draw_x += shake_x_offset;
+draw_surface_ext(game_surface, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
+draw_sprite_ext(border_sprite, 0, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
 
 
 if brand != 0 {

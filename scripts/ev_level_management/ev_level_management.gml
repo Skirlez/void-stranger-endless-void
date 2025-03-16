@@ -7,7 +7,6 @@
 
 
 function level_struct() constructor {
-
 	name = ""
 	description = ""
 	music = global.music_names[1];
@@ -306,4 +305,19 @@ function get_multiplier(str, pointer) {
 	}
 	var num = int64(num_string)
 	return { mult : num, offset : count };
+}
+
+function level_get_exit_count(lvl) {
+	static tile_exit = global.editor_instance.tile_exit;
+	static object_secret_exit = global.editor_instance.object_secret_exit; 
+	var exits = 0;
+	for (var i = 0; i < 9; i++) {
+		for (var j = 0; j < 14; j++) {
+			if lvl.tiles[i][j].tile == tile_exit
+				exits++;
+			if lvl.objects[i][j].tile == object_secret_exit
+				exits++;
+		}
+	}
+	return exits;
 }

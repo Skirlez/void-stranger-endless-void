@@ -9,8 +9,9 @@ for (var i = 0; i < array_length(nodes); i++) {
 		
 			var other_center_x = node.center_x
 			var other_center_y = node.center_y
-
-			ev_draw_pack_line(center_x, center_y, other_center_x, other_center_y)
+			
+			var number = (array_length(exit_instances) == 1) ? -1 : (j + 1)
+			ev_draw_pack_line(center_x, center_y, other_center_x, other_center_y, number)
 		}
 	}
 }

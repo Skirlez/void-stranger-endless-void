@@ -13,9 +13,9 @@ grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset
 		static grube_obj = asset_get_index("obj_ev_grube");
 		var type;
 		if count < 5
-			type = ev_grube_types.gray_cube;
+			type = ev_grube_types.player_cube;
 		else
-			type = choose(ev_grube_types.gray_cube, irandom_range(0, ev_grube_types.size - 1));
+			type = choose(ev_grube_types.player_cube, irandom_range(0, ev_grube_types.size - 1));
 		var grube = instance_create_layer(200 + irandom_range(-20, 20), y + 42, "Grube", grube_obj, {
 			type : type
 		})
@@ -151,15 +151,19 @@ credits = [
 		new ev_credits_text("KyuuMetis"),
 		new ev_credits_text("Pyredrid"),
 		new ev_credits_text("Meepster99"),
+		new ev_credits_text("Flan"),
 		new ev_credits_text("cyrelouyea"),
 		new ev_credits_text("Fayti1703"),
-		new ev_credits_text("gullwingdoors"),
-		new ev_credits_text("juliascythe"),
 	],
 	[
+		new ev_credits_header("Contributors"),
+		new ev_credits_text("gullwingdoors"),
+		new ev_credits_text("juliascythe"),
+		new ev_credits_spacing(),
 		new ev_credits_header("Server Development"),
 		new ev_credits_text("hexfae"),
-		new ev_credits_spacing(),
+	],
+	[
 		new ev_credits_header("Music"),
 		new ev_credits_text("astra_jam (Sun)"),
 		new ev_credits_text("by crappyblue"),
@@ -167,11 +171,11 @@ credits = [
 		new ev_credits_text("by skirlez"),
 		new ev_credits_text("Tail's Lullaby (Tue)"),
 		new ev_credits_text("by 8bitavo"),
+		new ev_credits_text("Blossom (Wed)"),
+		new ev_credits_text("by gooeyPhantasm"),
 	],
 	[
 		new ev_credits_header("Music"),
-		new ev_credits_text("Blossom (Wed)"),
-		new ev_credits_text("by gooeyPhantasm"),
 		new ev_credits_text("Endless Void (Fri)"),
 		new ev_credits_text("by gooeyPhantasm"),
 		new ev_credits_text("Stealie Feelies (Thu/Sat)"),
@@ -180,11 +184,21 @@ credits = [
 	],
 	[
 		new ev_credits_header("SFX"),
+		new ev_credits_text("The BFXR Program"),
 		new ev_credits_text("fatboy94"),
 		new ev_credits_text("SubUnit_FieldRec"),
 		new ev_credits_spacing(),
 		new ev_credits_text("Links and licenses"),
 		new ev_credits_text("available in credits.txt"),
+	],
+	[
+		new ev_credits_header("Special Thanks"),
+		new ev_credits_text("Underminers team"),
+		new ev_credits_text("for UndertaleModTool"),
+		new ev_credits_spacing(),
+		new ev_credits_header("Original Game"),
+		new ev_credits_text("Void Stranger"),
+		new ev_credits_text("by System Erasure"),
 	],
 ]
 

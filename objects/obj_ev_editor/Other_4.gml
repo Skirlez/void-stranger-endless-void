@@ -56,12 +56,8 @@ if (room == asset_get_index("rm_ev_startup")) {
 	request_version_string()
 }
 
-if (is_gameplay_room(room)) {
+if (ev_is_room_gameplay(room)) {
 	global.level_time = 0;	
 }
 
 global.turn_frames = 0
-
-if room == asset_get_index("rm_ev_pack_editor") {
-	place_pack_into_room(global.pack)
-}

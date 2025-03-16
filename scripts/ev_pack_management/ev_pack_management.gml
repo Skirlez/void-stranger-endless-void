@@ -56,7 +56,7 @@ function convert_room_nodes_to_structs() {
 		if (ds_map_exists(explored_instances_map, node_inst))
 			return ds_map_find_value(explored_instances_map, node_inst);
 		
-		var node_state = pack_editor_inst().get_node_state_from_instance(node_inst);
+		var node_state = global.pack_editor_instance.get_node_state_from_instance(node_inst);
 		
 		ds_map_set(explored_instances_map, node_inst, node_state)
 		
@@ -278,7 +278,7 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 	var node_state_strings = ev_string_split(node_string, "$");
 	for (var i = 0; i < array_length(node_state_strings); i++) {
 		var node = read_node_struct_from_state_string(node_state_strings[i]);
-		if (node != pack_editor_inst().thumbnail_node) 
+		if (node != global.pack_editor_instance.thumbnail_node) 
 			continue;
 		var node_state = read_node_state(node_state_strings[i]);
 		if (array_length(node_state.intermediary_numbered_exits) != 1) 
@@ -286,7 +286,7 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 		var index = node_state.intermediary_numbered_exits[0];
 		
 		var level_node_string = node_state_strings[index];
-		if (read_node_struct_from_state_string(level_node_string) != pack_editor_inst().level_node)
+		if (read_node_struct_from_state_string(level_node_string) != global.pack_editor_instance.level_node)
 			continue;
 			
 		var level_string = read_node_properties_from_state_string(level_node_string);
@@ -295,7 +295,7 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 	// haven't got any thumbnail nodes connected to levels. just use any level we find
 	for (var i = 0; i < array_length(node_state_strings); i++) {
 		var node = read_node_struct_from_state_string(node_state_strings[i]);
-		if (node == pack_editor_inst().level_node) {
+		if (node == global.pack_editor_instance.level_node) {
 			var level_string = read_node_properties_from_state_string(node_state_strings[i]);
 			return level_string;
 		}

@@ -143,7 +143,7 @@ default_reader = function(tile /*, lvl_str, pos, version*/ ) {
 default_writer = function(tile_state) {
 	return tile_state.tile.tile_id
 }
-default_placer = function(tile_state, i, j /*, wall_tilemaps, edge_tilemaps */) {
+default_placer = function(tile_state, i, j /*, extra_data */) {
 	var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name))
 	if (inst.persistent)
 		inst.persistent = false;
@@ -231,9 +231,9 @@ tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
 tile_pit.iostruct = {
 	read: default_reader,
 	write : default_writer,
-	place : function(tile_state, i, j, wall_tilemaps, edge_tilemaps, lvl) {
+	place : function(tile_state, i, j, extra_data) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
-		if i == 0 || !global.editor_instance.tile_state_has_edge(lvl.tiles[i - 1][j])
+		if i == 0 || !global.editor_instance.tile_state_has_edge(extra_data.lvl.tiles[i - 1][j])
 			instance_destroy(inst.pit_bg)
 			
 	}
@@ -263,6 +263,15 @@ tile_copyfloor = new editor_tile("Shade Tile", agi("spr_copyfloor"), "cr", "obj_
 tile_copyfloor.cube_type = cube_types.edge
 
 tile_exit = new editor_tile("Exit", agi("spr_stairs"), "ex", "obj_exit")
+tile_exit.iostruct = {
+	read : default_reader,
+	write : default_writer,
+	place : function (tile_state, i, j, extra_data) {
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name))
+		inst.ev_exit_number = extra_data.current_exit_number;
+		extra_data.current_exit_number++;
+	}
+}
 tile_exit.cube_type = cube_types.edge
 
 function can_tile_press_buttons(tile) {
@@ -339,8 +348,8 @@ function make_edge_tile(name, tid, type) {
 	tile.iostruct = {
 		read : tilemap_tile_read,
 		write : tilemap_tile_write,
-		place : function(tile_state, i, j, wall_tilemaps, edge_tilemaps) {
-			tilemap_set(edge_tilemaps[tile_state.tile.edge_type], tile_state.properties.ind, j, i)
+		place : function(tile_state, i, j, extra_data) {
+			tilemap_set(extra_data.edge_tilemaps[tile_state.tile.edge_type], tile_state.properties.ind, j, i)
 			var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, "Pit", agi(global.editor_instance.tile_pit.obj_name))
 			instance_destroy(inst.pit_bg)
 		}
@@ -382,8 +391,8 @@ function make_wall_tile(name, tid, type) {
 	tile.iostruct = {
 		read : tilemap_tile_read,
 		write : tilemap_tile_write,
-		place : function(tile_state, i, j, wall_tilemaps, edge_tilemaps) {
-			tilemap_set(wall_tilemaps[tile_state.tile.wall_type], tile_state.properties.ind, j, i)
+		place : function(tile_state, i, j, extra_data) {
+			tilemap_set(extra_data.wall_tilemaps[tile_state.tile.wall_type], tile_state.properties.ind, j, i)
 			if global.editor_instance.tile_state_has_edge(tile_state)
 				instance_create_layer(j * 16 + 8, i * 16 + 8, "More_Pit", agi("obj_ev_pit_drawer"))
 		}
@@ -535,7 +544,6 @@ tile_number_floor.iostruct = {
 	place : function (tile_state, i, j) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		inst.dummy_value = tile_state.properties.num;
-		return inst;
 	}	
 }
 
@@ -608,7 +616,6 @@ var directioned_iostruct = {
 	place : function (tile_state, i, j) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		inst.editor_dir = tile_state.properties.dir;
-		return inst;
 	}
 }
 
@@ -652,7 +659,6 @@ object_mimic.iostruct = {
 	place : function (tile_state, i, j) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		inst.editor_type = tile_state.properties.typ;
-		return inst;
 	}	
 }
 
@@ -693,7 +699,6 @@ object_spider.iostruct = {
 		if (val < 0)
 			val = 3
 		inst.set_e_direction = 3 - val;
-		return inst;
 	}		
 }
 
@@ -802,7 +807,6 @@ object_cif.iostruct = {
 			inst.editor_lamp = true
 
 		inst.b_form = 4
-		return inst;
 	}		
 }
 
@@ -820,81 +824,108 @@ object_add.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers)
 object_add.properties_generator = function() {
 	return {
 		mde : 0,
-		in1 : "",
-		in2 : "",
 		val : "",
 		pgm : "",
 	}
 }
 
-#macro BRAINFUCK_SEP "!"
+#macro OLD_BRAINFUCK_SEP "!"
 
 object_add.iostruct = {
 	read : function(tile, lvl_str, pos, version) {
 		if (version == 1)
 			return global.editor_instance.default_reader(tile, lvl_str, pos)	
 		var original_pos = pos;
-		var read_mode = string_copy(lvl_str, pos, 1)
-		var mode = int64_safe(read_mode, 0)	
-		pos++;
+		if (version == 2) {
+			var read_mode = string_copy(lvl_str, pos, 1)
+			var mode = int64_safe(read_mode, 0)	
+			pos++;
+			if (mode == 0) {
+				var t = new tile_with_state(tile)
+				return { value : t, offset : pos - original_pos }
+			}
+			var read_input_1 = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+			pos += read_input_1.offset + 1;
+			if (mode == 1) {
+				var read_destroy_value = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+				pos += read_destroy_value.offset + 1;
+				var t = new tile_with_state(tile, {
+					mde : 1,
+					val : base64_decode(read_destroy_value.substr),
+					pgm : base64_decode(read_input_1.substr),
+				})
+				return { value : t, offset : pos - original_pos }
+			}
 		
-		if (mode == 0) {
-			var t = new tile_with_state(tile)
-			return { value : t, offset : pos - original_pos }
-		}
-		var read_input_1 = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
-		
-		pos += read_input_1.offset + 1;
-		
-		if (mode == 1) {
-			var read_destroy_value = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
+			var read_input_2 = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+			pos += read_input_2.offset + 1;
+			var read_destroy_value = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
 			pos += read_destroy_value.offset + 1;
+			var read_program = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+			pos += read_program.offset + 1;
+		
+			// version 3 does not inputs, convert inputs to branefuck instructions
+			function input_to_code(input) {
+				if (input == "")
+					return "";
+				if string_is_int(input) {
+					var input_value = int64_safe(input, 0)
+					if input_value == 0
+						return "";
+					if input_value > 0
+						return "+" + input
+					else
+						return "-" + input
+				}
+				else
+					return ",g:" + input + "," 
+			}
+		
+			var prefix = input_to_code(read_input_1.substr) + ">" 
+				+ input_to_code(read_input_2.substr) + "<"
 			
-			
+			if prefix == "><"
+				prefix = "";
+		
 			var t = new tile_with_state(tile, {
-				mde : 1,
-				in1 : base64_decode(read_input_1.substr),
-				in2 : "",
+				mde : 2,
 				val : base64_decode(read_destroy_value.substr),
-				pgm : "",
+				pgm : prefix + read_program.substr,
 			})
 			return { value : t, offset : pos - original_pos }
 		}
-		
-		var read_input_2 = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
-		pos += read_input_2.offset + 1;
-		var read_destroy_value = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
-		pos += read_destroy_value.offset + 1;
-		var read_program = read_string_until(lvl_str, pos, BRAINFUCK_SEP)
-		pos += read_program.offset + 1;
-		
-		var t = new tile_with_state(tile, {
-			mde : 2,
-			in1 : base64_decode(read_input_1.substr),
-			in2 : base64_decode(read_input_2.substr),
-			val : base64_decode(read_destroy_value.substr),
-			pgm : read_program.substr,
-		})
-		return { value : t, offset : pos - original_pos }
+		if (version == 3) {
+			var read_mode = string_copy(lvl_str, pos, 1)
+			var mode = int64_safe(read_mode, 0)	
+			pos++;
+			if (mode == 0) {
+				var t = new tile_with_state(tile)
+				return { value : t, offset : pos - original_pos }
+			}
+			var read_program = read_string_until(lvl_str, pos, PROPERTY_SEPARATOR_CHAR)
+			pos += read_program.offset + 1;
+			var read_destroy_value = read_string_until(lvl_str, pos, PROPERTY_SEPARATOR_CHAR)
+			pos += read_destroy_value.offset + 1;
+			var t = new tile_with_state(tile, {
+				mde : mode,
+				val : base64_decode(read_destroy_value.substr),
+				pgm : base64_decode(read_program.substr),
+			})
+			return { value : t, offset : pos - original_pos }
+		}
+
 	},
 	write : function(tile_state) {
-		
 		var mode = tile_state.properties.mde
 		var program = tile_state.properties.pgm;
-		var input_1 = tile_state.properties.in1;
-		var input_2 = tile_state.properties.in2;
 		var destroy_value = tile_state.properties.val;
 		
 		if mode == 0 {
 			return tile_state.tile.tile_id + "0"
 		}
-		if mode == 1 {
-			return tile_state.tile.tile_id + "1" + base64_encode(input_1) + BRAINFUCK_SEP + base64_encode(destroy_value) + BRAINFUCK_SEP
-		}
-		return tile_state.tile.tile_id + "2" + base64_encode(input_1) + BRAINFUCK_SEP 
-			+ base64_encode(input_2) + BRAINFUCK_SEP 
-			+ base64_encode(destroy_value) + BRAINFUCK_SEP 
-			+ program + BRAINFUCK_SEP; 
+		return string(mode) + PROPERTY_SEPARATOR_CHAR 
+			+ base64_encode(program) + PROPERTY_SEPARATOR_CHAR 
+			+ base64_encode(destroy_value) + PROPERTY_SEPARATOR_CHAR;
 	},
 	place : function (tile_state, i, j) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
@@ -903,23 +934,20 @@ object_add.iostruct = {
 		var mode = tile_state.properties.mde;
 		
 		if mode == 0
-			return inst;
+			return;
 			
 		
 		var program 
-		if mode == 1
+		if mode == 1 {
 			program = ".";
+		}
 		else
 			program = tile_state.properties.pgm
-		instance_create_layer(0, 0, tile_state.tile.obj_layer, agi("obj_ev_brainfucker"), {
+		instance_create_layer(0, 0, tile_state.tile.obj_layer, agi("obj_ev_branefucker"), {
 			add_inst : inst,
-			input_1_str : tile_state.properties.in1,
-			input_2_str : tile_state.properties.in2,
 			destroy_value_str : tile_state.properties.val,
 			program_str : program,
 		});
-		
-		return inst;
 	},
 };
 object_add.zed_function = function(tile_state) {
@@ -936,7 +964,6 @@ function voidlord_io(b_form) {
 		place : function (tile_state, i, j) {
 			var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 			inst.b_form = self.num
-			return inst;
 		},
 		num : b_form
 	};
@@ -1026,9 +1053,9 @@ object_secret_exit.iostruct = {
 		return tile_state.tile.tile_id 
 			+ string(tile_state.properties.typ) + PROPERTY_SEPARATOR_CHAR
 			+ string(tile_state.properties.ofx) + PROPERTY_SEPARATOR_CHAR
-			+ string(tile_state.properties.ofy);
+			+ string(tile_state.properties.ofy) + PROPERTY_SEPARATOR_CHAR;
 	},
-	place : function (tile_state, i, j) {
+	place : function (tile_state, i, j, extra_data) {
 		i += tile_state.properties.ofy;
 		j += tile_state.properties.ofx;
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
@@ -1039,8 +1066,9 @@ object_secret_exit.iostruct = {
 			inst.secret_stars = true;
 		else if type == 2
 			instance_create_layer(j * 16 + 8, i * 16 + 8, "Effects", agi("obj_stinklines"))	
+		inst.ev_exit_number = extra_data.current_exit_number;
+		extra_data.current_exit_number++;
 		
-		return inst;
 	}
 }
 function draw_offset_arrow(i, j, ofx, ofy) {

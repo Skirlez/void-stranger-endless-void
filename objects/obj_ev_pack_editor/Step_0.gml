@@ -59,11 +59,10 @@ if play_transition_time != -1 {
 	camera_set_view_pos(view_camera[0], cam_x, cam_y)
 	play_transition_time--;
 	if play_transition_time == 0 {
-		
 		global.mouse_layer = 0;
 		global.pack.starting_node_states = convert_room_nodes_to_structs() 
+		global.playtesting = true;
 		room_goto(global.pack_level_room)
-		
 		play_transition_time = -1;
 	}
 }

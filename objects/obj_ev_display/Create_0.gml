@@ -256,17 +256,15 @@ highlighted = false
 
 outside_view = false;
 mouse_moving = false;
-
-
-node_instance_setup(-1, 112 * image_xscale, 72 * image_yscale)
-
+if display_context == display_contexts.pack_editor {
+	node_instance_setup(level_get_exit_count(lvl), 112 * image_xscale, 72 * image_yscale)
+}
 function destroy() {
 	audio_play_sound(asset_get_index("snd_stainedglass_break"), 10, false, 1, 0, random_range(0.9, 1));
 	
 	static shard_sprite = asset_get_index("spr_ev_display_shards");
 	static shard_object = asset_get_index("obj_ev_display_shard");
 	static shard_manager = asset_get_index("obj_ev_shard_manager");
-	
 	
 	new_game_surface = surface_create(224, 144);
 	surface_copy(new_game_surface, 0, 0, game_surface);

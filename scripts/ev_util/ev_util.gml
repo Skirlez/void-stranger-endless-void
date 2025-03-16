@@ -142,7 +142,3 @@ function ds_list_to_array(list) {
 	}
 	return arr;
 }
-
-function is_gameplay_room(rm) {
-	return rm == global.level_room || rm == global.pack_level_room;	
-}

@@ -1,7 +1,7 @@
 event_inherited();
 
-if instance_exists(asset_get_index("obj_ev_pack_editor")) {
-	with (asset_get_index("obj_ev_pack_editor")) {
+if mode == level_selector_modes.selecting_level_for_pack {
+	with (global.pack_editor_instance) {
 		on_menu_destroy()
 	}
 }

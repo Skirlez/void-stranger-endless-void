@@ -96,15 +96,13 @@ function for_every_collision_run(func) {
 	}
 	ds_list_destroy(list);
 }
-if type == ev_grube_types.leech_cube {
+if type == ev_grube_types.enemy_cube {
 	for_every_collision_run(function (instance) {
 		with (instance) {
-
-			if player_cube && !touched_leech_cube {
+			if type == ev_grube_types.player_cube && !touched_enemy_cube {
 				sprite_index = hit_sprite;
-				touched_leech_cube = true;
+				touched_enemy_cube = true;
 				audio_play_sound(agi("snd_player_damage"), 10, false);
-
 			}
 		}	
 	})
@@ -112,13 +110,13 @@ if type == ev_grube_types.leech_cube {
 if type == ev_grube_types.egg_cube && phy_speed > 4 {
 	for_every_collision_run(function (instance) {
 		with (instance) {
-			if type == ev_grube_types.leech_cube {
+			if type == ev_grube_types.enemy_cube {
 				instance_destroy(id)
 				audio_play_sound(agi("snd_enemy_explosion"), 10, false);
 				if global.compiled_for_merge {
 					// leech death code
 					var ienemydeath_fx = instance_create_depth(x, y, depth, agi("obj_enemydeath_fx"))
-					var ideathsprite = agi("spr_cl_falling")
+					var ideathsprite = fall_sprite;
 					with (ienemydeath_fx)
 					    enemy_sprite = ideathsprite
 					instance_create_depth(x, y, 10, agi("obj_explosion_001"))

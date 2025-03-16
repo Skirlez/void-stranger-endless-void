@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ev_clear_pack_level",
+  "name": "ev_leave_pack_level",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

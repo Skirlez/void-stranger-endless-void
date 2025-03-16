@@ -10,7 +10,8 @@ if (global.swapper_backup != 0)
 global.swapper_used = 0
 
 // TARGET: TAIL
-if (string_pos("rm_ev_", room_get_name(room)) != 0 && room != rm_ev_level) {
+// Change resolution for non gameplay rooms to take up the screen
+if (string_pos("rm_ev_", room_get_name(room)) != 0 && !ev_is_room_gameplay(room)) {
     if surface_get_width(application_surface) == 224 {
     	var ratio = display_get_height() / 144	
     	surface_resize(application_surface, 224 * ratio, 144 * ratio)

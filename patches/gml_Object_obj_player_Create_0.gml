@@ -92,12 +92,17 @@ switch global.blade_style
 swap_stage = 0
 swapper_flash_counter = 0
 
-
+// No steam achievements. These lines don't exist in the itch version, so a string replace target doesn't do any damage if they're not present
 // TARGET: STRING
 scr_steam_achievement_get()> { /* do nothing*/ }
 // TARGET: STRING
 scr_steam_achievement_clear()> { /* do nothing*/ }
+
 // TARGET: STRING
 spr_wings = 2595> { /* do nothing*/ }
 // TARGET: STRING
 spr_blade = 1700> { /* do nothing*/ }
+
+// TARGET: TAIL
+// Set up exit number variable for packs
+ev_exit_numbers = []
