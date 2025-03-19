@@ -21,7 +21,6 @@ if [ ! -x "$UNDERTALEMODCLI_PATH" ]; then
   echo ""
   echo "UndertaleModCli not set as executable. Please run"
   echo "chmod +x path/to/UndertaleModCli"
-
   read -p "Try running the command? (y/n): " answer
   if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
       chmod +x "$UNDERTALEMODCLI_PATH";
@@ -91,6 +90,9 @@ fi
 echo "--------------------------"
 echo "Merging into Void Stranger"
 echo "--------------------------"
+
+# https://github.com/UnderminersTeam/UndertaleModTool/pull/2063
+rm "$VOID_STRANGER_PATH/data.win"
 
 $UNDERTALEMODCLI_PATH load "$VOID_STRANGER_PATH/clean_data.win" --scripts "./csx/merger.csx" --output "$VOID_STRANGER_PATH/data.win"
 
