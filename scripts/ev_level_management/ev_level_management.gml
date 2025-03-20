@@ -12,10 +12,11 @@ function level_struct() constructor {
 	music = global.music_names[1];
 	author = "Anonymous"
 	author_brand = int64(0)
-	
 	burdens = [false, false, false, false, false]
 	tiles = array_create(9);
 	objects = array_create(9);
+	theme = 0
+	bount = -1; // brane count
 	for (var i = 0; i < array_length(tiles) - 1; i++)
 		tiles[i] = array_create(14, new tile_with_state(global.editor_instance.tile_pit))	
 	tiles[8] = array_create(14, new tile_with_state(global.editor_instance.tile_unremovable))	
@@ -126,9 +127,11 @@ function export_level_arr(level) {
 	if object_multiplier != 1 
 		object_string += MULTIPLIER_CHAR + string(object_multiplier)
 		
+	var theme_string = string(level.theme);
+	var bount_string = string(level.bount)
 	return [version_string, name_string, description_string, music_string, 
 		author_string, author_brand_string, upload_date_string, last_edit_date_string,
-		burdens_string, tile_string, object_string]
+		burdens_string, tile_string, object_string, theme_string, bount_string]
 }
 
 // returns the level in string format
@@ -182,15 +185,16 @@ function get_level_date_from_string(level_string) {
 
 
 
-
+enum level_themes {
+	regular,
+	universe,
+	white_void
+}
 // imports a level from a level string
 function import_level(level_string) {
 	var level = new level_struct()
 	
 	var strings = ev_string_split(level_string, "|");
-	if array_length(strings) != 11 {
-		return place_placeholder_tiles(level);
-	}
 	var version_string = strings[0];
 	var version = int64_safe(version_string, 0);
 	if (version <= 0)
@@ -198,6 +202,16 @@ function import_level(level_string) {
 	if (version > global.latest_lvl_format) {
 		return place_placeholder_tiles(level)
 	}
+	var section_amount;
+	if version <= 2
+		section_amount = 11;
+	else
+		section_amount = 13;
+	
+	if array_length(strings) != section_amount {
+		return place_placeholder_tiles(level);
+	}
+
 
 		
 	level.name = base64_decode(strings[1]);
@@ -216,10 +230,18 @@ function import_level(level_string) {
 	var tile_string = strings[9]
 	var object_string = strings[10]
 
-
 	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit, version)
 	import_process_tiles(object_string, level, 8,  global.editor_instance.object_empty, version)
 	
+
+	if (version <= 2) {
+		level.theme = 0
+		level.bount = -1;
+	}
+	else {
+		level.theme = strings[11]
+		level.bount = strings[12]
+	}
 	return level
 }
 function import_process_tiles(tile_string, level, height, failsafe_tile, version) {

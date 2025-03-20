@@ -82,12 +82,15 @@ global.void_radio_on = false;
 #macro thing_multiplaceable 3
 #macro thing_picker 6
 
-// cannot be removed
-#macro flag_unremovable 1
-// if true, placing this tile will remove any previously placed tile of this type
-#macro flag_only_one 2
-// if true, cannot be picked up by picker or plucker
-#macro flag_unplaceable 4
+
+enum tile_flags {
+	// cannot be removed
+	unremovable = 1,
+	// if set, placing this tile will remove any previously placed tile of this type
+	only_one = 2,
+	// if set, cannot be picked up by picker or plucker
+	unplaceable = 4
+}
 
 #macro burden_memory 0
 #macro burden_wings 1
@@ -222,11 +225,49 @@ function tile_state_has_edge(tile_state) {
 
 #region Tile Definitions
 
-floor_sprite = agi("spr_floor")
-tile_pit = new editor_tile(no_name, noone, "pt", "obj_pit", "Pit", flag_unplaceable)
+
+function get_floor_sprite(lvl) {
+	static floor_sprite = agi("spr_floor");
+	static universe_floor_sprite = agi("spr_floor_alpha")
+	if lvl.theme == level_themes.regular
+		return floor_sprite
+	if lvl.theme == level_themes.universe
+		return universe_floor_sprite;
+	return floor_sprite;
+}
+
+
+tile_default = new editor_tile("Floor", agi("spr_floor"), "fl", "obj_floor")
+tile_default.cube_type = cube_types.edge_constant
+tile_default.draw_function = function(tile_state, i, j, preview, lvl) {
+	draw_sprite(get_floor_sprite(lvl), 0, j * 16 + 8, i * 16 + 8)
+}
+
+
+// this is separated into a function since glass also calls it
+
+// it may seem like this function is drawing the floor sprite,
+// that's only because the edge graphic is the second index of that sprite
+function draw_pit(i, j, lvl, obscure_universe) {
+	static pit_sprite = agi("spr_pit");
+	if i != 0 && global.editor_instance.tile_state_has_edge(lvl.tiles[i - 1][j]) {
+		static default_floor_sprite = agi("spr_floor");
+		var spr;
+		if lvl.tiles[i - 1][j].tile == global.editor_instance.tile_default
+			spr = get_floor_sprite(lvl); // default tile might have themed edge
+		else
+			spr = default_floor_sprite;
+		draw_sprite(spr, 1, j * 16 + 8, i * 16 + 8)
+	}
+	else if obscure_universe && lvl.theme == level_themes.universe {
+		draw_sprite(pit_sprite, 1, j * 16 + 8, i * 16 + 8) // draw black square to hide away the universe background
+	}	
+}
+
+
+tile_pit = new editor_tile(no_name, agi("spr_pit"), "pt", "obj_pit", "Pit", tile_flags.unplaceable)
 tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
-	if i != 0 && global.editor_instance.tile_state_has_edge(lvl.tiles[i - 1][j])
-		draw_sprite(floor_sprite, 1, j * 16 + 8, i * 16 + 8)
+	draw_pit(i, j, lvl, true)
 }
 tile_pit.iostruct = {
 	read: default_reader,
@@ -234,7 +275,7 @@ tile_pit.iostruct = {
 	place : function(tile_state, i, j, extra_data) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		if i == 0 || !global.editor_instance.tile_state_has_edge(extra_data.lvl.tiles[i - 1][j])
-			instance_destroy(inst.pit_bg)
+			inst.pit_bg.no_edge = true;
 			
 	}
 }
@@ -242,14 +283,11 @@ tile_pit.iostruct = {
 
 tile_glass = new editor_tile("Glass", agi("spr_glassfloor"), "gl", "obj_glassfloor", "Floor_INS")
 tile_glass.draw_function = function(tile_state, i, j, preview, lvl) {
-	tile_pit.draw_function(tile_state, i, j, preview, lvl)
+	draw_pit(i, j, lvl, false)
 	default_draw_function(tile_state, i, j)
 }
 tile_bomb = new editor_tile("Bomb Tile", agi("spr_bombfloor"), "mn", "obj_bombfloor")
 tile_explo = new editor_tile("Lit Bomb Tile", agi("spr_explofloor"), "xp", "obj_explofloor")
-
-tile_default = new editor_tile("Floor", agi("spr_floor"), "fl", "obj_floor")
-tile_default.cube_type = cube_types.edge
 
 
 tile_floorswitch = new editor_tile("Button", agi("spr_floorswitch"), "fs", "obj_floorswitch")
@@ -562,10 +600,10 @@ tile_number_floor.zed_function = function(tile_state) {
 }
 tile_number_floor.cube_type = cube_types.edge
 
-tile_unremovable = new editor_tile(no_name, agi("spr_floor_white"), "ur", no_obj, "Floor", flag_unremovable|flag_unplaceable)
+tile_unremovable = new editor_tile(no_name, agi("spr_floor_white"), "ur", no_obj, "Floor", tile_flags.unremovable|tile_flags.unplaceable)
 tile_unremovable.draw_function = empty_function;
 
-object_empty = new editor_object(no_name, noone, "em", no_obj, "Instances", flag_unplaceable)
+object_empty = new editor_object(no_name, noone, "em", no_obj, "Instances", tile_flags.unplaceable)
 object_empty.draw_function = empty_function;
 object_empty.iostruct = {
 	read: default_reader,
@@ -574,7 +612,7 @@ object_empty.iostruct = {
 }
 
 sweat_sprite = agi("spr_sweat")
-object_player = new editor_object("Player", agi("spr_player_down"), "pl", "obj_spawnpoint", "Instances", flag_unremovable|flag_only_one)
+object_player = new editor_object("Player", agi("spr_player_down"), "pl", "obj_spawnpoint", "Instances", tile_flags.unremovable|tile_flags.only_one)
 object_player.draw_function = function(tile_state, i, j, preview, lvl) {
 	var spr = ev_get_stranger_down_sprite(global.stranger)
 	if (preview && lvl.tiles[i][j].tile == tile_pit) {
@@ -1071,6 +1109,7 @@ object_secret_exit.iostruct = {
 		
 	}
 }
+/* scrapped in favor of offset projections
 function draw_offset_arrow(i, j, ofx, ofy) {
 	if (ofx == 0 && ofy == 0)
 		return;
@@ -1078,6 +1117,7 @@ function draw_offset_arrow(i, j, ofx, ofy) {
 	angle = round(angle / 45) * 45
 	draw_sprite_ext(agi("spr_ev_tile_offset_arrow"), 0, j * 16 + 8, i * 16 + 8, 1, 1, angle, c_white, 1)
 }
+*/
 object_secret_exit.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	if (no_spoilers)
 		return;
@@ -1127,7 +1167,7 @@ surface_reset_target()
 var crystal_sprite_with_outline = sprite_create_from_surface(surface_crystal, 0, 0, 16, 16, false, false, 8, 8)
 surface_free(surface_crystal)
 
-object_memory_crystal = new editor_object("Memory Crystal", crystal_sprite_with_outline, "mm", "obj_token_uncover", "Instances", flag_only_one)
+object_memory_crystal = new editor_object("Memory Crystal", crystal_sprite_with_outline, "mm", "obj_token_uncover", "Instances", tile_flags.only_one)
 object_memory_crystal.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	draw_sprite(global.editor_instance.crystal_sprite, 0, j * 16 + 8, i * 16 + 8)	
 }
@@ -1550,5 +1590,17 @@ global.turn_frames = 0
 global.death_frames = -1
 
 global.instance_touching_mouse = noone;
-
 global.happenings = ds_map_create();
+
+if global.compiled_for_merge {
+	// the universe object is modified to not draw anything unless global.level.theme == level_themes.universe
+	universe_instance = instance_create_depth(-16, -16, 1250, agi("obj_universe"))
+	
+	// this sprite also has no hitbox, unlike the original which would cover most of the screen
+	universe_instance.sprite_index = agi("spr_ev_universe_no_flashbang");
+}
+function get_universe_instance() {
+	if !global.compiled_for_merge
+		return noone;
+	return universe_instance;
+}

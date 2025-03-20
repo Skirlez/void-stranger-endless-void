@@ -12,6 +12,7 @@ The project is set up like this, as opposed to just a plain UndertaleModTool mod
 - Faster iteration, as a lot of changes can be tested by just running the GameMaker project without merging
 - When the game updates, it will be trivial to update with it
 - Ability to use GameMaker's animation curves (in a non-painful way)
+- Ability to use GameMaker's debugger for code in the project
 - Ability to use things that the UndertaleModTool (de)compiler would usually not like (in a non-painful way)
 - Ability to open-source the project
 
@@ -37,7 +38,7 @@ This does not apply to animation curves, as Void Stranger never uses them, and s
 
 ## License
 The code, with some exceptions, is licensed under the terms of the AGPLv3.
-Exceptions being `gml_Object_obj_chest_small_Step_0.gml`, `gml_Object_obj_chest_small_Draw_0.gm`, `gml_Object_obj_floor_memory1_Create_0.gml`, `gml_Object_obj_floor_memory1_Create_0.gml`, `gml_Object_obj_floor_memory3_Create_0.gml`, `gml_Object_obj_player_Step_0.gml`, and `gml_Object_obj_inventory_Create_0.gml`
+Exceptions being `gml_Object_obj_chest_small_Step_0.gml`, `gml_Object_obj_chest_small_Draw_0.gm`, `gml_Object_obj_floor_memory1_Create_0.gml`, `gml_Object_obj_floor_memory2_Create_0.gml`, `gml_Object_obj_floor_memory3_Create_0.gml`, `gml_Object_obj_player_Step_0.gml`, and `gml_Object_obj_inventory_Create_0.gml`
 all in the patches folder, since they are mostly copied decompiled code.
 
 ## Contributing

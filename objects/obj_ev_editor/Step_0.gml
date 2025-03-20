@@ -304,4 +304,6 @@ if !global.compiled_for_merge {
 		else
 			audio_stop_sound(global.music_inst);	
 	}
-}	
+}
+
+

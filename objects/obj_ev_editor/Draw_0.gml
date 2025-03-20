@@ -46,8 +46,9 @@ if (room == global.editor_room) {
 					spr = sprite;
 				else if state.tile.cube_type == cube_types.edge_constant
 					spr = state.tile.spr_ind
-
-				var edge_sprite = asset_get_index("spr_floor")
+					
+				edge_sprite = asset_get_index("spr_floor")
+				
 				var black_bottom_sprite = asset_get_index("spr_ev_tile_hitbox");
 				ev_draw_cube_multisprite(
 					[edge_sprite, edge_sprite, edge_sprite, edge_sprite, spr,

@@ -35,7 +35,7 @@ switch (display_context) {
 			if (!dragging && mouse_check_button_pressed(mb_right)
 					&& !(global.selected_thing == thing_placeable 
 						&& held_tile_state != noone 
-						&& held_tile_state.tile.flags & flag_only_one)
+						&& held_tile_state.tile.flags & tile_flags.only_one)
 					&& global.selected_thing != thing_multiplaceable)
 					&& global.selected_thing != thing_nothing {
 				dragging = true

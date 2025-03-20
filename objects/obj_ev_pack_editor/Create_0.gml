@@ -140,9 +140,17 @@ function get_node_state_from_instance(node_inst) {
 }
 
 
+enum node_flags {
+	// cannot be removed
+	unremovable = 1,
+	// if set, you cannot place more than 1 of this node type
+	only_one = 2,
+}
+
+
 global.id_node_map = ds_map_create()
 global.object_node_map = ds_map_create()
-function node_struct(node_id, object_name) constructor {
+function node_struct(node_id, object_name, flags = 0) constructor {
 	self.node_id = node_id;
 	global.id_node_map[? node_id] = self;
 	self.object_ind = asset_get_index(object_name);
@@ -165,9 +173,10 @@ function node_struct(node_id, object_name) constructor {
 	// either returns the next node to be travelled to immediately, or return noone
 	// for the pack player to wait
 	self.play_evaluate = noone;
+	self.flags = flags;
 }
 
-root_node = new node_struct("ro", "obj_ev_pack_root");
+root_node = new node_struct("ro", "obj_ev_pack_root", node_flags.unremovable);
 root_node.play_evaluate = function (node_state) {
 	return node_state.exits[0];
 };
@@ -197,7 +206,7 @@ brand_node.on_config = function (node_instance) {
 }
 level_node = new node_struct("lv", "obj_ev_display");
 level_node.properties_generator = function () {
-	return { lvl : new level_struct() }	
+	return noone; // if this is called something went wrong
 }
 level_node.read_function = function (properties_str /*, version */) {
 	var level = import_level(properties_str)
@@ -273,7 +282,7 @@ branefuck_node.play_evaluate = function(node_state) {
 	var program = node_state.properties.program;
 }
 
-thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node");
+thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node", node_flags.only_one);
 count_node = new node_struct("ct", "obj_ev_pack_count_node");
 
 
@@ -322,7 +331,8 @@ comment_node.on_config = function (node_instance) {
 	});
 }
 
-oob_node = new node_struct("ob", "obj_ev_pack_oob_node");
+oob_node = new node_struct("ob", "obj_ev_pack_oob_node", node_flags.only_one);
+
 // List of all the nodes a user should be able to create
 nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node, count_node, comment_node, oob_node];
 

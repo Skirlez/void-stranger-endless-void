@@ -22,6 +22,10 @@ function ev_prepare_level(level = noone) {
 			ds_grid_set(inv.ds_player_info, 10, 2, 999)
 		if (level.burdens[4])
 			ds_grid_set(inv.ds_equipment, 0, 4, 1)	
+		if level.theme == level_themes.universe
+			global.universe = 1;
+		else
+			global.universe = 0;
 	}
 
 	ds_grid_set(inv.ds_player_info, 0, 2, "V???")

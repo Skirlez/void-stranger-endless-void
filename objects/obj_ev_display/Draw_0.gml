@@ -8,7 +8,26 @@ if outside_view
 
 function draw() {
 	surface_set_target(game_surface)
+
+	
 	draw_clear_alpha(c_black, 1)
+
+	if lvl.theme == level_themes.universe {
+		if global.compiled_for_merge {
+			var universe_instance = global.editor_instance.get_universe_instance();
+			with (universe_instance) {
+				if surface_exists(u_surf) {
+					shader_set(agi("shader_wavy"))
+					shader_set_uniform_f(t, timer)
+					shader_set_uniform_f(a, 0.07)
+					shader_set_uniform_f(s, 1)
+					shader_set_uniform_f(f, 10)
+					draw_surface(u_surf, u_x, u_y)
+					shader_reset()
+				}
+			}
+		}
+	}
 
 	var tile_mode = display_context == display_contexts.level_editor ? global.tile_mode : false
 
@@ -31,10 +50,21 @@ function draw() {
 	draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
 	draw_text(5 * 16, 9 * 16 + 1, "00")
 
-	// idk how void stranger draws it but this is the only way i could make it align properly
-	draw_text(12 * 16, 9 * 16 + 1, "V?")
-	draw_text(13 * 16, 9 * 16 + 1, "?")
-	draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
+	
+	if lvl.bount == -1 { 
+		// idk how void stranger draws it but this is the only way i could make it align properly
+		draw_text(12 * 16, 9 * 16 + 1, "V?")
+		draw_text(13 * 16, 9 * 16 + 1, "?")
+		draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
+	}
+	else {
+		var hundreds_digit = number div 100;
+		var tenths_digit = (number % 100) div 10;
+		var units_digit = number % 10;
+		draw_text(12 * 16, 9 * 16 + 1, "V" + string(hundreds_digit))
+		draw_text(13 * 16, 9 * 16 + 1, string(tenths_digit))
+		draw_text(13 * 16 + 8, 9 * 16 + 1, string(units_digit))
+	}
 
 	var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
 	draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)

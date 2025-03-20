@@ -34,13 +34,13 @@ function place_placeable(tile_i, tile_j, new_tile, properties = global.empty_str
 	var tile_state = arr[tile_i][tile_j]
 			
 	if (tile_state.tile != new_tile) {
-		if (tile_state.tile.flags & flag_unremovable)
+		if (tile_state.tile.flags & tile_flags.unremovable)
 			return;
 
 		//audio_play_sound(snd_reveal, 10, false)
 	}
 	
-	if (new_tile.flags & flag_only_one) {
+	if (new_tile.flags & tile_flags.only_one) {
 		for (var i = 0; i < 9; i++) {
 			for (var j = 0; j < 14; j++) {
 				if arr[i][j].tile == new_tile
@@ -107,7 +107,7 @@ function handle_click(tile_i, tile_j) {
 		case thing_plucker: // nearly the same, might as well lump them together and check when needed..
 			if dragging {
 				var tile_state = global.editor_instance.current_placeables[tile_i][tile_j];
-				if !(tile_state.tile.flags & flag_unplaceable) {
+				if !(tile_state.tile.flags & tile_flags.unplaceable) {
 					var local_tile_i = tile_i - held_tile_offset[0]
 					var local_tile_j = tile_j - held_tile_offset[1]
 					held_tile_array[local_tile_i][local_tile_j] = tile_state
@@ -121,12 +121,12 @@ function handle_click(tile_i, tile_j) {
 				var tile_state = lvl.tiles[tile_i][tile_j];
 				
 				var final_state;
-				if !(object_state.tile.flags & flag_unplaceable) {
+				if !(object_state.tile.flags & tile_flags.unplaceable) {
 					final_state = object_state
 					if global.tile_mode == true
 						global.editor_instance.switch_tile_mode(false)		
 				}
-				else if !(tile_state.tile.flags & flag_unplaceable){
+				else if !(tile_state.tile.flags & tile_flags.unplaceable){
 					final_state = tile_state
 					if global.tile_mode == false
 						global.editor_instance.switch_tile_mode(true)	

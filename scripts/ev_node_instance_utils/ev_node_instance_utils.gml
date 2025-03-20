@@ -13,7 +13,6 @@ function node_instance_setup(max_exits, center_x_offset, center_y_offset) {
 	node_type = global.object_node_map[? object_index];
 	shake_seconds = 0;
 	shake_x_offset = 0;
-	
 	properties = node_type.properties_generator();
 }
 
@@ -72,7 +71,7 @@ function node_instance_step() {
 				if !(global.pack_editor_instance.judging_node == id) {
 					static hammer_sound = asset_get_index("snd_ev_hammer_judge")
 					audio_play_sound(hammer_sound, 10, false, 1, 0, random_range(0.9, 1.1))
-					if (object_index != root_node_obj) {
+					if !(node_type.flags & node_flags.unremovable) {
 						instance_create_layer(center_x, center_y, "NodeJudgments", judgment_object, {
 							node_inst : id,
 							judgment_type : judgment_types.destroy_node,
@@ -91,7 +90,7 @@ function node_instance_step() {
 							}
 						)
 					}
-					if (instance_exists(judgment_object)) // root node might not have anything to judge
+					if (instance_exists(judgment_object)) // root node might not have anything to judge for example
 						global.pack_editor_instance.judging_node = id;
 					else {
 						shake_seconds = 0.5;

@@ -105,6 +105,7 @@ function level_clicked(display_inst) {
 			mouse_y - 144 * level_size / 2, "PackLevels", display_object, 
 			{
 				lvl : lvl,
+				number : 1,
 				name : lvl.name,
 				brand : lvl.author_brand,
 				draw_beaten : false,

@@ -29,9 +29,7 @@ function ev_draw_pack_line(x1, y1, x2, y2, number = 0) {
 		draw_set_valign(fa_middle)
 		draw_set_font(global.ev_font)
 		draw_set_color(c_white)
-		var number_t = t - 0.15
-		if number_t < 0
-			number_t += 1;
+		var number_t = get_pack_line_number_progress()
 		var number_pos_x = lerp(x1, x2, number_t)
 		var number_pos_y = lerp(y1, y2, number_t)
 		draw_text_shadow(number_pos_x, number_pos_y, string(number), c_black);
@@ -48,6 +46,12 @@ function ev_draw_pack_line(x1, y1, x2, y2, number = 0) {
 
 function get_pack_line_arrow_progress() {
 	return (global.editor_time % 200) / 200;	
+}
+function get_pack_line_number_progress() {
+	var t = get_pack_line_arrow_progress() - 0.15;
+	if t < 0
+		t += 1;
+	return t;
 }
 
 function get_all_node_instances() {
