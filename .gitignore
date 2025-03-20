@@ -16,3 +16,4 @@ projectscripts/output
 projectscripts/variables.sh
 projectscripts/variables.bat
 projectscripts/*.plist
+projectscripts/*.zip
