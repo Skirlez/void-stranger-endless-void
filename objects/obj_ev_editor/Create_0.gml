@@ -225,6 +225,9 @@ function tile_state_has_edge(tile_state) {
 
 #region Tile Definitions
 
+// used in cases a tile has a variable-length property/properties
+#macro PROPERTY_END_CHAR "!"
+
 
 function get_floor_sprite(lvl) {
 	static floor_sprite = agi("spr_floor");
@@ -774,7 +777,7 @@ object_egg.iostruct = {
 		var total_count = 0;
 		
 		for (var m = 0; m < arrlen; m++) {
-			var endp = string_pos_ext(BASE64_END_CHAR, lvl_str, pos)	
+			var endp = string_pos_ext(PROPERTY_END_CHAR, lvl_str, pos)	
 			if (endp == 0)
 				break;
 			total_count += endp - pos + 1;
@@ -793,7 +796,7 @@ object_egg.iostruct = {
 			var txt = tile_state.properties.txt[m]
 			if txt == ""
 				break;
-			encoded_text += base64_encode(txt) + BASE64_END_CHAR	
+			encoded_text += base64_encode(txt) + PROPERTY_END_CHAR	
 		}
 		return tile_state.tile.tile_id + string(m) + encoded_text
 	},
@@ -940,9 +943,9 @@ object_add.iostruct = {
 				var t = new tile_with_state(tile)
 				return { value : t, offset : pos - original_pos }
 			}
-			var read_program = read_string_until(lvl_str, pos, PROPERTY_SEPARATOR_CHAR)
+			var read_program = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_program.offset + 1;
-			var read_destroy_value = read_string_until(lvl_str, pos, PROPERTY_SEPARATOR_CHAR)
+			var read_destroy_value = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_destroy_value.offset + 1;
 			var t = new tile_with_state(tile, {
 				mde : mode,
@@ -961,9 +964,9 @@ object_add.iostruct = {
 		if mode == 0 {
 			return tile_state.tile.tile_id + "0"
 		}
-		return string(mode) + PROPERTY_SEPARATOR_CHAR 
-			+ base64_encode(program) + PROPERTY_SEPARATOR_CHAR 
-			+ base64_encode(destroy_value) + PROPERTY_SEPARATOR_CHAR;
+		return string(mode) + PROPERTY_END_CHAR 
+			+ base64_encode(program) + PROPERTY_END_CHAR 
+			+ base64_encode(destroy_value) + PROPERTY_END_CHAR;
 	},
 	place : function (tile_state, i, j) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
@@ -1059,7 +1062,7 @@ object_secret_exit.properties_generator = function () {
 	return { typ : secret_exit_types.hidden, ofx : 0, ofy : 0 }
 }
 object_secret_exit.has_offset_properties = true;
-#macro PROPERTY_SEPARATOR_CHAR "+"
+
 object_secret_exit.iostruct = {
 	read : function(tile_id, lvl_str, pos, version) {
 		if (version == 1) {
@@ -1089,9 +1092,9 @@ object_secret_exit.iostruct = {
 	},
 	write : function(tile_state) {
 		return tile_state.tile.tile_id 
-			+ string(tile_state.properties.typ) + PROPERTY_SEPARATOR_CHAR
-			+ string(tile_state.properties.ofx) + PROPERTY_SEPARATOR_CHAR
-			+ string(tile_state.properties.ofy) + PROPERTY_SEPARATOR_CHAR;
+			+ string(tile_state.properties.typ) + PROPERTY_END_CHAR
+			+ string(tile_state.properties.ofx) + PROPERTY_END_CHAR
+			+ string(tile_state.properties.ofy) + PROPERTY_END_CHAR;
 	},
 	place : function (tile_state, i, j, extra_data) {
 		i += tile_state.properties.ofy;

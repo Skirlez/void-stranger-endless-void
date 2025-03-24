@@ -1,6 +1,6 @@
 event_inherited()
 
-selector = instance_create_layer(112, 72 - 30, "WindowElements", asset_get_index("obj_ev_selector"), {
+selector = instance_create_layer(112, 72 - 20, "WindowElements", agi("obj_ev_selector"), {
 	elements : ["Hidden", "Stars", "Stinklines"],
 	selected_element : secret_exit_properties.typ,
 	max_radius : 30
@@ -8,25 +8,9 @@ selector = instance_create_layer(112, 72 - 30, "WindowElements", asset_get_index
 add_child(selector)
 
 
-offset_hori = instance_create_layer(112 - 40, 72 + 50, "WindowElements", asset_get_index("obj_ev_textbox"), {
-	txt : string(secret_exit_properties.ofx),
-	allow_alphanumeric : false,
-	exceptions : "-0123456789",
-	char_limit : 3,
-	base_scale_x : 1.4,
-	base_scale_y : 1,
-	allow_newlines : false,
+dpad = instance_create_layer(112, 72 + 20, "WindowElements", agi("obj_ev_dpad"), {
+	offset_x : secret_exit_properties.ofx,
+	offset_y : secret_exit_properties.ofy
 });
-add_child(offset_hori)
 
-offset_verti = instance_create_layer(112 + 40, 72 + 50, "WindowElements", asset_get_index("obj_ev_textbox"), {
-	txt : string(secret_exit_properties.ofy),
-	allow_alphanumeric : false,
-	exceptions : "-0123456789",
-	char_limit : 3,
-	base_scale_x : 1.4,
-	base_scale_y : 1,
-	allow_newlines : false,
-});
-add_child(offset_verti)
-
+add_child(dpad);

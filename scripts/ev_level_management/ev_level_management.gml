@@ -1,8 +1,3 @@
-// TODO: as it is there is a lot of code copied twice for tiles and object tiles,
-// reusing more code would be ideal.
-
-
-#macro BASE64_END_CHAR "!"
 #macro MULTIPLIER_CHAR "X"
 
 
@@ -63,6 +58,8 @@ function combine_strings(separator) {
 	return str + argument[argument_count - 1];
 }
 
+// TODO: as it is there is a lot of code copied twice for tiles and object tiles,
+// reusing more code would be ideal.
 function export_level_arr(level) {
 	var version_string = string(global.latest_lvl_format);
 	var name_string = base64_encode(level.name)	
@@ -211,9 +208,7 @@ function import_level(level_string) {
 	if array_length(strings) != section_amount {
 		return place_placeholder_tiles(level);
 	}
-
-
-		
+	
 	level.name = base64_decode(strings[1]);
 	level.description = base64_decode(strings[2]);
 	level.music = base64_decode(strings[3]);
@@ -231,7 +226,7 @@ function import_level(level_string) {
 	var object_string = strings[10]
 
 	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit, version)
-	import_process_tiles(object_string, level, 8,  global.editor_instance.object_empty, version)
+	import_process_tiles(object_string, level, 8, global.editor_instance.object_empty, version)
 	
 
 	if (version <= 2) {
@@ -283,33 +278,6 @@ function import_process_tiles(tile_string, level, height, failsafe_tile, version
 	}
 }
 
-
-/*
-function consider_multiplier(str, pointer, previous_string) {
-	if string_copy(str, pointer, 1) != MULTIPLIER_CHAR
-		return str;
-	var num_string = "";
-	var count = 0;
-
-	while (true) {
-		var read_char = string_copy(str, pointer + count + 1, 1)
-		if is_digit(read_char) {
-
-			num_string += read_char
-			count++;
-			continue;
-		}
-		break;
-	}
-	var num = int64(num_string)
-	str = string_delete(str, pointer, count + 1)
-	
-	repeat (num)
-		str = string_insert(previous_string, str, pointer)
-	
-	return str;
-}
-*/
 
 function get_multiplier(str, pointer) {
 	if string_copy(str, pointer, 1) != MULTIPLIER_CHAR
