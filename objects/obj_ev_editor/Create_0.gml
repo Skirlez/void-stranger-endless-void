@@ -82,7 +82,6 @@ global.void_radio_on = false;
 #macro thing_multiplaceable 3
 #macro thing_picker 6
 
-
 enum tile_flags {
 	// cannot be removed
 	unremovable = 1,
@@ -870,7 +869,6 @@ object_add.properties_generator = function() {
 	}
 }
 
-#macro OLD_BRAINFUCK_SEP "!"
 
 object_add.iostruct = {
 	read : function(tile, lvl_str, pos, version) {
@@ -885,10 +883,10 @@ object_add.iostruct = {
 				var t = new tile_with_state(tile)
 				return { value : t, offset : pos - original_pos }
 			}
-			var read_input_1 = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+			var read_input_1 = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_input_1.offset + 1;
 			if (mode == 1) {
-				var read_destroy_value = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+				var read_destroy_value = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 				pos += read_destroy_value.offset + 1;
 				var t = new tile_with_state(tile, {
 					mde : 1,
@@ -898,11 +896,11 @@ object_add.iostruct = {
 				return { value : t, offset : pos - original_pos }
 			}
 		
-			var read_input_2 = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+			var read_input_2 = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_input_2.offset + 1;
-			var read_destroy_value = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+			var read_destroy_value = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_destroy_value.offset + 1;
-			var read_program = read_string_until(lvl_str, pos, OLD_BRAINFUCK_SEP)
+			var read_program = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_program.offset + 1;
 		
 			// version 3 does not inputs, convert inputs to branefuck instructions
@@ -1085,7 +1083,7 @@ object_secret_exit.iostruct = {
 		
 		var read_offset_y = read_int(lvl_str, pos)
 		var ofy = read_offset_y.number;
-		pos += read_offset_y.offset;
+		pos += read_offset_y.offset + 1;
 		
 		var t = new tile_with_state(tile_id, { typ : type, ofx : ofx, ofy : ofy })
 		return { value : t, offset : pos - start_pos };
@@ -1171,13 +1169,54 @@ var crystal_sprite_with_outline = sprite_create_from_surface(surface_crystal, 0,
 surface_free(surface_crystal)
 
 object_memory_crystal = new editor_object("Memory Crystal", crystal_sprite_with_outline, "mm", "obj_token_uncover", "Instances", tile_flags.only_one)
+object_memory_crystal.properties_generator = function () {
+	return { ofx : 0, ofy : 0 }
+}
+object_memory_crystal.has_offset_properties = true;
+object_memory_crystal.iostruct = {
+	read : function(tile_id, lvl_str, pos, version) {
+		if version <= 2 {
+			var t = new tile_with_state(tile_id, { ofx : 0, ofy : 0 })
+			return { value : t, offset : 0 };	
+		}
+		var start_pos = pos;
+		var read_offset_x = read_int(lvl_str, pos)
+		var ofx = read_offset_x.number;
+		pos += read_offset_x.offset + 1;
+		
+		var read_offset_y = read_int(lvl_str, pos)
+		var ofy = read_offset_y.number;
+		pos += read_offset_y.offset + 1;
+		
+		var t = new tile_with_state(tile_id, { ofx : ofx, ofy : ofy })
+		return { value : t, offset : pos - start_pos };
+	},
+	write : function(tile_state) {
+		return tile_state.tile.tile_id 
+			+ string(tile_state.properties.ofx) + PROPERTY_END_CHAR
+			+ string(tile_state.properties.ofy) + PROPERTY_END_CHAR;
+	},
+	place : function (tile_state, i, j, extra_data) {
+		i += tile_state.properties.ofy;
+		j += tile_state.properties.ofx;
+		instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
+	}
+}
 object_memory_crystal.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	draw_sprite(global.editor_instance.crystal_sprite, 0, j * 16 + 8, i * 16 + 8)	
 }
+object_memory_crystal.zed_function = function(tile_state) {
+	new_window(7, 7, agi("obj_ev_memory_crystal_window"), {
+		memory_crystal_properties : tile_state.properties
+	})	
+	global.mouse_layer = 1
+}
 
 // The lengths I go to to not include base game sprites in the source.
+#region Create Scaredeer Sprite
 var surface_deer = surface_create(16, 16)
 surface_set_target(surface_deer)
+
 
 draw_sprite(agi("spr_ee_enemy_reaper"), 0, 0, -16 * 3)
 scaredeer_sprite_r = sprite_create_from_surface(surface_deer, 0, 0, 16, 16, false, false, 8, 8)
@@ -1207,6 +1246,7 @@ sprite_delete(scaredeer_sprite_r_2)
 
 surface_reset_target()
 surface_free(surface_deer)
+#endregion
 
 object_scaredeer = new editor_object("Scaredeer", scaredeer_sprite_r, "sd", "obj_enemy_cs")
 object_scaredeer.draw_function = music_draw_function;

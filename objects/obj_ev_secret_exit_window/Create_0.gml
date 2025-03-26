@@ -7,6 +7,10 @@ selector = instance_create_layer(112, 72 - 20, "WindowElements", agi("obj_ev_sel
 });
 add_child(selector)
 
+text_element = instance_create_layer(112, 72 + 2, "WindowElements", agi("obj_ev_text_element"), {
+	txt : "Offset"
+});
+add_child(text_element)
 
 dpad = instance_create_layer(112, 72 + 20, "WindowElements", agi("obj_ev_dpad"), {
 	offset_x : secret_exit_properties.ofx,

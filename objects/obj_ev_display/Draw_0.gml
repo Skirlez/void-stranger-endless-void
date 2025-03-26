@@ -58,9 +58,9 @@ function draw() {
 		draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
 	}
 	else {
-		var hundreds_digit = number div 100;
-		var tenths_digit = (number % 100) div 10;
-		var units_digit = number % 10;
+		var hundreds_digit = lvl.bount div 100;
+		var tenths_digit = (lvl.bount % 100) div 10;
+		var units_digit = lvl.bount % 10;
 		draw_text(12 * 16, 9 * 16 + 1, "V" + string(hundreds_digit))
 		draw_text(13 * 16, 9 * 16 + 1, string(tenths_digit))
 		draw_text(13 * 16 + 8, 9 * 16 + 1, string(units_digit))

@@ -137,9 +137,27 @@ function node_instance_step() {
 					audio_play_sound(not_possible_sound, 10, false);
 				}
 				else if (!ev_array_contains(exit_instances, node_inst)) {
+					// connection successful
 					array_push(exit_instances, node_inst)
 					var connect_sound = asset_get_index("snd_ev_node_connect")
 					audio_play_sound(connect_sound, 10, false, 1, 0, random_range(0.9, 1.1))
+					
+					// automatically give brane count to connected level nodes
+					if node_inst.object_index == global.display_object && array_length(exit_instances) == 1 {
+						if object_index == root_node_obj {
+							node_inst.lvl.bount = 1;
+							node_inst.delete_cached_surface();
+						}
+						else if object_index == global.display_object {
+							if lvl.bount != -1 {
+								node_inst.lvl.bount = lvl.bount + 1;
+								node_inst.delete_cached_surface();	
+							}
+							else
+								node_inst.lvl.bount = -1;
+						}
+					}
+					
 				}
 			}
 		}

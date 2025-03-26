@@ -236,6 +236,12 @@ level_node.play_evaluate = function (node_state) {
 	ev_place_level_instances(global.level)
 	return noone;
 };
+level_node.on_config = function (node_instance) {
+	global.mouse_layer = 1;
+	new_window_with_pos(node_instance.x, node_instance.y, 6, 6, asset_get_index("obj_ev_level_node_window"), {
+		node_instance : node_instance
+	});
+}
 
 music_node = new node_struct("mu", "obj_ev_pack_music_node");
 music_node.properties_generator = function () {

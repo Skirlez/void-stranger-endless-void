@@ -102,7 +102,6 @@ function handle_click_before(tile_i, tile_j) {
 // (meaning, per tile for each tile dragged, or just 1 if left clicked)
 function handle_click(tile_i, tile_j) {
 	switch (global.selected_thing) {
-		
 		case thing_picker:
 		case thing_plucker: // nearly the same, might as well lump them together and check when needed..
 			if dragging {
@@ -285,4 +284,8 @@ function destroy() {
 			});
 	}
 	instance_destroy(id)
+}
+function delete_cached_surface() {
+	if surface_exists(game_surface)
+		surface_free(game_surface)
 }

@@ -44,14 +44,11 @@ if state == selector_states.animating {
 	}
 	
 	if (animation_time < animation_length - 15) {
-	
 		if (animation_time / (animation_length - 15)) * array_length(element_objects) > animation_elements_progress {
 			element_objects[animation_elements_progress].start_return_animation();
 			animation_elements_progress++;
 		}
 	}
-	
-	
 }
 
 y_bounce += vsp
