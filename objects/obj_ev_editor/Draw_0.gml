@@ -30,7 +30,7 @@ if (room == global.editor_room) {
 		var spin_h = (dsin(spin_time_h) + 1) / 2;
 		var spin_v = (dcos(spin_time_v) + 1) / 2;
 		
-		
+		/*
 		if stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten == noone {
 			var sprite = sprite_create_from_surface(spin_surface, 0, 0, 16, 16, false, false, 8, 0)
 			stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = sprite;
@@ -55,6 +55,7 @@ if (room == global.editor_room) {
 			}
 			
 		}
+		*/
 		
 		
 		
