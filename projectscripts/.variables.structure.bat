@@ -1,5 +1,5 @@
 :: These variables will be used by build.sh, copy_assets.sh and clean_assets.sh
-:: When filling in folders, do not include a `\` at the end. 
+:: Do not include a `\` at the end of any of the variables, including when filling in folder paths.
 :: Make sure to include quotation marks around both the variable name and the value, for example: 
 :: set "VARIABLE=VALUE"
 
@@ -19,7 +19,7 @@ set "GAMEMAKER_CACHE_PATH="
 :: Likely is %appdata%\GameMakerStudio2\user_somenumbers\licence.plist (Watch the British spelling!)
 :: If you get a Permission Error : Unable to obtain permission to execute message, you should try generating your own license file
 :: https://manual.gamemaker.io/monthly/en/Settings/Building_via_Command_Line.htm (Access Key section.)
-:: Once you have the new license file, fill the path to it here. I'd recommend placing it in projectscripts, as git will ignore it there.
+:: Once you have the new license file, fill in the path to it here. I'd recommend placing it in projectscripts, as git will ignore it there.
 set "LICENSE_FILE_PATH="
 
 
