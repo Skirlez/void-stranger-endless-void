@@ -76,11 +76,12 @@ if global.erasing != -1 {
 	gpu_set_blendmode(bm_subtract);	
 	var rand_x = irandom_range(-3, 3)
 	var rand_y = irandom_range(-3, 3)
-	draw_circle(112 + rand_x, 72 + rand_y, global.erasing * 0.75, false)
+	var radius = sqrt(global.erasing) * 10;
+	draw_circle(112 + rand_x, 72 + rand_y, radius, false)
 	gpu_set_blendmode(bm_normal);
 	
-	draw_set_alpha(1 - min(1, global.erasing / 350))
-	draw_circle(112 + rand_x, 72 + rand_y, global.erasing * 0.75, false)
+	draw_set_alpha(1 - min(1, global.erasing / 220))
+	draw_circle(112 + rand_x, 72 + rand_y, radius, false)
 	draw_set_alpha(1)
 	
 	surface_reset_target()
@@ -99,7 +100,7 @@ if (room == asset_get_index("rm_ev_menu")) {
 	
 	
 	if global.there_is_a_newer_version
-		draw_text_transformed(6, 72 + 62, "THERE IS A NEWER VERSION!!!" + "\nYou are on " + global.ev_version + ", latest is " + global.newest_version, 0.5, 0.5, 0)
+		draw_text_transformed(6, 72 + 62, "THERE IS A NEWER VERSION!!!\n" + $"You are on {global.ev_version}, latest is {global.newest_version}", 0.5, 0.5, 0)
 	else
 		draw_text_transformed(6, 72 + 65, global.ev_version, 0.5, 0.5, 0)
 }

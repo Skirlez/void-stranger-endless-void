@@ -3,9 +3,12 @@
 // handles transitions, startup networking/file io and more
 
 randomize()
+global.g_mode = false;
 global.latest_lvl_format = 3;
 global.latest_pack_format = 1;
 global.ev_version = "0.90";
+
+
 
 global.compiled_for_merge = (agi("obj_game") != -1)
 if (!global.compiled_for_merge) {
@@ -920,8 +923,8 @@ object_add.iostruct = {
 					return ",g:" + input + "," 
 			}
 		
-			var prefix = input_to_code(read_input_1.substr) + ">" 
-				+ input_to_code(read_input_2.substr) + "<"
+			var prefix = input_to_code(base64_decode(read_input_1.substr)) + ">" 
+				+ input_to_code(base64_decode(read_input_2.substr)) + "<"
 			
 			if prefix == "><"
 				prefix = "";
@@ -941,6 +944,7 @@ object_add.iostruct = {
 				var t = new tile_with_state(tile)
 				return { value : t, offset : pos - original_pos }
 			}
+			pos++; // skip over PROPERTY_END_CHAR
 			var read_program = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_program.offset + 1;
 			var read_destroy_value = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
@@ -962,7 +966,7 @@ object_add.iostruct = {
 		if mode == 0 {
 			return tile_state.tile.tile_id + "0"
 		}
-		return string(mode) + PROPERTY_END_CHAR 
+		return tile_state.tile.tile_id + string(mode) + PROPERTY_END_CHAR 
 			+ base64_encode(program) + PROPERTY_END_CHAR 
 			+ base64_encode(destroy_value) + PROPERTY_END_CHAR;
 	},
@@ -1071,6 +1075,7 @@ object_secret_exit.iostruct = {
 			var read_type = string_copy(lvl_str, pos, 1)
 			var type = clamp(int64_safe(read_type, 0), 0, 2)
 			var t = new tile_with_state(tile_id, { typ : type, ofx : 0, ofy : 0 })
+			return { value : t, offset : 1 };	
 		}
 		// version 3
 		var start_pos = pos;
@@ -1307,7 +1312,7 @@ objects_list = [object_player, object_leech, object_maggot, object_bull, object_
 
 global.music_names = ["", "msc_001", "msc_dungeon_wings", "msc_beecircle", "msc_dungeongroove", "msc_013",
 	"msc_gorcircle_lo", "msc_levcircle", "msc_escapewithfriend", "msc_cifcircle", "msc_006", "msc_beesong", "msc_themeofcif",
-	"msc_monstrail", "msc_endless", "msc_stg_extraboss", "msc_rytmi2", "msc_test2"]
+	"msc_monstrail", "msc_endless", "msc_stg_extraboss", "msc_rytmi2", "msc_test2", "snd_ev_music_judgment_jingle"]
 
 function reset_global_level() {
 	global.tile_mode = false
@@ -1395,15 +1400,13 @@ function get_menu_music_name() {
 		case 0: return "snd_ev_music_astra_jam"
 		case 1: return "snd_ev_music_monsday"
 		case 2: return "snd_ev_music_Teusday"
-		case 3: return "snd_ev_music_alsoGooeyPhantasm"
-		case 5: return "snd_ev_music_gooeyPhantasm"
+		case 3: return "snd_ev_music_blossom"
+		case 4: return "snd_ev_music_ex_smooth"
+		case 5: return "snd_ev_music_endless_void"
 		default: return "snd_ev_music_stealie_feelies"
 	}
 }
 global.menu_music = agi(get_menu_music_name())
-
-
-
 
 
 

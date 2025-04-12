@@ -22,28 +22,31 @@ function ev_play_void_radio() {
 	var previous_sum_seconds = 0;
 	var index = 0;
 	var song;
+	var song_length;
+	var start;
+	var endpoint;
 	do {
 		var previous_index = index;
 		while (index == previous_index)
 			index = irandom_range(1, array_length(global.music_names) - 1)
 		song = asset_get_index(global.music_names[index]);
-		var song_length = audio_sound_length(song);
-		var start = ev_get_real_song_start(song);
-		var endpoint = ev_get_real_song_end(song);
+		song_length = audio_sound_length(song);
+		start = ev_get_real_song_start(song);
+		endpoint = ev_get_real_song_end(song);
 		var song_after_endpoint = song_length - endpoint
 		song_length -= start + song_after_endpoint;
-		
+		endpoint = ev_get_real_song_end(song);
 		previous_sum_seconds = sum_seconds;
 		sum_seconds += song_length;
 	} until (sum_seconds >= seconds);
 	
-	var time = audio_sound_length(song) - (sum_seconds - seconds)
+	var time = song_length - (sum_seconds - seconds)
 	ev_play_music(song, false, true)
-	audio_sound_set_track_position(global.music_inst, time);
+	audio_sound_set_track_position(global.music_inst, start + time);
 	
 	// fade in
 	audio_sound_gain(global.music_inst, 0, 0)
-	audio_sound_gain(global.music_inst, 1, 500);
+	audio_sound_gain(global.music_inst, 1, 300);
 	
 	date_set_timezone(timezone_local)
 	randomize();

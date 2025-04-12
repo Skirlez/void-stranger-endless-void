@@ -6,14 +6,9 @@
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":10,"eventType":7,"isDnD":false,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":2,"eventType":3,"isDnD":false,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,},
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":12,"isDnD":false,},
   ],
   "managed": true,
-  "overriddenProperties": [
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"obj_ev_button","path":"objects/obj_ev_button/obj_ev_button.yy",},"propertyId":{"name":"base_scale_x","path":"objects/obj_ev_button/obj_ev_button.yy",},"value":"2",},
-    {"resourceType":"GMOverriddenProperty","resourceVersion":"1.0","name":"","objectId":{"name":"obj_ev_button","path":"objects/obj_ev_button/obj_ev_button.yy",},"propertyId":{"name":"base_scale_y","path":"objects/obj_ev_button/obj_ev_button.yy",},"value":"0.7",},
-  ],
+  "overriddenProperties": [],
   "parent": {
     "name": "Objects",
     "path": "folders/Objects.yy",
@@ -35,13 +30,11 @@
   "physicsShape": 1,
   "physicsShapePoints": [],
   "physicsStartAwake": true,
-  "properties": [
-    {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"txt","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"Add Level","varType":2,},
-  ],
+  "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "spr_ev_white_button",
-    "path": "sprites/spr_ev_white_button/spr_ev_white_button.yy",
+    "name": "spr_ev_pack_add_level",
+    "path": "sprites/spr_ev_pack_add_level/spr_ev_pack_add_level.yy",
   },
   "spriteMaskId": null,
   "visible": true,

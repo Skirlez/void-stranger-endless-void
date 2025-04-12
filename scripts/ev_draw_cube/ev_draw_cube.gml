@@ -1,7 +1,13 @@
 
 
 function ev_draw_cube(sprite, subimg, draw_x, draw_y, size, spin_h, spin_v) {
-	ev_draw_cube_multisprite(array_create(6, sprite), array_create(6, subimg), draw_x, draw_y, size, spin_h, spin_v);
+	static recycled_sprite_array = array_create(6)
+	static recycled_subimg_array = array_create(6)
+	for (var i = 0; i < 6; i++) {
+		recycled_sprite_array[i] = sprite;
+		recycled_subimg_array[i] = subimg;
+	}
+	ev_draw_cube_multisprite(recycled_sprite_array, recycled_subimg_array, draw_x, draw_y, size, spin_h, spin_v);
 	
 }
 

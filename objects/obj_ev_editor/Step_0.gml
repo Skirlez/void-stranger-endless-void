@@ -24,7 +24,9 @@ if room == global.level_room {
 		global.level_time++;
 	}
 }
-
+if (ev_is_room_gameplay(room)) {
+	global.level_time++;
+}
 
 if (room == asset_get_index("rm_ev_startup")) {
 	if (startup_timeout != -1) {

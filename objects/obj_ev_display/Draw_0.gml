@@ -105,6 +105,8 @@ function draw() {
 			}
 			if lvl.objects[i][j].tile.has_offset() {
 				var object_state = lvl.objects[i][j];
+				if object_state.properties.ofx == 0 && object_state.properties.ofy == 0
+					continue;
 				last_offset_index++;
 				those_who_offset[last_offset_index] = {
 					pos_i : i + object_state.properties.ofy,
@@ -127,8 +129,10 @@ function draw() {
 	for (var i = 0; i < 9; i++)	{
 		for (var j = 0; j < 14; j++) {
 			var object_state = lvl.objects[i][j]
-			if object_state.tile.has_offset() {
-				if no_spoiling
+			if object_state.tile.has_offset() && (object_state.properties.ofx != 0 || object_state.properties.ofy != 0) {
+				// when viewing in a no spoiling context, we only want the offset projection to be shown
+				// skip drawing real position
+				if no_spoiling 
 					continue;
 				draw_set_alpha(alpha * 0.5)
 				draw_tile_state(i, j, object_state)

@@ -177,11 +177,18 @@ credits = [
 	],
 	[
 		new ev_credits_header("Music"),
+		new ev_credits_text("EX Smooth (Thu)"),
+		new ev_credits_text("by B. Spaghettini"),
 		new ev_credits_text("Endless Void (Fri)"),
 		new ev_credits_text("by gooeyPhantasm"),
-		new ev_credits_text("Stealie Feelies (Thu/Sat)"),
+		new ev_credits_text("Stealie Feelies (Sat)"),
 		new ev_credits_text("And the rest of the OST"),
 		new ev_credits_text("by eebrozgi"),
+	],
+	[
+		new ev_credits_header("Music"),
+		new ev_credits_text("Judgment Jingle"),
+		new ev_credits_text("by gooeyPhantasm")
 	],
 	[
 		new ev_credits_header("SFX"),
