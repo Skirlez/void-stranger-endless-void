@@ -1,4 +1,4 @@
-if global.compiled_for_merge {
+if global.is_merged {
 	if (!instance_exists(add_inst)
 			|| array_length(program) == 0)
 		return;

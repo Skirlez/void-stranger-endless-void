@@ -48,6 +48,7 @@ echo -------------------------------
 "%IGOR_PATH%" ^
 /lf="%LICENSE_FILE_PATH%" ^
 /project="%EV_PROJECT_PATH%\void-stranger-endless-void.yyp" ^
+/config="NoVoidStrangerGroups" ^
 /rp="%RUNTIME_PATH%" ^
 /tf="void-stranger-endless-void.zip" ^
 -- Windows PackageZip

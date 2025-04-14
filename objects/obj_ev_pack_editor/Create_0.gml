@@ -289,8 +289,11 @@ branefuck_node.play_evaluate = function(node_state) {
 }
 
 thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node", node_flags.only_one);
-count_node = new node_struct("ct", "obj_ev_pack_count_node");
-
+random_node = new node_struct("ct", "obj_ev_pack_random_node");
+random_node.play_evaluate = function (node_state) {
+	var rand = irandom_range(0, array_length(node_state.exits) - 1)
+	return node_state.exits[rand];
+};
 
 comment_node = new node_struct("cm", "obj_ev_pack_comment_node");
 comment_node.properties_generator = function () {
@@ -338,9 +341,10 @@ comment_node.on_config = function (node_instance) {
 }
 
 oob_node = new node_struct("ob", "obj_ev_pack_oob_node", node_flags.only_one);
+end_node = new node_struct("en", "obj_ev_pack_end_node");
 
 // List of all the nodes a user should be able to create
-nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node, count_node, comment_node, oob_node];
+nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node, random_node, comment_node, oob_node, end_node];
 
 
 function reset_global_pack() {

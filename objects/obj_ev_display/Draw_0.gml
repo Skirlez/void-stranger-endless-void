@@ -13,7 +13,7 @@ function draw() {
 	draw_clear_alpha(c_black, 1)
 
 	if lvl.theme == level_themes.universe {
-		if global.compiled_for_merge {
+		if global.is_merged {
 			var universe_instance = global.editor_instance.get_universe_instance();
 			with (universe_instance) {
 				if surface_exists(u_surf) {
@@ -218,7 +218,7 @@ if !surface_exists(game_surface) {
 
 if (display_context != display_contexts.pack_editor)
 	draw();
-else if global.compiled_for_merge {
+else if global.is_merged {
 	var zoom = global.pack_editor_instance.zoom;
 	if !outside_view && zoom <= 1
 		draw();

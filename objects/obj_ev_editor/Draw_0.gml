@@ -80,7 +80,7 @@ if global.erasing != -1 {
 	draw_circle(112 + rand_x, 72 + rand_y, radius, false)
 	gpu_set_blendmode(bm_normal);
 	
-	draw_set_alpha(1 - min(1, global.erasing / 220))
+	draw_set_alpha(1 - min(1, (sqrt(global.erasing) * 10) / 350))
 	draw_circle(112 + rand_x, 72 + rand_y, radius, false)
 	draw_set_alpha(1)
 	

@@ -275,7 +275,7 @@ if mouse_check_button_released(mb_right) {
 else
 	global.mouse_right_released = false;
 
-if global.compiled_for_merge {
+if global.is_merged {
 	with (asset_get_index("obj_player")) {
 		if (enemyturn_countdown <= 0 && enemy_cycle == 0) {
 			global.turn_frames += 1
@@ -295,7 +295,7 @@ if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 	stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone
 }
 
-if !global.compiled_for_merge {
+if !global.is_merged {
 	var file = asset_get_index(audio_get_name(global.music_inst))
 	var endpoint = ev_get_real_song_end(file)
 	if audio_sound_get_track_position(global.music_inst) > endpoint {

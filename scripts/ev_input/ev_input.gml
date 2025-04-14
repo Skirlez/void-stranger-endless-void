@@ -22,7 +22,7 @@ function ev_is_mouse_on_me() {
 	return global.instance_touching_mouse == id
 }
 function ev_is_action_pressed() {
-	if (global.compiled_for_merge) {
+	if (global.is_merged) {
 		static func = asset_get_index("scr_input_check_pressed");
 		return func(4)
 	}
@@ -30,14 +30,14 @@ function ev_is_action_pressed() {
 	return keyboard_check_pressed(ord("Z"))
 }
 function ev_is_action_held() {
-	if (global.compiled_for_merge) {
+	if (global.is_merged) {
 		static func = asset_get_index("scr_input_check");
 		return func(4)
 	}
 	return keyboard_check(ord("Z"))
 }
 function ev_get_action_key() {
-	if (global.compiled_for_merge) {
+	if (global.is_merged) {
 		return variable_global_get("key_action")
 	}
 	return ord("Z")

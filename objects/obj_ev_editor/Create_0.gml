@@ -8,10 +8,8 @@ global.latest_lvl_format = 3;
 global.latest_pack_format = 1;
 global.ev_version = "0.90";
 
-
-
-global.compiled_for_merge = (agi("obj_game") != -1)
-if (!global.compiled_for_merge) {
+global.is_merged = (agi("obj_game") != -1)
+if (!global.is_merged) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
 	audio_group_load(VoidStrangerAudio)
@@ -1394,12 +1392,11 @@ undo_repeat = -1
 undo_repeat_frames_start = 18
 undo_repeat_frames_speed = 0
 undo_repeat_frames_max_speed = 10
-
 function get_menu_music_name() {
 	switch (current_weekday) {
 		case 0: return "snd_ev_music_astra_jam"
 		case 1: return "snd_ev_music_monsday"
-		case 2: return "snd_ev_music_Teusday"
+		case 2: return "snd_ev_music_teusday"
 		case 3: return "snd_ev_music_blossom"
 		case 4: return "snd_ev_music_ex_smooth"
 		case 5: return "snd_ev_music_endless_void"
@@ -1638,7 +1635,7 @@ global.death_frames = -1
 global.instance_touching_mouse = noone;
 global.happenings = ds_map_create();
 
-if global.compiled_for_merge {
+if global.is_merged {
 	// the universe object is modified to not draw anything unless global.level.theme == level_themes.universe
 	universe_instance = instance_create_depth(-16, -16, 1250, agi("obj_universe"))
 	
@@ -1646,7 +1643,7 @@ if global.compiled_for_merge {
 	universe_instance.sprite_index = agi("spr_ev_universe_no_flashbang");
 }
 function get_universe_instance() {
-	if !global.compiled_for_merge
+	if !global.is_merged
 		return noone;
 	return universe_instance;
 }

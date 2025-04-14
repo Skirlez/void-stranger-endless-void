@@ -34,7 +34,7 @@ function ev_update_vars() {
 	var folder = string_lettersdigits(global.server_ip);
 	global.levels_directory = game_save_id + folder + "/levels/"
 	global.packs_directory = game_save_id + folder + "/packs/"
-	if (global.compiled_for_merge)
+	if (global.is_merged)
 		asset_get_index("scr_menueyecatch")(0)
 
 }

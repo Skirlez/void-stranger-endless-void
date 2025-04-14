@@ -65,6 +65,7 @@ $IGOR_PATH \
     -j=8 \
     --user="$USER_DIRECTORY_PATH" \
     --project="$EV_PROJECT_PATH/void-stranger-endless-void.yyp" \
+    --config="NoVoidStrangerGroups" \
     --runtimePath="$RUNTIME_PATH" \
     --tf="void-stranger-endless-void.zip" \
     --temp="./temp/" \

@@ -28,7 +28,7 @@ On Steam only, you can keep your original data.win by patching a copy of it, nam
 Your save file will not be touched by the mod, and you can install and uninstall the mod without anything happening to it. Have fun!
 
 ## Building
-See [Building Endless Void](https://github.com/Skirlez/void-stranger-endless-void/wiki/Building-Endless-Void) on the Wiki
+See [Building Endless Void](https://github.com/Skirlez/void-stranger-endless-void/wiki/Building-Endless-Void-(Windows)) on the Wiki
 
 ## Things of note about the code
 - Indices of objects, sprites, sounds, etc. become mismatched when merging with Void Stranger, so references to them are always obtained with `asset_get_index()`/`agi()`.

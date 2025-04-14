@@ -113,7 +113,7 @@ if type == ev_grube_types.egg_cube && phy_speed > 4 {
 			if type == ev_grube_types.enemy_cube {
 				instance_destroy(id)
 				audio_play_sound(agi("snd_enemy_explosion"), 10, false);
-				if global.compiled_for_merge {
+				if global.is_merged {
 					// leech death code
 					var ienemydeath_fx = instance_create_depth(x, y, depth, agi("obj_enemydeath_fx"))
 					var ideathsprite = fall_sprite;

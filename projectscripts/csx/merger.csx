@@ -39,6 +39,8 @@ foreach (UndertaleEmbeddedTexture embeddedTexture in endlessVoidData.EmbeddedTex
 }
 
 foreach (UndertaleSprite sprite in endlessVoidData.Sprites) {
+	if (sprite.Textures[0].Texture == null) // not present when building with NoVoidStrangerGroups config
+		continue;
 	if (sprite.Textures[0].Texture.TexturePage.TextureInfo.Name.Content == "VoidStrangerGroup")
 		continue;
 	Data.Sprites.Add(sprite);

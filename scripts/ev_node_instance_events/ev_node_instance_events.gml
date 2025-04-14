@@ -132,7 +132,7 @@ function node_instance_step() {
 					node_inst.shake_seconds = 0.5;
 					audio_play_sound(not_possible_sound, 10, false);
 				}
-				else if (array_length(exit_instances) >= max_exits && max_exits != -1) {
+				else if (array_length(exit_instances) >= max_exits) {
 					shake_seconds = 0.5;
 					audio_play_sound(not_possible_sound, 10, false);
 				}

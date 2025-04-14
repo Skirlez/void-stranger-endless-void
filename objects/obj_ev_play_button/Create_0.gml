@@ -1,3 +1,3 @@
 event_inherited()
-if !global.compiled_for_merge
+if !global.is_merged
 	image_alpha = 0.4
