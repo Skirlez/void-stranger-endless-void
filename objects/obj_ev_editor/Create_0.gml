@@ -852,12 +852,13 @@ object_cif.iostruct = {
 }
 
 
-global.branefuck_characterset = ".,+-[]><?0123456789^_:\" ";
+global.branefuck_characterset = ".,+-[]><?0123456789^_: ";
 
 object_add = new editor_object("Add Statue", agi("spr_voider"), "ad", egg_statue_obj)
 object_add.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	draw_sprite(tile_state.tile.spr_ind, 0, j * 16 + 8, i * 16 + 8)
 	if tile_state.properties.mde != 0 && !no_spoilers {
+		
 		static branefucked = agi("spr_ev_branefucked")
 		draw_sprite(branefucked, 0, j * 16 + 8, i * 16 + 8)
 	}

@@ -201,7 +201,7 @@
     {"id":{"name":"spr_cif_hit","path":"sprites/spr_cif_hit/spr_cif_hit.yy",},},
     {"id":{"name":"snd_lorddamage","path":"sounds/snd_lorddamage/snd_lorddamage.yy",},},
     {"id":{"name":"obj_ev_leave_level_button","path":"objects/obj_ev_leave_level_button/obj_ev_leave_level_button.yy",},},
-    {"id":{"name":"ev_get_elysium_music","path":"scripts/ev_get_elysium_music/ev_get_elysium_music.yy",},},
+    {"id":{"name":"ev_elysium_music_annoying","path":"scripts/ev_elysium_music_annoying/ev_elysium_music_annoying.yy",},},
     {"id":{"name":"snd_ev_selector_click","path":"sounds/snd_ev_selector_click/snd_ev_selector_click.yy",},},
     {"id":{"name":"spr_ev_swapper_flash","path":"sprites/spr_ev_swapper_flash/spr_ev_swapper_flash.yy",},},
     {"id":{"name":"spr_cc_up","path":"sprites/spr_cc_up/spr_cc_up.yy",},},
@@ -423,6 +423,7 @@
     {"id":{"name":"obj_ev_pack_node_button","path":"objects/obj_ev_pack_node_button/obj_ev_pack_node_button.yy",},},
     {"id":{"name":"snd_ex_vacuumgoes","path":"sounds/snd_ex_vacuumgoes/snd_ex_vacuumgoes.yy",},},
     {"id":{"name":"ev_tile_with_state","path":"scripts/ev_tile_with_state/ev_tile_with_state.yy",},},
+    {"id":{"name":"obj_ev_music_node_window","path":"objects/obj_ev_music_node_window/obj_ev_music_node_window.yy",},},
     {"id":{"name":"spr_ev_pack_add_level","path":"sprites/spr_ev_pack_add_level/spr_ev_pack_add_level.yy",},},
   ],
   "RoomOrderNodes": [

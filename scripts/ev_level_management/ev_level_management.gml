@@ -235,7 +235,7 @@ function import_level(level_string) {
 	}
 	else {
 		level.theme = strings[11]
-		level.bount = strings[12]
+		level.bount = int64_safe(-1, strings[12])
 	}
 	return level
 }

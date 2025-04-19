@@ -1901,13 +1901,7 @@ else if (state == (15 << 0))
         else if (global.ketuttaa == 0)
         {
             counter = 0
-            if room == rm_ev_pack_level {
-                ev_exit_number = 0
-                global.tis_challenge_levels_cleared--;
-                ev_clear_pack_level()
-            }
-            else
-                room_restart()
+            room_restart()
         }
         else
         {

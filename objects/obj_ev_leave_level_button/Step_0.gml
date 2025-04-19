@@ -2,7 +2,7 @@ event_inherited()
 
 var quill_exists = global.is_merged && instance_exists(asset_get_index("obj_quill"))
 
-if mouse_y < 48 && mouse_x < 64 && !quill_exists {
+if mouse_y < 32 && mouse_x < 48 && !quill_exists {
 	y = lerp(y, 14, 0.3)	
 }
 else {

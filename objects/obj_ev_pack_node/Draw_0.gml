@@ -26,8 +26,12 @@ else if instance_exists(display_inst) {
 
 
 
-
+if unselectable
+	draw_set_alpha(0.3)
 ev_draw_cube(sprite_index, i_imageframe, x + shake_x_offset, y, 5, spin_h, spin_v)
+if unselectable
+	draw_set_alpha(1)
+	
 if !in_menu {
 	draw_set_color(c_white)
 	draw_set_halign(fa_center)

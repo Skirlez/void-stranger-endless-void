@@ -1,20 +1,32 @@
-function node_instance_setup(max_exits, center_x_offset, center_y_offset) {
+function node_instance_setup(max_exits = 999, can_connect_to_me = true, center_x_offset = 0, center_y_offset = 0, animate = false) {
+	id.max_exits = max_exits;
+	id.can_connect_to_me = can_connect_to_me;
 	id.center_x_offset = center_x_offset;
 	id.center_y_offset = center_y_offset;
+	id.animate = animate;
+	image_speed = 0.1
+	
 	center_x = x + center_x_offset;
 	center_y = y + center_y_offset;
 	mouse_moving = false;
 	connecting_exit = false;
 	exit_instances = [];
-	id.max_exits = max_exits;
-	can_connect_to_me = true;
+	unselectable = false;
 	being_judged = true;
 	in_menu = false;
 	node_type = global.object_node_map[? object_index];
 	shake_seconds = 0;
 	shake_x_offset = 0;
 	properties = node_type.properties_generator();
+	
+	spin_time_h = 0;
+	spin_time_v = 0;
+	spin_h = 0
+	spin_v = 0
+	
+	
 }
+
 
 function with_all_nodes(func, args) {
 	with (global.node_object)
@@ -39,6 +51,8 @@ function node_instance_step() {
 	static not_possible_sound = asset_get_index("snd_lorddamage")
 	
 	if (ev_is_mouse_on_me()) {
+		if unselectable
+			return;
 		if in_menu && global.pack_editor_instance.selected_thing == pack_things.selector {
 			// TODO
 			if ev_mouse_pressed() {

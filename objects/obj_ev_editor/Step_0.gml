@@ -84,7 +84,7 @@ if play_transition != -1 {
 		
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(global.level_room)
-		if (!audio_is_playing(asset_get_index(global.level.music)))
+		if (!ev_is_music_playing(asset_get_index(global.level.music)))
 			ev_play_music(asset_get_index(global.level.music))	
 	}
 }
@@ -297,10 +297,10 @@ if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 
 if !global.is_merged {
 	var file = asset_get_index(audio_get_name(global.music_inst))
-	var endpoint = ev_get_real_song_end(file)
+	var endpoint = ev_get_real_track_end(file)
 	if audio_sound_get_track_position(global.music_inst) > endpoint {
 		if global.music_is_looping {
-			var startpoint = ev_get_real_song_start(global.music_inst);
+			var startpoint = ev_get_real_track_start(global.music_inst);
 			audio_sound_set_track_position(global.music_inst, startpoint);	
 		}
 		else

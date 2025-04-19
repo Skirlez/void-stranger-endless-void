@@ -19,7 +19,7 @@ function ev_play_music(track, looping = true, for_menu = false) {
 		if ((room == global.editor_room || room == global.level_room) && audio_get_name(track) == "msc_test2") {
 			track = ev_get_elysium_music(global.level);
 		}
-		var start = ev_get_real_song_start(track);
+		var start = ev_get_real_track_start(track);
 		global.music_inst = audio_play_sound(track, 10, looping, 1, start)
 		global.music_is_looping = looping
 		/* function doesn't exist in VS and fixing that would be annoying
@@ -28,8 +28,13 @@ function ev_play_music(track, looping = true, for_menu = false) {
 		}
 		*/
 	}
-	
 }
+
+function ev_is_music_playing(track) {
+	return audio_is_playing(track) 
+		|| (ev_is_music_elysium(track) && ev_is_elysium_music_playing())
+}
+
 function ev_stop_music() {
 	if global.is_merged {
 		global.music_file = noone

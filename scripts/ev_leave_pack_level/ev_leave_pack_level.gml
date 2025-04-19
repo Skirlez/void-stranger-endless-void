@@ -1,5 +1,5 @@
 
-function ev_leave_pack_level() {
+function ev_leave_pack() {
 	if (global.playtesting)
 		room_goto(asset_get_index("rm_ev_pack_editor"))
 	else
@@ -7,14 +7,18 @@ function ev_leave_pack_level() {
 	global.playtesting = false;
 }
 
-function ev_clear_pack_level() {
+function ev_clear_pack_level(exit_number = 0) {
 	var asset = asset_get_index("obj_ev_pack_player")
 	if asset == -1
 		exit
-	var index = ev_exit_number;
+	var index = exit_number;
 	with (asset) {
 		if index >= array_length(current_node_state.exits)
 			index = array_length(current_node_state.exits) - 1;
+		if (index == -1) {
+			ev_leave_pack()
+			return
+		}
 		var new_state = current_node_state.exits[index]
 		move_to_node_state(new_state);	
 	}

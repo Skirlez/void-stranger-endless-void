@@ -1,3 +1,1 @@
-event_inherited();
-
-max_exits = 1
+node_instance_setup(1)

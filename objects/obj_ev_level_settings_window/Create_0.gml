@@ -73,7 +73,8 @@ var man = instance_create_layer(112 + 43, 72 + 27, "WindowElements", asset_get_i
 add_child(man)
 
 music_select = instance_create_layer(112 + 48, 72 + 45, "WindowElements", asset_get_index("obj_ev_music_select"), {
-	base_scale_x : 1	
+	base_scale_x : 1,
+	preselected_music : global.level.music
 })
 
 theme_selector = instance_create_layer(112 + 58, 72, "WindowElements", asset_get_index("obj_ev_selector"), {

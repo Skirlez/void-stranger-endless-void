@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ev_get_elysium_music",
+  "name": "ev_elysium_music_annoying",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

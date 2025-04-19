@@ -9,7 +9,7 @@ if instance_exists(asset_get_index("obj_player"))
         {
             var new_tile_str = string_insert("N", tile_str, string_length(tile_str))
             tile_str = new_tile_str
-            show_debug_message(tile_str)
+            //show_debug_message(tile_str)
         }
     }
 }

@@ -1,5 +1,7 @@
-
+global.void_radio_disable_stack = 0;
 function ev_play_void_radio() {
+	if global.void_radio_disable_stack != 0
+		return;
 	ev_stop_music();
 	date_set_timezone(timezone_utc)
 	var date = date_current_datetime();
@@ -21,27 +23,27 @@ function ev_play_void_radio() {
 	var sum_seconds = 0;
 	var previous_sum_seconds = 0;
 	var index = 0;
-	var song;
-	var song_length;
+	var track;
+	var track_length;
 	var start;
 	var endpoint;
 	do {
 		var previous_index = index;
 		while (index == previous_index)
 			index = irandom_range(1, array_length(global.music_names) - 1)
-		song = asset_get_index(global.music_names[index]);
-		song_length = audio_sound_length(song);
-		start = ev_get_real_song_start(song);
-		endpoint = ev_get_real_song_end(song);
-		var song_after_endpoint = song_length - endpoint
-		song_length -= start + song_after_endpoint;
-		endpoint = ev_get_real_song_end(song);
+		track = asset_get_index(global.music_names[index]);
+		track_length = audio_sound_length(track);
+		start = ev_get_real_track_start(track);
+		endpoint = ev_get_real_track_end(track);
+		var track_after_endpoint = track_length - endpoint
+		track_length -= start + track_after_endpoint;
+		endpoint = ev_get_real_track_end(track);
 		previous_sum_seconds = sum_seconds;
-		sum_seconds += song_length;
+		sum_seconds += track_length;
 	} until (sum_seconds >= seconds);
 	
-	var time = song_length - (sum_seconds - seconds)
-	ev_play_music(song, false, true)
+	var time = track_length - (sum_seconds - seconds)
+	ev_play_music(track, false, true)
 	audio_sound_set_track_position(global.music_inst, start + time);
 	
 	// fade in
@@ -52,24 +54,18 @@ function ev_play_void_radio() {
 	randomize();
 }
 
-function ev_get_real_song_start(song) {
-	static elysium_songs = [asset_get_index("msc_test2"), asset_get_index("msc_ending2"),
-		asset_get_index("msc_looptest"), asset_get_index("msc_sendoff")]
-		
+function ev_get_real_track_start(track) {
 	for (var i = 0; i < 4; i++) {
-		if song == elysium_songs[i]
+		if track == global.elysium_tracks[i]
 			return 188.57;
 	}
 	return 0;
 }
 
-function ev_get_real_song_end(song) {
-	static elysium_songs = [asset_get_index("msc_test2"), asset_get_index("msc_ending2"),
-		asset_get_index("msc_looptest"), asset_get_index("msc_sendoff")]
-		
+function ev_get_real_track_end(track) {
 	for (var i = 0; i < 4; i++) {
-		if song == elysium_songs[i]
+		if track == global.elysium_tracks[i]
 			return 471;
 	}
-	return audio_sound_length(song);
+	return audio_sound_length(track);
 }

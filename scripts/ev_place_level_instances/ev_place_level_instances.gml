@@ -28,5 +28,14 @@ function ev_place_level_instances(level) {
 			object.iostruct.place(object_state, i, j, extra_data)
 		}
 	}
+	
+	var bount_string;
+	if level.bount == -1
+		bount_string = "V???"
+	else {
+		bount_string = "V"
+		ds_grid_set(agi("obj_inventory").ds_player_info, 1, 2, level.bount)
+	}	
+	ds_grid_set(agi("obj_inventory").ds_player_info, 0, 2, bount_string)
 }
 

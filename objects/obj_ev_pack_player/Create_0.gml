@@ -1,12 +1,12 @@
-ev_prepare_level()
-// don't display locusts
-
-ds_grid_set(agi("obj_inventory").ds_player_info, 0, 1, 0)
+ev_set_play_variables()
 
 current_node_state = noone;
 function move_to_node_state(state) {
 	current_node_state = state;
 	room_restart();
+}
+function end_pack() {
+	ev_leave_pack()	
 }
 
 function on_room_create() {

@@ -7,6 +7,9 @@ if !selected {
 		var node_state = new node_with_state(nodes[i], x, y);
 		var instance = node_state.write_instance();
 		instance.in_menu = true;
+		if (nodes[i].flags & node_flags.only_one && instance_number(instance.object_index) != 1) {
+			instance.unselectable = true;
+		}
 		instance.layer = layer_get_id("NodesInMenu");
 		array_push(node_instances, instance)
 	}

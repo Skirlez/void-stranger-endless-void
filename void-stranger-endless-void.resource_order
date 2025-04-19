@@ -172,7 +172,7 @@
     {"name":"spr_cif_hit","order":53,"path":"sprites/spr_cif_hit/spr_cif_hit.yy",},
     {"name":"snd_lorddamage","order":2,"path":"sounds/snd_lorddamage/snd_lorddamage.yy",},
     {"name":"obj_ev_leave_level_button","order":58,"path":"objects/obj_ev_leave_level_button/obj_ev_leave_level_button.yy",},
-    {"name":"ev_get_elysium_music","order":19,"path":"scripts/ev_get_elysium_music/ev_get_elysium_music.yy",},
+    {"name":"ev_elysium_music_annoying","order":19,"path":"scripts/ev_elysium_music_annoying/ev_elysium_music_annoying.yy",},
     {"name":"snd_ev_selector_click","order":26,"path":"sounds/snd_ev_selector_click/snd_ev_selector_click.yy",},
     {"name":"spr_ev_swapper_flash","order":16,"path":"sprites/spr_ev_swapper_flash/spr_ev_swapper_flash.yy",},
     {"name":"spr_cc_up","order":3,"path":"sprites/spr_cc_up/spr_cc_up.yy",},
@@ -385,6 +385,7 @@
     {"name":"obj_ev_pack_node_button","order":73,"path":"objects/obj_ev_pack_node_button/obj_ev_pack_node_button.yy",},
     {"name":"snd_ex_vacuumgoes","order":4,"path":"sounds/snd_ex_vacuumgoes/snd_ex_vacuumgoes.yy",},
     {"name":"ev_tile_with_state","order":1,"path":"scripts/ev_tile_with_state/ev_tile_with_state.yy",},
+    {"name":"obj_ev_music_node_window","order":98,"path":"objects/obj_ev_music_node_window/obj_ev_music_node_window.yy",},
     {"name":"spr_ev_pack_add_level","order":56,"path":"sprites/spr_ev_pack_add_level/spr_ev_pack_add_level.yy",},
   ],
 }

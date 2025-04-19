@@ -153,7 +153,7 @@ global.object_node_map = ds_map_create()
 function node_struct(node_id, object_name, flags = 0) constructor {
 	self.node_id = node_id;
 	global.id_node_map[? node_id] = self;
-	self.object_ind = asset_get_index(object_name);
+	self.object_ind = agi(object_name);
 	global.object_node_map[? object_ind] = self;
 
 	self.properties_generator = global.editor_instance.return_noone;
@@ -233,6 +233,8 @@ level_node.write_instance_function = function (node_state) {
 }
 level_node.play_evaluate = function (node_state) {
 	global.level = node_state.properties.level;
+	ev_set_play_variables(true)
+	ev_prepare_level_visuals(global.level)
 	ev_place_level_instances(global.level)
 	return noone;
 };
@@ -248,17 +250,28 @@ music_node.properties_generator = function () {
 	return { music : "" }	
 }
 music_node.read_function = function (properties_str /*, version */) {
+	show_message(properties_str)
 	return { music : base64_decode(properties_str) }; 
 }
 music_node.read_instance_function = function (inst) {
 	return { music : inst.music }
 }
 music_node.write_function = function (node_state) {
-	return string(node_state.properties.music)
+	return base64_encode(node_state.properties.music)
 }
 music_node.write_instance_function = function (node_state) {
 	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
 		{ music : node_state.properties.music })
+}
+music_node.on_config = function (node_instance) {
+	global.mouse_layer = 1;
+	new_window_with_pos(node_instance.x, node_instance.y, 6, 6, asset_get_index("obj_ev_music_node_window"), {
+		node_instance : node_instance
+	});
+}
+music_node.play_evaluate = function (node_state) {
+	ev_play_music(agi(node_state.properties.music), true, false)
+	return node_state.exits[0];	
 }
 
 branefuck_node = new node_struct("bf", "obj_ev_pack_branefuck_node");
@@ -319,7 +332,6 @@ comment_node.on_config = function (node_instance) {
 	});
 }
 
-
 comment_node.read_function = function (properties_str /*, version */) {
 	return { comment : properties_str }; 
 }
@@ -351,6 +363,6 @@ function reset_global_pack() {
 	global.pack = new pack_struct()
 	array_push(global.pack.starting_node_states, 
 		new node_with_state(root_node,
-		 350, 1440 / 2))
+		 350, 2160 / 2))
 }
 reset_global_pack();

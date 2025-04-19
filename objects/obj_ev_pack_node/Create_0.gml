@@ -7,13 +7,4 @@ inherit from this object.
 
 Most of the node logic is in the node_instance functions so it can be used by display objects.
 */
-
-node_instance_setup(999, 0, 0)
-
-spin_time_h = 0;
-spin_time_v = 0;
-spin_h = 0
-spin_v = 0
-image_speed = 0.1
-animate = true
-
+node_instance_setup()

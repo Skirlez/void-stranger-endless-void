@@ -87,7 +87,6 @@ if [ -d "./output" ]; then
 fi
 
 
-
 echo "--------------------------"
 echo "Merging into Void Stranger"
 echo "--------------------------"

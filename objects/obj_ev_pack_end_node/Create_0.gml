@@ -1,3 +1,1 @@
-event_inherited();
-can_connect_to_me = true;
-max_exits = 0
+node_instance_setup(0)

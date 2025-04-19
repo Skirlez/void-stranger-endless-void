@@ -222,7 +222,7 @@ else if global.is_merged {
 	var zoom = global.pack_editor_instance.zoom;
 	if !outside_view && zoom <= 1
 		draw();
-	show_debug_message(zoom)
+
 }
 
 var draw_x = x;
