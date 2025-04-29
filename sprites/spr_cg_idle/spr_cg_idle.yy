@@ -67,8 +67,8 @@
   "swatchColours": null,
   "swfPrecision": 2.525,
   "textureGroupId": {
-    "name": "VoidStrangerGroup",
-    "path": "texturegroups/VoidStrangerGroup",
+    "name": "VoidStrangerTextureGroup",
+    "path": "texturegroups/VoidStrangerTextureGroup",
   },
   "type": 0,
   "VTile": false,

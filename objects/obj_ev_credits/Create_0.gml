@@ -195,6 +195,7 @@ credits = [
 		new ev_credits_text("The BFXR Program"),
 		new ev_credits_text("fatboy94"),
 		new ev_credits_text("SubUnit_FieldRec"),
+		new ev_credits_text("Snake16547"),
 		new ev_credits_spacing(),
 		new ev_credits_text("Links and licenses"),
 		new ev_credits_text("available in credits.txt"),

@@ -1,6 +1,6 @@
 event_inherited()
 
-
+elements_depth = layer_get_depth("WindowElements")
 function commit() {
 	with (asset_get_index("obj_ev_level_settings_window")) {
 		global.level.name = name_textbox.txt
@@ -40,6 +40,8 @@ name_textbox = instance_create_layer(textbox_x, 72 - 10, "WindowElements", asset
 	allow_newlines : false,
 	automatic_newline: false,
 	char_limit : 30,
+	opened_x : room_width / 2,
+	opened_y : room_height / 2
 	//exceptions: "~`!@#$%^&()_=-+{} [],.;'"
 })
 	
@@ -49,7 +51,9 @@ description_textbox = instance_create_layer(textbox_x, 72 + 10, "WindowElements"
 	empty_text : "Level Description",
 	char_limit : 256,
 	base_scale_x : textbox_scale,
-	allow_newlines : false
+	allow_newlines : false,
+	opened_x : room_width / 2,
+	opened_y : room_height / 2
 })
 
 description_textbox.depth--;
@@ -69,21 +73,32 @@ for (var i = 0; i < 5; i++) {
 	add_child(burdens[i])
 }
 
-var man = instance_create_layer(112 + 43, 72 + 27, "WindowElements", asset_get_index("obj_ev_man"))
+var man = instance_create_layer(112 + 43, 72 - 16, "WindowElements", asset_get_index("obj_ev_man"))
 add_child(man)
 
-music_select = instance_create_layer(112 + 48, 72 + 45, "WindowElements", asset_get_index("obj_ev_music_select"), {
+music_select = instance_create_layer(112 + 48, 72 + 4, "WindowElements", asset_get_index("obj_ev_music_select"), {
 	base_scale_x : 1,
 	preselected_music : global.level.music
 })
 
-theme_selector = instance_create_layer(112 + 58, 72, "WindowElements", asset_get_index("obj_ev_selector"), {
+theme_selector = instance_create_layer(112 + 50, 72 - 35, "WindowElements", asset_get_index("obj_ev_selector"), {
 	elements : ["Regular", "Universe", "White Void"],
 	selected_element : global.level.theme,
 	max_radius : 32
 })
-
+var claim_button = instance_create_layer(112 + 46, 72 + 40, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	func : function () {
+		global.mouse_layer++
+		new_window(11, 6, asset_get_index("obj_ev_claim_window"), 
+		{
+			layer_num : global.mouse_layer,
+			layer : layer_get_id("Windows2")
+		})
+	},
+	layer_num : global.mouse_layer,
+	sprite_index : agi("spr_ev_claim")
+})
 
 add_child(theme_selector)
 add_child(music_select)
-
+add_child(claim_button)

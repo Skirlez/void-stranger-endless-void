@@ -25,7 +25,7 @@ int lastTexturePageItem = Data.TexturePageItems.Count - 1;
 
 Dictionary<UndertaleEmbeddedTexture, int> dict = new Dictionary<UndertaleEmbeddedTexture, int>();
 foreach (UndertaleEmbeddedTexture embeddedTexture in endlessVoidData.EmbeddedTextures) {
-	if (embeddedTexture.TextureInfo.Name.Content == "VoidStrangerGroup" || 
+	if (embeddedTexture.TextureInfo.Name.Content == "VoidStrangerTextureGroup" || 
 			embeddedTexture.TextureInfo.Name.Content == "__YY__0fallbacktexture.png_YYG_AUTO_GEN_TEX_GROUP_NAME_")
 		continue;
 
@@ -41,7 +41,7 @@ foreach (UndertaleEmbeddedTexture embeddedTexture in endlessVoidData.EmbeddedTex
 foreach (UndertaleSprite sprite in endlessVoidData.Sprites) {
 	if (sprite.Textures[0].Texture == null) // not present when building with NoVoidStrangerGroups config
 		continue;
-	if (sprite.Textures[0].Texture.TexturePage.TextureInfo.Name.Content == "VoidStrangerGroup")
+	if (sprite.Textures[0].Texture.TexturePage.TextureInfo.Name.Content == "VoidStrangerTextureGroup")
 		continue;
 	Data.Sprites.Add(sprite);
 	foreach (UndertaleSprite.TextureEntry textureEntry in sprite.Textures) {
@@ -53,20 +53,11 @@ foreach (UndertaleSprite sprite in endlessVoidData.Sprites) {
 	}
 }
 
-/*
-foreach (UndertaleAudioGroup group in endlessVoidData.AudioGroups) {
-	if (group.Name.Content == "VoidStrangerAudio")
-		continue;
-
-	Data.AudioGroups.Add(group);
-}
-*/
 
 foreach (UndertaleSound sound in endlessVoidData.Sounds) {
-	if (sound.AudioGroup.Name.Content == "VoidStrangerAudio")
+	if (sound.AudioGroup.Name.Content == "audiogroup_void_stranger")
 		continue;
-
-	sound.AudioGroup = Data.AudioGroups[0];
+	sound.AudioGroup = Data.AudioGroups[0]; 
 	Data.Sounds.Add(sound);
 	Data.EmbeddedAudio.Add(sound.AudioFile);
 }
@@ -200,9 +191,7 @@ void applyPatches(string codeEntryName, string patches) {
 }
 
 
-Data.GeneralInfo.FileName = endlessVoidData.GeneralInfo.FileName;
 Data.GeneralInfo.Name = endlessVoidData.GeneralInfo.Name;
-Data.GeneralInfo.DisplayName = endlessVoidData.GeneralInfo.DisplayName;
 
 //DisableAllSyncBindings();
 

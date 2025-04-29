@@ -6,13 +6,13 @@ randomize()
 global.g_mode = false;
 global.latest_lvl_format = 3;
 global.latest_pack_format = 1;
-global.ev_version = "0.90";
+global.ev_version = "0.99";
 
 global.is_merged = (agi("obj_game") != -1)
 if (!global.is_merged) {
 	var ratio = display_get_height() / 144	
 	surface_resize(application_surface, 224 * ratio, 144 * ratio)
-	audio_group_load(VoidStrangerAudio)
+	audio_group_load(audiogroup_void_stranger)
 	global.debug = false;
 	global.pause = false;
 	global.music_inst = noone;
@@ -60,6 +60,7 @@ global.level = noone;
 global.level_sha = ""
 
 global.pack = noone;
+global.pack_save = noone;
 
 global.editor_time = int64(0)
 global.level_time = int64(0)
@@ -852,7 +853,13 @@ object_cif.iostruct = {
 }
 
 
-global.branefuck_characterset = ".,+-[]><?0123456789^_: ";
+global.branefuck_characterset = ".,+-[]><?0123456789^_#: ";
+global.branefuck_persistent_memory = array_create(ADD_STATUE_MEMORY_AMOUNT)
+function reset_branefuck_persistent_memory() {
+	for (var i = 0; i < ADD_STATUE_MEMORY_AMOUNT; i++)
+		global.branefuck_persistent_memory[i] = int64(0);
+}
+reset_branefuck_persistent_memory()
 
 object_add = new editor_object("Add Statue", agi("spr_voider"), "ad", egg_statue_obj)
 object_add.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
@@ -981,7 +988,7 @@ object_add.iostruct = {
 		
 		var program 
 		if mode == 1 {
-			program = ".";
+			program = $",g:{ tile_state.properties.pgm},";
 		}
 		else
 			program = tile_state.properties.pgm
@@ -1464,7 +1471,17 @@ function play_level_transition(lvl, lvl_sha, display_instance) {
 	global.mouse_layer = -1
 }
 
-function play_pack_transition(lvl, lvl_sha, display_instance) {
+play_pack_transition_time = -1
+max_play_pack_transition = 250
+function play_pack_transition(nodeless_pack, display_instance) {
+	var pack_string = read_pack_string_from_file(nodeless_pack.save_name)
+	global.pack = import_pack(pack_string)
+	global.pack.save_name = nodeless_pack.save_name;
+	ev_stop_music();
+	global.mouse_layer = -1
+	display_instance.destroy();
+	play_pack_transition_time = max_play_pack_transition
+
 	//TODO
 }
 

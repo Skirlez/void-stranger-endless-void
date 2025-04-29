@@ -3,6 +3,7 @@ function node_instance_setup(max_exits = 999, can_connect_to_me = true, center_x
 	id.can_connect_to_me = can_connect_to_me;
 	id.center_x_offset = center_x_offset;
 	id.center_y_offset = center_y_offset;
+
 	id.animate = animate;
 	image_speed = 0.1
 	
@@ -24,7 +25,10 @@ function node_instance_setup(max_exits = 999, can_connect_to_me = true, center_x
 	spin_h = 0
 	spin_v = 0
 	
-	
+	scale_x_start = image_xscale
+	scale_y_start = image_yscale
+	center_x_offset_start = center_x_offset;
+	center_y_offset_start = center_y_offset;
 }
 
 
@@ -34,6 +38,34 @@ function with_all_nodes(func, args) {
 	with (global.display_object)
 		func(id, args);
 }
+
+function expand_node_instance(node_instance) {
+	var scale_factor = (object_index == global.display_object) ? 1.2 : 1.3
+	with (node_instance) {
+		image_xscale = scale_x_start * scale_factor;
+		image_yscale = scale_y_start * scale_factor;
+		x -= (image_xscale - scale_x_start) * ((center_x - x) * 4)
+		y -= (image_yscale - scale_y_start) * ((center_y - y) * 4)
+		center_x_offset = center_x_offset_start * scale_factor;
+		center_y_offset = center_y_offset_start * scale_factor;
+		center_x = x + center_x_offset;
+		center_y = y + center_y_offset;
+	}
+}
+
+function contract_node_instance(node_instance) {
+	with (node_instance) {
+		x += (image_xscale - scale_x_start) * ((center_x - x) * 4)
+		y += (image_yscale - scale_y_start) * ((center_y - y) * 4)
+		image_xscale = scale_x_start;
+		image_yscale = scale_y_start;
+		center_x_offset = center_x_offset_start;
+		center_y_offset = center_y_offset_start;
+		center_x = x + center_x_offset;
+		center_y = y + center_y_offset;
+	}
+}
+
 
 
 function get_node_at_position(pos_x, pos_y) {
@@ -45,7 +77,13 @@ function get_node_at_position(pos_x, pos_y) {
 		return noone;
 	return node_inst;
 }
-
+function play_pickup_sound(pitch) {
+	static sounds = [agi("snd_ev_node_pickup_1"), agi("snd_ev_node_pickup_2"), agi("snd_ev_node_pickup_3")]
+	
+	var gain = (1 - (global.pack_editor_instance.zoom + 10) / (global.pack_editor_instance.last_possible_zoom + 10)) * 2
+	gain = clamp(gain, 0.2, 1.6)
+	audio_play_sound(sounds[irandom_range(0, array_length(sounds) - 1)], 10, false, gain, 0, pitch)
+}
 function node_instance_step() {
 	static root_node_obj = asset_get_index("obj_ev_pack_root")
 	static not_possible_sound = asset_get_index("snd_lorddamage")
@@ -65,15 +103,21 @@ function node_instance_step() {
 			}
 		}
 		if global.pack_editor_instance.selected_thing == pack_things.nothing {
-			if ev_mouse_pressed()
+			if ev_mouse_pressed() {
 				mouse_moving = true;
+				play_pickup_sound(random_range(1, 1.05))
+				expand_node_instance(id)
+			}
 			if ev_mouse_right_pressed() {
 				if max_exits == 0 {
 					shake_seconds = 0.5;
 					audio_play_sound(not_possible_sound, 10, false);	
 				}
-				else
+				else {
+					static start_connect_sound = agi("snd_ev_node_start_connect")
+					audio_play_sound(start_connect_sound, 10, false, 1, 0, random_range(0.9, 1.1));	
 					connecting_exit = true;
+				}
 			}
 		}
 		else if global.pack_editor_instance.selected_thing == pack_things.hammer {
@@ -133,8 +177,11 @@ function node_instance_step() {
 	if being_judged && global.pack_editor_instance.selected_thing != pack_things.hammer
 		being_judged = false;
 	
-	if ev_mouse_released()
+	if ev_mouse_released() && mouse_moving {
 		mouse_moving = false;
+		contract_node_instance(id)
+		play_pickup_sound(0.8)	
+	}
 	if connecting_exit {
 		if ev_mouse_held() || global.pack_editor_instance.selected_thing != pack_things.nothing
 			connecting_exit = false;	

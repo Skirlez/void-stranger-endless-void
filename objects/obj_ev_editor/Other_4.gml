@@ -5,6 +5,7 @@ global.mouse_pressed = false;
 
 if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level_select") || room == asset_get_index("rm_ev_pack_select") {
 	history = []
+	reset_branefuck_persistent_memory()
 	global.level_sha = "";
 	var music = global.menu_music;
 	if !audio_is_playing(music)

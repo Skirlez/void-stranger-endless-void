@@ -32,6 +32,10 @@ function ev_play_void_radio() {
 		while (index == previous_index)
 			index = irandom_range(1, array_length(global.music_names) - 1)
 		track = asset_get_index(global.music_names[index]);
+		if (ev_is_music_elysium(track)) {
+			// swap to a variation
+			track = global.elysium_tracks[irandom_range(0, 3)]
+		}
 		track_length = audio_sound_length(track);
 		start = ev_get_real_track_start(track);
 		endpoint = ev_get_real_track_end(track);

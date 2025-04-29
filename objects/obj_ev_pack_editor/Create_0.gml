@@ -63,6 +63,12 @@ zoom_factor = 1.2;
 // to be level_size, x would have to be log of zoom_factor(level_size)
 zoom_level_needed_to_be_directly_on_level = logn(zoom_factor, level_size); 
 
+// last possible zoom level
+// 224 * 1.2^zoom = room_width
+// zoom = log1.2(room_width / 224) 
+		
+last_possible_zoom = floor(logn(1.2, 3360 / 224))
+
 function calculate_zoom() {
 	var mult = power(zoom_factor, zoom);
 	
@@ -70,11 +76,8 @@ function calculate_zoom() {
 	var cam_height = 144 * mult
 	
 	if (cam_width > room_width || cam_height > room_height) {
-		// go to last possible zoom level
-		// 224 * 1.2^zoom = room_width
-		// zoom = log1.2(room_width / 224) 
-		
-		zoom = floor(logn(1.2, room_width / 224))
+
+		zoom = last_possible_zoom
 		calculate_zoom()
 		return;
 	}
@@ -102,9 +105,8 @@ function calculate_zoom() {
 play_transition_target = noone;
 play_transition_time = -1;
 function start_play_transition(target_node) {
-	play_transition_time = 80;
+	play_transition_time = 40;
 	play_transition_target = target_node;
-	
 	
 	var border = asset_get_index("obj_ev_pack_border")
 	if instance_exists(border) && border.visible {
@@ -169,15 +171,23 @@ function node_struct(node_id, object_name, flags = 0) constructor {
 	self.on_config = global.editor_instance.empty_function;
 	
 	// what to do when evaluated while playing
-	// by default NOT a function indicating this node cannot be played
-	// either returns the next node to be travelled to immediately, or return noone
-	// for the pack player to wait
-	self.play_evaluate = noone;
+	// nodes that have this defined can immediately tell you where to go in the pack
+	// if they can't, returns noone
+	self.play_evaluate_immediate = function () {
+		return noone;	
+	};
+	
+	// runs after room restart
+	// used by nodes that can't immediately tell you where to go in the pack,
+	// like levels, since they have to wait for you to complete the level
+	// doesn't return anything
+	self.play_evaluate = global.editor_instance.empty_function;
+	
 	self.flags = flags;
 }
 
 root_node = new node_struct("ro", "obj_ev_pack_root", node_flags.unremovable);
-root_node.play_evaluate = function (node_state) {
+root_node.play_evaluate_immediate = function (node_state) {
 	return node_state.exits[0];
 };
 brand_node = new node_struct("br", "obj_ev_pack_brand_node");
@@ -231,13 +241,21 @@ level_node.write_instance_function = function (node_state) {
 		image_yscale : 0.2
 	})
 }
+level_node.play_evaluate_immediate = function (node_state) {
+	return noone;
+}
 level_node.play_evaluate = function (node_state) {
 	global.level = node_state.properties.level;
 	ev_set_play_variables(true)
 	ev_prepare_level_visuals(global.level)
 	ev_place_level_instances(global.level)
-	return noone;
-};
+	with (agi("obj_ev_pack_player")) {
+		if is_first_level {
+			instance_create_layer(x, y, "Effects", agi("obj_darkness_begins"))
+			is_first_level = false;
+		}
+	}
+}
 level_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
 	new_window_with_pos(node_instance.x, node_instance.y, 6, 6, asset_get_index("obj_ev_level_node_window"), {
@@ -250,7 +268,6 @@ music_node.properties_generator = function () {
 	return { music : "" }	
 }
 music_node.read_function = function (properties_str /*, version */) {
-	show_message(properties_str)
 	return { music : base64_decode(properties_str) }; 
 }
 music_node.read_instance_function = function (inst) {
@@ -269,7 +286,7 @@ music_node.on_config = function (node_instance) {
 		node_instance : node_instance
 	});
 }
-music_node.play_evaluate = function (node_state) {
+music_node.play_evaluate_immediate = function (node_state) {
 	ev_play_music(agi(node_state.properties.music), true, false)
 	return node_state.exits[0];	
 }
@@ -297,13 +314,32 @@ branefuck_node.on_config = function (node_instance) {
 		node_instance : node_instance
 	});
 }
-branefuck_node.play_evaluate = function(node_state) {
-	var program = node_state.properties.program;
+branefuck_node.play_evaluate_immediate = function(node_state) {
+	var program = string_to_array(node_state.properties.program);
+	
+	var return_value = execute_branefuck(program, undefined);
+	if return_value == undefined {
+		ev_notify("Branefuck node errored!")
+		return_value = 1	
+	}
+	else if return_value < 1 {
+		ev_notify($"(Too small: {return_value} < 1)")
+		ev_notify("Branefuck node returned invalid exit number!")
+		
+		return_value = 1;
+	}
+	else if return_value > array_length(node_state.exits) {
+		ev_notify($"(Too big: {return_value} > {array_length(node_state.exits)})")
+		ev_notify($"Branefuck node returned invalid exit number!")
+		return_value = 1;
+	}
+	return node_state.exits[return_value - 1];
+	
 }
 
 thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node", node_flags.only_one);
 random_node = new node_struct("ct", "obj_ev_pack_random_node");
-random_node.play_evaluate = function (node_state) {
+random_node.play_evaluate_immediate = function (node_state) {
 	var rand = irandom_range(0, array_length(node_state.exits) - 1)
 	return node_state.exits[rand];
 };

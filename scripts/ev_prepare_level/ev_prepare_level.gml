@@ -7,7 +7,11 @@ function ev_set_play_variables(display_locusts = true) {
 	global.blade_backup = 0	
     global.swapper_backup = 0
 	
-	// idk what this is
+	// burdens off
+	ds_grid_set(inv.ds_equipment, 0, 0, 0)
+	ds_grid_set(inv.ds_equipment, 0, 1, 0)
+	ds_grid_set(inv.ds_equipment, 0, 2, 0)
+	ds_grid_set(inv.ds_equipment, 0, 4, 0)
 	ds_grid_set(inv.ds_player_info, 10, 2, 4)
 
 
@@ -30,6 +34,7 @@ function ev_prepare_level_burdens(level) {
 	ds_grid_set(inv.ds_equipment, 0, 1, 0)
 	ds_grid_set(inv.ds_equipment, 0, 2, 0)
 	ds_grid_set(inv.ds_equipment, 0, 4, 0)
+	ds_grid_set(inv.ds_player_info, 10, 2, 4)
 	if (level.burdens[0])
 		ds_grid_set(inv.ds_equipment, 0, 0, 1)
 	if (level.burdens[1])

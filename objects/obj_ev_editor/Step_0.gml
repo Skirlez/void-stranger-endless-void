@@ -145,7 +145,12 @@ else if (edit_transition != -1) {
 }
 else if (edit_pack_transition != -1) {
 	edit_pack_transition--;
-
+}
+else if play_pack_transition_time != -1 {
+	play_pack_transition_time--;
+	if play_pack_transition_time == 0 {
+		room_goto(global.pack_level_room)
+	}
 }
 
 if room == global.editor_room { 
@@ -177,7 +182,7 @@ if room == global.editor_room {
 		}
 	}
 }
-else if (room == global.level_room) {
+else if ev_is_room_gameplay(room) {
 	global.floor_count = instance_number_string(tile_default.obj_name)
 	global.glass_count = instance_number_string(tile_glass.obj_name)
 	
@@ -293,19 +298,6 @@ if(global.death_count > 0){
 if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 	sprite_delete(stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten)
 	stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone
-}
-
-if !global.is_merged {
-	var file = asset_get_index(audio_get_name(global.music_inst))
-	var endpoint = ev_get_real_track_end(file)
-	if audio_sound_get_track_position(global.music_inst) > endpoint {
-		if global.music_is_looping {
-			var startpoint = ev_get_real_track_start(global.music_inst);
-			audio_sound_set_track_position(global.music_inst, startpoint);	
-		}
-		else
-			audio_stop_sound(global.music_inst);	
-	}
 }
 
 

@@ -54,7 +54,7 @@ function get_pack_line_number_progress() {
 	return t;
 }
 
-function get_all_node_instances() {
+function get_all_level_node_instances() {
 	static pack_levels_layer = layer_get_id("PackLevels")
 	var display_instance_elements = layer_get_all_elements(pack_levels_layer)		
 	var nodes = []
@@ -63,6 +63,11 @@ function get_all_node_instances() {
 		if inst.object_index == global.display_object
 			array_push(nodes, inst);
 	}
+	return nodes;
+}
+
+function get_all_node_instances() {
+	var nodes = get_all_level_node_instances();
 	
 	static nodes_layer = layer_get_id("Nodes")
 	var node_instance_elements = layer_get_all_elements(nodes_layer)

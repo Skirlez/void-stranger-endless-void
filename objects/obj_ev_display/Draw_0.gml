@@ -8,10 +8,7 @@ if outside_view
 
 function draw() {
 	surface_set_target(game_surface)
-
-	
 	draw_clear_alpha(c_black, 1)
-
 	if lvl.theme == level_themes.universe {
 		if global.is_merged {
 			var universe_instance = global.editor_instance.get_universe_instance();
@@ -28,10 +25,7 @@ function draw() {
 			}
 		}
 	}
-
 	var tile_mode = display_context == display_contexts.level_editor ? global.tile_mode : false
-
-
 	function draw_tile_state(i, j, tile_state, preview = false) {
 		tile_state.tile.draw_function(tile_state, i, j, preview, lvl, no_spoiling)
 	}
@@ -273,7 +267,7 @@ if name != "" {
 	
 	draw_set_font(global.ev_font)
 	var size = 1
-	var text_width = string_width(lvl.name);
+	var text_width = string_width(name);
 	if (text_width > sprite_width) { 
 		size = sprite_width / text_width
 	}

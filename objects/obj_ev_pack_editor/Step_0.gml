@@ -1,8 +1,16 @@
 if room != global.pack_editor_room
 	exit;
 	
-if global.void_radio_on && !audio_is_playing(global.music_inst) {
-	ev_play_void_radio()
+	
+
+
+if global.void_radio_on {
+	var file = agi(audio_get_name(global.music_inst))
+	var endpoint = ev_get_real_track_end(file)
+	if (!audio_is_playing(global.music_inst) || 
+			endpoint < audio_sound_get_track_position(global.music_inst)) {
+		ev_play_void_radio()
+	}
 }
 if ev_mouse_pressed() && global.instance_touching_mouse == noone 
 		&& (global.mouse_layer == 0 || selected_thing == pack_things.wrench) {
@@ -35,7 +43,6 @@ if (global.mouse_layer == 0 || selected_thing == pack_things.wrench) {
 	}
 	if mouse_wheel_up() && zoom > -10 {
 		zoom -= 1;
-		
 	}
 
 	if (prev_zoom != zoom) {
@@ -48,19 +55,22 @@ if play_transition_time != -1 {
 	var cam_y = camera_get_view_y(view_camera[0])
 	zoom = lerp(zoom, zoom_level_needed_to_be_directly_on_level, 0.2)
 	calculate_zoom()
-	var target_x = play_transition_target.center_x - (224 / 2) * level_size;
-	var target_y = play_transition_target.center_y - (144 / 2) * level_size;
+	var mult = power(zoom_factor, zoom);
+	var final_mult = power(zoom_factor, zoom_level_needed_to_be_directly_on_level);
+	var target_x = play_transition_target.center_x - (224 / 2) * level_size * (mult/final_mult);
+	var target_y = play_transition_target.center_y - (144 / 2) * level_size * (mult/final_mult);
 	
-	cam_x = lerp(cam_x, target_x, 0.2)
-	cam_y = lerp(cam_y, target_y, 0.2)
-	
-
+	cam_x = lerp(cam_x, target_x, 0.5)
+	cam_y = lerp(cam_y, target_y, 0.5)
 	
 	camera_set_view_pos(view_camera[0], cam_x, cam_y)
 	play_transition_time--;
 	if play_transition_time == 0 {
 		global.mouse_layer = 0;
 		global.pack.starting_node_states = convert_room_nodes_to_structs() 
+		global.pack_save = {
+			level_name : play_transition_target.lvl.name
+		}
 		global.playtesting = true;
 		room_goto(global.pack_level_room)
 		play_transition_time = -1;

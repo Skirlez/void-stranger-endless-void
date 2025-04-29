@@ -88,7 +88,7 @@ if global.erasing != -1 {
 	draw_surface(erasing_surface, 0, 0)
 }
 
-if (edit_transition != -1) {
+if (edit_transition != -1 || play_pack_transition_time != -1) {
 	draw_clear(c_black)	
 }
 

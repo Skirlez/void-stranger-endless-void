@@ -94,6 +94,6 @@ echo "--------------------------"
 # https://github.com/UnderminersTeam/UndertaleModTool/pull/2063
 rm "$VOID_STRANGER_PATH/data.win"
 
-$UNDERTALEMODCLI_PATH load "$VOID_STRANGER_PATH/clean_data.win" --scripts "./csx/merger.csx" --output "$VOID_STRANGER_PATH/data.win"
+"$UNDERTALEMODCLI_PATH" load "$VOID_STRANGER_PATH/clean_data.win" --scripts "./csx/merger.csx" --output "$VOID_STRANGER_PATH/data.win"
 
 echo "All done!"

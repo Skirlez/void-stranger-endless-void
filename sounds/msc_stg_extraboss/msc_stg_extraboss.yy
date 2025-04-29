@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "msc_stg_extraboss",
   "audioGroupId": {
-    "name": "VoidStrangerAudio",
-    "path": "audiogroups/VoidStrangerAudio",
+    "name": "audiogroup_void_stranger",
+    "path": "audiogroups/audiogroup_void_stranger",
   },
   "bitDepth": 1,
   "bitRate": 128,
@@ -12,8 +12,8 @@
   "conversionMode": 0,
   "duration": 414.19354,
   "parent": {
-    "name": "Void Stranger music",
-    "path": "folders/Sounds/Void Stranger music.yy",
+    "name": "VS Music",
+    "path": "folders/Sounds/VS Music.yy",
   },
   "preload": false,
   "sampleRate": 44100,

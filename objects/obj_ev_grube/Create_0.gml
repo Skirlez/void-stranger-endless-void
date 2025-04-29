@@ -25,6 +25,7 @@ enum ev_grube_types {
 	player_cube,
 	enemy_cube,
 	egg_cube,
+	level_cube,
 	size,
 }
 phy_active = false;
@@ -73,6 +74,16 @@ switch (type) {
 		image_yscale *= 1.5;
 		physics_fixture_set_box_shape(fix, cube_size, cube_size);
 		physics_fixture_set_restitution(fix, 0.3);
+		break;
+	case ev_grube_types.level_cube:
+		// this is so jank but it's worth it
+		var level_string = global.online_levels[irandom_range(0, array_length(global.online_levels) - 1)];
+		var lvl = import_level(level_string);
+		display_instance = instance_create_depth(-1000, -1000, 0, agi("obj_ev_display"), {
+			lvl : lvl,
+			no_spoiling : true,
+		})
+		visible = false;
 		break;
 }
 phy_active = true;

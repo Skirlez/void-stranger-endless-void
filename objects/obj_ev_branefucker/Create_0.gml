@@ -1,8 +1,5 @@
-#macro ADD_STATUE_MEMORY_AMOUNT 23
-persistent_memory = array_create(ADD_STATUE_MEMORY_AMOUNT)
-for (var i = 0; i < ADD_STATUE_MEMORY_AMOUNT; i++)
-	persistent_memory[i] = int64(0);
-	
+#macro ADD_STATUE_MEMORY_AMOUNT 230
+
 //Data for command functions below
 #region command_tiles
 
@@ -458,13 +455,7 @@ function get_command_parameters(memory, pointer, param_count){
 	return params;
 }
 
-function string_to_array(str) {
-	var arr = array_create(string_length(str))
-	for (var i = 0; i < array_length(arr); i++) {
-		arr[i] = string_char_at(str, i + 1);	
-	}
-	return arr;
-}
+
 
 function evaluate_input(input) {
 	if string_is_int(input)
@@ -486,184 +477,7 @@ function evaluate_input(input) {
 
 program = string_to_array(program_str)
 
-function execute(program, exit_value) {
-	var temporary_memory = array_create(ADD_STATUE_MEMORY_AMOUNT)
-	for (var i = 0; i < ADD_STATUE_MEMORY_AMOUNT; i++)
-		temporary_memory[i] = int64(0);	
-	var memory = temporary_memory;
-	
-	var program_length = array_length(program);
-	var pointer = 0
-	var i = 0;
-	var count = 0;
-	while (i < program_length) {
-		var command = program[i];
-		count++;
-		if (count > 50000) {
-			ev_notify("BF code ran for too long!")
-			return exit_value;
-		}
-		
-		switch (command) {
-			case "<": 
-				var ret = get_bf_multiplier(program, i)
-				ret.mult %= ADD_STATUE_MEMORY_AMOUNT;
-				pointer -= ret.mult;
-				if (pointer < 0)
-					pointer += ADD_STATUE_MEMORY_AMOUNT;
-				i += ret.offset + 1;
-				break;
-			case ">":
-				var ret = get_bf_multiplier(program, i)
-				pointer = (pointer + ret.mult) % ADD_STATUE_MEMORY_AMOUNT;
-				i += ret.offset + 1;
-				break;
-			case "+":
-				var ret = get_bf_multiplier(program, i)
-				memory[@ pointer] += ret.mult;
-				i += ret.offset + 1;
-				break;
-			case "-":
-				var ret = get_bf_multiplier(program, i)
-				memory[@ pointer] -= ret.mult;
-				i += ret.offset + 1;
-				break;
-			case "[": 
-				if (memory[pointer] == 0) {
-					var j = i;
-					var stack = 1;
-					while (j < program_length) {
-						j++;
-						if (program[j] == "[")
-							stack++;
-						else if (program[j] == "]") {
-							stack--;
-							if (stack == 0)
-								break;
-						}
-					}
-					if (stack != 0)
-						return destroy_value;
-					i = j + 1;
-				}
-				else
-					i++;
-				break;
-			case "]":
-				if (memory[pointer] != 0) {
-					var j = i;
-					var stack = 1;
-					while (j > 0) {
-						j--;
-						if (program[j] == "]")
-							stack++;
-						else if (program[j] == "[") {
-							stack--;
-							if (stack == 0)
-								break;
-						}
-					}
-					if (stack != 0)
-						return destroy_value;
-					i = j + 1;
-				}
-				else
-					i++;
-				break;
-			case ".":
-				return (memory[pointer])
-			case "?":
-				memory[@ pointer] = sign(memory[pointer])
-				i++;
-				break;
-			case "#":
-				if ds_exists(command_functions, ds_type_map){
-					var s = memory[pointer]
-					if ds_map_exists(command_functions, s) {
-						command_functions[? s](memory, pointer)
-					}
-				}
-				i++;
-				break;
-			case "^":
-				persistent_memory[@ pointer] = temporary_memory[pointer];
-				memory = persistent_memory;
-				i++;
-				break;
-			case "v":
-			case "V":
-				temporary_memory[@ pointer] = persistent_memory[pointer];
-				memory = temporary_memory;
-				i++;
-				break;
-			case ",":
-				var expression = "";
-				i++;
-				if i >= program_length
-					return exit_value;
-				while (program[i] != ",") {
-					expression += program[i];
-					i++;
-					if i >= program_length
-						return exit_value;
-				}
-				i++;
-				memory[@ pointer] = evaluate_expression(expression, temporary_memory);
-				break;
-			default:
-				i++;
-		}
-	}
-	return memory[pointer];
-}
 
-function evaluate_expression(expr, temporary_memory) {
-	var read_base = read_string_until(expr, 1, ":");
-	var base_name = read_base.substr;
-	var i = 1 + read_base.offset + 1;
-	
-	var remainder = string_copy(expr, i, string_length(expr) - i + 1);
-
-	var base;
-	if base_name == "g" || base_name == "global"
-		base = global;
-	else if base_name == "s" || base_name == "self" || base_name == "id"
-		base = id;
-	else if base_name == "t"
-		base = temporary_memory;
-	else if base_name == "p"
-		base = persistent_memory;
-	else if asset_get_type(base_name) == asset_object
-		base = instance_nearest(x, y, asset_get_index(base_name));
-	else
-		return noone;
-	return evaluate_expression_recursive(remainder, base);
-}
-function evaluate_expression_recursive(expr, base) {
-	if expr == ""
-		return base;
-
-	var read_vari = read_string_until(expr, 1, ":");
-	var vari_name = read_vari.substr;
-	var i = 1 + read_vari.offset + 1;
-	var remainder = string_copy(expr, i, string_length(expr) - i + 1);
-	
-	if is_array(base) {
-		if !string_is_uint(vari_name)
-			return noone;
-		return evaluate_expression_recursive(remainder, base[int64(vari_name)])
-	}
-	if is_struct(base) {
-		return evaluate_expression_recursive(remainder, variable_struct_get(base, vari_name))
-	}
-	if instance_exists(base) {
-		if (!variable_instance_exists(base, vari_name))
-			return noone;
-		return evaluate_expression_recursive(remainder, variable_instance_get(base, vari_name))
-	}
-	
-	return noone;
-}
 
 function is_alphanumeric(char) {
 	return string_lettersdigits(char) != "";

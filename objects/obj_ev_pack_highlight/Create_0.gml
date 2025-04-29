@@ -1,20 +1,25 @@
 event_inherited()
 
-var play = instance_create_layer(208, 40, "LevelHighlightButtons", asset_get_index("obj_ev_play_button"))
+var play = instance_create_layer(208, 40, "LevelHighlightButtons", agi("obj_ev_play_pack_button"))
 play.layer_num = 1
-//play.lvl = lvl
-//play.lvl_sha = lvl_sha
+play.nodeless_pack = nodeless_pack
 play.display_instance = display_instance
 play.highlighter = id;
 play.image_alpha = 0
-/*
-var copy = instance_create_layer(192, 40, "LevelHighlightButtons", asset_get_index("obj_ev_copy_button"))
-copy.layer_num = 1
-copy.lvl = lvl
-copy.image_alpha = 0
-*/
 
-var back = instance_create_layer(200, 16, "LevelHighlightButtons", asset_get_index("obj_ev_main_menu_button"), {
+var copy = instance_create_layer(192, 40, "LevelHighlightButtons", agi("obj_ev_executing_button"), {
+	layer_num : 1,
+	nodeless_pack : nodeless_pack,
+	image_alpha : 0,
+	sprite_index : agi("spr_ev_copy"),
+	func : function () {
+		var pack_string = read_pack_string_from_file(nodeless_pack.save_name)
+		clipboard_set_text(pack_string)
+		ev_notify("Copied to clipboard!")
+	}
+})
+
+var back = instance_create_layer(200, 16, "LevelHighlightButtons", agi("obj_ev_main_menu_button"), {
 	base_scale_x : 1,
 	base_scale_y : 0.7,
 	txt : "Back",
@@ -27,7 +32,7 @@ var back = instance_create_layer(200, 16, "LevelHighlightButtons", asset_get_ind
 
 add_child(play)
 add_child(back)
-//add_child(copy)
+add_child(copy)
 
 
 function format_date(date_str) {
@@ -65,32 +70,31 @@ if (!global.online_mode) {
 			global.editor_instance.edit_level_pack_transition(nodeless_pack, display_instance);
 		}
 	})
-	/*
-	var claim = instance_create_layer(208, 73, "LevelHighlightButtons", asset_get_index("obj_ev_claim_button"))
-	claim.layer_num = 1
-	claim.lvl = lvl
-	claim.highlighter = id
-	claim.image_alpha = 0
 	
-	var deleteb = instance_create_layer(192, 90, "LevelHighlightButtons", asset_get_index("obj_ev_delete_button"))
-	deleteb.layer_num = 1
-	deleteb.level_select = instance_find(asset_get_index("obj_ev_level_select"), 0)
-	deleteb.save_name = lvl.save_name
-	deleteb.display_instance = display_instance
-	deleteb.image_alpha = 0
 
+	
+	var deleteb = instance_create_layer(192, 90, "LevelHighlightButtons", agi("obj_ev_delete_button"), {
+		pack_mode : true,
+		layer_num : 1,
+		level_select : instance_find(asset_get_index("obj_ev_level_select"), 0),
+		save_name : nodeless_pack.save_name,
+		display_instance : display_instance,
+		image_alpha : 0,
+	})
+
+	/*
 	var upload = instance_create_layer(208, 90, "LevelHighlightButtons", asset_get_index("obj_ev_upload_button"))
 	upload.layer_num = 1
 	upload.lvl = lvl;
 	upload.image_alpha = 0
-
-	
-	
-	add_child(claim)
-	add_child(deleteb)
-	add_child(upload)
-	
 	*/
+	
+	
+
+	add_child(deleteb)
+	//add_child(upload)
+
+
 	textbox_offset = 20;
 	add_child(edit)
 }
@@ -129,7 +133,7 @@ description_textbox = instance_create_layer(201, 90 + textbox_offset, "LevelDesc
 
 author_textbox = instance_create_layer(201, 110 + textbox_offset, "LevelDescription", asset_get_index("obj_ev_textbox"), 
 {
-	txt : (nodeless_pack.author == "" ? "No author?" : "Author:\n" + nodeless_pack.author),
+	txt : make_author_textbox_text(nodeless_pack.author),
 	base_scale_x : 2,
 	base_scale_y : 1,
 	layer_num : 1,

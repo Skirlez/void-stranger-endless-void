@@ -25,10 +25,10 @@ else if instance_exists(display_inst) {
 */
 
 
-
+var size = ((image_xscale + image_yscale) / 2) * 5
 if unselectable
 	draw_set_alpha(0.3)
-ev_draw_cube(sprite_index, i_imageframe, x + shake_x_offset, y, 5, spin_h, spin_v)
+ev_draw_cube(sprite_index, i_imageframe, x + shake_x_offset, y, size, spin_h, spin_v)
 if unselectable
 	draw_set_alpha(1)
 	

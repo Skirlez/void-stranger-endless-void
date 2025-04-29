@@ -34,7 +34,7 @@ See [Building Endless Void](https://github.com/Skirlez/void-stranger-endless-voi
 - Indices of objects, sprites, sounds, etc. become mismatched when merging with Void Stranger, so references to them are always obtained with `asset_get_index()`/`agi()`.
 This does not apply to animation curves, as Void Stranger never uses them, and so their indices are not offset.
 - Semicolons are lightly and inconsistently sprinkled throughout, because of muscle memory, but GameMaker does not enforce them...
-- It's uh, pretty good, occasionally.
+- It's uh, pretty good, semi-occasionally.
 
 ## License
 The code, with some exceptions, is licensed under the terms of the AGPLv3.

@@ -1,9 +1,10 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_ev_copy_button",
+  "name": "obj_ev_claim_pack_window",
   "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":10,"eventType":7,"isDnD":false,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,},
   ],
   "managed": true,
   "overriddenProperties": [],
@@ -12,8 +13,8 @@
     "path": "folders/Objects.yy",
   },
   "parentObjectId": {
-    "name": "obj_ev_button",
-    "path": "objects/obj_ev_button/obj_ev_button.yy",
+    "name": "obj_ev_window",
+    "path": "objects/obj_ev_window/obj_ev_window.yy",
   },
   "persistent": false,
   "physicsAngularDamping": 0.1,
@@ -29,12 +30,12 @@
   "physicsShapePoints": [],
   "physicsStartAwake": true,
   "properties": [
-    {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"lvl","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"noone","varType":0,},
+    {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"pack","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"noone","varType":0,},
   ],
   "solid": false,
   "spriteId": {
-    "name": "spr_ev_copy",
-    "path": "sprites/spr_ev_copy/spr_ev_copy.yy",
+    "name": "spr_ev_window",
+    "path": "sprites/spr_ev_window/spr_ev_window.yy",
   },
   "spriteMaskId": null,
   "visible": true,

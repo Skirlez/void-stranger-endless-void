@@ -1,15 +1,16 @@
 event_inherited()
 
 enum level_selector_modes {
+	// selecting levels
 	levels,
+	// selecting pack (still levels, since you're selecting thumbnail levels)
 	packs,
+	// selecting level for use in a pack
 	selecting_level_for_pack
 }
 
 
-function delete_level(save_name) {
-	file_delete(global.levels_directory + save_name + "." + level_extension)	
-}
+
 
 if mode != level_selector_modes.selecting_level_for_pack {
 	var back_button = instance_create_layer(200, 16, buttons_layer, asset_get_index("obj_ev_main_menu_button"), {
@@ -99,6 +100,44 @@ function level_clicked(display_inst) {
 		
 		instance_destroy(id)
 		
+		
+		var level_nodes = get_all_level_node_instances()
+		function try_level_name_and_rename(lvl, level_nodes) {
+			for (var i = 0; i < array_length(level_nodes); i++) {
+				var other_lvl = level_nodes[i].lvl;
+				if (other_lvl.name == lvl.name) {
+					var arr = ev_string_split(other_lvl.name, "_")
+					if array_length(arr) == 0 {
+						lvl.name += "_1"
+						try_level_name_and_rename(lvl, level_nodes)
+						return;
+					}
+					else {
+						var last = array_length(arr) - 1
+						if string_is_uint(arr[last]) {
+							var num = int64(arr[last])
+							lvl.name = ""
+							for (var i = 0; i < last; i++) {
+								lvl.name += arr[i] + "_"
+							}
+							lvl.name += string(num + 1)
+							try_level_name_and_rename(lvl, level_nodes)
+							return;
+						}
+						else {
+							lvl.name += "_1"
+							try_level_name_and_rename(lvl, level_nodes)
+							return;
+						}
+					}
+				}
+			}
+		}
+		
+		
+		try_level_name_and_rename(lvl, level_nodes)
+
+		
 		var level_size = global.pack_editor_instance.level_size;
 		instance_create_layer(
 			mouse_x - 224 * level_size / 2, 
@@ -113,6 +152,8 @@ function level_clicked(display_inst) {
 				image_xscale : level_size,
 				image_yscale : level_size
 			})
+			
+
 	}
 	
 }

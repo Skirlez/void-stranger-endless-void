@@ -1,4 +1,10 @@
-
+if type == ev_grube_types.level_cube && !visible {
+	if surface_exists(display_instance.game_surface) {
+		sprite_index = sprite_create_from_surface(display_instance.game_surface, 0, 0, 224, 144, false, false, 112, 72)	
+		visible = true;
+		instance_destroy(display_instance)
+	}
+}
 if death_timer != -1 {
 	death_timer++
 	

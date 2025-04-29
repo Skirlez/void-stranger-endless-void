@@ -48,6 +48,10 @@ function save_level(lvl)
 	file_text_write_string(file, str)
 	file_text_close(file)
 }
+function delete_level(save_name) {
+	file_delete(global.levels_directory + save_name + "." + level_extension)	
+}
+
 
 function save_pack(pack)
 {
@@ -57,4 +61,7 @@ function save_pack(pack)
 	var str = export_pack(pack)
 	file_text_write_string(file, str)
 	file_text_close(file)
+}
+function delete_pack(save_name) {
+	file_delete(global.packs_directory + save_name + "." + pack_extension)	
 }

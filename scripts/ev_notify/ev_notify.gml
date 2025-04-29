@@ -1,9 +1,24 @@
 
-function ev_notify(txt, spd = 6){
-	static obj = asset_get_index("obj_ev_notification")
-	instance_destroy(obj)
-	var i = instance_create_layer(5, -30, "Notifications", obj)
+function ev_notify(txt){
+	static object = agi("obj_ev_notification")
+	move_all_notifications_up()
+	with (object) {
+		vspeed = 6;
+	}
+	//instance_destroy(obj)
+	var i = instance_create_layer(5, -30, "Notifications", object)
 	i.txt = txt
-	i.vspeed = spd
+	i.vspeed = 6;
 
+}
+function move_all_notifications_up() {
+	static object = agi("obj_ev_notification")
+	with (object) {
+		while (vspeed > 0) {
+			y += vspeed
+			vspeed -= 0.3
+			if vspeed < 0
+				vspeed = 0	
+		}
+	}	
 }

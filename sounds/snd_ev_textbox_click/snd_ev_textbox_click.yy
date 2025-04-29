@@ -12,8 +12,8 @@
   "conversionMode": 0,
   "duration": 0.323628,
   "parent": {
-    "name": "Sounds",
-    "path": "folders/Sounds.yy",
+    "name": "EV SFX",
+    "path": "folders/Sounds/EV SFX.yy",
   },
   "preload": false,
   "sampleRate": 44100,

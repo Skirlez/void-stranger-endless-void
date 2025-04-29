@@ -1,6 +1,6 @@
 event_inherited()
 
-var play = instance_create_layer(208, 40, "LevelHighlightButtons", asset_get_index("obj_ev_play_button"))
+var play = instance_create_layer(208, 40, "LevelHighlightButtons", agi("obj_ev_play_button"))
 play.layer_num = 1
 play.lvl = lvl
 play.lvl_sha = lvl_sha
@@ -8,12 +8,19 @@ play.display_instance = display_instance
 play.highlighter = id;
 play.image_alpha = 0
 
-var copy = instance_create_layer(192, 40, "LevelHighlightButtons", asset_get_index("obj_ev_copy_button"))
-copy.layer_num = 1
-copy.lvl = lvl
-copy.image_alpha = 0
+var copy = instance_create_layer(192, 40, "LevelHighlightButtons", agi("obj_ev_executing_button"), {
+	layer_num : 1,
+	lvl : lvl,
+	image_alpha : 0,
+	sprite_index : agi("spr_ev_copy"),
+	func : function () {
+		var str = export_level(lvl);
+		clipboard_set_text(str)
+		ev_notify("Copied to clipboard!")
+	}
+})
 
-var back = instance_create_layer(200, 16, "LevelHighlightButtons", asset_get_index("obj_ev_main_menu_button"), {
+var back = instance_create_layer(200, 16, "LevelHighlightButtons", agi("obj_ev_main_menu_button"), {
 	base_scale_x : 1,
 	base_scale_y : 0.7,
 	txt : "Back",
@@ -59,12 +66,6 @@ if (!global.online_mode) {
 	edit.highlighter = id
 	edit.image_alpha = 0
 	
-	var claim = instance_create_layer(208, 73, "LevelHighlightButtons", asset_get_index("obj_ev_claim_button"))
-	claim.layer_num = 1
-	claim.lvl = lvl
-	claim.highlighter = id
-	claim.image_alpha = 0
-	
 	var deleteb = instance_create_layer(192, 90, "LevelHighlightButtons", asset_get_index("obj_ev_delete_button"))
 	deleteb.layer_num = 1
 	deleteb.level_select = instance_find(asset_get_index("obj_ev_level_select"), 0)
@@ -81,7 +82,6 @@ if (!global.online_mode) {
 
 
 	textbox_offset = 20;
-	add_child(claim)
 	add_child(deleteb)
 	add_child(upload)
 	add_child(edit)
@@ -121,7 +121,7 @@ description_textbox = instance_create_layer(201, 90 + textbox_offset, "LevelDesc
 
 author_textbox = instance_create_layer(201, 110 + textbox_offset, "LevelDescription", asset_get_index("obj_ev_textbox"), 
 {
-	txt : (lvl.author == "" ? "No author?" : "Author:\n" + lvl.author),
+	txt : make_author_textbox_text(lvl.author),
 	base_scale_x : 2,
 	base_scale_y : 1,
 	layer_num : 1,

@@ -21,8 +21,8 @@
   },
   "spriteNoExport": true,
   "textureGroupId": {
-    "name": "VoidStrangerGroup",
-    "path": "texturegroups/VoidStrangerGroup",
+    "name": "VoidStrangerTextureGroup",
+    "path": "texturegroups/VoidStrangerTextureGroup",
   },
   "tile_count": 49,
   "tileAnimation": {

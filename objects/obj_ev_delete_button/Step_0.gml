@@ -16,7 +16,10 @@ if deleting {
 		number--;
 		
 		if (number < 1) {
-			level_select.delete_level(save_name);
+			if pack_mode
+				delete_pack(save_name)
+			else
+				delete_level(save_name);
 			display_instance.destroy();
 			room_restart()
 		}

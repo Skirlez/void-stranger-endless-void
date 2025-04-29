@@ -74,3 +74,11 @@ function read_string_until(str, i, until_char) {
 	var result = string_copy(str, i, count);
 	return { substr : result, offset : count };
 }
+
+function string_to_array(str) {
+	var arr = array_create(string_length(str))
+	for (var i = 0; i < array_length(arr); i++) {
+		arr[i] = string_char_at(str, i + 1);	
+	}
+	return arr;
+}

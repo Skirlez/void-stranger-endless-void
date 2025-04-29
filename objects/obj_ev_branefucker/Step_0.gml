@@ -31,11 +31,8 @@ if global.is_merged {
 	asset_get_index("obj_ev_editor").last_death_count = global.death_count
 }
 
-var input_1 = evaluate_input(input_1_str)
-var input_2 = evaluate_input(input_2_str)
 var destroy_value = evaluate_input(destroy_value_str)
-
-value = execute(program, input_1, input_2, destroy_value)
+value = execute_branefuck(program, destroy_value)
 if (value == destroy_value) {
 	with (add_inst)
 		event_perform(ev_other, ev_user1)

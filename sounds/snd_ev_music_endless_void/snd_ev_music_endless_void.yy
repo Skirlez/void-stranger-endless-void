@@ -12,8 +12,8 @@
   "conversionMode": 0,
   "duration": 51.017097,
   "parent": {
-    "name": "Sounds",
-    "path": "folders/Sounds.yy",
+    "name": "EV Music",
+    "path": "folders/Sounds/EV Music.yy",
   },
   "preload": false,
   "sampleRate": 44100,

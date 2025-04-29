@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "snd_player_damage",
   "audioGroupId": {
-    "name": "VoidStrangerAudio",
-    "path": "audiogroups/VoidStrangerAudio",
+    "name": "audiogroup_void_stranger",
+    "path": "audiogroups/audiogroup_void_stranger",
   },
   "bitDepth": 1,
   "bitRate": 128,
@@ -12,8 +12,8 @@
   "conversionMode": 0,
   "duration": 0.969002,
   "parent": {
-    "name": "Sounds",
-    "path": "folders/Sounds.yy",
+    "name": "VS SFX",
+    "path": "folders/Sounds/VS SFX.yy",
   },
   "preload": false,
   "sampleRate": 44100,
