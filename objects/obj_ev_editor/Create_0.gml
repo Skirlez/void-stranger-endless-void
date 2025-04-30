@@ -27,11 +27,11 @@ global.server_ip = "skirlez.com"
 
 global.author = { username : "Anonymous", brand : int64(irandom_range(0, $FFFFFFFFF)) }
 global.stranger = 0;
+global.logging_socket = noone
 
 if !file_exists(global.save_directory + "ev_options.ini") {
 	ev_load()
 	ev_save();
-	ev_update_vars()
 }
 else
 	ev_load()
@@ -1328,7 +1328,7 @@ function reset_global_level() {
 	
 	global.level = new level_struct()
 
-	place_placeholder_tiles(global.level)
+	place_default_tiles(global.level)
 	
 	current_list = objects_list;
 	current_placeables = global.level.objects

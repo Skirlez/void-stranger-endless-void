@@ -18,8 +18,8 @@ if keyboard_check(vk_control) && keyboard_check_pressed(ord("V")) && !global.onl
 			ev_notify("Level pasted!")
 		}
 		catch (e) {
-			show_debug_message(e)
 			ev_notify("Couldn't paste level!")	
+			log_error(e)
 		}
 
 
@@ -42,8 +42,8 @@ if keyboard_check(vk_control) && keyboard_check_pressed(ord("V")) && !global.onl
 			ev_notify("Pack pasted!")
 		}
 		catch (e) {
-			show_debug_message(e)
 			ev_notify("Couldn't paste pack!")
+			log_error(e)
 		}
 
 

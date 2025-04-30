@@ -41,7 +41,6 @@ if mode != level_selector_modes.selecting_level_for_pack {
 			func : function () {
 				global.pack_editor_instance.reset_global_pack();
 				ev_claim_pack(global.pack)
-				
 				room_goto(asset_get_index("rm_ev_pack_editor"))	
 			}
 		});

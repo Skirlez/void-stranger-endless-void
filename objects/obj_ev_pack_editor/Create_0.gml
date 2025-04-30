@@ -30,7 +30,6 @@ enum pack_things {
 }
 
 
-
 select_tool_happening = new ev_happening();
 function select(thing) {
 	selected_thing = thing;
@@ -214,6 +213,8 @@ brand_node.on_config = function (node_instance) {
 		node_instance : node_instance
 	});
 }
+
+global.level_node_display_scale = 0.2;
 level_node = new node_struct("lv", "obj_ev_display");
 level_node.properties_generator = function () {
 	return noone; // if this is called something went wrong
@@ -237,8 +238,8 @@ level_node.write_instance_function = function (node_state) {
 		draw_beaten : false,
 		no_spoiling : false,
 		display_context : display_contexts.pack_editor,
-		image_xscale : 0.2,
-		image_yscale : 0.2
+		image_xscale : global.level_node_display_scale,
+		image_yscale : global.level_node_display_scale
 	})
 }
 level_node.play_evaluate_immediate = function (node_state) {
@@ -262,6 +263,12 @@ level_node.on_config = function (node_instance) {
 		node_instance : node_instance
 	});
 }
+
+redirect_node = new node_struct("re", "obj_ev_pack_redirect_node");
+redirect_node.play_evaluate_immediate = function (node_state) {
+	return node_state.exits[0];	
+}
+
 
 music_node = new node_struct("mu", "obj_ev_pack_music_node");
 music_node.properties_generator = function () {
@@ -390,15 +397,21 @@ comment_node.on_config = function (node_instance) {
 
 oob_node = new node_struct("ob", "obj_ev_pack_oob_node", node_flags.only_one);
 end_node = new node_struct("en", "obj_ev_pack_end_node");
+end_node.play_evaluate = function () {
+	end_pack()	
+}
+
 
 // List of all the nodes a user should be able to create
-nodes_list = [brand_node, music_node, branefuck_node, thumbnail_node, random_node, comment_node, oob_node, end_node];
+nodes_list = [redirect_node, music_node, random_node, comment_node, thumbnail_node, oob_node, branefuck_node, brand_node, end_node];
 
 
 function reset_global_pack() {
-	global.pack = new pack_struct()
-	array_push(global.pack.starting_node_states, 
-		new node_with_state(root_node,
-		 350, 2160 / 2))
+	var pack = new pack_struct();
+	place_default_nodes(pack)
+	global.pack = pack;
 }
 reset_global_pack();
+
+
+global.pack_zoom_gain = 1;

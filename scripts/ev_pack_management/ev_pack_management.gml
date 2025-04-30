@@ -8,13 +8,7 @@ function pack_struct() constructor {
 	save_name = generate_save_name()
 	upload_date = "";
 	last_edit_date = "";
-	
-	
-	current_node = noone;
 }
-
-
-
 
 function place_pack_into_room(pack) {
 	var node_instances = get_all_node_instances();
@@ -86,9 +80,6 @@ function convert_room_nodes_to_structs() {
 	}
 	
 	ds_map_destroy(map)
-	
-	
-	
 	return starting_node_states;
 }
 
@@ -105,11 +96,39 @@ function import_pack_nodeless(pack_string) {
 	return pack;
 }
 
+function place_default_nodes(pack) {
+	var root_node_state = new node_with_state(global.pack_editor_instance.root_node, 270, 2160 / 2);
+	
+	var music_node_state = new node_with_state(global.pack_editor_instance.music_node, 330, 2160 / 2, {
+		music : global.music_names[1]	
+	})
+	array_push(root_node_state.exits, music_node_state)
+	
+	var level = new level_struct();
+	level.name = "Level!!"
+	level.bount = 1;
+	place_default_tiles(level);
+	var level_node_state = new node_with_state(global.pack_editor_instance.level_node, 
+	390 - global.level_node_display_scale * 224 / 2, 
+	2160 / 2 - global.level_node_display_scale * 144 / 2,
+	{
+		level : level,
+		
+	});
+
+	array_push(music_node_state.exits, level_node_state)
+	
+	var end_node_state = new node_with_state(global.pack_editor_instance.end_node, 450, 2160 / 2);
+	array_push(level_node_state.exits, end_node_state)
+	
+	array_push(pack.starting_node_states, root_node_state)
+}
+
+
 function import_pack(pack_string) {
 	var pack = new pack_struct();
 	
 	var arr = ev_string_split(pack_string, "&")
-	
 	pack.version = int64_safe(arr[0], 1);
 	pack.name = base64_decode(arr[1])
 	pack.description = base64_decode(arr[2])
@@ -148,7 +167,27 @@ function import_pack(pack_string) {
 		if (!has_anyone_connected[i])
 			array_push(pack.starting_node_states, all_node_states[i])
 	}
-		
+	if array_length(pack.starting_node_states) == 0 {
+		log_error($"Trying to import invalid pack with no starting nodes: {pack_string}")
+		place_default_nodes(pack);
+		return pack;
+	}
+	
+	// Find root node and put it in the first index
+	for (var i = 1; i < array_length(pack.starting_node_states); i++) {
+		var node_state = pack.starting_node_states[i]
+		if node_state.node == global.pack_editor_instance.root_node {
+			var temp = pack.starting_node_states[0];
+			pack.starting_node_states[0] = node_state;
+			pack.starting_node_states[i] = temp;
+		}
+	}
+	if pack.starting_node_states[0].node != global.pack_editor_instance.root_node {
+		log_error($"Tried to import invalid pack with no root node: {pack_string}")
+		pack.starting_node_states = []
+		place_default_nodes(pack);
+	}
+	
 	return pack;
 }
 

@@ -80,9 +80,8 @@ function get_node_at_position(pos_x, pos_y) {
 function play_pickup_sound(pitch) {
 	static sounds = [agi("snd_ev_node_pickup_1"), agi("snd_ev_node_pickup_2"), agi("snd_ev_node_pickup_3")]
 	
-	var gain = (1 - (global.pack_editor_instance.zoom + 10) / (global.pack_editor_instance.last_possible_zoom + 10)) * 2
-	gain = clamp(gain, 0.2, 1.6)
-	audio_play_sound(sounds[irandom_range(0, array_length(sounds) - 1)], 10, false, gain, 0, pitch)
+
+	audio_play_sound(sounds[irandom_range(0, array_length(sounds) - 1)], 10, false, global.pack_zoom_gain, 0, pitch)
 }
 function node_instance_step() {
 	static root_node_obj = asset_get_index("obj_ev_pack_root")
@@ -111,11 +110,11 @@ function node_instance_step() {
 			if ev_mouse_right_pressed() {
 				if max_exits == 0 {
 					shake_seconds = 0.5;
-					audio_play_sound(not_possible_sound, 10, false);	
+					audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);	
 				}
 				else {
 					static start_connect_sound = agi("snd_ev_node_start_connect")
-					audio_play_sound(start_connect_sound, 10, false, 1, 0, random_range(0.9, 1.1));	
+					audio_play_sound(start_connect_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1));	
 					connecting_exit = true;
 				}
 			}
@@ -128,7 +127,7 @@ function node_instance_step() {
 				
 				if !(global.pack_editor_instance.judging_node == id) {
 					static hammer_sound = asset_get_index("snd_ev_hammer_judge")
-					audio_play_sound(hammer_sound, 10, false, 1, 0, random_range(0.9, 1.1))
+					audio_play_sound(hammer_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 					if !(node_type.flags & node_flags.unremovable) {
 						instance_create_layer(center_x, center_y, "NodeJudgments", judgment_object, {
 							node_inst : id,
@@ -152,7 +151,7 @@ function node_instance_step() {
 						global.pack_editor_instance.judging_node = id;
 					else {
 						shake_seconds = 0.5;
-						audio_play_sound(not_possible_sound, 10, false);
+						audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);
 					}
 				}
 				else
@@ -163,13 +162,19 @@ function node_instance_step() {
 			if ev_mouse_pressed() {
 				static wrench_sound = asset_get_index("snd_ev_use_wrench");
 				node_type.on_config(id);	
-				audio_play_sound(wrench_sound, 10, false, 1, 0, random_range(0.9, 1.1))
+				audio_play_sound(wrench_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 			}
 		}
 		else if global.pack_editor_instance.selected_thing == pack_things.play {
 			if ev_mouse_pressed() {
-				global.mouse_layer = 1;
-				global.pack_editor_instance.start_play_transition(id)
+				if object_index != global.display_object {
+					shake_seconds = 0.5;
+					audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);	
+				}
+				else {
+					global.pack_editor_instance.start_play_transition(id)
+					global.mouse_layer = 1;	
+				}
 			}
 		}
 	}
@@ -191,17 +196,17 @@ function node_instance_step() {
 			if instance_exists(node_inst) {
 				if (!node_inst.can_connect_to_me) {
 					node_inst.shake_seconds = 0.5;
-					audio_play_sound(not_possible_sound, 10, false);
+					audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);
 				}
 				else if (array_length(exit_instances) >= max_exits) {
 					shake_seconds = 0.5;
-					audio_play_sound(not_possible_sound, 10, false);
+					audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);
 				}
 				else if (!ev_array_contains(exit_instances, node_inst)) {
 					// connection successful
 					array_push(exit_instances, node_inst)
 					var connect_sound = asset_get_index("snd_ev_node_connect")
-					audio_play_sound(connect_sound, 10, false, 1, 0, random_range(0.9, 1.1))
+					audio_play_sound(connect_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 					
 					// automatically give brane count to connected level nodes
 					if node_inst.object_index == global.display_object && array_length(exit_instances) == 1 {

@@ -1,1 +1,2 @@
-sprite_delete(brand_sprite)
+if sprite_exists(brand_sprite)
+	sprite_delete(brand_sprite)

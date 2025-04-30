@@ -149,6 +149,7 @@ else if (edit_pack_transition != -1) {
 else if play_pack_transition_time != -1 {
 	play_pack_transition_time--;
 	if play_pack_transition_time == 0 {
+		global.pack_save = noone;
 		room_goto(global.pack_level_room)
 	}
 }

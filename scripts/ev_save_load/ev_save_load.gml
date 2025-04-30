@@ -10,6 +10,9 @@ function ev_save(){
 	ini_write_string("options", "wings", global.wings_style)
 	ini_write_string("options", "blade", global.blade_style)
 	
+	ini_write_string("options", "should_log", global.should_log_udp)
+	ini_write_string("options", "logging_port", global.logging_port)
+	
 	ini_write_string("stats", "grube", global.highest_grube_stack)
 	
 	ini_close()
@@ -25,6 +28,9 @@ function ev_load() {
 	global.blade_style = ini_read_real("options", "blade", 0)
 	global.highest_grube_stack = ini_read_real("stats", "grube", 1)
 	
+	global.should_log_udp = ini_read_real("options", "should_log", false)
+	global.logging_port = ini_read_real("options", "logging_port", 1235)
+	
 	ini_close()
 	ev_update_vars()
 }
@@ -36,6 +42,15 @@ function ev_update_vars() {
 	global.packs_directory = game_save_id + folder + "/packs/"
 	if (global.is_merged)
 		asset_get_index("scr_menueyecatch")(0)
+	
+	if global.logging_socket != noone {
+		network_destroy(global.logging_socket)
+		global.logging_socket = noone;	
+	}
+	if global.should_log_udp {
+		global.logging_socket = network_create_socket(network_socket_udp)
+		log_info($"EV Starting to log on port {global.logging_port}")
+	}
 
 }
 

@@ -2,7 +2,8 @@ if room != global.pack_editor_room
 	exit;
 	
 	
-
+var gain = (1 - (global.pack_editor_instance.zoom + 10) / (global.pack_editor_instance.last_possible_zoom + 10)) * 2
+global.pack_zoom_gain = clamp(gain, 0.2, 1.6)
 
 if global.void_radio_on {
 	var file = agi(audio_get_name(global.music_inst))

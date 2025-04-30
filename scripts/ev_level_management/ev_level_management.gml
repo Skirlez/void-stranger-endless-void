@@ -25,7 +25,7 @@ function level_struct() constructor {
 	last_edit_date = "";
 	
 }
-function place_placeholder_tiles(level) {
+function place_default_tiles(level) {
 	level.objects[@ 4][6] = new tile_with_state(global.editor_instance.object_player)
 	level.tiles[@ 2][6] = new tile_with_state(global.editor_instance.tile_exit)
 	for (var i = 0; i < 3; i++) {
@@ -195,9 +195,9 @@ function import_level(level_string) {
 	var version_string = strings[0];
 	var version = int64_safe(version_string, 0);
 	if (version <= 0)
-		return place_placeholder_tiles(level)
+		return place_default_tiles(level)
 	if (version > global.latest_lvl_format) {
-		return place_placeholder_tiles(level)
+		return place_default_tiles(level)
 	}
 	var section_amount;
 	if version <= 2
@@ -206,7 +206,7 @@ function import_level(level_string) {
 		section_amount = 13;
 	
 	if array_length(strings) != section_amount {
-		return place_placeholder_tiles(level);
+		return place_default_tiles(level);
 	}
 	
 	level.name = base64_decode(strings[1]);

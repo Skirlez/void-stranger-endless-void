@@ -196,9 +196,11 @@ credits = [
 		new ev_credits_text("fatboy94"),
 		new ev_credits_text("SubUnit_FieldRec"),
 		new ev_credits_text("Snake16547"),
+		new ev_credits_text("Ruben_Uitenweerde"),
 		new ev_credits_spacing(),
 		new ev_credits_text("Links and licenses"),
-		new ev_credits_text("available in credits.txt"),
+		new ev_credits_text("available in"),
+		new ev_credits_text("SFX_CREDITS.md")
 	],
 	[
 		new ev_credits_header("Special Thanks"),
