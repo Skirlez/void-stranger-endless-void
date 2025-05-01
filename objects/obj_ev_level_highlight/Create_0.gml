@@ -121,7 +121,7 @@ description_textbox = instance_create_layer(201, 90 + textbox_offset, "LevelDesc
 
 author_textbox = instance_create_layer(201, 110 + textbox_offset, "LevelDescription", asset_get_index("obj_ev_textbox"), 
 {
-	txt : make_author_textbox_text(lvl.author),
+	txt : ev_make_author_textbox_text(lvl.author),
 	base_scale_x : 2,
 	base_scale_y : 1,
 	layer_num : 1,

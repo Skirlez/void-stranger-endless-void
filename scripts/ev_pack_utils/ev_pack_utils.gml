@@ -77,3 +77,40 @@ function get_all_node_instances() {
 	return nodes;
 	
 }
+
+// checks if any other nodes has this level's name, and if they do,
+// renames the level by adding _number. or if there's already _number at the end,
+// increases the number.
+function try_level_name_and_rename(lvl, level_nodes) {
+	for (var i = 0; i < array_length(level_nodes); i++) {
+		var other_lvl = level_nodes[i].lvl;
+		if (other_lvl == lvl)
+			continue;
+		if (other_lvl.name == lvl.name) {
+			var arr = ev_string_split(other_lvl.name, "_")
+			if array_length(arr) == 0 {
+				lvl.name += "_1"
+				try_level_name_and_rename(lvl, level_nodes)
+				return;
+			}
+			else {
+				var last = array_length(arr) - 1
+				if string_is_uint(arr[last]) {
+					var num = int64(arr[last])
+					lvl.name = ""
+					for (var i = 0; i < last; i++) {
+						lvl.name += arr[i] + "_"
+					}
+					lvl.name += string(num + 1)
+					try_level_name_and_rename(lvl, level_nodes)
+					return;
+				}
+				else {
+					lvl.name += "_1"
+					try_level_name_and_rename(lvl, level_nodes)
+					return;
+				}
+			}
+		}
+	}
+}

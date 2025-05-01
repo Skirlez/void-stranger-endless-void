@@ -101,46 +101,13 @@ function level_clicked(display_inst) {
 		
 		
 		var level_nodes = get_all_level_node_instances()
-		function try_level_name_and_rename(lvl, level_nodes) {
-			for (var i = 0; i < array_length(level_nodes); i++) {
-				var other_lvl = level_nodes[i].lvl;
-				if (other_lvl.name == lvl.name) {
-					var arr = ev_string_split(other_lvl.name, "_")
-					if array_length(arr) == 0 {
-						lvl.name += "_1"
-						try_level_name_and_rename(lvl, level_nodes)
-						return;
-					}
-					else {
-						var last = array_length(arr) - 1
-						if string_is_uint(arr[last]) {
-							var num = int64(arr[last])
-							lvl.name = ""
-							for (var i = 0; i < last; i++) {
-								lvl.name += arr[i] + "_"
-							}
-							lvl.name += string(num + 1)
-							try_level_name_and_rename(lvl, level_nodes)
-							return;
-						}
-						else {
-							lvl.name += "_1"
-							try_level_name_and_rename(lvl, level_nodes)
-							return;
-						}
-					}
-				}
-			}
-		}
-		
-		
 		try_level_name_and_rename(lvl, level_nodes)
 
 		
 		var level_size = global.pack_editor_instance.level_size;
 		instance_create_layer(
 			mouse_x - 224 * level_size / 2, 
-			mouse_y - 144 * level_size / 2, "PackLevels", display_object, 
+			mouse_y - 144 * level_size / 2, "PackLevels", global.display_object, 
 			{
 				lvl : lvl,
 				name : lvl.name,
@@ -160,7 +127,7 @@ function level_clicked(display_inst) {
 function destroy_displays(except = noone) {
 	for (var i = 0; i < array_length(children); i++) {
 		var inst = children[i]
-		if (inst.object_index == display_object && inst != except) { 
+		if (inst.object_index == global.display_object && inst != except) { 
 			array_delete(children, i, 1)
 			i--;
 			instance_destroy(inst)	
@@ -201,7 +168,7 @@ function create_displays() {
 		if mode == level_selector_modes.packs {
 			var nodeless_pack = nodeless_packs[i];
 			
-			var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
+			var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", global.display_object, {
 				lvl : lvl_struct,
 				name : nodeless_pack.name,
 				brand : nodeless_pack.author_brand,
@@ -225,7 +192,7 @@ function create_displays() {
 			else
 				beat_value = 0;
 			
-			var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", display_object, {
+			var display = instance_create_layer(20 + pos * 50, 40 + line * 50, "Levels", global.display_object, {
 				lvl : lvl_struct,
 				lvl_sha : sha,
 				name : lvl_struct.name,
@@ -286,7 +253,6 @@ if (mode == level_selector_modes.packs)
 
 
 
-display_object = asset_get_index("obj_ev_display")
 files = []
 nodeless_packs = [];
 function read_offline_levels() {

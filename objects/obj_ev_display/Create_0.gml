@@ -286,7 +286,11 @@ function destroy() {
 	}
 	instance_destroy(id)
 }
-function delete_cached_surface() {
+function delete_cached_game_surface() {
 	if surface_exists(game_surface)
 		surface_free(game_surface)
+}
+function delete_cached_name_surface() {
+	if surface_exists(name_surface)
+		surface_free(name_surface)
 }

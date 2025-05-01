@@ -170,7 +170,7 @@ function node_struct(node_id, object_name, flags = 0) constructor {
 	self.on_config = global.editor_instance.empty_function;
 	
 	// what to do when evaluated while playing
-	// nodes that have this defined can immediately tell you where to go in the pack
+	// nodes that use this function can immediately tell you where to go in the pack
 	// if they can't, returns noone
 	self.play_evaluate_immediate = function () {
 		return noone;	
@@ -255,11 +255,12 @@ level_node.play_evaluate = function (node_state) {
 			instance_create_layer(x, y, "Effects", agi("obj_darkness_begins"))
 			is_first_level = false;
 		}
+		in_brand_room = is_level_brand_room(global.level)
 	}
 }
 level_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 6, 6, asset_get_index("obj_ev_level_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 10, 7, asset_get_index("obj_ev_level_node_window"), {
 		node_instance : node_instance
 	});
 }
@@ -327,20 +328,10 @@ branefuck_node.play_evaluate_immediate = function(node_state) {
 	var return_value = execute_branefuck(program, undefined);
 	if return_value == undefined {
 		ev_notify("Branefuck node errored!")
-		return_value = 1	
+		return_value = 1
 	}
-	else if return_value < 1 {
-		ev_notify($"(Too small: {return_value} < 1)")
-		ev_notify("Branefuck node returned invalid exit number!")
-		
-		return_value = 1;
-	}
-	else if return_value > array_length(node_state.exits) {
-		ev_notify($"(Too big: {return_value} > {array_length(node_state.exits)})")
-		ev_notify($"Branefuck node returned invalid exit number!")
-		return_value = 1;
-	}
-	return node_state.exits[return_value - 1];
+	var index = clamp(return_value, 1, array_length(node_state.exits)) - 1
+	return node_state.exits[index];
 	
 }
 

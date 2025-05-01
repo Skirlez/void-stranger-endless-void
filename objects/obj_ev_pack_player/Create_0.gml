@@ -78,6 +78,7 @@ function on_room_create() {
 	}
 	else {
 		current_node_state.node.play_evaluate(current_node_state);
+		
 	}
 	
 	alarm[0] = 1
@@ -85,3 +86,4 @@ function on_room_create() {
 
 // checked and changed at level_node.play_evaluate
 is_first_level = !global.playtesting;
+is_brand_room = false;

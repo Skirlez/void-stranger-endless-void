@@ -212,12 +212,12 @@ function node_instance_step() {
 					if node_inst.object_index == global.display_object && array_length(exit_instances) == 1 {
 						if object_index == root_node_obj {
 							node_inst.lvl.bount = 1;
-							node_inst.delete_cached_surface();
+							node_inst.delete_cached_game_surface();
 						}
 						else if object_index == global.display_object {
 							if lvl.bount != -1 {
 								node_inst.lvl.bount = lvl.bount + 1;
-								node_inst.delete_cached_surface();	
+								node_inst.delete_cached_game_surface();	
 							}
 							else
 								node_inst.lvl.bount = -1;

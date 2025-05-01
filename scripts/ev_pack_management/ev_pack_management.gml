@@ -45,8 +45,6 @@ function convert_room_nodes_to_structs() {
 	// creates and returns a node state struct for this node instance
 	// any nodes this node connects to will also have state structs created and linked.
 	function explore_node_and_convert_to_struct(node_inst, explored_instances_map) {
-		static display_object = asset_get_index("obj_ev_display");
-		
 		if (ds_map_exists(explored_instances_map, node_inst))
 			return ds_map_find_value(explored_instances_map, node_inst);
 		

@@ -10,7 +10,7 @@
   "bitRate": 128,
   "compression": 1,
   "conversionMode": 0,
-  "duration": 1.135271,
+  "duration": 0.436604,
   "parent": {
     "name": "EV SFX",
     "path": "folders/Sounds/EV SFX.yy",
