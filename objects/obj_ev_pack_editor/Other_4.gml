@@ -6,6 +6,9 @@ if (room == global.pack_editor_room) {
 	ev_stop_music()
 	zoom = 0;
 	calculate_zoom()
+	last_nid = -1;
+	undo_actions = []
+	ds_map_clear(node_id_to_instance_map)
 	place_pack_into_room(global.pack)
 	selected_thing = pack_things.nothing
 }

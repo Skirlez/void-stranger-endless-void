@@ -174,7 +174,7 @@ if room == global.editor_room {
 		
 				if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
 					undo_repeat_frames_speed = undo_repeat_frames_max_speed;
-				undo_repeat = undo_repeat_frames_start-undo_repeat_frames_speed
+				undo_repeat = undo_repeat_frames_start - undo_repeat_frames_speed
 			}
 		}
 		else {

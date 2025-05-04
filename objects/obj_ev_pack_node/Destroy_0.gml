@@ -1,0 +1,1 @@
+node_instance_destroy()

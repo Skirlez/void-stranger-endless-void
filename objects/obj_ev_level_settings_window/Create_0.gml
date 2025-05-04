@@ -73,7 +73,7 @@ for (var i = 0; i < 5; i++) {
 	add_child(burdens[i])
 }
 
-var man = instance_create_layer(112 + 43, 72 - 16, "WindowElements", asset_get_index("obj_ev_man"))
+var man = instance_create_layer(112 + 43, 72 - 14, "WindowElements", asset_get_index("obj_ev_man"))
 add_child(man)
 
 music_select = instance_create_layer(112 + 48, 72 + 4, "WindowElements", asset_get_index("obj_ev_music_select"), {

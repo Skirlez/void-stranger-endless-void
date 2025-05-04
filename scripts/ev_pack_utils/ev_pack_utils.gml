@@ -67,16 +67,23 @@ function get_all_level_node_instances() {
 }
 
 function get_all_node_instances() {
-	var nodes = get_all_level_node_instances();
+	var node_instances = get_all_level_node_instances();
 	
 	static nodes_layer = layer_get_id("Nodes")
 	var node_instance_elements = layer_get_all_elements(nodes_layer)
 	for (var i = 0; i < array_length(node_instance_elements); i++) {
-		array_push(nodes, layer_instance_get_instance(node_instance_elements[i]))	
+		array_push(node_instances, layer_instance_get_instance(node_instance_elements[i]))	
 	}
-	return nodes;
+	return node_instances;
 	
 }
+function destroy_all_node_instances() {
+	var node_instances = get_all_node_instances();
+	for (var i = 0; i < array_length(node_instances); i++) {
+		instance_destroy(node_instances[i])
+	}
+}
+
 
 // checks if any other nodes has this level's name, and if they do,
 // renames the level by adding _number. or if there's already _number at the end,

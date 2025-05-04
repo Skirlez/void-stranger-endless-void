@@ -29,15 +29,37 @@ function node_instance_setup(max_exits = 999, can_connect_to_me = true, center_x
 	scale_y_start = image_yscale
 	center_x_offset_start = center_x_offset;
 	center_y_offset_start = center_y_offset;
+	
+	
+	x_when_started_moving = x;
+	y_when_started_moving = y;
+	
+	if !variable_instance_exists(id, "node_id") {
+		global.pack_editor_instance.last_nid++;
+		node_id = global.pack_editor_instance.last_nid
+	}
+	ds_map_add(global.pack_editor_instance.node_id_to_instance_map, node_id, id)	
+
 }
 
+function move_node_to_position(instance, new_x, new_y) {
+	with (instance) {
+		x = new_x
+		y = new_y
 
-function with_all_nodes(func, args) {
-	with (global.node_object)
-		func(id, args);
-	with (global.display_object)
-		func(id, args);
+		if (y < 0)
+			y = 0
+		if (y > room_height - sprite_height)
+			y = room_height - sprite_height
+		if (x < 0)
+			x = 0
+		if (x > room_width - sprite_width)
+			x = room_width - sprite_width
+		center_x = x + center_x_offset
+		center_y = y + center_y_offset
+	}
 }
+
 
 function expand_node_instance(node_instance) {
 	var scale_factor = (object_index == global.display_object) ? 1.2 : 1.3
@@ -94,7 +116,6 @@ function node_instance_step() {
 			// TODO
 			if ev_mouse_pressed() {
 				static node_button = asset_get_index("obj_ev_pack_node_button")
-				
 				node_button.pick(id);
 				global.pack_editor_instance.select(pack_things.nothing)
 				in_menu = false;
@@ -103,6 +124,8 @@ function node_instance_step() {
 		}
 		if global.pack_editor_instance.selected_thing == pack_things.nothing {
 			if ev_mouse_pressed() {
+				x_when_started_moving = x;
+				y_when_started_moving = y;
 				mouse_moving = true;
 				play_pickup_sound(random_range(1, 1.05))
 				expand_node_instance(id)
@@ -184,8 +207,16 @@ function node_instance_step() {
 	
 	if ev_mouse_released() && mouse_moving {
 		mouse_moving = false;
+		play_pickup_sound(0.8)
 		contract_node_instance(id)
-		play_pickup_sound(0.8)	
+		global.pack_editor_instance.add_undo_action(function (args) {
+			var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
+			move_node_to_position(instance, args.old_x, args.old_y)
+		}, {
+			node_id : node_id,
+			old_x : x_when_started_moving,
+			old_y : y_when_started_moving
+		})
 	}
 	if connecting_exit {
 		if ev_mouse_held() || global.pack_editor_instance.selected_thing != pack_things.nothing
@@ -229,23 +260,36 @@ function node_instance_step() {
 		}
 	}
 	if (mouse_moving) {
-		x = mouse_x - center_x_offset
-		y = mouse_y - center_y_offset
-			
-		if (y < 0)
-			y = 0
-		if (y > room_height - sprite_height)
-			y = room_height - sprite_height
-		if (x < 0)
-			x = 0
-		if (x > room_width - sprite_width)
-			x = room_width - sprite_width
-		center_x = x + center_x_offset
-		center_y = y + center_y_offset
+		move_node_to_position(id, mouse_x - center_x_offset, mouse_y - center_y_offset)
 	}
 	
 	if (shake_seconds > 0) {
 		shake_seconds -= 1/60;
 		shake_x_offset = sin(16 * shake_seconds * pi) * 3;
 	}
+}
+
+function node_instance_destroy() {
+	ds_map_delete(global.pack_editor_instance.node_id_to_instance_map, node_id)	
+}
+
+function create_falling_arrow_and_number(node_instance, other_node_instance, index, total_exits) {
+	var t = get_pack_line_arrow_progress();
+	instance_create_layer(
+		lerp(node_instance.center_x, other_node_instance.center_x, t),
+		lerp(node_instance.center_y, other_node_instance.center_y, t),
+		"ConnectingLines",
+		asset_get_index("obj_ev_falling_pack_arrow"))
+	var more_than_one_exit = (total_exits > 1)
+	var number = (index + 1) * more_than_one_exit
+	if number == 0
+		exit;
+	var t2 = get_pack_line_number_progress();
+	instance_create_layer(
+		lerp(node_instance.center_x, other_node_instance.center_x, t2),
+		lerp(node_instance.center_y, other_node_instance.center_y, t2),
+		"ConnectingLines",
+		asset_get_index("obj_ev_falling_pack_number"), {
+			number : number	
+		})
 }

@@ -78,13 +78,25 @@ if play_transition_time != -1 {
 	}
 }
 
-/*
-if keyboard_check_pressed(ord("S")) {
-	var room_nodes = convert_room_nodes_to_structs()
-	global.pack.starting_node_states = room_nodes;
-	var str = export_pack(global.pack)
-	show_debug_message(str)
+if keyboard_check(vk_control) && global.mouse_layer == 0 && !instance_exists(agi("obj_ev_pack_node_judgment")) {
+	if keyboard_check_pressed(ord("Z")) {
+		undo_repeat = undo_repeat_frames_start
+		undo();
+	}
 	
-	var pack = import_pack(str);
-	place_pack_into_room(pack);
+	if keyboard_check(ord("Z")) {
+		undo_repeat--;	
+		if undo_repeat <= 0 {
+			undo()
+			undo_repeat_frames_speed += 2
+		
+			if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
+				undo_repeat_frames_speed = undo_repeat_frames_max_speed;
+			undo_repeat = undo_repeat_frames_start - undo_repeat_frames_speed
+		}
+	}
+	else {
+		undo_repeat = -1	
+		undo_repeat_frames_speed = 0
+	}
 }

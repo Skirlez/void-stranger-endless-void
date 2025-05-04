@@ -21,8 +21,12 @@ function node_with_state(node, pos_x, pos_y, properties = node.properties_genera
 		return node.node_id + "#" + position_string + "#" + exits_string + "#" + properties_string;
 	}
 	
-	function write_instance() {
-		return node.write_instance_function(self);	
+	function write_instance(node_id = noone) {
+		if node_id == noone {
+			global.pack_editor_instance.last_nid++;
+			node_id = global.pack_editor_instance.last_nid;	
+		}
+		return node.write_instance_function(self, node_id);	
 	}
 	
 	self.intermediary_numbered_exits = [];
