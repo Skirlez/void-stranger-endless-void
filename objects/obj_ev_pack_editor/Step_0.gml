@@ -58,8 +58,8 @@ if play_transition_time != -1 {
 	calculate_zoom()
 	var mult = power(zoom_factor, zoom);
 	var final_mult = power(zoom_factor, zoom_level_needed_to_be_directly_on_level);
-	var target_x = play_transition_target.center_x - (224 / 2) * level_size * (mult/final_mult);
-	var target_y = play_transition_target.center_y - (144 / 2) * level_size * (mult/final_mult);
+	var target_x = play_transition_target.center_x - (224 / 2) * global.level_node_display_scale * (mult/final_mult);
+	var target_y = play_transition_target.center_y - (144 / 2) * global.level_node_display_scale * (mult/final_mult);
 	
 	cam_x = lerp(cam_x, target_x, 0.5)
 	cam_y = lerp(cam_y, target_y, 0.5)
@@ -68,11 +68,11 @@ if play_transition_time != -1 {
 	play_transition_time--;
 	if play_transition_time == 0 {
 		global.mouse_layer = 0;
+		global.playtesting = true;
 		global.pack.starting_node_states = convert_room_nodes_to_structs() 
 		global.pack_save = {
-			level_name : play_transition_target.lvl.name
+			level_name : play_transition_target.properties.level.name
 		}
-		global.playtesting = true;
 		room_goto(global.pack_level_room)
 		play_transition_time = -1;
 	}

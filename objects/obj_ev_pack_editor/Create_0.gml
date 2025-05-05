@@ -17,9 +17,9 @@
 
 global.pack_editor_instance = id;
 
-
 previous_mouse_x = mouse_x;
 previous_mouse_y = mouse_y;
+
 dragging_camera = false;
 zoom = 0;
 enum pack_things {
@@ -56,12 +56,13 @@ function on_menu_destroy() {
 	camera_set_view_pos(view_camera[0], menu_remember_x, menu_remember_y)	
 }
 
-level_size = 0.2;
+global.level_node_display_scale = 0.2;
+
 zoom_factor = 1.2;
 
 // since we want the zoom multiplier (zoom_factor^x)
 // to be level_size, x would have to be log of zoom_factor(level_size)
-zoom_level_needed_to_be_directly_on_level = logn(zoom_factor, level_size); 
+zoom_level_needed_to_be_directly_on_level = logn(zoom_factor, global.level_node_display_scale); 
 
 // last possible zoom level
 // 224 * 1.2^zoom = room_width
@@ -107,7 +108,9 @@ play_transition_time = -1;
 function start_play_transition(target_node) {
 	play_transition_time = 40;
 	play_transition_target = target_node;
-	
+	remember_zoom = zoom;
+	remember_camera_x = camera_get_view_x(view_camera[0])
+	remember_camera_y = camera_get_view_y(view_camera[0])	
 	var border = asset_get_index("obj_ev_pack_border")
 	if instance_exists(border) && border.visible {
 		border.toggle();
@@ -117,10 +120,7 @@ function start_play_transition(target_node) {
 		border_hide_button.visible = false;
 }
 
-// read node properties from instance
-default_instance_reader = function (inst) {
-	return global.empty_struct;
-}
+	
 // read node properties from string
 default_reader = function (properties_str /*, version */) {
 	return { value : global.empty_struct, offset : 0 };
@@ -129,22 +129,15 @@ default_reader = function (properties_str /*, version */) {
 default_writer = function (node_state, node_index_map) {
 	return "";
 }
-// create node instance from node state and return the instance
-default_instance_writer = function (node_state, node_id) {
-	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, {
-		node_id : node_id
-	});
-}
+
 
 function get_node_state_from_instance(node_inst) {
-	var node = global.object_node_map[? node_inst.object_index]
-	var properties = node.read_instance_function(node_inst);
-	
-	return new node_with_state(node, node_inst.x, node_inst.y, properties)
+	return new node_with_state(node_inst.node_type, node_inst.x, node_inst.y, node_inst.properties)
 }
 
 
 enum node_flags {
+	none = 0,
 	// cannot be removed
 	unremovable = 1,
 	// if set, you cannot place more than 1 of this node type
@@ -154,23 +147,29 @@ enum node_flags {
 
 global.id_node_map = ds_map_create()
 global.object_node_map = ds_map_create()
-function node_struct(node_id, object_name, flags = 0) constructor {
+function node_struct(node_id, object_name, flags = 0, layer_name = "Nodes") constructor {
 	self.node_id = node_id;
 	global.id_node_map[? node_id] = self;
 	self.object_ind = agi(object_name);
 	global.object_node_map[? object_ind] = self;
+	
+	self.layer_name = "Nodes";
 
 	self.properties_generator = global.editor_instance.return_noone;
 	self.properties = {};
 	
 	self.read_function = global.pack_editor_instance.default_reader;
-	self.read_instance_function = global.pack_editor_instance.default_instance_reader;
 	self.write_function = global.pack_editor_instance.default_writer;
-	self.write_instance_function = global.pack_editor_instance.default_instance_writer;
-	
+
+
 	// called when wrench is used
 	// params: (node_instance)
 	self.on_config = global.editor_instance.empty_function;
+	
+	self.on_death = function (node_instance) {
+		audio_play_sound(agi("snd_ev_node_destroy"), 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
+		create_node_shards(node_instance)		
+	}
 	
 	// what to do when evaluated while playing
 	// nodes that use this function can immediately tell you where to go in the pack
@@ -194,21 +193,14 @@ root_node.play_evaluate_immediate = function (node_state) {
 };
 brand_node = new node_struct("br", "obj_ev_pack_brand_node");
 brand_node.properties_generator = function () {
-	return { brand : int64(irandom_range(0, $FFFFFFFFF)) }	
+	return { brand : int64(irandom_range(1, $FFFFFFFFF)) }	
 }
 brand_node.read_function = function (properties_str /*, version */) {
 	var brand = int64_safe(properties_str, 0);
 	return { brand : brand }; 
 }
-brand_node.read_instance_function = function (inst) {
-	return { brand : inst.brand }
-}
-brand_node.write_function = function (node_state) {
-	return string(node_state.properties.brand)
-}
-brand_node.write_instance_function = function (node_state, node_id) {
-	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
-		{ brand : node_state.properties.brand, node_id : node_id })
+brand_node.write_function = function (properties) {
+	return string(properties.brand)
 }
 brand_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
@@ -217,8 +209,8 @@ brand_node.on_config = function (node_instance) {
 	});
 }
 
-global.level_node_display_scale = 0.2;
-level_node = new node_struct("lv", "obj_ev_display");
+
+level_node = new node_struct("lv", "obj_ev_pack_level_node");
 level_node.properties_generator = function () {
 	return noone; // if this is called something went wrong
 }
@@ -226,25 +218,8 @@ level_node.read_function = function (properties_str /*, version */) {
 	var level = import_level(properties_str)
 	return { level : level }; 
 }
-level_node.read_instance_function = function (node_inst) {
-	return { level : node_inst.lvl } 
-}
-level_node.write_function = function (node_state) {
-	return export_level(node_state.properties.level)
-}
-level_node.write_instance_function = function (node_state, node_id) {
-	return instance_create_layer(node_state.pos_x, node_state.pos_y, "PackLevels", node_state.node.object_ind, 
-	{ 
-		lvl : node_state.properties.level,
-		name : node_state.properties.level.name,
-		brand : node_state.properties.level.author_brand,
-		draw_beaten : false,
-		no_spoiling : false,
-		display_context : display_contexts.pack_editor,
-		image_xscale : global.level_node_display_scale,
-		image_yscale : global.level_node_display_scale,
-		node_id : node_id
-	})
+level_node.write_function = function (properties) {
+	return export_level(properties.level)
 }
 level_node.play_evaluate_immediate = function (node_state) {
 	return noone;
@@ -268,6 +243,9 @@ level_node.on_config = function (node_instance) {
 		node_instance : node_instance
 	});
 }
+level_node.on_death = function(node_instance) {
+	node_instance.display.destroy();	
+}
 
 redirect_node = new node_struct("re", "obj_ev_pack_redirect_node");
 redirect_node.play_evaluate_immediate = function (node_state) {
@@ -282,13 +260,10 @@ music_node.properties_generator = function () {
 music_node.read_function = function (properties_str /*, version */) {
 	return { music : base64_decode(properties_str) }; 
 }
-music_node.read_instance_function = function (inst) {
-	return { music : inst.music }
+music_node.write_function = function (properties) {
+	return base64_encode(properties.music)
 }
-music_node.write_function = function (node_state) {
-	return base64_encode(node_state.properties.music)
-}
-music_node.write_instance_function = function (node_state, node_id) {
+music_node.write_struct_function = function (node_state, node_id) {
 	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
 		{ music : node_state.properties.music, node_id : node_id })
 }
@@ -310,13 +285,10 @@ branefuck_node.properties_generator = function () {
 branefuck_node.read_function = function (properties_str /*, version */) {
 	return { program : properties_str }; 
 }
-branefuck_node.read_instance_function = function (inst) {
-	return { program : inst.program }
+branefuck_node.write_function = function (properties) {
+	return string(properties.program)
 }
-branefuck_node.write_function = function (node_state) {
-	return string(node_state.properties.program)
-}
-branefuck_node.write_instance_function = function (node_state, node_id) {
+branefuck_node.write_struct_function = function (node_state, node_id) {
 	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
 		{ program : node_state.properties.program, node_id : node_id })
 }
@@ -353,15 +325,8 @@ comment_node.properties_generator = function () {
 comment_node.read_function = function (properties_str /*, version */) {
 	return { comment : properties_str }; 
 }
-comment_node.read_instance_function = function (inst) {
-	return { comment : inst.comment }
-}
-comment_node.write_function = function (node_state) {
-	return string(node_state.properties.comment)
-}
-comment_node.write_instance_function = function (node_state, node_id) {
-	return instance_create_layer(node_state.pos_x, node_state.pos_y, "Nodes", node_state.node.object_ind, 
-		{ comment : node_state.properties.comment, node_id : node_id })
+comment_node.write_function = function (properties) {
+	return string(properties.comment)
 }
 comment_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
@@ -397,6 +362,9 @@ last_nid = -1;
 node_id_to_instance_map = ds_map_create()
 
 
+// maps NIDs to node states for remembering node IDs after playing/returning from playing
+node_state_to_id_map = ds_map_create()
+
 function add_undo_action(func, args) {
 	array_push(undo_actions, {
 		func : func,
@@ -420,4 +388,6 @@ undo_repeat = -1
 undo_repeat_frames_start = 18
 undo_repeat_frames_speed = 0
 undo_repeat_frames_max_speed = 10
+
+in_pack_editor = false;
 

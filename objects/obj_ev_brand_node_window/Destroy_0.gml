@@ -1,3 +1,3 @@
-node_instance.brand = draw_brand.brand;
+node_instance.properties.brand = draw_brand.brand;
 event_inherited();
 

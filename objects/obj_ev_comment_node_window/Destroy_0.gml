@@ -1,3 +1,3 @@
-node_instance.comment = textbox_instance.txt;
+node_instance.properties.comment = textbox_instance.txt;
 event_inherited();
 

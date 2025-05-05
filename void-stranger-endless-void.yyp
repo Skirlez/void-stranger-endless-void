@@ -346,6 +346,7 @@
     {"id":{"name":"spr_voider","path":"sprites/spr_voider/spr_voider.yy",},},
     {"id":{"name":"rm_ev_editor","path":"rooms/rm_ev_editor/rm_ev_editor.yy",},},
     {"id":{"name":"ev_music","path":"scripts/ev_music/ev_music.yy",},},
+    {"id":{"name":"obj_ev_pack_level_node","path":"objects/obj_ev_pack_level_node/obj_ev_pack_level_node.yy",},},
     {"id":{"name":"rm_ev_pack_select","path":"rooms/rm_ev_pack_select/rm_ev_pack_select.yy",},},
     {"id":{"name":"ev_claim_level","path":"scripts/ev_claim_level/ev_claim_level.yy",},},
     {"id":{"name":"spr_boulder","path":"sprites/spr_boulder/spr_boulder.yy",},},

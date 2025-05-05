@@ -55,19 +55,17 @@ function get_pack_line_number_progress() {
 }
 
 function get_all_level_node_instances() {
-	static pack_levels_layer = layer_get_id("PackLevels")
-	var display_instance_elements = layer_get_all_elements(pack_levels_layer)		
-	var nodes = []
-	for (var i = 0; i < array_length(display_instance_elements); i++) {
-		var inst = layer_instance_get_instance(display_instance_elements[i]);
-		if inst.object_index == global.display_object
-			array_push(nodes, inst);
+	var node_instances = get_all_node_instances();
+	var level_node_instances = []
+	for (var i = 0; i < array_length(node_instances); i++) {
+		if node_instances[i].node_type == global.pack_editor_instance.level_node
+			array_push(level_node_instances, node_instances[i])	
 	}
-	return nodes;
+	return level_node_instances
 }
 
 function get_all_node_instances() {
-	var node_instances = get_all_level_node_instances();
+	var node_instances = []
 	
 	static nodes_layer = layer_get_id("Nodes")
 	var node_instance_elements = layer_get_all_elements(nodes_layer)
@@ -90,7 +88,7 @@ function destroy_all_node_instances() {
 // increases the number.
 function try_level_name_and_rename(lvl, level_nodes) {
 	for (var i = 0; i < array_length(level_nodes); i++) {
-		var other_lvl = level_nodes[i].lvl;
+		var other_lvl = level_nodes[i].properties.level;
 		if (other_lvl == lvl)
 			continue;
 		if (other_lvl.name == lvl.name) {

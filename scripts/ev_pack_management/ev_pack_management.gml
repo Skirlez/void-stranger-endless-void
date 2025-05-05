@@ -15,14 +15,16 @@ function place_pack_into_room(pack) {
 	for (var i = 0; i < array_length(node_instances); i++) {
 		instance_destroy(node_instances[i]);	
 	}
-	
 	var map = ds_map_create();
 	function place_node_and_exits(node_state, explored_structs_map) {
 		if (ds_map_exists(explored_structs_map, node_state))
 			return ds_map_find_value(explored_structs_map, node_state);
-		var instance = node_state.write_instance();
+				
+		// if node_id is undefined this still works out. don't worry about it
+		var node_id = ds_map_find_value(global.pack_editor_instance.node_state_to_id_map, node_state)
+		log_info($"getting node id {string(node_id)} from state {node_state}")
+		var instance = node_state.create_instance(node_id);
 		ds_map_set(explored_structs_map, node_state, instance);
-		
 		for (var i = 0; i < array_length(node_state.exits); i++) {
 			var exit_instance = place_node_and_exits(node_state.exits[i], explored_structs_map)
 			array_push(instance.exit_instances, exit_instance)
@@ -52,12 +54,18 @@ function convert_room_nodes_to_structs() {
 		
 		ds_map_set(explored_instances_map, node_inst, node_state)
 		
+		
 		var exits = []
 		for (var i = 0; i < array_length(node_inst.exit_instances); i++) {
 			var exit_node_state = explore_node_and_convert_to_struct(node_inst.exit_instances[i], explored_instances_map)
 			array_push(exits, exit_node_state)
 		}
 		node_state.exits = exits;
+		if global.playtesting {
+			ds_map_set(global.pack_editor_instance.node_state_to_id_map, node_state, node_inst.node_id)
+			log_info($"mapped node state {node_state}\nto node id {node_inst.node_id}")	
+		}
+		
 		return node_state;
 	}
 	var root_id = noone

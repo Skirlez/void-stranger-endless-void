@@ -52,12 +52,23 @@ function draw() {
 		draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
 	}
 	else {
+		draw_set_halign(fa_center)
+		draw_set_valign(fa_middle)	
 		var hundreds_digit = lvl.bount div 100;
 		var tenths_digit = (lvl.bount % 100) div 10;
 		var units_digit = lvl.bount % 10;
-		draw_text(12 * 16, 9 * 16 + 1, "V" + string(hundreds_digit))
-		draw_text(13 * 16, 9 * 16 + 1, string(tenths_digit))
-		draw_text(13 * 16 + 8, 9 * 16 + 1, string(units_digit))
+		
+		draw_text(12 * 16 + 4, 9 * 16 - 8, "V")
+		
+		function draw_digit(pos_x, pos_y, digit) {
+			// no idea why i need to do this
+			var offset = (digit == 1 || digit == 3 || digit == 5 || digit == 6 || digit == 8 || digit == 9)	
+			draw_text(pos_x - offset, pos_y, string(digit))
+		}
+		
+		draw_digit(13 * 16 - 4, 9 * 16 - 8, hundreds_digit)
+		draw_digit(13 * 16 + 4, 9 * 16 - 8, tenths_digit)
+		draw_digit(14 * 16 - 4, 9 * 16 - 8, units_digit)
 	}
 
 	var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
@@ -220,8 +231,7 @@ else if global.is_merged {
 }
 
 var draw_x = x;
-if display_context == display_contexts.pack_editor
-	draw_x += shake_x_offset;
+
 draw_surface_ext(game_surface, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
 draw_sprite_ext(border_sprite, 0, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
 

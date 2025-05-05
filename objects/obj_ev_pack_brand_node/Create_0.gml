@@ -13,6 +13,6 @@ function create_brand_sprite(brand) {
 	return sprite_create_from_surface(brand_surface, 0, 0, 6, 6, false, false, 3, 3)
 
 }
-brand_sprite = create_brand_sprite(brand);
+brand_sprite = create_brand_sprite(properties.brand);
 sprite_index = brand_sprite;
-remember_brand = brand;
+remember_brand = properties.brand;

@@ -8,7 +8,8 @@ function ev_play_music(track, looping = true, for_menu = false) {
 	}
 	if global.is_merged {
 		if (!for_menu && audio_get_name(track) == "msc_test2") {
-			track = ev_get_elysium_music(global.level)
+			if room == global.editor_room || room == global.level_room || room == global.pack_level_room
+				track = ev_get_elysium_music(global.level)
 			asset_get_index("scr_play_music")(track, looping, 1)
 		}
 		else {

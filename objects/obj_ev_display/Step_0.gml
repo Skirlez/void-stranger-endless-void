@@ -151,12 +151,12 @@ switch (display_context) {
 		var cam_width = camera_get_view_width(view_camera[0])
 		var cam_y = camera_get_view_y(view_camera[0])
 		var cam_height = camera_get_view_height(view_camera[0])
-		outside_view = (x < cam_x - 224 * image_xscale
-			|| x > cam_x + cam_width +  224 * image_xscale
+		outside_view = 
+			x < cam_x - 224 * image_xscale
+			|| x > cam_x + cam_width + 224 * image_xscale
 			|| y < cam_y - 144 * image_yscale
-			|| y > cam_y + cam_height + 144 * image_yscale)
+			|| y > cam_y + cam_height + 144 * image_yscale
 		if outside_view
 			break;
-		node_instance_step()
 		break;
 }

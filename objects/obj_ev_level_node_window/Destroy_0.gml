@@ -1,9 +1,6 @@
-node_instance.lvl.bount = int64_safe(bount_textbox.txt, -1);
+node_instance.properties.level.bount = int64_safe(bount_textbox.txt, -1);
+node_instance.properties.level.name = name_textbox.txt
+try_level_name_and_rename(node_instance.properties.level, get_all_level_node_instances())
 
-node_instance.lvl.name = name_textbox.txt
-try_level_name_and_rename(node_instance.lvl, get_all_level_node_instances())
-
-node_instance.name = node_instance.lvl.name;
-node_instance.delete_cached_game_surface();
-node_instance.delete_cached_name_surface();
+node_instance.sync_display_level();
 event_inherited();

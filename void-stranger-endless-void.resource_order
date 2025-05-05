@@ -310,6 +310,7 @@
     {"name":"spr_voider","order":36,"path":"sprites/spr_voider/spr_voider.yy",},
     {"name":"rm_ev_editor","order":4,"path":"rooms/rm_ev_editor/rm_ev_editor.yy",},
     {"name":"ev_music","order":10,"path":"scripts/ev_music/ev_music.yy",},
+    {"name":"obj_ev_pack_level_node","order":104,"path":"objects/obj_ev_pack_level_node/obj_ev_pack_level_node.yy",},
     {"name":"rm_ev_pack_select","order":3,"path":"rooms/rm_ev_pack_select/rm_ev_pack_select.yy",},
     {"name":"ev_claim_level","order":15,"path":"scripts/ev_claim_level/ev_claim_level.yy",},
     {"name":"spr_boulder","order":27,"path":"sprites/spr_boulder/spr_boulder.yy",},

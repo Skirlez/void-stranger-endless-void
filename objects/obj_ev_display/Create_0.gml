@@ -255,9 +255,7 @@ highlighted = false
 
 outside_view = false;
 mouse_moving = false;
-if display_context == display_contexts.pack_editor {
-	node_instance_setup(level_get_exit_count(lvl), true, 112 * image_xscale, 72 * image_yscale)
-}
+
 function destroy() {
 	var gain = (room == global.pack_editor_room) ? global.pack_zoom_gain : 1
 	audio_play_sound(asset_get_index("snd_stainedglass_break"), 10, false, gain, 0, random_range(0.9, 1));

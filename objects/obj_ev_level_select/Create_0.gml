@@ -99,27 +99,27 @@ function level_clicked(display_inst) {
 		
 		instance_destroy(id)
 		
-		
 		var level_nodes = get_all_level_node_instances()
 		try_level_name_and_rename(lvl, level_nodes)
 
-		
-		var level_size = global.pack_editor_instance.level_size;
-		instance_create_layer(
-			mouse_x - 224 * level_size / 2, 
-			mouse_y - 144 * level_size / 2, "PackLevels", global.display_object, 
+		var node_state = new node_with_state(global.pack_editor_instance.level_node,
+			mouse_x - 224 * global.level_node_display_scale / 2,
+			mouse_y - 144 * global.level_node_display_scale / 2,
 			{
-				lvl : lvl,
-				name : lvl.name,
-				brand : lvl.author_brand,
-				draw_beaten : false,
-				no_spoiling : false,
-				display_context : display_contexts.pack_editor,
-				image_xscale : level_size,
-				image_yscale : level_size
-			})
-			
-
+				level : lvl	
+			});
+		var instance = node_state.create_instance();
+		instance.spawn_picked_up = true;
+		instance.mouse_moving = true;
+		play_pickup_sound(random_range(1, 1.05))
+		expand_node_instance(instance)
+		
+		global.pack_editor_instance.add_undo_action(function (args) {
+			var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
+			instance_destroy(instance)
+		}, {
+			node_id : instance.node_id,
+		})
 	}
 	
 }
