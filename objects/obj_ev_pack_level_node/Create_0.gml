@@ -30,3 +30,6 @@ function sync_display_level() {
 	display.delete_cached_game_surface();
 	display.delete_cached_name_surface();	
 }
+
+grube_solid = instance_create_depth(x, y, depth, agi("obj_ev_grubesolid"))
+grube_solid.visible = false;

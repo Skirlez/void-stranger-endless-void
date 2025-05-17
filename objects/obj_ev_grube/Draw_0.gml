@@ -21,6 +21,13 @@ if death_timer != -1 {
 	gpu_set_fog(false, c_white, 0, 1)
 	draw_set_alpha(1)
 }
+if room == global.pack_editor_room {
+	draw_set_color(c_white)
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_middle)
+	draw_set_font(global.ev_font)
+	draw_text_shadow(x, y + 16, "Grube")
+}
 /*
 for (var i = 0; i < array_length(position_history) - 1; i += 2) {
 	var xpos = position_history[i]

@@ -205,14 +205,15 @@ function node_instance_step() {
 		}
 		else if global.pack_editor_instance.selected_thing == pack_things.play {
 			if ev_mouse_pressed() {
+				/*
 				if node_type != global.pack_editor_instance.level_node {
 					shake_seconds = 0.5;
 					audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);	
 				}
-				else {
-					global.pack_editor_instance.start_play_transition(id)
-					global.mouse_layer = 1;	
-				}
+				else { }
+				*/
+				global.pack_editor_instance.start_play_transition(id)
+				global.mouse_layer = 1;	
 			}
 		}
 	}

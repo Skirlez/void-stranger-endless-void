@@ -53,7 +53,7 @@ if ev_is_mouse_on_me() {
 			audio_play_sound(asset_get_index("snd_ev_pluck"), 10, false)	
 		}
 	}
-	if ev_mouse_right_pressed() {
+	if ev_mouse_right_pressed() && room != global.pack_editor_room {
 		die()
 		death_timer = 50
 	}

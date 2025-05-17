@@ -39,6 +39,16 @@ function on_room_create() {
 			log_info("No save, choosing root")
 			first_state = global.pack.starting_node_states[0];
 		}
+		else if global.playtesting {
+			var node_id = global.pack_save.node_id;
+			var node_states = ds_map_keys_to_array(global.pack_editor_instance.node_state_to_id_map);
+			for (var i = 0; i < array_length(node_states); i++) {
+				if (ds_map_find_value(global.pack_editor_instance.node_state_to_id_map, node_states[i]) == node_id) {
+					first_state = node_states[i]
+					break;
+				}
+			}
+		} 
 		else {
 			function find_level_node_state_with_name(node_state, name, explored_states_map) {
 				static level_node = global.pack_editor_instance.level_node
@@ -87,3 +97,18 @@ function on_room_create() {
 // checked and changed at level_node.play_evaluate
 is_first_level = !global.playtesting;
 is_brand_room = false;
+
+// called at level_node.play_evaluate
+function evaluate_brand_room() {
+	in_brand_room = is_level_brand_room(global.level)
+	if in_brand_room {
+		brand_secret_exit = instance_create_layer(-100, -100, "Instances",
+			agi("obj_na_secret_exit"))
+		brand_secret_exit.secret_stars = true;
+	}
+}
+// instance we move around depending on if this is a brand room
+brand_secret_exit = noone;
+
+dust_emit_counter = 0;
+dust_emit_limit = 0;

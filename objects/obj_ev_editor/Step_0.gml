@@ -1,6 +1,3 @@
-if keyboard_check_pressed(vk_f4)
-	window_set_fullscreen(!window_get_fullscreen())
-
 
 var list = ds_list_create()
 var length = instance_position_list(mouse_x, mouse_y, all, list, false)

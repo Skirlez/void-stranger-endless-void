@@ -56,12 +56,13 @@ function ev_update_vars() {
 
 function save_level(lvl)
 {
+	var str = export_level(lvl)
 	var file = file_text_open_write(global.levels_directory + lvl.save_name + "." + level_extension)
 	if (file == -1)
-		return;
-	var str = export_level(lvl)
+		return false;
 	file_text_write_string(file, str)
 	file_text_close(file)
+	return true;
 }
 function delete_level(save_name) {
 	file_delete(global.levels_directory + save_name + "." + level_extension)	
@@ -70,12 +71,13 @@ function delete_level(save_name) {
 
 function save_pack(pack)
 {
+	var str = export_pack(pack)
 	var file = file_text_open_write(global.packs_directory + pack.save_name + "." + pack_extension)
 	if (file == -1)
-		return;
-	var str = export_pack(pack)
+		return false;
 	file_text_write_string(file, str)
 	file_text_close(file)
+	return true;
 }
 function delete_pack(save_name) {
 	file_delete(global.packs_directory + save_name + "." + pack_extension)	

@@ -7,6 +7,7 @@ global.g_mode = false;
 global.latest_lvl_format = 3;
 global.latest_pack_format = 1;
 global.ev_version = "0.99";
+global.ev_fall_down_next_level = false;
 
 global.is_merged = (agi("obj_game") != -1)
 if (!global.is_merged) {
@@ -626,6 +627,22 @@ object_player.draw_function = function(tile_state, i, j, preview, lvl) {
 	}
 	draw_sprite(spr, ev_strobe_integer(2), j * 16 + 8, i * 16 + 8)	
 }
+object_player.iostruct = {
+	read : default_reader,
+	write : default_writer,
+	place : function (tile_state, i, j) {
+		var obj;
+		if global.ev_fall_down_next_level {
+			obj = agi("obj_enter_the_secret")
+			global.ev_fall_down_next_level = false;	
+		}
+		else
+			obj = agi(tile_state.tile.obj_name);
+		
+		instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, obj);
+	},
+}
+
 
 object_leech = new editor_object("Leech", agi("spr_cl_right"), "cl", "obj_enemy_cl")
 object_leech.draw_function = function(tile_state, i, j) {

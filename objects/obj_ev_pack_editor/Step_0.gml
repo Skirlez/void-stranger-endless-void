@@ -71,7 +71,7 @@ if play_transition_time != -1 {
 		global.playtesting = true;
 		global.pack.starting_node_states = convert_room_nodes_to_structs() 
 		global.pack_save = {
-			level_name : play_transition_target.properties.level.name
+			node_id : play_transition_target.node_id
 		}
 		room_goto(global.pack_level_room)
 		play_transition_time = -1;

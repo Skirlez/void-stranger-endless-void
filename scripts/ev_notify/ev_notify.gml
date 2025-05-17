@@ -1,8 +1,9 @@
-function ev_notify(txt){
+function ev_notify(txt) {
+
 	static object = agi("obj_ev_notification")
 	move_all_notifications_up()
 	with (object) {
-		y += 12
+		y += 40
 	}
 	//instance_destroy(obj)
 	var i = instance_create_layer(5, -30, "Notifications", object)

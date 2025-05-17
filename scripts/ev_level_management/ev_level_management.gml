@@ -35,7 +35,7 @@ function place_default_tiles(level) {
 	return level;
 }
 
-
+// just needs to be unique
 function generate_save_name() {
 	return base64_encode(date_string() + string(irandom($7fffffffffffffff)));	
 }

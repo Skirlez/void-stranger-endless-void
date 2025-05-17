@@ -4,7 +4,8 @@ textbox_instance = instance_create_layer(x, y, "WindowElements", asset_get_index
 	empty_text : "Comment",
 	txt : node_instance.properties.comment,
 	allow_alphanumeric : true,
-	char_limit : 100,
+	char_limit : 999,
+	max_line_width : 99999,
 	base_scale_x : 8,
 });
 

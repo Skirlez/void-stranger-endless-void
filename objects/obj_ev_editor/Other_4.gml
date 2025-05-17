@@ -22,6 +22,7 @@ if room == asset_get_index("rm_ev_editor") {
 	if (!ev_is_music_playing(asset_get_index(global.level.music))) {
 		ev_play_music(asset_get_index(global.level.music))	
 	}
+	
 }
 else {
 	var quill = asset_get_index("obj_quill")

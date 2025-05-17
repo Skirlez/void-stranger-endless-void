@@ -208,6 +208,9 @@ brand_node.on_config = function (node_instance) {
 		node_instance : node_instance
 	});
 }
+brand_node.play_evaluate_immediate = function (node_state) {
+	return node_state.exits[0];	
+}
 
 
 level_node = new node_struct("lv", "obj_ev_pack_level_node");
@@ -234,7 +237,8 @@ level_node.play_evaluate = function (node_state) {
 			instance_create_layer(x, y, "Effects", agi("obj_darkness_begins"))
 			is_first_level = false;
 		}
-		in_brand_room = is_level_brand_room(global.level)
+		evaluate_brand_room();
+		
 	}
 }
 level_node.on_config = function (node_instance) {
@@ -323,10 +327,10 @@ comment_node.properties_generator = function () {
 	return { comment : "" }	
 }
 comment_node.read_function = function (properties_str /*, version */) {
-	return { comment : properties_str }; 
+	return { comment : base64_decode(properties_str) }; 
 }
 comment_node.write_function = function (properties) {
-	return string(properties.comment)
+	return base64_encode(properties.comment)
 }
 comment_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
@@ -336,14 +340,17 @@ comment_node.on_config = function (node_instance) {
 }
 
 oob_node = new node_struct("ob", "obj_ev_pack_oob_node", node_flags.only_one);
+oob_node.play_evaluate_immediate = function (node_state) {
+	return node_state.exits[0];	
+}
 end_node = new node_struct("en", "obj_ev_pack_end_node");
 end_node.play_evaluate = function () {
-	end_pack()	
+	instance_create_layer(0, 0, "Text", agi("obj_ev_pack_end"))
+	// TODO display end screen
 }
-
-
 // List of all the nodes a user should be able to create
-nodes_list = [redirect_node, music_node, random_node, comment_node, thumbnail_node, oob_node, branefuck_node, brand_node, end_node];
+nodes_list = [redirect_node, music_node, random_node, comment_node, thumbnail_node, 
+				oob_node, branefuck_node, brand_node, end_node];
 
 
 function reset_global_pack() {

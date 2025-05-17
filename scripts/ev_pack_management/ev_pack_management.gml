@@ -3,11 +3,16 @@ function pack_struct() constructor {
 	description = ""
 	author = "Anonymous"
 	author_brand = int64(0)
-	starting_node_states = []
-	// This name will be used for when the file is saved
-	save_name = generate_save_name()
+	
 	upload_date = "";
 	last_edit_date = "";
+	
+	password_brand = int64(0)
+	
+	starting_node_states = []
+	
+	// This name will be used for when the file is saved
+	save_name = generate_save_name()
 }
 
 function place_pack_into_room(pack) {
@@ -22,7 +27,6 @@ function place_pack_into_room(pack) {
 				
 		// if node_id is undefined this still works out. don't worry about it
 		var node_id = ds_map_find_value(global.pack_editor_instance.node_state_to_id_map, node_state)
-		log_info($"getting node id {string(node_id)} from state {node_state}")
 		var instance = node_state.create_instance(node_id);
 		ds_map_set(explored_structs_map, node_state, instance);
 		for (var i = 0; i < array_length(node_state.exits); i++) {
@@ -63,7 +67,6 @@ function convert_room_nodes_to_structs() {
 		node_state.exits = exits;
 		if global.playtesting {
 			ds_map_set(global.pack_editor_instance.node_state_to_id_map, node_state, node_inst.node_id)
-			log_info($"mapped node state {node_state}\nto node id {node_inst.node_id}")	
 		}
 		
 		return node_state;
@@ -99,6 +102,7 @@ function import_pack_nodeless(pack_string) {
 	pack.author_brand = int64_safe(arr[4], 0);
 	pack.upload_date = arr[5]
 	pack.last_edit_date = arr[6];
+	pack.password_brand = arr[7];
 	return pack;
 }
 
@@ -142,7 +146,8 @@ function import_pack(pack_string) {
 	pack.author_brand = int64_safe(arr[4], 0);
 	pack.upload_date = arr[5]
 	pack.last_edit_date = arr[6];
-	var node_string = arr[7];
+	pack.password_brand = arr[7];
+	var node_string = arr[8];
 	
 	var all_node_states = [];
 	
@@ -265,6 +270,7 @@ function export_pack_arr(pack) {
 	var author_brand_string = string(pack.author_brand)
 	var upload_date_string = "";
 	var last_edit_date_string = "";
+	var password_brand_string = string(pack.password_brand)
 	var node_string = ""
 	
 	
@@ -299,7 +305,8 @@ function export_pack_arr(pack) {
 	
 	
 	return [version_string, name_string, description_string, author_string, 
-		author_brand_string, upload_date_string, last_edit_date_string, node_string]
+			author_brand_string, upload_date_string, last_edit_date_string, 
+			password_brand_string, node_string]
 	
 }
 
@@ -318,7 +325,7 @@ function export_pack(pack) {
 function get_thumbnail_level_string_from_pack_string(pack_string) {
 	var arr = ev_string_split(pack_string, "&")
 	// the seventh section contains all the nodes
-	var node_string = arr[7];
+	var node_string = arr[8];
 	
 	var node_state_strings = ev_string_split(node_string, "$");
 	for (var i = 0; i < array_length(node_state_strings); i++) {
