@@ -46,7 +46,7 @@ function ev_play_void_radio() {
 	} until (sum_seconds >= seconds);
 	var time = track_length - (sum_seconds - seconds)
 	
-	if track == global.music_file && abs(audio_sound_get_track_position(global.music_inst) - time) < 0.2
+	if track == global.music_file && abs(audio_sound_get_track_position(global.music_inst) - (start + time)) < 0.3
 		return;
 	
 	ev_play_music(track, false, true)

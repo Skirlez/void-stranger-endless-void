@@ -104,7 +104,6 @@ function evaluate_brand_room() {
 	if in_brand_room {
 		brand_secret_exit = instance_create_layer(-100, -100, "Instances",
 			agi("obj_na_secret_exit"))
-		brand_secret_exit.secret_stars = true;
 	}
 }
 // instance we move around depending on if this is a brand room

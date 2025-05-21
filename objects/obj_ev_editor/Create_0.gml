@@ -1240,6 +1240,7 @@ object_memory_crystal.zed_function = function(tile_state) {
 	global.mouse_layer = 1
 }
 
+
 // The lengths I go to to not include base game sprites in the source.
 #region Create Scaredeer Sprite
 var surface_deer = surface_create(16, 16)
@@ -1313,6 +1314,30 @@ object_hologram.draw_function = function(tile_state, i, j, preview, lvl, no_spoi
 }
 
 
+object_mural = new editor_object("Mural", agi("spr_ev_mural"), "mu", "obj_mural")
+object_mural.iostruct = {
+	read: default_reader,
+	write : default_writer,
+	place : function(tile_state, i, j, extra_data) {
+		instance_create_layer(j * 16 + 16, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
+	}
+}
+object_mural.draw_function = function(tile_state, i, j, preview, lvl) {
+	var img;
+	if j > 0 && lvl.objects[i][j - 1].tile == tile_state.tile {
+		img = 1;
+	}
+	else
+		img = 0;
+	if lvl.tiles[i][j].tile == global.editor_instance.tile_wall
+		img += 2;
+		
+	draw_sprite(tile_state.tile.spr_ind, img, j * 16 + 8, i * 16 + 8)
+	
+	
+}
+
+
 global.player_tiles = array_create(7)
 global.player_objects = array_create(7)
 for (var i = 0; i < 7; i++) {
@@ -1328,7 +1353,7 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch,
 
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_hungry_man, object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor, 
-	object_jukebox, object_egg, object_hologram, object_tree, object_memory_crystal, object_secret_exit,
+	object_jukebox, object_egg, object_hologram, object_tree, object_memory_crystal, object_secret_exit, object_mural,
 	object_spider, object_scaredeer, object_orb]
 
 #endregion

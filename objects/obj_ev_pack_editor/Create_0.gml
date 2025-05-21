@@ -343,14 +343,41 @@ oob_node = new node_struct("ob", "obj_ev_pack_oob_node", node_flags.only_one);
 oob_node.play_evaluate_immediate = function (node_state) {
 	return node_state.exits[0];	
 }
+
+global.palette_node_palettes = ["GRAY", "R***", "O***", "Y***", "G***", "B***", "I***", "V***", "Custom"]
+palette_node = new node_struct("pl", "obj_ev_pack_palette_node");
+palette_node.properties_generator = function () {
+	return { palette_number : 0 }	
+}
+palette_node.play_evaluate_immediate = function (node_state) {
+	global.s_g_pal = node_state.properties.palette_number;
+	log_info("Palette node set palette to " + string(node_state.properties.palette_number))
+	agi("set_palette")(node_state.properties.palette_number);
+	return node_state.exits[0];	
+}
+palette_node.read_function = function (properties_str /*, version */) {
+	var palette_number = int64_safe(properties_str, 0);
+	return { palette_number : palette_number }; 
+}
+palette_node.write_function = function (properties) {
+	return string(properties.palette_number)
+}
+palette_node.on_config = function (node_instance) {
+	global.mouse_layer = 1;
+	new_window_with_pos(node_instance.x, node_instance.y, 8, 8, asset_get_index("obj_ev_palette_node_window"), {
+		node_instance : node_instance
+	});
+}
+
 end_node = new node_struct("en", "obj_ev_pack_end_node");
 end_node.play_evaluate = function () {
 	instance_create_layer(0, 0, "Text", agi("obj_ev_pack_end"))
-	// TODO display end screen
+
 }
+
 // List of all the nodes a user should be able to create
 nodes_list = [redirect_node, music_node, random_node, comment_node, thumbnail_node, 
-				oob_node, branefuck_node, brand_node, end_node];
+				oob_node, branefuck_node, brand_node, palette_node, end_node];
 
 
 function reset_global_pack() {

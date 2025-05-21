@@ -169,6 +169,13 @@ function evaluate_expression_recursive(expr, base) {
 			return noone;
 		return evaluate_expression_recursive(remainder, base[int64(vari_name)])
 	}
+	if is_string(base) {
+		if !string_is_uint(vari_name)
+			return noone;
+		var character = string_ord_at(base, int64(vari_name) - 1)
+		// we know this is a number so we can return
+		return character;
+	}
 	if is_struct(base) {
 		return evaluate_expression_recursive(remainder, variable_struct_get(base, vari_name))
 	}

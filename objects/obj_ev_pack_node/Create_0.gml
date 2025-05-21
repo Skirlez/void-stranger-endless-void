@@ -1,10 +1,6 @@
 /*
-This object represents almost all nodes in the pack editor.
-I say almost all nodes, because displays are also nodes.
-Due to gamemaker not providing any sort of way to inherit from multiple objects,
-or any way to make a "trait" or an "interface" of any way, we can't have display
-inherit from this object.
-
-Most of the node logic is in the node_instance functions so it can be used by display objects.
+Most of the logic for all nodes is in node_instance functions, but it could be taken out into this object's events
+(it's only like this because previously the level node couldn't inherit from the node object
+so this should probably be done now)
 */
 node_instance_setup()

@@ -1,4 +1,5 @@
 // Add bpms of various songs that EV adds so everything animates to their beat
+// and also msc_rytmi2 because it doesn't have one
 // TARGET: LINENUMBER
 // 6
 case snd_ev_music_astra_jam:
@@ -24,4 +25,7 @@ case snd_ev_music_stealie_feelies:
     break;
 case snd_ev_music_judgment_jingle:
     _tempo = 93
+    break
+case msc_rytmi2:
+    _tempo = 142
     break

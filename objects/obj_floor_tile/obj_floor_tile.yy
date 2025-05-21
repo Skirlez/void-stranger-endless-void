@@ -6,8 +6,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Void Stranger Dummy",
-    "path": "folders/Objects/Void Stranger Dummy.yy",
+    "name": "Void Stranger Dummy Objects",
+    "path": "folders/Objects/Void Stranger Dummy Objects.yy",
   },
   "parentObjectId": null,
   "persistent": false,

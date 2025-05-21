@@ -17,5 +17,7 @@ if (room == global.pack_editor_room) {
 	place_pack_into_room(global.pack)
 	
 	selected_thing = pack_things.nothing
+	ev_switch_to_user_palette()
 	
+	//instance_destroy(agi("obj_darkness_begins"))
 }
