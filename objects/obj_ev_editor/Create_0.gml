@@ -1051,6 +1051,8 @@ object_gor.iostruct = voidlord_io(5)
 object_jukebox = new editor_object("Jukebox", agi("spr_jb"), "jb", egg_statue_obj)
 object_jukebox.iostruct = voidlord_io(9)
 
+object_tis = new editor_object("Tis Statue", agi("spr_ev_tis_statue"), "ts", egg_statue_obj)
+object_tis.iostruct = voidlord_io(10)
 
 var surface_tree = surface_create(16, 16)
 surface_set_target(surface_tree)
@@ -1313,28 +1315,33 @@ object_hologram.draw_function = function(tile_state, i, j, preview, lvl, no_spoi
 	default_draw_function(tile_state, i, j)
 }
 
-
+function mural_get_image_index(i, j, lvl) {
+	static mural_object = global.editor_instance.object_mural
+	static wall_tile = global.editor_instance.tile_wall
+	
+	var img;
+	if j > 0 && lvl.objects[i][j - 1].tile == mural_object
+		img = 1;
+	else
+		img = 0;
+	if lvl.tiles[i][j].tile == wall_tile
+		img += 2;
+	return img;
+}
 object_mural = new editor_object("Mural", agi("spr_ev_mural"), "mu", "obj_mural")
 object_mural.iostruct = {
 	read: default_reader,
 	write : default_writer,
 	place : function(tile_state, i, j, extra_data) {
-		instance_create_layer(j * 16 + 16, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
+		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
+		inst.sprite_index = agi("spr_ev_mural")
+		inst.image_speed = global.editor_instance.mural_get_image_index(i, j, extra_data.lvl);
 	}
 }
 object_mural.draw_function = function(tile_state, i, j, preview, lvl) {
-	var img;
-	if j > 0 && lvl.objects[i][j - 1].tile == tile_state.tile {
-		img = 1;
-	}
-	else
-		img = 0;
-	if lvl.tiles[i][j].tile == global.editor_instance.tile_wall
-		img += 2;
-		
+	var img = global.editor_instance.mural_get_image_index(i, j, lvl)
+
 	draw_sprite(tile_state.tile.spr_ind, img, j * 16 + 8, i * 16 + 8)
-	
-	
 }
 
 
@@ -1354,7 +1361,7 @@ tiles_list = [tile_default, tile_glass, tile_bomb, tile_explo, tile_floorswitch,
 objects_list = [object_player, object_leech, object_maggot, object_bull, object_gobbler, object_hand, 
 	object_mimic, object_diamond, object_hungry_man, object_add, object_cif, object_bee, object_tan, object_lev, object_mon, object_eus, object_gor, 
 	object_jukebox, object_egg, object_hologram, object_tree, object_memory_crystal, object_secret_exit, object_mural,
-	object_spider, object_scaredeer, object_orb]
+	object_spider, object_scaredeer, object_orb, object_tis]
 
 #endregion
 

@@ -177,6 +177,7 @@ function draw() {
 		else if global.selected_thing == thing_placeable 
 				&& held_tile_state.tile != global.editor_instance.object_empty {
 			var alpha = ((dsin(global.editor_time * 3) / 4) + 0.75);
+		
 			if held_tile_state.tile.has_offset() {
 				draw_set_alpha(alpha / 2)
 				draw_tile_state(tile_i, tile_j, held_tile_state, true)
