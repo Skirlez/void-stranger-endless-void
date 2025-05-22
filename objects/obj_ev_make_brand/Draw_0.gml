@@ -4,7 +4,7 @@ if !surface_exists(brand_surface)
 surface_set_target(brand_surface)
 draw_clear(c_black)
 draw_set_color(c_white)
-ev_draw_brand(brand, 0, 0)
+ev_draw_brand(0, 0, brand)
 surface_reset_target();
 
 

@@ -35,6 +35,11 @@ else if (b_form == 10) {
 else if (b_form == 10)
 	sprite_index = spr_ev_tis_statue
 
+// wrap around behavior
+// TARGET: LINENUMBER
+// 109
+ev_tis_wraparound();
+
 // make tis statue have its defining trait
 // TARGET: LINENUMBER
 // 103

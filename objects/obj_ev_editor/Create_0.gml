@@ -1051,7 +1051,7 @@ object_gor.iostruct = voidlord_io(5)
 object_jukebox = new editor_object("Jukebox", agi("spr_jb"), "jb", egg_statue_obj)
 object_jukebox.iostruct = voidlord_io(9)
 
-object_tis = new editor_object("Tis Statue", agi("spr_ev_tis_statue"), "ts", egg_statue_obj)
+object_tis = new editor_object("Tis Statue", agi("spr_ev_tis_statue"), "ts", egg_statue_obj, "Player")
 object_tis.iostruct = voidlord_io(10)
 
 var surface_tree = surface_create(16, 16)
@@ -1336,6 +1336,9 @@ object_mural.iostruct = {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		inst.sprite_index = agi("spr_ev_mural")
 		inst.image_speed = global.editor_instance.mural_get_image_index(i, j, extra_data.lvl);
+		inst.inscription = 19;
+		inst.ev_mural_brand = global.author.brand;
+		inst.ev_mural_text = "onlyagruberemains"
 	}
 }
 object_mural.draw_function = function(tile_state, i, j, preview, lvl) {

@@ -248,7 +248,7 @@ if brand != 0 {
 		
 		draw_set_color(c_white)
 		
-		ev_draw_brand(brand, 1, 1)
+		ev_draw_brand(1, 1, brand)
 		
 		surface_reset_target()
 		cached_author_brand = lvl.author_brand
