@@ -1,5 +1,6 @@
 function is_digit(str) {
-	return str != "" && str == string_digits(str)	
+	var num = (ord(str) - ord("0"))
+	return num >= 0 && num <= 9
 }
 function string_is_uint(str) {
 	return str != "" && string_length(str) == string_length(string_digits(str));

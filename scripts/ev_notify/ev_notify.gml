@@ -1,5 +1,4 @@
 function ev_notify(txt) {
-
 	static object = agi("obj_ev_notification")
 	move_all_notifications_up()
 	with (object) {

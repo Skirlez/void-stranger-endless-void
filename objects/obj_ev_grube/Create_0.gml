@@ -47,7 +47,7 @@ switch (type) {
 	case ev_grube_types.player_cube:
 		touched_enemy_cube = false;
 		hit_sprite = noone;
-		var stranger = choose(0, irandom_range(0, 2));
+		var stranger = choose(0, 0, 0, irandom_range(1, 2));
 		switch (stranger) {
 			case 0:
 				sprite_index = agi("spr_player_down");

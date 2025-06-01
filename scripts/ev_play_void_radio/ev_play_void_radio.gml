@@ -46,15 +46,18 @@ function ev_play_void_radio() {
 	} until (sum_seconds >= seconds);
 	var time = track_length - (sum_seconds - seconds)
 	
-	if track == global.music_file && abs(audio_sound_get_track_position(global.music_inst) - (start + time)) < 0.3
+	var current_track = agi(audio_get_name(global.music_inst))
+	if track == current_track && abs(audio_sound_get_track_position(global.music_inst) - (start + time)) < 0.3
 		return;
 	
 	ev_play_music(track, false, true)
 	audio_sound_set_track_position(global.music_inst, start + time);
 	
-	// play static and fade in
-	var static_sfx = audio_play_sound(agi("snd_ev_radio_static"), 0, false, 1)
-	audio_sound_gain(static_sfx, 0, 800)
+	if !audio_is_playing(agi("snd_ev_radio_static")) {
+		// play static and fade in
+		var static_sfx = audio_play_sound(agi("snd_ev_radio_static"), 0, false, 1)
+		audio_sound_gain(static_sfx, 0, 800)
+	}
 	
 	// fade in
 	audio_sound_gain(global.music_inst, 0, 0)

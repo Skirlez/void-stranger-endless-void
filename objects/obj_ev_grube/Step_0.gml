@@ -1,6 +1,12 @@
 if type == ev_grube_types.level_cube && !visible {
 	if surface_exists(display_instance.game_surface) {
-		sprite_index = sprite_create_from_surface(display_instance.game_surface, 0, 0, 224, 144, false, false, 112, 72)	
+		var surf = surface_create(224, 144)
+		surface_set_target(surf)
+		draw_clear(c_black)
+		draw_surface(display_instance.game_surface, 0, 0)
+		surface_reset_target()
+		sprite_index = sprite_create_from_surface(surf, 0, 0, 224, 144, false, false, 112, 72)	
+		surface_free(surf)
 		visible = true;
 		instance_destroy(display_instance)
 	}

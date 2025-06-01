@@ -1,12 +1,14 @@
 // Lightning Bolt!
 function ev_run_tis_lightning_check() {
-	if !variable_instance_exists(id, "has_moved")
-		has_moved = false;
+	if b_form != 10
+		exit;
+	if !variable_instance_exists(id, "swapper_disable_lightning")
+		swapper_disable_lightning = false;
 	
-	if has_moved {
-		if o_move_x == 0 and o_move_y == 0 and (xprevious != x || yprevious != y) {
-			if point_distance(xprevious, yprevious, x, y) > 16 {
-				instance_create_layer(x, (y - 56), "Player", agi("obj_judgment_flash"));
+	if o_move_x == 0 and o_move_y == 0 {
+		if point_distance(xprevious, yprevious, x, y) > 16 {
+			if !swapper_disable_lightning {
+				instance_create_layer(x, (y - 56), "Effects", agi("obj_judgment_flash"));
 				var angle = point_direction(xprevious, yprevious, x, y)
 				
 				
@@ -20,13 +22,9 @@ function ev_run_tis_lightning_check() {
 				smokecloud = instance_create_layer(xprevious, yprevious, "Effects", agi("obj_smokecloud"))
 				with (smokecloud)
 					smoke_dir = dir;
-				
-				
 			}
-			has_moved = false;
+			else
+				swapper_disable_lightning = false;
 		}
-	}
-	else {
-
 	}
 }

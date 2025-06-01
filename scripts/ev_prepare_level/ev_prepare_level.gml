@@ -48,10 +48,14 @@ function ev_prepare_level_burdens(level) {
 }
 
 function ev_prepare_level_visuals(level) {
-	static inv = agi("obj_inventory");
 	if level.theme == level_themes.universe
 		global.universe = 1;
 	else
 		global.universe = 0;
+	
+	if level.theme == level_themes.white_void
+		global.floorvanish = 1;
+	else
+		global.floorvanish = 0;
 }
 

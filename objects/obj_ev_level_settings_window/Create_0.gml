@@ -82,7 +82,7 @@ music_select = instance_create_layer(112 + 48, 72 + 4, "WindowElements", asset_g
 })
 
 theme_selector = instance_create_layer(112 + 50, 72 - 35, "WindowElements", asset_get_index("obj_ev_selector"), {
-	elements : ["Regular", "Universe", "White Void"],
+	elements : ["Regular", "Universe"],
 	selected_element : global.level.theme,
 	max_radius : 32
 })

@@ -27,9 +27,11 @@ enum pack_things {
 	hammer,
 	wrench,
 	selector,
-	play
+	play,
+	placechanger
 }
 
+node_instance_changing_places = noone;
 
 select_tool_happening = new ev_happening();
 function select(thing) {

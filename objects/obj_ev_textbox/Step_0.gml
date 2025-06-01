@@ -16,7 +16,7 @@ if window != -1 && window.selected_element == id {
 	if dir != 0
 		cursor_time = 0
 	cursor_pos = clamp(cursor_pos + dir, 1, string_length(txt) + 1)
-	if ev_is_mouse_on_me() && ev_mouse_pressed() {
+	if ev_is_mouse_on_me() && ev_mouse_pressed() && !first_expansion_frame {
 		
 		var line_height = 16;
 		var line = (mouse_y - y) div line_height;
@@ -109,6 +109,7 @@ if window != -1 && window.selected_element == id {
 	}
 	keyboard_lastchar = ""
 	keyboard_lastkey = 0
+	first_expansion_frame = false;
 }
 else {
 	cursor_time = 30

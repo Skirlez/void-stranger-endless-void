@@ -21,6 +21,7 @@ surface_reset_target()
 
 // subtract that inverse from the game surface to leave only the shard
 surface_set_target(surface)
+draw_clear(c_black)
 draw_surface(game_surface, 0, 0)
 gpu_set_blendmode(bm_subtract)
 draw_surface(surface_invert, 0, 0)

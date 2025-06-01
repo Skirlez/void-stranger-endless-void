@@ -1,4 +1,4 @@
-if layer_num != global.mouse_layer
+if ev_is_mouse_on_me()
 	exit
 index--
 if index < 0

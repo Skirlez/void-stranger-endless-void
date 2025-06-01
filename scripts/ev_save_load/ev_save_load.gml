@@ -27,7 +27,7 @@ function ev_load() {
 	global.wings_style = ini_read_real("options", "wings", 0)
 	global.blade_style = ini_read_real("options", "blade", 0)
 	global.highest_grube_stack = ini_read_real("stats", "grube", 1)
-	
+	global.seen_intro = true;
 	global.should_log_udp = ini_read_real("options", "should_log", false)
 	global.logging_port = ini_read_real("options", "logging_port", 1235)
 	

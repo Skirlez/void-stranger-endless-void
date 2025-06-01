@@ -262,7 +262,13 @@ function read_offline_levels() {
 		var offline_levels = array_create(array_length(files));
 		for (var i = 0; i < array_length(files); i++) {
 			var pack_string = read_pack_string_from_file(files[i])
-			
+			if !is_string(pack_string) {
+				array_delete(nodeless_packs, i, 1)
+				array_delete(files, i, 1)
+				array_delete(offline_levels, i, 1)
+				i--;
+				continue;
+			}
 			var pack = import_pack_nodeless(pack_string);
 			pack.save_name = files[i];
 			

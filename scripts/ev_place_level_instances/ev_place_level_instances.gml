@@ -9,7 +9,13 @@ function ev_place_level_instances(level) {
 	global.wall_tilemaps[wall_types.mon] = layer_tilemap_create("Tiles_Mon_Wall", 0, 0, global.tileset_mon, 224, 144)
 	global.wall_tilemaps[wall_types.dis] = layer_tilemap_create("Tiles_DIS_Wall", 0, 0, global.tileset_dis, 224, 144)
 	global.wall_tilemaps[wall_types.ex] = layer_tilemap_create("Tiles_EX_Wall", 0, 0, global.tileset_ex, 224, 144)
-
+	
+	if level.theme == level_themes.white_void {
+		var bg_layer = layer_get_id("Background")
+		var bg = layer_background_get_id(bg_layer)
+		layer_background_blend(bg, c_white)
+	}
+	
 	var extra_data = {
 		lvl : level,
 		wall_tilemaps : global.wall_tilemaps,

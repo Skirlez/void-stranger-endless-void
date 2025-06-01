@@ -2,30 +2,6 @@ event_inherited();
 
 
 
-/*
-Removes all connections to a node and returns the list of node instances from which it disconnected.
-*/
-function remove_connections_to_node(target) {
-	var list = []
-	
-	function disconnect_from_node_instance(target) {
-		for (var i = 0; i < array_length(exit_instances); i++) {
-			if (exit_instances[i] == target) {
-				create_falling_arrow_and_number(id, target, i, array_length(exit_instances));
-				array_delete(exit_instances, i, 1)
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	with (global.node_object) {
-		if disconnect_from_node_instance(target)
-			array_push(list, id)
-	}
-
-	return list;
-}
 
 switch (judgment_type) {
 	case judgment_types.destroy_node:

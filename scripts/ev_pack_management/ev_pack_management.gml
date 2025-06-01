@@ -94,7 +94,7 @@ function convert_room_nodes_to_structs() {
 
 function import_pack_nodeless(pack_string) {
 	var pack = new pack_struct();
-	var arr = ev_string_split(pack_string, "&")
+	var arr = ev_string_split_stop(pack_string, "&", 8)
 	pack.version = int64_safe(arr[0], 1);
 	pack.name = base64_decode(arr[1])
 	pack.description = base64_decode(arr[2])
@@ -138,7 +138,7 @@ function place_default_nodes(pack) {
 function import_pack(pack_string) {
 	var pack = new pack_struct();
 	
-	var arr = ev_string_split(pack_string, "&")
+	var arr = ev_string_split_buffer(pack_string, "&", string_length(pack_string))
 	pack.version = int64_safe(arr[0], 1);
 	pack.name = base64_decode(arr[1])
 	pack.description = base64_decode(arr[2])
@@ -153,7 +153,7 @@ function import_pack(pack_string) {
 	
 	
 	// $ is reserved for this purpose - it cannot be used anywhere else but delimiting node state strings
-	var node_state_strings = ev_string_split(node_string, "$");
+	var node_state_strings = ev_string_split_buffer(node_string, "$", 200);
 	
 	for (var i = 0; i < array_length(node_state_strings); i++) {
 		var node_state = read_node_state(node_state_strings[i])
@@ -323,11 +323,11 @@ function export_pack(pack) {
 
 
 function get_thumbnail_level_string_from_pack_string(pack_string) {
-	var arr = ev_string_split(pack_string, "&")
+	var arr = ev_string_split_buffer(pack_string, "&", 500)
 	// the seventh section contains all the nodes
 	var node_string = arr[8];
 	
-	var node_state_strings = ev_string_split(node_string, "$");
+	var node_state_strings = ev_string_split_buffer(node_string, "$", 200);
 	for (var i = 0; i < array_length(node_state_strings); i++) {
 		var node = read_node_struct_from_state_string(node_state_strings[i]);
 		if (node != global.pack_editor_instance.thumbnail_node) 
@@ -358,6 +358,8 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 
 function read_pack_string_from_file(save_name) {
 	var file = file_text_open_read(global.packs_directory + save_name + "." + pack_extension)
+	if file == -1
+		return file;
 	var pack_string = file_text_read_string(file)
 	file_text_close(file)
 	return pack_string;

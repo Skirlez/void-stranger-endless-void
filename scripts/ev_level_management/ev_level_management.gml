@@ -143,8 +143,8 @@ function export_level(level) {
 }
 
 function level_string_content_sha1(level_string) {
-	var arr = ev_string_split(level_string, "|")
-	if array_length(arr) != 11
+	var arr = ev_string_split_buffer(level_string, "|", 100)
+	if array_length(arr) < 11
 		return sha1_string_utf8("fuck")
 	var str = sha1_string_utf8(arr[8] + "|" + arr[9] + "|" + arr[10])
 	return str;
@@ -187,11 +187,17 @@ enum level_themes {
 	universe,
 	white_void
 }
+
 // imports a level from a level string
+// TODO: this function is a bottleneck for all of EV. it is slow
+// (more precisely, import_process_tiles is slow), and is called
+// not only when loading levels, but also for packs (since they have a lot of levels!). 
+// therefore, if you can optimize it that'd be great. the level format is a bit
+// poorly engineered so it's a hard task.
 function import_level(level_string) {
 	var level = new level_struct()
 	
-	var strings = ev_string_split(level_string, "|");
+	var strings = ev_string_split_buffer(level_string, "|", 100);
 	var version_string = strings[0];
 	var version = int64_safe(version_string, 0);
 	if (version <= 0)

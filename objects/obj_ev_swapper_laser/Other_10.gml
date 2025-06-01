@@ -8,6 +8,11 @@ with (swap_object)
     y = asset_get_index("obj_player").y
 	if (object_index == other.tree_index)
 		y -= 24
+	if (object_index == other.boulder_index && b_form == 10) {
+		ev_tis_wraparound()
+		if o_move_x == 0 && o_move_y == 0
+			swapper_disable_lightning = true;
+	}
 	
     with (instance_place(x, y, asset_get_index("obj_glassfloor")))
         didplayermove = false
@@ -50,9 +55,9 @@ with (asset_get_index("obj_player"))
         }
     }
     with (instance_place(x, y, asset_get_index("obj_glassfloor")))
-        didplayermove = false
+        didplayermove = true
     with (instance_place(x, y, asset_get_index("obj_bombfloor")))
-        didplayermove = false		
+        didplayermove = true		
 }
 with (asset_get_index("obj_ev_swapper_target"))
     fade_away = true

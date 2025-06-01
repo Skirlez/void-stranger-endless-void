@@ -66,7 +66,6 @@ function get_all_level_node_instances() {
 
 function get_all_node_instances() {
 	var node_instances = []
-	
 	static nodes_layer = layer_get_id("Nodes")
 	var node_instance_elements = layer_get_all_elements(nodes_layer)
 	for (var i = 0; i < array_length(node_instance_elements); i++) {
@@ -118,4 +117,45 @@ function try_level_name_and_rename(lvl, level_nodes) {
 			}
 		}
 	}
+}
+
+
+
+
+function get_nodes_connected_to_node(target) {
+	function is_connected(target) {
+		for (var i = 0; i < array_length(exit_instances); i++) {
+			if (exit_instances[i] == target)
+				return true;
+		}
+		return false;
+	}
+	var list = []
+	with (global.node_object) {
+		if is_connected(target)
+			array_push(list, id)
+	}
+	return list;
+}
+
+/*
+Removes all connections to a node and returns the list of node instances from which it disconnected.
+*/
+function remove_connections_to_node(target) {
+	function disconnect_from_node_instance(target) {
+		for (var i = 0; i < array_length(exit_instances); i++) {
+			if (exit_instances[i] == target) {
+				create_falling_arrow_and_number(id, target, i, array_length(exit_instances));
+				array_delete(exit_instances, i, 1)
+				return true;
+			}
+		}
+		return false;
+	}
+	var list = []
+	with (global.node_object) {
+		if disconnect_from_node_instance(target)
+			array_push(list, id)
+	}
+	return list;
 }

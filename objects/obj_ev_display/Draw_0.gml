@@ -8,7 +8,10 @@ if outside_view
 
 function draw() {
 	surface_set_target(game_surface)
-	draw_clear_alpha(c_black, 1)
+	if lvl.theme == level_themes.white_void
+		draw_clear_alpha(c_white, 1)
+	else
+		draw_clear_alpha(c_black, 0)
 	if lvl.theme == level_themes.universe {
 		if global.is_merged {
 			var universe_instance = global.editor_instance.get_universe_instance();
@@ -29,71 +32,72 @@ function draw() {
 	function draw_tile_state(i, j, tile_state, preview = false) {
 		tile_state.tile.draw_function(tile_state, i, j, preview, lvl, no_spoiling)
 	}
+	if lvl.theme != level_themes.white_void {
+		draw_sprite(base_ui, 0, 0, 8 * 16)
 
-	draw_sprite(base_ui, 0, 0, 8 * 16)
-
-	draw_set_font(global.ev_font)
-	draw_set_halign(fa_left)
-	draw_set_valign(fa_right)
-	draw_set_color(c_black)
+		draw_set_font(global.ev_font)
+		draw_set_halign(fa_left)
+		draw_set_valign(fa_right)
+		draw_set_color(c_black)
 
 
-	draw_text_ext(1 * 16, 9 * 16 + 1, "VO", 0, -1)
-	draw_text_ext(2 * 16, 9 * 16 + 1, "ID", 0, -1)
+		draw_text_ext(1 * 16, 9 * 16 + 1, "VO", 0, -1)
+		draw_text_ext(2 * 16, 9 * 16 + 1, "ID", 0, -1)
 
-	draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
-	draw_text(5 * 16, 9 * 16 + 1, "00")
+		draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
+		draw_text(5 * 16, 9 * 16 + 1, "00")
 
 	
-	if lvl.bount == -1 { 
-		// idk how void stranger draws it but this is the only way i could make it align properly
-		draw_text(12 * 16, 9 * 16 + 1, "V?")
-		draw_text(13 * 16, 9 * 16 + 1, "?")
-		draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
-	}
-	else {
-		draw_set_halign(fa_center)
-		draw_set_valign(fa_middle)	
-		var hundreds_digit = lvl.bount div 100;
-		var tenths_digit = (lvl.bount % 100) div 10;
-		var units_digit = lvl.bount % 10;
-		
-		draw_text(12 * 16 + 4, 9 * 16 - 8, "V")
-		
-		function draw_digit(pos_x, pos_y, digit) {
-			// no idea why i need to do this
-			var offset = (digit == 1 || digit == 3 || digit == 5 || digit == 6 || digit == 8 || digit == 9)	
-			draw_text(pos_x - offset, pos_y, string(digit))
+		if lvl.bount == -1 { 
+			// idk how void stranger draws it but this is the only way i could make it align properly
+			draw_text(12 * 16, 9 * 16 + 1, "V?")
+			draw_text(13 * 16, 9 * 16 + 1, "?")
+			draw_text(13 * 16 + 8, 9 * 16 + 1, "?")
 		}
+		else {
+			draw_set_halign(fa_center)
+			draw_set_valign(fa_middle)	
+			var hundreds_digit = lvl.bount div 100;
+			var tenths_digit = (lvl.bount % 100) div 10;
+			var units_digit = lvl.bount % 10;
 		
-		draw_digit(13 * 16 - 4, 9 * 16 - 8, hundreds_digit)
-		draw_digit(13 * 16 + 4, 9 * 16 - 8, tenths_digit)
-		draw_digit(14 * 16 - 4, 9 * 16 - 8, units_digit)
-	}
-
-	var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
-	draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
-	if (lvl.burdens[burden_swapper]) 
-		draw_sprite(asset_get_index("spr_ev_swapper"), 0, 16 * 6 + 16, 8 * 16) //I'm bad at math.
-	for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
-		if lvl.burdens[i] {
-			switch i {
-				case 2:
-					if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
-					else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
-					break
-				case 1:
-					burdens_sprite = ev_get_burden_sprite(global.wings_style)
-					break
-				case 0:
-					burdens_sprite = ev_get_burden_sprite(global.memory_style)
-					break
-				default:
-					burdens_sprite = asset_get_index("spr_ev_items_lev") //Avoid displaying the diamond thing
-					break
+			draw_text(12 * 16 + 4, 9 * 16 - 8, "V")
+		
+			function draw_digit(pos_x, pos_y, digit) {
+				// no idea why i need to do this
+				var offset = (digit == 1 || digit == 3 || digit == 5 || digit == 6 || digit == 8 || digit == 9)	
+				draw_text(pos_x - offset, pos_y, string(digit))
 			}
-			if (i != 4) 
-				draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)		
+		
+			draw_digit(13 * 16 - 4, 9 * 16 - 8, hundreds_digit)
+			draw_digit(13 * 16 + 4, 9 * 16 - 8, tenths_digit)
+			draw_digit(14 * 16 - 4, 9 * 16 - 8, units_digit)
+		}
+
+		var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
+		draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
+		if (lvl.burdens[burden_swapper]) 
+			draw_sprite(asset_get_index("spr_ev_swapper"), 0, 16 * 6 + 16, 8 * 16) //I'm bad at math.
+		for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
+			if lvl.burdens[i] {
+				switch i {
+					case 2:
+						if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
+						else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
+						break
+					case 1:
+						burdens_sprite = ev_get_burden_sprite(global.wings_style)
+						break
+					case 0:
+						burdens_sprite = ev_get_burden_sprite(global.memory_style)
+						break
+					default:
+						burdens_sprite = asset_get_index("spr_ev_items_lev") //Avoid displaying the diamond thing
+						break
+				}
+				if (i != 4) 
+					draw_sprite_part(burdens_sprite, 0, 16 + i * 16, 0, 16, 16, 16 * (8 + i), 8 * 16)		
+			}
 		}
 	}
 	
@@ -122,7 +126,7 @@ function draw() {
 		}
 	}
 	
-	var alpha = tile_mode ? 0.3 : 1;
+	var alpha = tile_mode ? 0.4 : 1;
 	draw_set_alpha(alpha);
 	
 	for (var i = 0; i <= last_offset_index; i++) {
@@ -233,7 +237,9 @@ else if global.is_merged {
 
 var draw_x = x;
 
+gpu_set_blendenable(false)
 draw_surface_ext(game_surface, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
+gpu_set_blendenable(true)
 draw_sprite_ext(border_sprite, 0, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
 
 

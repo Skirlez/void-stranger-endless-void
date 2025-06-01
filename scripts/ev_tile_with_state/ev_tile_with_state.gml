@@ -10,7 +10,7 @@ function struct_copy(SS) {
 	var AR = variable_struct_get_names(SS);
 	
 	var SS_new = {};
-	for (var i = 0; i < array_length(AR); i++;) {
+	for (var i = 0; i < array_length(AR); i++) {
 		SS_new[$ AR[i]] = SS[$ AR[i]];
 	}
 	return(SS_new);

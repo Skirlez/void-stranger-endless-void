@@ -3,6 +3,7 @@
 // handles transitions, startup networking/file io and more
 
 randomize()
+surface_depth_disable(false)
 global.g_mode = false;
 global.latest_lvl_format = 3;
 global.latest_pack_format = 1;
@@ -234,18 +235,54 @@ function tile_state_has_edge(tile_state) {
 function get_floor_sprite(lvl) {
 	static floor_sprite = agi("spr_floor");
 	static universe_floor_sprite = agi("spr_floor_alpha")
+	static floorvanish_sprite = agi("spr_floor_unknown")
 	if lvl.theme == level_themes.regular
 		return floor_sprite
 	if lvl.theme == level_themes.universe
 		return universe_floor_sprite;
-	return floor_sprite;
+	return floorvanish_sprite;
 }
 
+function get_player_object_pos(lvl) {
+	// player position is cached using static variables
+	static player_i = 0;
+	static player_j = 0;
+	static player = global.editor_instance.object_player;
+	
+	if lvl.objects[player_i][player_j].tile == player {
+		return { i : player_i, j : player_j }
+	}
+	
+	for (var i = 0; i < 9; i++) {
+		for (var j = 0; j < 14; j++) {
+			if (lvl.objects[i][j].tile == player) {
+				player_i = i;
+				player_j = j;
+				return { i : i, j : j };
+			}
+		}
+	}
+	return { i : 4, j : 7 }
+}
 
 tile_default = new editor_tile("Floor", agi("spr_floor"), "fl", "obj_floor")
 tile_default.cube_type = cube_types.edge_constant
-tile_default.draw_function = function(tile_state, i, j, preview, lvl) {
-	draw_sprite(get_floor_sprite(lvl), 0, j * 16 + 8, i * 16 + 8)
+tile_default.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
+	var alpha = draw_get_alpha();
+	if lvl.theme == level_themes.white_void {
+		var pos = get_player_object_pos(lvl)
+		var diff_i = abs(pos.i - i);
+		var diff_j = abs(pos.j - j);
+		delete pos;
+		if (max(diff_i, diff_j) > 2) {
+			alpha = alpha * 0.4 * !no_spoilers;
+
+		}
+		
+		
+	}
+		
+	draw_sprite_ext(get_floor_sprite(lvl), 0, j * 16 + 8, i * 16 + 8, 1, 1, 0, c_white, alpha)
 }
 
 
@@ -253,16 +290,31 @@ tile_default.draw_function = function(tile_state, i, j, preview, lvl) {
 
 // it may seem like this function is drawing the floor sprite,
 // that's only because the edge graphic is the second index of that sprite
-function draw_pit(i, j, lvl, obscure_universe) {
+function draw_pit(i, j, lvl, obscure_universe, no_spoilers) {
 	static pit_sprite = agi("spr_pit");
+	
 	if i != 0 && global.editor_instance.tile_state_has_edge(lvl.tiles[i - 1][j]) {
 		static default_floor_sprite = agi("spr_floor");
 		var spr;
-		if lvl.tiles[i - 1][j].tile == global.editor_instance.tile_default
+		var alpha = draw_get_alpha();
+		if lvl.tiles[i - 1][j].tile == global.editor_instance.tile_default {
+			if lvl.theme == level_themes.white_void {
+				// maybe we need to not draw because the tile itself also isn't drawing
+				var pos = get_player_object_pos(lvl)
+				var diff_i = abs(pos.i - (i - 1));
+				var diff_j = abs(pos.j - j);
+				delete pos;
+				if (max(diff_i, diff_j) > 2) {
+					alpha = alpha * 0.4 * !no_spoilers;
+				}
+			}
+			
 			spr = get_floor_sprite(lvl); // default tile might have themed edge
-		else
+		}
+		else {
 			spr = default_floor_sprite;
-		draw_sprite(spr, 1, j * 16 + 8, i * 16 + 8)
+		}
+		draw_sprite_ext(spr, 1, j * 16 + 8, i * 16 + 8, 1, 1, 0, c_white, alpha)
 	}
 	else if obscure_universe && lvl.theme == level_themes.universe {
 		draw_sprite(pit_sprite, 1, j * 16 + 8, i * 16 + 8) // draw black square to hide away the universe background
@@ -271,15 +323,17 @@ function draw_pit(i, j, lvl, obscure_universe) {
 
 
 tile_pit = new editor_tile(no_name, agi("spr_pit"), "pt", "obj_pit", "Pit", tile_flags.unplaceable)
-tile_pit.draw_function = function(tile_state, i, j, preview, lvl) {
-	draw_pit(i, j, lvl, true)
+tile_pit.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
+	draw_pit(i, j, lvl, true, no_spoilers)
 }
 tile_pit.iostruct = {
 	read: default_reader,
 	write : default_writer,
 	place : function(tile_state, i, j, extra_data) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
-		if i == 0 || !global.editor_instance.tile_state_has_edge(extra_data.lvl.tiles[i - 1][j])
+		if instance_exists(inst.pit_bg)
+				&& (i == 0 
+				|| !global.editor_instance.tile_state_has_edge(extra_data.lvl.tiles[i - 1][j]))
 			inst.pit_bg.no_edge = true;
 			
 	}
@@ -287,8 +341,8 @@ tile_pit.iostruct = {
 
 
 tile_glass = new editor_tile("Glass", agi("spr_glassfloor"), "gl", "obj_glassfloor", "Floor_INS")
-tile_glass.draw_function = function(tile_state, i, j, preview, lvl) {
-	draw_pit(i, j, lvl, false)
+tile_glass.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
+	draw_pit(i, j, lvl, false, no_spoilers)
 	default_draw_function(tile_state, i, j)
 }
 tile_bomb = new editor_tile("Bomb Tile", agi("spr_bombfloor"), "mn", "obj_bombfloor")
@@ -327,6 +381,8 @@ function can_tile_press_buttons(tile) {
 }
 
 function level_has_unpressed_button(lvl) {
+	// TODO calculate hash to cache this result? maybe?
+	
 	static fs = tile_floorswitch;
 	for (var i = 0; i < 8; i++) {
 		for (var j = 0; j < 14; j++) {
@@ -1337,14 +1393,26 @@ object_mural.iostruct = {
 		inst.sprite_index = agi("spr_ev_mural")
 		inst.image_speed = global.editor_instance.mural_get_image_index(i, j, extra_data.lvl);
 		inst.inscription = 19;
-		inst.ev_mural_brand = global.author.brand;
-		inst.ev_mural_text = "onlyagruberemains"
+		inst.ev_mural_brand = tile_state.properties.brd;
+		inst.ev_mural_text = tile_state.properties.txt;
 	}
 }
 object_mural.draw_function = function(tile_state, i, j, preview, lvl) {
 	var img = global.editor_instance.mural_get_image_index(i, j, lvl)
 
 	draw_sprite(tile_state.tile.spr_ind, img, j * 16 + 8, i * 16 + 8)
+}
+object_mural.properties_generator = function () {
+	return {
+		brd : int64(0),
+		txt : "",
+	}
+}
+object_mural.zed_function = function(tile_state) {
+	new_window(10, 8, agi("obj_ev_mural_window"), {
+		mural_properties : tile_state.properties
+	})	
+	global.mouse_layer = 1
 }
 
 
@@ -1626,7 +1694,7 @@ function on_startup_finish() {
 	get_levels = noone;
 	validate_levels = noone;
 	startup_timeout = 0;
-	room_goto(agi("rm_ev_menu"))
+	room_goto(agi("rm_ev_pretitle"))
 }
 
 

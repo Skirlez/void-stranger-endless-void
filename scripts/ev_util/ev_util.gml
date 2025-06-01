@@ -79,8 +79,25 @@ function ev_string_split(str, delimiter) {
 	array_push(arr, build);	
 	return arr;
 }
-function ev_string_split_buffer(str, delimiter, approx_average_substr_length) {
+function ev_string_split_stop(str, delimiter, max_splits) {
+	var arr = []
+	var build = ""
+	for (var i = 1; i <= string_length(str); i++) {
+		var c = string_char_at(str, i)
+		if (c == delimiter) {
+			array_push(arr, build);	
+			if array_length(arr) == max_splits
+				return arr;
+			build = ""
+		}
+		else
+			build += c;	
+	}
+	array_push(arr, build);	
+	return arr;
+}
 
+function ev_string_split_buffer(str, delimiter, approx_average_substr_length) {
 	var delimiter_ord = ord(delimiter)
 	
 	var size = string_length(str) + 1;

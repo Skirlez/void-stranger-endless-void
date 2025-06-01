@@ -109,3 +109,4 @@ text_surface = noone
 if !allow_edit
 	is_selectable = false
 
+first_expansion_frame = false;
