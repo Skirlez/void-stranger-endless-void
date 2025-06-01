@@ -1,5 +1,5 @@
 global.void_radio_disable_stack = 0;
-function ev_play_void_radio() {
+function ev_play_void_radio() {	
 	if global.void_radio_disable_stack != 0
 		return;
 	date_set_timezone(timezone_utc)
@@ -47,15 +47,16 @@ function ev_play_void_radio() {
 	var time = track_length - (sum_seconds - seconds)
 	
 	var current_track = agi(audio_get_name(global.music_inst))
-	if track == current_track && abs(audio_sound_get_track_position(global.music_inst) - (start + time)) < 0.3
+	if track == current_track && abs(audio_sound_get_track_position(global.music_inst) - (start + time)) < 0.4
 		return;
 	
 	ev_play_music(track, false, true)
 	audio_sound_set_track_position(global.music_inst, start + time);
 	
-	if !audio_is_playing(agi("snd_ev_radio_static")) {
+	static static_sfx = noone;
+	if !audio_is_playing(static_sfx) || audio_sound_get_gain(static_sfx) == 0 {
 		// play static and fade in
-		var static_sfx = audio_play_sound(agi("snd_ev_radio_static"), 0, false, 1)
+		static_sfx = audio_play_sound(agi("snd_ev_radio_static"), 0, false, 1)
 		audio_sound_gain(static_sfx, 0, 800)
 	}
 	

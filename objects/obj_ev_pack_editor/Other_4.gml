@@ -4,6 +4,7 @@ if (room == global.pack_editor_room) {
 		remember_camera_y = 993;
 		remember_zoom = 0;
 		in_pack_editor = true;
+		
 	}
 
 	if global.void_radio_on
@@ -19,5 +20,6 @@ if (room == global.pack_editor_room) {
 	selected_thing = pack_things.nothing
 	ev_switch_to_user_palette()
 	
-	//instance_destroy(agi("obj_darkness_begins"))
+	// exit creates this when you use it and it does persist so we Kill It
+	instance_destroy(agi("obj_darkness"))
 }

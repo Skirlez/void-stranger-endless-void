@@ -17,7 +17,7 @@
   },
   "preload": false,
   "sampleRate": 44100,
-  "soundFile": "snd_ev_mark_placechanger.wav",
+  "soundFile": "snd_ev_mark_placechanger.ogg",
   "type": 0,
-  "volume": 0.5,
+  "volume": 1.0,
 }

@@ -19,5 +19,5 @@
   "sampleRate": 44100,
   "soundFile": "snd_ev_use_placechanger.ogg",
   "type": 0,
-  "volume": 0.8,
+  "volume": 1.0,
 }

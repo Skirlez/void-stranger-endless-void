@@ -43,5 +43,10 @@ function ev_place_level_instances(level) {
 		ds_grid_set(agi("obj_inventory").ds_player_info, 1, 2, level.bount)
 	}	
 	ds_grid_set(agi("obj_inventory").ds_player_info, 0, 2, bount_string)
+	
+	// this creates collision where there's wall tiles (where there's the absence of the pit object)
+	with (agi("obj_game")) {
+		event_perform(ev_alarm, 5)	
+	}
 }
 

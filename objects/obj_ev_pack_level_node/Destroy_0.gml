@@ -1,5 +1,3 @@
 node_instance_destroy()
 if instance_exists(display)
 	instance_destroy(display)
-if instance_exists(grube_solid)
-	instance_destroy(grube_solid)

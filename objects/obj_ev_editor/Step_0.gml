@@ -302,4 +302,3 @@ if (stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten != noone) {
 	stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = noone
 }
 
-
