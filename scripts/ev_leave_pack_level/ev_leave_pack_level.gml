@@ -17,8 +17,8 @@ function ev_clear_pack_level(exit_number = 0) {
 			index = array_length(current_node_state.exits) - 1;
 		if (index == -1) {
 			ev_leave_pack()
-			ev_notify("Cleared node with no exits!")
-			return
+			ev_notify("Cleared level with no exits!")
+			return;
 		}
 		var new_state = current_node_state.exits[index]
 		move_to_node_state(new_state);	

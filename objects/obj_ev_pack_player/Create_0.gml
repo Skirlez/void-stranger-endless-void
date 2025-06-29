@@ -1,19 +1,38 @@
 ev_set_play_variables()
+ev_prepare_level_burdens()
+
 
 current_node_state = noone;
 brand_node_states = noone;
 
-
-
 in_brand_room = false;
+
+function move_to_root_state() {
+	move_to_node_state(global.pack.starting_node_states[0])
+}
+
 function move_to_node_state(state) {
 	var potential_next_state = state;
 	do {
 		current_node_state = potential_next_state;
 		potential_next_state = current_node_state.node.play_evaluate_immediate(current_node_state);
-	} until (potential_next_state == noone)
+	} until (potential_next_state < 0)
 	
-	room_restart();
+	if potential_next_state == node_return_status.need_exits {
+		ev_notify("Reached node with no exits!")	
+		ev_leave_pack()
+	}
+	else if potential_next_state == node_return_status.not_immediate {
+		if !global.playtesting && current_node_state.node == global.pack_editor_instance.level_node {
+			save_pack_progress(current_node_state.properties.level.name)
+		}
+
+		room_restart();
+	}
+	else {
+		ev_notify("????")
+		ev_leave_pack()
+	}
 }
 function end_pack() {
 	ev_leave_pack()	
@@ -40,6 +59,9 @@ function on_room_create() {
 			first_state = global.pack.starting_node_states[0];
 		}
 		else if global.playtesting {
+			ev_prepare_level_burdens(global.pack_playtest_parameters.burdens);
+			ds_grid_set(agi("obj_inventory").ds_player_info, 1, 1, global.pack_playtest_parameters.locust_count)
+			
 			var node_id = global.pack_save.node_id;
 			var node_states = ds_map_keys_to_array(global.pack_editor_instance.node_state_to_id_map);
 			for (var i = 0; i < array_length(node_states); i++) {
@@ -50,6 +72,13 @@ function on_room_create() {
 			}
 		} 
 		else {
+			global.branefuck_persistent_memory = global.pack_save.persistent_memory;
+			var track = agi(global.pack_save.music);
+			if track != -1 {
+				ev_play_music(agi(global.pack_save.music), true, false)
+			}
+			ev_prepare_level_burdens(global.pack_save.burdens);
+			
 			function find_level_node_state_with_name(node_state, name, explored_states_map) {
 				static level_node = global.pack_editor_instance.level_node
 				if (ds_map_exists(explored_states_map, node_state))
@@ -68,11 +97,12 @@ function on_room_create() {
 				return noone;
 			}
 			var map = ds_map_create();
+			var target_name = base64_decode(global.pack_save.level_name)
 			for (var i = 0; i < array_length(global.pack.starting_node_states); i++) {
-				var node_state = find_level_node_state_with_name(global.pack.starting_node_states[i], global.pack_save.level_name, map)
+				var node_state = find_level_node_state_with_name(global.pack.starting_node_states[i], target_name, map)
 				if (node_state != noone) {
 					first_state = node_state
-					log_info($"Found level from save with name {global.pack_save.level_name}")
+					log_info($"Found level from save with name {target_name}")
 					break;	
 				}
 			}
@@ -83,6 +113,8 @@ function on_room_create() {
 					+ "Sadly choosing root node.")
 				first_state = global.pack.starting_node_states[0];
 			}
+			
+			
 		}
 		move_to_node_state(first_state)
 	}

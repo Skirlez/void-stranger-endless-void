@@ -5,7 +5,7 @@ textbox_instance = instance_create_layer(x, y, "WindowElements", asset_get_index
 	txt : node_instance.program,
 	allow_alphanumeric : true,
 	exceptions : global.branefuck_characterset,
-	char_limit : 260,
+	char_limit : 9999,
 	base_scale_x : 8,
 });
 

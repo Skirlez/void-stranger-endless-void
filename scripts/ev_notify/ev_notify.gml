@@ -9,7 +9,7 @@ function ev_notify(txt) {
 	i.txt = txt
 	i.vspeed = 6;
 
-	log_info($"Notification: {txt}")
+	log_info($"[Notification] {txt}")
 }
 function move_all_notifications_up() {
 	static object = agi("obj_ev_notification")

@@ -14,7 +14,8 @@ surface_set_target(text_surface)
 draw_clear_alpha(c_black, 0)
 var filtered_text
 var draw_color
-if txt == "" && (window == -1 || window.selected_element != id) {
+if txt == "" && (window == -1 || window.selected_element != id)
+		|| (ev_is_mouse_on_me() && ev_mouse_right_held() && empty_text != "") {
 	filtered_text = empty_text
 	draw_color = c_gray
 }
@@ -23,7 +24,7 @@ else {
 	draw_color = c_white
 }
 draw_set_color(draw_color)
-draw_text_ext(3, 0, filtered_text, 15, -1)
+draw_text_ext(3, 0, filtered_text, 16, -1)
 surface_reset_target()
 
 draw_surface_ext(text_surface, x, y, 1, 1, 0, c_white, image_alpha)

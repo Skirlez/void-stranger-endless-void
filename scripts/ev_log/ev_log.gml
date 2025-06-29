@@ -19,6 +19,6 @@ function log_info(text){
 function log_udp(text) {
 	var buffer = buffer_create(string_length(text) + 1, buffer_fixed, 1);
 	buffer_write(buffer, buffer_string, text);
-	network_send_udp_raw(global.logging_socket, "127.0.0.1", global.logging_port, buffer, buffer_tell(buffer))
+	network_send_udp_raw(global.logging_socket, global.logging_ip, global.logging_port, buffer, buffer_tell(buffer))
 	buffer_delete(buffer)
 }

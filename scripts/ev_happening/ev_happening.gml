@@ -24,14 +24,18 @@ You are allowed to subscribe more than once to a happening with the same functio
 
 function ev_happening() constructor {
 	self.callbacks = []
+	
 	function subscribe(callback) {
-		if (ev_array_contains(callback))
-			return;
+		for (var i = 0; i < array_length(callbacks); i++) {
+			if (method_get_index(callbacks[i]) == method_get_index(callback)) {
+				return;
+			}
+		}
 		array_push(callbacks, callback)
 	}
 	function unsubscribe(callback) {
 		for (var i = 0; i < array_length(callbacks); i++) {
-			if (callbacks[i] == callback) {
+			if (method_get_index(callbacks[i]) == method_get_index(callback)) {
 				array_delete(callbacks, i, 1)
 				return;
 			}
@@ -41,6 +45,15 @@ function ev_happening() constructor {
 	function trigger(struct) {
 		for (var i = 0; i < array_length(callbacks); i++) {
 			callbacks[i](struct);
+		}
+	}
+	
+	function unsubscribe_belonging_to_instance(inst) {
+		for (var i = 0; i < array_length(callbacks); i++) {
+			if (method_get_self(callbacks[i]) == inst) {
+				array_delete(callbacks, i, 1)
+				return;
+			}
 		}
 	}
 }

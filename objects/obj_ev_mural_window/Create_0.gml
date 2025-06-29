@@ -10,6 +10,7 @@ mural_text = instance_create_layer(112 - 40, 72 + 20, "WindowElements", asset_ge
 	exceptions : "",
 	allow_newlines : false,
 	opened_x : 112,
-	opened_y : 72 + 40
+	opened_y : 72 + 40,
+	txt : mural_properties.txt,
 })
 add_child(mural_text)

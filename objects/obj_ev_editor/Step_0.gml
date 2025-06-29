@@ -22,12 +22,9 @@ if room == global.level_room {
 		if (ev_is_leave_key_pressed()) {
 			ev_leave_level()
 		}
-		global.level_time++;
 	}
 }
-if (ev_is_room_gameplay(room)) {
-	global.level_time++;
-}
+
 
 if (room == asset_get_index("rm_ev_startup")) {
 	if (startup_timeout != -1) {
@@ -150,37 +147,41 @@ else if (edit_pack_transition != -1) {
 else if play_pack_transition_time != -1 {
 	play_pack_transition_time--;
 	if play_pack_transition_time == 0 {
-		global.pack_save = noone;
+		
+		
+		global.pack_save = load_pack_progress();
 		room_goto(global.pack_level_room)
 	}
 }
 
 if room == global.editor_room { 
-	if ev_is_tile_mode_hotkey_pressed() && global.mouse_layer == 0 {
-		switch_tile_mode(!global.tile_mode)
-		audio_play_sound(global.select_sound, 10, false, 1, 0, 1.2)
-	}
+	if global.mouse_layer == 0 {
+		if ev_is_tile_mode_hotkey_pressed() {
+			switch_tile_mode(!global.tile_mode)
+			audio_play_sound(global.select_sound, 10, false, 1, 0, 1.2)
+		}
 
-	if keyboard_check(vk_control) && global.mouse_layer == 0 {
-		if keyboard_check_pressed(ord("Z")) {
-			undo_repeat = undo_repeat_frames_start
-			undo();
-		}
-	
-		if keyboard_check(ord("Z")) {
-			undo_repeat--;	
-			if undo_repeat <= 0 {
-				undo()
-				undo_repeat_frames_speed += 2
-		
-				if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
-					undo_repeat_frames_speed = undo_repeat_frames_max_speed;
-				undo_repeat = undo_repeat_frames_start - undo_repeat_frames_speed
+		if keyboard_check(vk_control) {
+			if keyboard_check_pressed(ord("Z")) {
+				undo_repeat = undo_repeat_frames_start
+				undo();
 			}
-		}
-		else {
-			undo_repeat = -1	
-			undo_repeat_frames_speed = 0
+	
+			if keyboard_check(ord("Z")) {
+				undo_repeat--;	
+				if undo_repeat <= 0 {
+					undo()
+					undo_repeat_frames_speed += 2
+		
+					if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
+						undo_repeat_frames_speed = undo_repeat_frames_max_speed;
+					undo_repeat = undo_repeat_frames_start - undo_repeat_frames_speed
+				}
+			}
+			else {
+				undo_repeat = -1	
+				undo_repeat_frames_speed = 0
+			}
 		}
 	}
 }

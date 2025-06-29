@@ -31,7 +31,14 @@ if global.is_merged {
 	asset_get_index("obj_ev_editor").last_death_count = global.death_count
 }
 
-var destroy_value = evaluate_input(destroy_value_str)
+
+var destroy_value;
+if destroy_value_str == ""
+	destroy_value = "" // statue will never destroy
+if string_is_int(destroy_value_str)
+	destroy_value = int64(destroy_value_str)
+else
+	destroy_value = execute_branefuck($",g:{destroy_value_str},", 0)
 value = execute_branefuck(program, destroy_value)
 if (value == destroy_value) {
 	with (add_inst)

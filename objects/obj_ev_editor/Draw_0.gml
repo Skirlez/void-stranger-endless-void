@@ -32,8 +32,14 @@ if (room == global.editor_room) {
 		
 		
 		if stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten == noone {
-			var sprite = sprite_create_from_surface(spin_surface, 0, 0, 16, 16, false, false, 8, 0)
-			stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = sprite;
+			var sprite;
+			if global.disable_3d_cube_bs {
+				sprite = state.tile.spr_ind
+			}
+			else {
+				sprite = sprite_create_from_surface(spin_surface, 0, 0, 16, 16, false, false, 8, 0)
+				stupid_sprite_i_can_only_delete_later_lest_the_cube_shall_whiten = sprite;
+			}
 			
 			if state.tile.cube_type == cube_types.uniform
 				ev_draw_cube(sprite, 0, 27, draw_y, 7, spin_h, spin_v)		

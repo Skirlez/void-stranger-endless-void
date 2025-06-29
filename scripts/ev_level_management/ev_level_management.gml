@@ -299,7 +299,7 @@ function get_multiplier(str, pointer) {
 		}
 		break;
 	}
-	var num = int64(num_string)
+	var num = int64_safe(num_string, 1)
 	return { mult : num, offset : count };
 }
 

@@ -1,7 +1,16 @@
-
-if image_index == thing_picker {
-	if ev_is_picker_hotkey_pressed() && !selected
-		event_user(0)
+if global.mouse_layer == 0 {
+	if image_index == thing_eraser {
+		if ev_is_eraser_hotkey_pressed() && !selected
+			event_user(0)
+	}
+	if image_index == thing_picker {
+		if ev_is_picker_hotkey_pressed() && !selected
+			event_user(0)
+	}
+	if image_index == thing_plucker {
+		if ev_is_plucker_hotkey_pressed() && !selected
+			event_user(0)
+	}
 }
 
 if (image_index == thing_plucker || image_index == thing_eraser || image_index == thing_picker)

@@ -88,11 +88,19 @@ function execute_branefuck(program, error_value) {
 				i++;
 				break;
 			case "#":
-				if ds_exists(command_functions, ds_type_map) {
-					var s = memory[pointer]
-					if ds_map_exists(command_functions, s) {
-						command_functions[? s](memory, pointer)
-					}
+				var func = "";
+				i++;
+				if i >= program_length
+					return error_value;
+				while (program[i] != "#") {
+					func += program[i];
+					i++;
+					if i >= program_length
+						return error_value;
+				}
+				
+				if ds_map_exists(global.branefuck_command_functions, func) {
+					global.branefuck_command_functions[? func](memory, pointer, id)
 				}
 				i++;
 				break;
@@ -121,6 +129,17 @@ function execute_branefuck(program, error_value) {
 				i++;
 				memory[@ pointer] = evaluate_expression(expression, temporary_memory);
 				break;
+			case ";":
+				i++;
+				do {
+					i++;
+					if i >= program_length
+						return error_value;
+				} until (program[i] == "\n");
+				i++;
+				if i >= program_length
+					return error_value;
+				break;
 			default:
 				i++;
 		}
@@ -139,19 +158,19 @@ function evaluate_expression(expr, temporary_memory) {
 	if base_name == "g" || base_name == "global"
 		base = global;
 	else if base_name == "s" || base_name == "self" || base_name == "id" {
-		if id == global.pack_editor_instance {
+		if object_index != agi("obj_ev_branefucker") {
 			ev_notify($"(there is no {base_name})")
 			ev_notify($"Branefuck node tried to access {base_name}")
 			return 0;
 		}
-		base = id;
+		base = add_inst;
 	}
 	else if base_name == "t"
 		base = temporary_memory;
 	else if base_name == "p"
 		base = global.branefuck_persistent_memory;
-	else if asset_get_type(base_name) == asset_object
-		base = instance_nearest(x, y, asset_get_index(base_name));
+	else if agi(base_name) != -1
+		base = agi(base_name);
 	else
 		return noone;
 	return evaluate_expression_recursive(remainder, base);
@@ -170,14 +189,34 @@ function evaluate_expression_recursive(expr, base) {
 		return evaluate_expression_recursive(remainder, base[int64(vari_name)])
 	}
 	if is_string(base) {
-		if !string_is_uint(vari_name)
+		if !string_is_uint(vari_name) {
+			ev_notify($"({vari_name})")
+			ev_notify("Invalid string index")
 			return noone;
-		var character = string_ord_at(base, int64(vari_name) - 1)
+		}
+		
+		var index = int64(vari_name);
+		if index > string_length(base) {
+			ev_notify($"({vari_name} >= {string_length(base)})")
+			ev_notify("String index too big")
+		}
+		var character = string_ord_at(base, index + 1)
+		
 		// we know this is a number so we can return
 		return character;
 	}
 	if is_struct(base) {
 		return evaluate_expression_recursive(remainder, variable_struct_get(base, vari_name))
+	}
+	if object_exists(base) {
+		var instance = instance_find(base, 0);
+		if instance_exists(instance) {
+			if (!variable_instance_exists(instance, vari_name))
+				return noone;
+			return evaluate_expression_recursive(remainder, variable_instance_get(instance, vari_name))
+		}
+		else
+			return noone;
 	}
 	if instance_exists(base) {
 		if (!variable_instance_exists(base, vari_name))

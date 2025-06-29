@@ -55,7 +55,9 @@ if mode != level_selector_modes.selecting_level_for_pack {
 	});
 	add_child(back_button)
 	add_child(new_button)
-	add_child(online_switch)
+	// TODO remove this
+	if instance_exists(online_switch)
+		add_child(online_switch)
 	add_child(refresh_button)
 }
 else {

@@ -1,6 +1,6 @@
 event_inherited()
 if !allow_edit {
-	calculate_scale()
+	calculate_scale_and_offset()
 	image_xscale = xscale
 	image_yscale = yscale
 	update_position()
@@ -12,16 +12,63 @@ if window != -1 && window.selected_element == id {
 	if size_time < 100
 		size_time += 10
 
-	var dir = ev_get_horizontal_pressed()
-	if dir != 0
-		cursor_time = 0
-	cursor_pos = clamp(cursor_pos + dir, 1, string_length(txt) + 1)
+	var hori_dir = ev_get_horizontal_pressed()
+	if hori_dir != 0 { 
+		cursor_time = 0 
+		var new_pos;
+		if (keyboard_check(vk_control)) {
+			new_pos = cursor_pos;
+			if hori_dir == 1 {
+				if string_char_at(txt, new_pos) != "\n" {
+					do {
+						new_pos++;
+					} until (new_pos < 1 || new_pos > string_length(txt) || string_char_at(txt, new_pos) == "\n")
+				}
+			}
+			else {
+				do {
+					new_pos--;
+				} until (new_pos < 1 || new_pos > string_length(txt) || string_char_at(txt, new_pos) == "\n")
+				new_pos++; // don't stay on the newline char (otherwise we would be going a line above)
+			}
+		}
+		else
+			new_pos = cursor_pos + hori_dir;
+		cursor_pos = clamp(new_pos, 1, string_length(txt) + 1)
+	}
+	else {
+		var verti_dir = ev_get_vertical_pressed()
+		if verti_dir != 0 {
+			cursor_time = 0
+			var new_pos = cursor_pos;
+			
+			var newlines_target;
+			var newlines_crossed;
+			if verti_dir == -1 {
+				newlines_target = 1;
+				newlines_crossed = 0;
+			}
+			else {
+				newlines_target = 2;
+				newlines_crossed = (string_char_at(txt, new_pos) == "\n")
+			}
+			
+			do {
+				new_pos += verti_dir;
+				if string_char_at(txt, new_pos) == "\n" {
+					newlines_crossed++;
+				}
+			} until (new_pos < 1 || new_pos > string_length(txt) || newlines_crossed == newlines_target)
+
+			cursor_pos = clamp(new_pos, 1, string_length(txt) + 1)
+		}
+	}
 	if ev_is_mouse_on_me() && ev_mouse_pressed() && !first_expansion_frame {
 		
 		var line_height = 16;
 		var line = (mouse_y - y) div line_height;
 		
-		// idea is to find where the line starts, then accumulate the widths of the character
+		// the idea is to find where the line starts, then accumulate the widths of the character
 		// until our x value is over the mouse position's x, and then place the cursor there.
 		// we need to get the text as it is displayed on screen, and that is what filter_text()
 		// gives. but we need to keep track of which newlines are real and which are "fake"/added by
@@ -126,11 +173,12 @@ else {
 		}
 	}
 }
-calculate_scale()
+calculate_scale_and_offset()
 
 var t = animcurve_channel_evaluate(curve, size_time / 100)
 image_xscale = lerp(base_scale_x, xscale, t)
 image_yscale = lerp(base_scale_y, yscale, t)
 pos_x = lerp(xstart, opened_x, t)
 pos_y = lerp(ystart, opened_y, t)
+offset_y = lerp(0, offset_y_opened, t)
 update_position()

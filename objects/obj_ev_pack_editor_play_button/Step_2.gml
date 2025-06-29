@@ -12,3 +12,10 @@ image_xscale = scale_x / base_scale_x
 image_yscale = scale_y / base_scale_y
 x = cam_x + xstart * ratio_x;
 y = cam_y + ystart * ratio_y;
+
+if global.pack_editor_instance.play_transition_time != -1 && array_length(chudlings) > 0 {
+	for (var i = 0; i < array_length(chudlings); i++)
+		chudlings[i].visible = false;
+
+}
+update_chudlings_position();

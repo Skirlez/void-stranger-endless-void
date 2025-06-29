@@ -30,6 +30,7 @@ else {
 		instance_destroy(quill)	
 }
 if (room == asset_get_index("rm_ev_startup")) {
+	
 	read_beaten_levels()
 	
 	uploaded_levels = get_all_files(global.levels_directory, "key")

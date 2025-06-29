@@ -1,9 +1,9 @@
 children = []
 
-function add_child(obj) {
-	obj.window = id
-	obj.layer_num = layer_num
-	array_push(children, obj)	
+function add_child(inst) {
+	inst.window = id
+	inst.layer_num = layer_num
+	array_push(children, inst)	
 }
 function remove_child(obj) {
 	ev_array_remove(children, obj)

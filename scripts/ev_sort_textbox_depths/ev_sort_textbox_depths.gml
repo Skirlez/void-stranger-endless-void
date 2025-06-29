@@ -6,6 +6,7 @@ function ev_window_sort_textbox_depths(elements_depth) {
 		if child == selected_element
 			child.depth = elements_depth - 2
 		else if child.image_xscale != child.base_scale_x || child.image_yscale != child.base_scale_y
+				|| child.size_time > 0
 			child.depth = elements_depth - 1
 		else
 			child.depth = elements_depth

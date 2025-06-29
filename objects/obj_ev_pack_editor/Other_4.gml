@@ -21,5 +21,6 @@ if (room == global.pack_editor_room) {
 	ev_switch_to_user_palette()
 	
 	// exit creates this when you use it and it does persist so we Kill It
-	instance_destroy(agi("obj_darkness"))
+	if global.is_merged
+		instance_destroy(agi("obj_darkness"))
 }

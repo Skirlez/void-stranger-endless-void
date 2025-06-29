@@ -5,6 +5,7 @@ if ds_map_find_value(async_load, "id") == post_level_id
 	{
 		if (http_status == 201) {
 			var key = ds_map_find_value(async_load, "result");
+			log_info($"Key received from Voyager: {key}")
 			on_finish_upload(key);
 		}
 		else
@@ -16,7 +17,7 @@ if ds_map_find_value(async_load, "id") == post_level_id
 if ds_map_find_value(async_load, "id") == update_level_id
 {
 	var http_status = ds_map_find_value(async_load, "http_status");
-	if (http_status == 200)
+	if (http_status == 204 || http_status == 201)
 		on_finish_update()
 	else
 		on_fail(ds_map_find_value(async_load, "result"))
@@ -32,7 +33,7 @@ if ds_map_find_value(async_load, "id") == delete_level_id
 }
 if ds_map_find_value(async_load, "id") == post_level_verify_id {
 	var http_status = ds_map_find_value(async_load, "http_status");
-	if (http_status == 200)
+	if (http_status == 204 || http_status == 201)
 		on_verify_upload()
 	else
 		on_fail_verify()

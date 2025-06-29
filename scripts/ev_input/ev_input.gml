@@ -18,7 +18,7 @@ function ev_mouse_right_released() {
 }
 function ev_is_mouse_on_me() {
 	if layer_num != global.mouse_layer
-		return false
+		return false;
 	return global.instance_touching_mouse == id
 }
 function ev_is_action_pressed() {
@@ -63,4 +63,10 @@ function ev_is_tile_mode_hotkey_pressed() {
 }
 function ev_is_picker_hotkey_pressed() {
 	return mouse_check_button_pressed(mb_middle)
+}
+function ev_is_plucker_hotkey_pressed() {
+	return keyboard_check_pressed(ord("W"))
+}
+function ev_is_eraser_hotkey_pressed() {
+	return keyboard_check_pressed(ord("E"))
 }

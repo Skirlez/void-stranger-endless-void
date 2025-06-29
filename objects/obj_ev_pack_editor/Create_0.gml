@@ -175,9 +175,9 @@ function node_struct(node_id, object_name, flags = 0, layer_name = "Nodes") cons
 	
 	// what to do when evaluated while playing
 	// nodes that use this function can immediately tell you where to go in the pack
-	// if they can't, returns noone
+	// if they can't, returns node_return_status.not_immediate
 	self.play_evaluate_immediate = function () {
-		return noone;	
+		return node_return_status.not_immediate;	
 	};
 	
 	// runs after room restart
@@ -189,10 +189,38 @@ function node_struct(node_id, object_name, flags = 0, layer_name = "Nodes") cons
 	self.flags = flags;
 }
 
+function first_or_error(exits) {
+	return array_length(exits) > 0 ? exits[0] : node_return_status.need_exits;
+}
+
+enum node_return_status {
+	need_exits = -1,
+	not_immediate = -2
+}
+
+
 root_node = new node_struct("ro", "obj_ev_pack_root", node_flags.unremovable);
 root_node.play_evaluate_immediate = function (node_state) {
-	return node_state.exits[0];
+	global.ev_fall_down_next_level = node_state.properties.fall;
+	return first_or_error(node_state.exits);
 };
+root_node.properties_generator = function () {
+	return { fall : 0 }	
+}
+root_node.read_function = function (properties_str /*, version */) {
+	var fall = int64_safe(properties_str, 0) != 0;
+	return { fall : fall }; 
+}
+root_node.write_function = function (properties) {
+	return string(properties.fall)
+}
+root_node.on_config = function (node_instance) {
+	global.mouse_layer = 1;
+	new_window_with_pos(node_instance.x, node_instance.y, 8, 4, asset_get_index("obj_ev_root_node_window"), {
+		node_instance : node_instance
+	});
+}
+
 brand_node = new node_struct("br", "obj_ev_pack_brand_node");
 brand_node.properties_generator = function () {
 	return { brand : int64(irandom_range(1, $FFFFFFFFF)) }	
@@ -211,7 +239,7 @@ brand_node.on_config = function (node_instance) {
 	});
 }
 brand_node.play_evaluate_immediate = function (node_state) {
-	return node_state.exits[0];	
+	return first_or_error(node_state.exits);
 }
 
 
@@ -226,12 +254,9 @@ level_node.read_function = function (properties_str /*, version */) {
 level_node.write_function = function (properties) {
 	return export_level(properties.level)
 }
-level_node.play_evaluate_immediate = function (node_state) {
-	return noone;
-}
 level_node.play_evaluate = function (node_state) {
 	global.level = node_state.properties.level;
-	ev_set_play_variables(true)
+	ev_set_play_variables()
 	ev_prepare_level_visuals(global.level)
 	ev_place_level_instances(global.level)
 	with (agi("obj_ev_pack_player")) {
@@ -255,7 +280,7 @@ level_node.on_death = function(node_instance) {
 
 redirect_node = new node_struct("re", "obj_ev_pack_redirect_node");
 redirect_node.play_evaluate_immediate = function (node_state) {
-	return node_state.exits[0];	
+	return first_or_error(node_state.exits);	
 }
 
 
@@ -281,7 +306,7 @@ music_node.on_config = function (node_instance) {
 }
 music_node.play_evaluate_immediate = function (node_state) {
 	ev_play_music(agi(node_state.properties.music), true, false)
-	return node_state.exits[0];	
+	return first_or_error(node_state.exits);
 }
 
 branefuck_node = new node_struct("bf", "obj_ev_pack_branefuck_node");
@@ -306,9 +331,10 @@ branefuck_node.on_config = function (node_instance) {
 }
 branefuck_node.play_evaluate_immediate = function(node_state) {
 	var program = string_to_array(node_state.properties.program);
-	
-	var return_value = execute_branefuck(program, undefined);
-	if return_value == undefined {
+	if array_length(node_state.exits) == 0
+		return node_return_status.need_exits
+	var return_value = execute_branefuck(program, "");
+	if return_value == "" {
 		ev_notify("Branefuck node errored!")
 		return_value = 1
 	}
@@ -320,6 +346,8 @@ branefuck_node.play_evaluate_immediate = function(node_state) {
 thumbnail_node = new node_struct("tn", "obj_ev_pack_thumbnail_node", node_flags.only_one);
 random_node = new node_struct("ct", "obj_ev_pack_random_node");
 random_node.play_evaluate_immediate = function (node_state) {
+	if array_length(node_state.exits) == 0
+		return node_return_status.need_exits
 	var rand = irandom_range(0, array_length(node_state.exits) - 1)
 	return node_state.exits[rand];
 };
@@ -343,7 +371,7 @@ comment_node.on_config = function (node_instance) {
 
 oob_node = new node_struct("ob", "obj_ev_pack_oob_node", node_flags.only_one);
 oob_node.play_evaluate_immediate = function (node_state) {
-	return node_state.exits[0];	
+	return first_or_error(node_state.exits);
 }
 
 global.palette_node_palettes = ["GRAY", "R***", "O***", "Y***", "G***", "B***", "I***", "V***", "Custom"]
@@ -355,7 +383,7 @@ palette_node.play_evaluate_immediate = function (node_state) {
 	global.s_g_pal = node_state.properties.palette_number;
 	log_info("Palette node set palette to " + string(node_state.properties.palette_number))
 	agi("set_palette")(node_state.properties.palette_number);
-	return node_state.exits[0];	
+	return first_or_error(node_state.exits);
 }
 palette_node.read_function = function (properties_str /*, version */) {
 	var palette_number = int64_safe(properties_str, 0);

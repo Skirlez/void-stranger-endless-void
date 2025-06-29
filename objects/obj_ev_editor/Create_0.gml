@@ -23,6 +23,8 @@ if (!global.is_merged) {
 
 #macro level_extension "vsl"
 #macro pack_extension "vspk"
+#macro pack_password_extension "vspkp"
+#macro pack_save_extension "vspks"
 
 global.save_directory = game_save_id
 global.server_ip = "skirlez.com"
@@ -276,10 +278,7 @@ tile_default.draw_function = function(tile_state, i, j, preview, lvl, no_spoiler
 		delete pos;
 		if (max(diff_i, diff_j) > 2) {
 			alpha = alpha * 0.4 * !no_spoilers;
-
 		}
-		
-		
 	}
 		
 	draw_sprite_ext(get_floor_sprite(lvl), 0, j * 16 + 8, i * 16 + 8, 1, 1, 0, c_white, alpha)
@@ -872,6 +871,7 @@ object_egg.iostruct = {
 				break;
 			encoded_text += base64_encode(txt) + PROPERTY_END_CHAR	
 		}
+		// TODO FORMAT VERSION 4: add a `PROPERTY_END_CHAR` here after string(m)
 		return tile_state.tile.tile_id + string(m) + encoded_text
 	},
 	place : function (tile_state, i, j) {
@@ -926,7 +926,7 @@ object_cif.iostruct = {
 }
 
 
-global.branefuck_characterset = ".,+-[]><?0123456789^_#: ";
+global.branefuck_characterset = ".,+-[]><?^_#:; ";
 global.branefuck_persistent_memory = array_create(ADD_STATUE_MEMORY_AMOUNT)
 function reset_branefuck_persistent_memory() {
 	for (var i = 0; i < ADD_STATUE_MEMORY_AMOUNT; i++)
@@ -985,7 +985,7 @@ object_add.iostruct = {
 			var read_program = read_string_until(lvl_str, pos, PROPERTY_END_CHAR)
 			pos += read_program.offset + 1;
 		
-			// version 3 does not inputs, convert inputs to branefuck instructions
+			// version 3 does not do inputs, convert inputs to branefuck instructions
 			function input_to_code(input) {
 				if (input == "")
 					return "";
@@ -1386,8 +1386,20 @@ function mural_get_image_index(i, j, lvl) {
 }
 object_mural = new editor_object("Mural", agi("spr_ev_mural"), "mu", "obj_mural")
 object_mural.iostruct = {
-	read: default_reader,
-	write : default_writer,
+	read : function(tile_id, lvl_str, pos) {
+		var start_pos = pos;
+		var read_brand = read_string_until(lvl_str, pos, "!")
+		var brand = int64_safe(read_brand.substr, 1)
+		pos += read_brand.offset + 1;
+		var read_text = read_string_until(lvl_str, pos, "!")
+		var text = base64_decode(read_text.substr)
+		pos += read_text.offset + 1;
+		var t = new tile_with_state(tile_id, { brd : brand, txt : text })
+		return { value : t, offset : pos - start_pos };
+	},
+	write : function(tile_state) {
+		return $"{tile_state.tile.tile_id}{tile_state.properties.brd}{PROPERTY_END_CHAR}{base64_encode(tile_state.properties.txt)}{PROPERTY_END_CHAR}"
+	},
 	place : function(tile_state, i, j, extra_data) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		inst.sprite_index = agi("spr_ev_mural")
@@ -1673,6 +1685,7 @@ function remove_level_key(level_save_name) {
 	ds_map_delete(global.level_key_map, level_save_name)
 }
 function on_server_validate_startup(valid_str) {
+	ds_map_clear(global.level_key_map)
 	var arr_ind = 0;
 	for (var i = 1; i <= string_length(valid_str); i++) {
 		var char = string_char_at(valid_str, i)
@@ -1690,11 +1703,19 @@ function on_server_validate_startup(valid_str) {
 		
 
 }
+
+has_been_to_pretitle = false
 function on_startup_finish() {
 	get_levels = noone;
 	validate_levels = noone;
 	startup_timeout = 0;
-	room_goto(agi("rm_ev_pretitle"))
+	audio_play_sound(agi("snd_ev_mark_placechanger"), 10, false, 1, 0, 1.2)
+	if !has_been_to_pretitle {
+		room_goto(agi("rm_ev_pretitle"))
+		has_been_to_pretitle = true;	
+	}
+	else
+		room_goto(agi("rm_ev_menu"))
 }
 
 

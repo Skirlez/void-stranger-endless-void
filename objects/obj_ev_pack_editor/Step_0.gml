@@ -73,30 +73,51 @@ if play_transition_time != -1 {
 		global.pack_save = {
 			node_id : play_transition_target.node_id
 		}
+		with (agi("obj_ev_pack_editor_play_button")) {
+			global.pack_playtest_parameters = get_playtest_parameters();
+		}
 		room_goto(global.pack_level_room)
 		play_transition_time = -1;
 	}
 }
-
-if keyboard_check(vk_control) && global.mouse_layer == 0 && !instance_exists(agi("obj_ev_pack_node_judgment")) {
-	if keyboard_check_pressed(ord("Z")) {
-		undo_repeat = undo_repeat_frames_start
-		undo();
+if global.mouse_layer == 0 {
+	if keyboard_check_pressed(ord("D")) && selected_thing != pack_things.nothing {
+		global.pack_editor_instance.select(pack_things.nothing)
+		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(0.75, 0.8))
+	}
+	else if keyboard_check_pressed(ord("W")) && selected_thing != pack_things.wrench {
+		global.pack_editor_instance.select(pack_things.wrench)
+		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(1.1, 1.2))
+	}
+	else if keyboard_check_pressed(ord("S")) && selected_thing != pack_things.placechanger  {
+		global.pack_editor_instance.select(pack_things.placechanger)
+		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(1.1, 1.2))
+	}
+	else if mouse_check_button_pressed(mb_middle) && selected_thing != pack_things.hammer  {
+		global.pack_editor_instance.select(pack_things.hammer)
+		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(1.1, 1.2))
 	}
 	
-	if keyboard_check(ord("Z")) {
-		undo_repeat--;	
-		if undo_repeat <= 0 {
-			undo()
-			undo_repeat_frames_speed += 2
-		
-			if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
-				undo_repeat_frames_speed = undo_repeat_frames_max_speed;
-			undo_repeat = undo_repeat_frames_start - undo_repeat_frames_speed
+	if keyboard_check(vk_control) && !instance_exists(agi("obj_ev_pack_node_judgment")) {
+		if keyboard_check_pressed(ord("Z")) {
+			undo_repeat = undo_repeat_frames_start
+			undo();
 		}
-	}
-	else {
-		undo_repeat = -1	
-		undo_repeat_frames_speed = 0
+	
+		if keyboard_check(ord("Z")) {
+			undo_repeat--;	
+			if undo_repeat <= 0 {
+				undo()
+				undo_repeat_frames_speed += 2
+		
+				if (undo_repeat_frames_speed > undo_repeat_frames_max_speed)
+					undo_repeat_frames_speed = undo_repeat_frames_max_speed;
+				undo_repeat = undo_repeat_frames_start - undo_repeat_frames_speed
+			}
+		}
+		else {
+			undo_repeat = -1	
+			undo_repeat_frames_speed = 0
+		}
 	}
 }

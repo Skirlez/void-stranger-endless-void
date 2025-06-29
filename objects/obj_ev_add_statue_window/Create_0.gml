@@ -61,7 +61,7 @@ function create_base_buttons(mode) {
 			txt : add_properties.pgm,
 			allow_alphanumeric : true,
 			exceptions : global.branefuck_characterset,
-			char_limit : 999,
+			char_limit : 9999,
 			opened_y : 72,
 			base_scale_x : 8,
 		})
