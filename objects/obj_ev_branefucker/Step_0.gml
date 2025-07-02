@@ -28,7 +28,7 @@ if global.is_merged {
 		global.death_frames = 0
 	}
 
-	asset_get_index("obj_ev_editor").last_death_count = global.death_count
+	global.editor_instance.last_death_count = global.death_count
 }
 
 

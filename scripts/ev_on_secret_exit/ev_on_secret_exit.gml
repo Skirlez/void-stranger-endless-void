@@ -22,7 +22,7 @@ function ev_on_secret_exit() {
 			
 		}
 		else
-			ev_clear_pack_level()
+			ev_clear_pack_level(ev_exit_number)
 
 	}
 }

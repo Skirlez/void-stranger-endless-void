@@ -297,7 +297,7 @@
     {"name":"obj_ev_pack_brand_node","order":67,"path":"objects/obj_ev_pack_brand_node/obj_ev_pack_brand_node.yy",},
     {"name":"spr_cm_down","order":20,"path":"sprites/spr_cm_down/spr_cm_down.yy",},
     {"name":"snd_player_damage","order":4,"path":"sounds/snd_player_damage/snd_player_damage.yy",},
-    {"name":"ev_on_bee_warp","order":38,"path":"scripts/ev_on_bee_warp/ev_on_bee_warp.yy",},
+    {"name":"ev_warps","order":38,"path":"scripts/ev_warps/ev_warps.yy",},
     {"name":"obj_ev_placeables_window","order":18,"path":"objects/obj_ev_placeables_window/obj_ev_placeables_window.yy",},
     {"name":"spr_lover","order":33,"path":"sprites/spr_lover/spr_lover.yy",},
     {"name":"spr_ev_brand_hitbox","order":31,"path":"sprites/spr_ev_brand_hitbox/spr_ev_brand_hitbox.yy",},

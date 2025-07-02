@@ -1,5 +1,4 @@
 if in_brand_room && instance_exists(brand_secret_exit) {
-	
 	var brand_found = false;
 	if !instance_exists(agi("obj_exit")) {
 		var brand = int64(0)
@@ -28,8 +27,10 @@ if in_brand_room && instance_exists(brand_secret_exit) {
 					dust_emit_counter = 0;
 					dust_emit_limit = irandom_range(128, 144)
 				}
-				brand_secret_exit.x = agi("obj_player").x
-				brand_secret_exit.y = agi("obj_player").y
+				with (agi("obj_player")) {
+					other.brand_secret_exit.x = x
+					other.brand_secret_exit.y = y
+				}
 				brand_secret_exit.exit_brand = brand;
 				brand_found = true;
 				break;

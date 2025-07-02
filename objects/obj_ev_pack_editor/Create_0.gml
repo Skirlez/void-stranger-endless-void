@@ -256,7 +256,6 @@ level_node.write_function = function (properties) {
 }
 level_node.play_evaluate = function (node_state) {
 	global.level = node_state.properties.level;
-	ev_set_play_variables()
 	ev_prepare_level_visuals(global.level)
 	ev_place_level_instances(global.level)
 	with (agi("obj_ev_pack_player")) {
@@ -265,7 +264,6 @@ level_node.play_evaluate = function (node_state) {
 			is_first_level = false;
 		}
 		evaluate_brand_room();
-		
 	}
 }
 level_node.on_config = function (node_instance) {

@@ -10,7 +10,7 @@ function ev_leave_pack() {
 function ev_clear_pack_level(exit_number = 0) {
 	var asset = agi("obj_ev_pack_player")
 	if asset == -1
-		exit
+		exit;
 	var index = exit_number;
 	with (asset) {
 		if index >= array_length(current_node_state.exits)

@@ -260,7 +260,7 @@ global.branefuck_command_functions[? "mod"] = function(memory, pointer) {
 	command_return(memory, pointer, int64(dividend % divisor))
 }
 global.branefuck_command_functions[? "instance_position"] = function(memory, pointer) {
-	var params = get_command_parameters(memory, pointer, 2)
+	var params = get_command_parameters(memory, pointer, 3)
 	var pos_x = params[0]
 	var pos_y = params[1];
 	var object = params[2];
@@ -268,10 +268,44 @@ global.branefuck_command_functions[? "instance_position"] = function(memory, poi
 	var count = instance_position_list(pos_x, pos_y, object, list, false);
 	var arr = ds_list_to_array(list);
 	ds_list_destroy(list)
+	array_insert(arr, 0, count)
 	
 	command_return(memory, pointer, arr)
 }
 
+// ds_grid_get(x, y)
+// Sets a tile at a given position to one from an custom array at a given index
+global.branefuck_command_functions[? "ds_grid_get"] = function(memory, pointer) {
+	var params = get_command_parameters(memory, pointer, 3)
+	var grid = params[0]
+	if !ds_exists(grid, ds_type_grid) {
+		ev_notify("ds_grid_get used on non grid")
+		return;	
+	}
+	var cell_x = params[1]
+	if cell_x < 0 {
+		ev_notify($"{cell_x}, (x > 0)")
+		ev_notify($"ds_grid_get x out of bounds")
+		return;
+	}
+	else if cell_x >= ds_grid_width(grid) {
+		ev_notify($"{cell_x}, (x < ${ds_grid_width(grid)})")
+		ev_notify($"ds_grid_get x out of bounds")
+		return;
+	}
+	var cell_y = params[2]
+	if cell_y < 0 {
+		ev_notify($"{cell_y}, (y > 0)")
+		ev_notify($"ds_grid_get y out of bounds")
+		return;
+	}
+	else if cell_y >= ds_grid_height(grid) {
+		ev_notify($"{cell_y}, (y < {ds_grid_height(grid)})")
+		ev_notify($"ds_grid_get y out of bounds")
+		return;
+	}
+	command_return(memory, pointer, ds_grid_get(grid, cell_x, cell_y))
+}
 
 //move(direction)
 global.branefuck_command_functions[? "move"] = function(memory, pointer, executer) {
@@ -476,15 +510,7 @@ global.branefuck_command_functions[? "set_tile"] = function(memory, pointer){
 }
 
 
-// get_id(x, y)
-// Sets a tile at a given position to one from an custom array at a given index
-global.branefuck_command_functions[? "instance_find"] = function(memory, pointer) {
-	var params = get_command_parameters(memory, pointer, 3)
-	var cell_x = params[0]
-	var cell_y = params[1]
-	var tile_index = params[2]
 
-}
 
 
 function get_command_parameters(memory, pointer, param_count){

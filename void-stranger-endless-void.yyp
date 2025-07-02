@@ -333,7 +333,7 @@
     {"id":{"name":"obj_ev_pack_brand_node","path":"objects/obj_ev_pack_brand_node/obj_ev_pack_brand_node.yy",},},
     {"id":{"name":"spr_cm_down","path":"sprites/spr_cm_down/spr_cm_down.yy",},},
     {"id":{"name":"snd_player_damage","path":"sounds/snd_player_damage/snd_player_damage.yy",},},
-    {"id":{"name":"ev_on_bee_warp","path":"scripts/ev_on_bee_warp/ev_on_bee_warp.yy",},},
+    {"id":{"name":"ev_warps","path":"scripts/ev_warps/ev_warps.yy",},},
     {"id":{"name":"obj_ev_placeables_window","path":"objects/obj_ev_placeables_window/obj_ev_placeables_window.yy",},},
     {"id":{"name":"spr_lover","path":"sprites/spr_lover/spr_lover.yy",},},
     {"id":{"name":"spr_ev_brand_hitbox","path":"sprites/spr_ev_brand_hitbox/spr_ev_brand_hitbox.yy",},},

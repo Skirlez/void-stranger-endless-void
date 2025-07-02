@@ -16,7 +16,7 @@ function ev_set_play_variables() {
 	ds_grid_set(inv.ds_player_info, 0, 1, 1) // display locusts
 	ds_grid_set(inv.ds_player_info, 1, 1, 0) // Locust count
 	
-	// stops the player from doing blink a animation when starting level
+	// stops the player from doing the blink animation when starting level
 	global.player_blink = 0
 }
 

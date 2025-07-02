@@ -3,7 +3,7 @@ global.mouse_held = false;
 global.mouse_pressed = false;
 
 
-if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level_select") || room == asset_get_index("rm_ev_pack_select") {
+if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level_select") || room == asset_get_index("rm_ev_pack_select") || room == global.editor_room {
 	history = []
 	reset_branefuck_persistent_memory()
 	global.level_sha = "";
@@ -61,7 +61,15 @@ if (room == asset_get_index("rm_ev_startup")) {
 }
 
 if (ev_is_room_gameplay(room)) {
-	global.level_time = 0;	
+	global.level_time = 0;
+	starting_deaths = 0
+	starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 5)
+	starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
+	last_death_count = 0
+	global.death_count = 0
+	global.death_x = -1
+	global.death_y = -1
+	global.annoyance_count = 0
 }
 
 global.turn_frames = 0

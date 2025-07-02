@@ -1,24 +1,33 @@
-// have textbox copy mural brand and mural text so it can draw them
-
+// have textbox copy mural brand and mural text so it can draw them.
 // TARGET: LINENUMBER
 // 610
 active_textbox.ev_mural_brand = ev_mural_brand
 active_textbox.ev_mural_text = ev_mural_text
 
-// correct inscription dialogue
+// have correct inscription dialogue. 
 // could potentially write character specific stuff here
-
 // TARGET: LINENUMBER
-// 275
-else if (inscription == 19) {
-	text[0] = scrScript(1200)
-	text[1] = scrScript(180)
-	text[2] = string_upper(ev_mural_text)
-	moods = [neutral, neutral, neutral]
-	speakers = [id, id, id]
+// 606
+if (inscription == 19) {
+	if ev_mural_brand == 0 {
+		text[0] = scrScript(1245)
+		moods = [neutral]
+		speakers = [id]
+	}
+	else {
+		if (ds_grid_get(obj_inventory.ds_equipment, 0, 0) == 0 || global.memory_toggle == false) {
+			text[0] = scrScript(1200)
+			moods = [neutral]
+			speakers = [id]
+		}
+		else {
+			text[0] = scrScript(1200)
+			text[1] = scrScript(180)
+			text[2] = string_upper(ev_mural_text)
+			if text[2] == ""
+				text[2] = " "
+			moods = [neutral, neutral, neutral]
+			speakers = [id, id, id]
+		}
+	}
 }
-
-// this removes the inscription < 10 check, so our inscription goes through here
-// TARGET: LINENUMBER_REPLACE
-// 177
-if (true)

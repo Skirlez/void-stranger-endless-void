@@ -62,7 +62,10 @@ if window != -1 && window.selected_element == id {
 
 			cursor_pos = clamp(new_pos, 1, string_length(txt) + 1)
 		}
+		else
+			cursor_pos = clamp(cursor_pos, 1, string_length(txt) + 1)
 	}
+
 	if ev_is_mouse_on_me() && ev_mouse_pressed() && !first_expansion_frame {
 		
 		var line_height = 16;

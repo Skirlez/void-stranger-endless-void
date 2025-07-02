@@ -120,7 +120,7 @@ function save_pack_progress(current_level_name) {
 	static inv = agi("obj_inventory")
 	var save = {
 		level_name : base64_encode(current_level_name),
-		locusts : ds_grid_get(inv.ds_player_info, 1, 1),
+		locust_count : ds_grid_get(inv.ds_player_info, 1, 1),
 		music : audio_get_name(global.music_file),
 		persistent_memory : global.branefuck_persistent_memory,
 		burdens : [ds_grid_get(inv.ds_equipment, 0, 0) != 0,

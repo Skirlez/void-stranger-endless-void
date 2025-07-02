@@ -39,7 +39,7 @@ function execute_branefuck(program, error_value) {
 				memory[@ pointer] -= ret.mult;
 				i += ret.offset + 1;
 				break;
-			case "[": 
+			case "[":
 				if (memory[pointer] == 0) {
 					var j = i;
 					var stack = 1;
@@ -223,6 +223,5 @@ function evaluate_expression_recursive(expr, base) {
 			return noone;
 		return evaluate_expression_recursive(remainder, variable_instance_get(base, vari_name))
 	}
-	
 	return noone;
 }

@@ -14,7 +14,6 @@ function level_contains_crystal_memory(level) {
 }
 
 function can_upload_level(level) {
-	return true;
 	var sha = level_content_sha1(level);
 	if !ds_map_exists(global.beaten_levels_map, sha)
 		return false;

@@ -77,6 +77,11 @@ function on_room_create() {
 			if track != -1 {
 				ev_play_music(agi(global.pack_save.music), true, false)
 			}
+			
+			// TODO: remove
+			if !variable_struct_exists(global.pack_save, "locust_count")
+				global.pack_save.locust_count = 0
+			ds_grid_set(agi("obj_inventory").ds_player_info, 1, 1, global.pack_save.locust_count)
 			ev_prepare_level_burdens(global.pack_save.burdens);
 			
 			function find_level_node_state_with_name(node_state, name, explored_states_map) {

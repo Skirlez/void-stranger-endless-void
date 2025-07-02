@@ -71,15 +71,6 @@ if play_transition != -1 {
 		if (room == global.editor_room)
 			global.playtesting = true;
 
-		starting_deaths = 0
-		starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 5)
-		starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
-		last_death_count = 0
-		global.death_count = 0
-		global.death_x = -1
-		global.death_y = -1
-		global.annoyance_count = 0
-		
 		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
 		room_goto(global.level_room)
 		if (!ev_is_music_playing(asset_get_index(global.level.music)))
@@ -147,8 +138,6 @@ else if (edit_pack_transition != -1) {
 else if play_pack_transition_time != -1 {
 	play_pack_transition_time--;
 	if play_pack_transition_time == 0 {
-		
-		
 		global.pack_save = load_pack_progress();
 		room_goto(global.pack_level_room)
 	}
@@ -215,6 +204,21 @@ else if ev_is_room_gameplay(room) {
 	global.cif_count = 0;
 	global.jukebox_count = 0;
 	global.egg_count = 0;
+	
+	var inv = agi("obj_inventory")
+	global.has_memory = ds_grid_get(inv.ds_equipment, 0, 0) != 0;
+	global.has_wings = ds_grid_get(inv.ds_equipment, 0, 1) != 0;
+	global.has_sword = ds_grid_get(inv.ds_equipment, 0, 2) != 0;
+	
+	var has_the_thing = ds_grid_get(inv.ds_player_info, 10, 2) != 4
+	global.has_super_rod = has_the_thing
+	global.has_stack_rod = has_the_thing
+	global.has_endless_void_rod = has_the_thing
+	global.has_hungry_rod = has_the_thing
+	
+	global.has_idol = ds_grid_get(inv.ds_equipment, 0, 4) != 0;
+	
+	global.locust_count = ds_grid_get(agi("obj_inventory").ds_player_info, 1, 1);
 	
 	with (asset_get_index(egg_statue_obj)) {
 		switch (b_form) {
