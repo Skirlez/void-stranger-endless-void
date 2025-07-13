@@ -8,7 +8,7 @@ var arr = [3, 5, 4, 6, 13, 14,
 		  
 var i = 0, j = 0;
 repeat (array_length(arr)) {
-	var inst = instance_create_layer(left_edge + i * step, top_edge + j * step, "WindowElements", asset_get_index("obj_ev_wall_choose"), {
+	var inst = instance_create_layer(left_edge + i * step, top_edge + j * step, "WindowElements", agi("obj_ev_wall_choose"), {
 		ind : arr[i + j * 6],
 		type : type
 	}) 

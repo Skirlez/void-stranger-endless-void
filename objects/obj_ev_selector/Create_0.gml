@@ -36,7 +36,7 @@ function return_bounce(instance) {
 	var last = (bounces == array_length(element_objects) - 1);
 	var pitch = last ? 1.6 : 1.2
 	var gain = last ? 1 : 0.8
-	audio_play_sound(asset_get_index("snd_ev_textbox_click"), 10, false, gain, 0, pitch)
+	audio_play_sound(agi("snd_ev_textbox_click"), 10, false, gain, 0, pitch)
 	vsp = last ? 6 : 3
 	y_bounce = 0;
 	bounce_angle = instance.angle + 180;

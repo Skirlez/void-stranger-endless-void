@@ -74,7 +74,7 @@ switch (judgment_type) {
 				break;
 			}
 		}
-		audio_play_sound(asset_get_index("snd_ev_node_disconnect"), 10, false, 1, 0, random_range(0.9, 1.1))
+		audio_play_sound(agi("snd_ev_node_disconnect"), 10, false, 1, 0, random_range(0.9, 1.1))
 		if instance_number(object_index) == 1 // i'm the last one left
 			global.pack_editor.judging_node = noone;
 		instance_destroy(id)

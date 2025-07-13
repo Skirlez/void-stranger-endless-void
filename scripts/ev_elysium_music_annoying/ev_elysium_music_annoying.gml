@@ -1,5 +1,5 @@
-global.elysium_tracks = [asset_get_index("msc_test2"), asset_get_index("msc_ending2"),
-		asset_get_index("msc_looptest"), asset_get_index("msc_sendoff")]
+global.elysium_tracks = [agi("msc_test2"), agi("msc_ending2"),
+		agi("msc_looptest"), agi("msc_sendoff")]
 		
 function ev_get_elysium_music(level) {
 	var track = 0;

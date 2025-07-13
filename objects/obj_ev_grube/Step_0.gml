@@ -16,7 +16,7 @@ if death_timer != -1 {
 	
 	if death_timer > 140 || !audio_is_playing(death_sound) {
 		audio_stop_sound(death_sound)
-		audio_play_sound(asset_get_index("snd_ex_enemyexplosion_009"), 0, false, 0.8)
+		audio_play_sound(agi("snd_ex_enemyexplosion_009"), 0, false, 0.8)
 		for (var i = 0; i < array_length(window.grubes); i++) {
 			var grube = window.grubes[i]
 			if !instance_exists(grube)
@@ -43,7 +43,7 @@ if death_timer != -1 {
 			grube.phy_speed_y = -dsin(angle) * effect * max_force;
 				
 		}
-		instance_create_layer(x, y, "Explosion", asset_get_index("obj_ev_after_erase"), {
+		instance_create_layer(x, y, "Explosion", agi("obj_ev_after_erase"), {
 			grube : true	
 		})
 		instance_destroy(id)
@@ -55,8 +55,8 @@ if death_timer != -1 {
 if ev_is_mouse_on_me() {
 	if ev_mouse_pressed() {
 		follow = true
-		if instance_exists(asset_get_index("obj_ev_plucker")) {
-			audio_play_sound(asset_get_index("snd_ev_pluck"), 10, false)	
+		if instance_exists(agi("obj_ev_plucker")) {
+			audio_play_sound(agi("snd_ev_pluck"), 10, false)	
 		}
 	}
 	if ev_mouse_right_pressed() && room != global.pack_editor_room {

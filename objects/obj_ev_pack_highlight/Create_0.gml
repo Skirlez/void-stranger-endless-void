@@ -58,12 +58,12 @@ var textbox_offset;
 if (!global.online_mode) {
 	date_textbox = noone
 	
-	var edit = instance_create_layer(192, 73, "LevelHighlightButtons", asset_get_index("obj_ev_executing_button"), {
+	var edit = instance_create_layer(192, 73, "LevelHighlightButtons", agi("obj_ev_executing_button"), {
 		layer_num : 1,
 		nodeless_pack : nodeless_pack,
 		display_instance : display_instance,
 		highlighter : id,
-		sprite_index : asset_get_index("spr_ev_edit_level"),
+		sprite_index : agi("spr_ev_edit_level"),
 		image_alpha : 0,
 		func : function () {
 			highlighter.hide_textbox();
@@ -76,14 +76,14 @@ if (!global.online_mode) {
 	var deleteb = instance_create_layer(192, 90, "LevelHighlightButtons", agi("obj_ev_delete_button"), {
 		pack_mode : true,
 		layer_num : 1,
-		level_select : instance_find(asset_get_index("obj_ev_level_select"), 0),
+		level_select : instance_find(agi("obj_ev_level_select"), 0),
 		save_name : nodeless_pack.save_name,
 		display_instance : display_instance,
 		image_alpha : 0,
 	})
 
 	/*
-	var upload = instance_create_layer(208, 90, "LevelHighlightButtons", asset_get_index("obj_ev_upload_button"))
+	var upload = instance_create_layer(208, 90, "LevelHighlightButtons", agi("obj_ev_upload_button"))
 	upload.layer_num = 1
 	upload.lvl = lvl;
 	upload.image_alpha = 0
@@ -99,7 +99,7 @@ if (!global.online_mode) {
 	add_child(edit)
 }
 else {
-	date_textbox = instance_create_layer(201, 130, "LevelDescription", asset_get_index("obj_ev_textbox"), 
+	date_textbox = instance_create_layer(201, 130, "LevelDescription", agi("obj_ev_textbox"), 
 	{
 		txt : ("Upload date:\n" 
 			+ format_date(nodeless_pack.upload_date) 
@@ -118,7 +118,7 @@ else {
 	add_child(date_textbox)
 }
 
-description_textbox = instance_create_layer(201, 90 + textbox_offset, "LevelDescription", asset_get_index("obj_ev_textbox"), 
+description_textbox = instance_create_layer(201, 90 + textbox_offset, "LevelDescription", agi("obj_ev_textbox"), 
 {
 	txt : (nodeless_pack.description == "" ? "No description provided." : "Description:\n" + nodeless_pack.description),
 	base_scale_x : 2,
@@ -131,7 +131,7 @@ description_textbox = instance_create_layer(201, 90 + textbox_offset, "LevelDesc
 	image_alpha : 0
 })
 
-author_textbox = instance_create_layer(201, 110 + textbox_offset, "LevelDescription", asset_get_index("obj_ev_textbox"), 
+author_textbox = instance_create_layer(201, 110 + textbox_offset, "LevelDescription", agi("obj_ev_textbox"), 
 {
 	txt : ev_make_author_textbox_text(nodeless_pack.author),
 	base_scale_x : 2,

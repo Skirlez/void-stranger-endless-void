@@ -1,6 +1,6 @@
-sprite_index = asset_get_index("spr_floor")
+sprite_index = agi("spr_floor")
 grid_size = global.grid_x
-var collision = instance_place(x, y, asset_get_index("obj_collision"))
+var collision = instance_place(x, y, agi("obj_collision"))
 with (collision)
     instance_destroy()
 destroyer_id = 0

@@ -336,16 +336,16 @@ global.branefuck_command_functions[? "move"] = function(memory, pointer, execute
 	}
 	
 	with (executer.add_inst) {
-		if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_collision"))
+		if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_collision"))
 		{
 			//Collided, don't move
 			//Removed the sound that played here cause it was really bad when it spammed....
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_boulder"))
 		{
 			var b_push_x = p_move_x
 			var b_push_y = p_move_y
-			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_boulder")))
+			with (instance_place((x + p_move_x), (y + p_move_y), agi("obj_boulder")))
 			{
 				if (shaken == false){
 					o_move_x += b_push_x
@@ -354,26 +354,26 @@ global.branefuck_command_functions[? "move"] = function(memory, pointer, execute
 				}
 			}
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_demonlords_statue"))
 		{
-			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_demonlords_statue")))
+			with (instance_place((x + p_move_x), (y + p_move_y), agi("obj_demonlords_statue")))
 				o_state = (10 << 0)
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_npc_tail_void_hori"))
 		{
-			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_hori")))
+			with (instance_place((x + p_move_x), (y + p_move_y), agi("obj_npc_tail_void_hori")))
 				o_state = (10 << 0)
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_npc_tail_void_vert"))
 		{
-			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_tail_void_vert")))
+			with (instance_place((x + p_move_x), (y + p_move_y), agi("obj_npc_tail_void_vert")))
 				o_state = (10 << 0)
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_npc_talk"))
 		{
 			var n_push_x = p_move_x
 			var n_push_y = p_move_y
-			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_talk")))
+			with (instance_place((x + p_move_x), (y + p_move_y), agi("obj_npc_talk")))
 			{
 				if (shaken == false){
 					o_move_x += n_push_x
@@ -381,31 +381,31 @@ global.branefuck_command_functions[? "move"] = function(memory, pointer, execute
 					o_state = (10 << 0)
 				}
 			}
-			with (instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_rest")))
+			with (instance_place((x + p_move_x), (y + p_move_y), agi("obj_rest")))
 				counter = 0
 		}
-		else if (place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_enemy_parent")) || place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_npc_parent")))
+		else if (place_meeting((x + p_move_x), (y + p_move_y), agi("obj_enemy_parent")) || place_meeting((x + p_move_x), (y + p_move_y), agi("obj_npc_parent")))
 		{
 			x += p_move_x
 			y += p_move_y
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_pit"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_pit"))
 		{
 			x += p_move_x
 			y += p_move_y
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_player"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_player"))
 		{
 			//tl;dr, mimics pushing boulders into the player just causes a collision
 			//gonna use that as the behaviour here I guess....
 		}
-		else if place_meeting((x + p_move_x), (y + p_move_y), asset_get_index("obj_fakewall"))
+		else if place_meeting((x + p_move_x), (y + p_move_y), agi("obj_fakewall"))
 		{
 			//Collide with the fake hologram rockeggs, similar to other boulders/statues
 		}
 		else
 		{
-			var _explofloor_stepped = instance_place((x + p_move_x), (y + p_move_y), asset_get_index("obj_explofloor"))
+			var _explofloor_stepped = instance_place((x + p_move_x), (y + p_move_y), agi("obj_explofloor"))
 			if (_explofloor_stepped != noone)
 			{
 				with (_explofloor_stepped)
@@ -472,14 +472,14 @@ global.branefuck_command_functions[? "set_tile"] = function(memory, pointer){
 	}
 	
 	//Destroy wall collision
-	var collision = instance_position(tile_x, tile_y, asset_get_index("obj_collision"))
-	with (instance_position(tile_x, tile_y, asset_get_index("obj_collision")))
+	var collision = instance_position(tile_x, tile_y, agi("obj_collision"))
+	with (instance_position(tile_x, tile_y, agi("obj_collision")))
 		instance_destroy(collision)
 	
 	//Finally set tile
 	if tile_index == 0 {
 		// Pits are a special case, since they don't fit cleanly into the whole global.branefuck_command_tiles thing
-		instance_create_layer(tile_x, tile_y, "Pit", asset_get_index("obj_pit"))
+		instance_create_layer(tile_x, tile_y, "Pit", agi("obj_pit"))
 		return
 	}
 	else if global.branefuck_command_tiles[? tile_index].is_wall_tile {
@@ -495,17 +495,17 @@ global.branefuck_command_functions[? "set_tile"] = function(memory, pointer){
 		tilemap_set(map_id, data, cell_x, cell_y)
 	}
 	else{
-		instance_create_layer(tile_x, tile_y, global.branefuck_command_tiles[? tile_index].obj_layer, asset_get_index(global.branefuck_command_tiles[? tile_index].obj_name))
+		instance_create_layer(tile_x, tile_y, global.branefuck_command_tiles[? tile_index].obj_layer, agi(global.branefuck_command_tiles[? tile_index].obj_name))
 	}
 	
 	//Clear pit tiles
-	var pit_tile = instance_position(tile_x, tile_y, asset_get_index("obj_pit"))
-	with (instance_position(tile_x, tile_y, asset_get_index("obj_pit")))
+	var pit_tile = instance_position(tile_x, tile_y, agi("obj_pit"))
+	with (instance_position(tile_x, tile_y, agi("obj_pit")))
 		instance_destroy(pit_tile)
 	
 	//Set solid collision if applicable
 	if global.branefuck_command_tiles[? tile_index].is_solid {
-		instance_create_layer(tile_x, tile_y, "Instances", asset_get_index("obj_collision"))
+		instance_create_layer(tile_x, tile_y, "Instances", agi("obj_collision"))
 	}
 }
 

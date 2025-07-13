@@ -1,5 +1,5 @@
 event_inherited()
-textbox = instance_create_layer(112, 72, "WindowElements", asset_get_index("obj_ev_textbox"), {
+textbox = instance_create_layer(112, 72, "WindowElements", agi("obj_ev_textbox"), {
 	txt : string(tile_properties.num),
 	allow_alphanumeric : false,
 	exceptions : "0123456789",

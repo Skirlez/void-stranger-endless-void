@@ -1,6 +1,6 @@
 event_inherited()
 
-selector = instance_create_layer(112, 72, "WindowElements", asset_get_index("obj_ev_selector"), {
+selector = instance_create_layer(112, 72, "WindowElements", agi("obj_ev_selector"), {
 	elements : ["Locust", "Memory", "Wings", "Sword", "Empty", "Opened", "Idol", "Endless"],
 	
 	selected_element : chest_properties.itm,
@@ -23,7 +23,7 @@ function get_item_name(item_id) {
 }
 /*
 
-item_textbox = instance_create_layer(112, 72 - 10, "WindowElements", asset_get_index("obj_ev_textbox"), {
+item_textbox = instance_create_layer(112, 72 - 10, "WindowElements", agi("obj_ev_textbox"), {
 	base_scale_x : 4,
 	allow_edit : false
 })
@@ -33,7 +33,7 @@ add_child(item_textbox)
 item_textbox.txt = get_item_name(chest_properties.itm)
 
 
-next_button = instance_create_layer(112, 72 + 10, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+next_button = instance_create_layer(112, 72 + 10, "WindowElements", agi("obj_ev_executing_button"), {
 	txt : "Next",
 	base_scale_y : 0.6,
 	func : function () {

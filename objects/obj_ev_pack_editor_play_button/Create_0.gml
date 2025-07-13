@@ -1,7 +1,7 @@
 event_inherited()
 base_scale_x_start = base_scale_x
 base_scale_y_start = base_scale_y
-window_sprite = asset_get_index("spr_ev_window")
+window_sprite = agi("spr_ev_window")
 
 window_size = 0;
 
@@ -52,7 +52,7 @@ global.pack_editor.select_tool_happening.subscribe(function (struct) {
 			array_push(chudlings, instance)
 		}
 		/*
-		locust_textbox = instance_create_layer(112, 72, "WindowElements", asset_get_index("obj_ev_textbox"), {
+		locust_textbox = instance_create_layer(112, 72, "WindowElements", agi("obj_ev_textbox"), {
 			txt : "",
 			allow_alphanumeric : false,
 			exceptions : "0123456789",

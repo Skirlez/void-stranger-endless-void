@@ -88,7 +88,7 @@ switch target_state
         break
     case 11:
         var iframes = 2
-        var i_imageframe = asset_get_index("scr_music_strobe_integer(iframes)")
+        var i_imageframe = agi("scr_music_strobe_integer(iframes)")
         if (i_imageframe == 1)
         {
             t_x[0] = 1

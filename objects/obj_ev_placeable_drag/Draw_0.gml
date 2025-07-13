@@ -14,7 +14,7 @@ else
 
 if selected {
 	var alpha = (dsin(global.editor_time * 4) / 5) + 0.75
-	var inst = instance_position(mouse_x, mouse_y, asset_get_index("obj_ev_placeable_selection"))
+	var inst = instance_position(mouse_x, mouse_y, agi("obj_ev_placeable_selection"))
 	if !instance_exists(inst) || inst.layer_num != layer_num {
 		draw_sprite_ext(sprite_index, 0, x, y, scale_x, scale_y, 0, c_white, 1)
 	}

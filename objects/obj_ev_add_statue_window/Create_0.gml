@@ -3,7 +3,7 @@ mode = add_properties.mde;
 program_text = noone;
 
 function add_mode_switch_button(mode) {
-	mode_button = instance_create_layer(112, 72 + 40, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	mode_button = instance_create_layer(112, 72 + 40, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : mode == 0 ? "Nothing" : (mode == 1 ? "Simple" : "BRANEFUCK"),
 		base_scale_y : 0.6,
 		base_scale_x : mode == 0 ? 1.55 : (mode == 1 ? 1.35 : 2.5),
@@ -38,7 +38,7 @@ function create_base_buttons(mode) {
 	if mode == 0
 		return;
 	if mode == 1 {
-		program_text = instance_create_layer(112, 72 - 40, "WindowElements", asset_get_index("obj_ev_textbox"), {
+		program_text = instance_create_layer(112, 72 - 40, "WindowElements", agi("obj_ev_textbox"), {
 			empty_text : "Input",
 			txt : add_properties.pgm,
 			exceptions : "_-",
@@ -46,7 +46,7 @@ function create_base_buttons(mode) {
 			allow_newlines : false,
 		})
 		add_child(program_text)
-		destroy_value_text = instance_create_layer(112, 72 - 20, "WindowElements", asset_get_index("obj_ev_textbox"), {
+		destroy_value_text = instance_create_layer(112, 72 - 20, "WindowElements", agi("obj_ev_textbox"), {
 			empty_text : "Destroy Value",
 			txt : add_properties.val,
 			exceptions : "_-",
@@ -56,7 +56,7 @@ function create_base_buttons(mode) {
 		add_child(destroy_value_text)	
 	}
 	else {
-		program_text = instance_create_layer(112, 72 - 40, "WindowElements", asset_get_index("obj_ev_textbox"), {
+		program_text = instance_create_layer(112, 72 - 40, "WindowElements", agi("obj_ev_textbox"), {
 			empty_text : "Branefuck Program",
 			txt : add_properties.pgm,
 			allow_alphanumeric : true,
@@ -66,7 +66,7 @@ function create_base_buttons(mode) {
 			base_scale_x : 8,
 		})
 		add_child(program_text)
-		destroy_value_text = instance_create_layer(112, 72 - 20, "WindowElements", asset_get_index("obj_ev_textbox"), {
+		destroy_value_text = instance_create_layer(112, 72 - 20, "WindowElements", agi("obj_ev_textbox"), {
 			empty_text : "Destroy Value",
 			txt : add_properties.val,
 			exceptions : "_-",

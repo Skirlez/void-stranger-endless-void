@@ -7,14 +7,14 @@ if global.is_merged {
 	global.add_current_y = add_inst.y div 16
 
 	current_deaths = 0
-	current_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 5)
-	current_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
+	current_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 5)
+	current_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 6)
 	global.death_count = current_deaths - global.editor.starting_deaths
 
 	if (global.death_count != global.editor.last_death_count) {
 		//Player has just died
-		current_death_x = asset_get_index("obj_player").x div 16
-		current_death_y = asset_get_index("obj_player").y div 16
+		current_death_x = agi("obj_player").x div 16
+		current_death_y = agi("obj_player").y div 16
 	
 		if (global.death_x == current_death_x && global.death_y == current_death_y) {
 			global.annoyance_count += 1

@@ -53,9 +53,9 @@ if (room == global.editor_room) {
 				else if state.tile.cube_type == cube_types.edge_constant
 					spr = state.tile.spr_ind
 					
-				edge_sprite = asset_get_index("spr_floor")
+				edge_sprite = agi("spr_floor")
 				
-				var black_bottom_sprite = asset_get_index("spr_ev_tile_hitbox");
+				var black_bottom_sprite = agi("spr_ev_tile_hitbox");
 				ev_draw_cube_multisprite(
 					[edge_sprite, edge_sprite, edge_sprite, edge_sprite, spr,
 						black_bottom_sprite], [1, 1, 1, 1, 0, 0], 27, draw_y, 7, spin_h, spin_v)			
@@ -98,7 +98,7 @@ if (edit_transition != -1 || play_pack_transition_time != -1) {
 	draw_clear(c_black)	
 }
 
-if (room == asset_get_index("rm_ev_menu")) {
+if (room == agi("rm_ev_menu")) {
 	draw_set_color(c_white)
 	draw_set_font(global.ev_font)
 	draw_set_halign(fa_left)

@@ -1,4 +1,4 @@
-if (!instance_exists(asset_get_index("obj_ev_editor"))) {
-	room_goto(asset_get_index("rm_ev_editor"))
+if (!instance_exists(agi("obj_ev_editor"))) {
+	room_goto(agi("rm_ev_editor"))
 	exit
 }

@@ -1,6 +1,6 @@
 event_inherited()
 
-var no = instance_create_layer(142, 102, "WindowElements2", asset_get_index("obj_ev_executing_button"), 
+var no = instance_create_layer(142, 102, "WindowElements2", agi("obj_ev_executing_button"), 
 {
 	txt: "No",
 	base_scale_x: 0.8,
@@ -10,7 +10,7 @@ var no = instance_create_layer(142, 102, "WindowElements2", asset_get_index("obj
 		instance_destroy(window)
 	}
 })
-var yes = instance_create_layer(82, 102, "WindowElements2", asset_get_index("obj_ev_executing_button"), 
+var yes = instance_create_layer(82, 102, "WindowElements2", agi("obj_ev_executing_button"), 
 {
 	txt: "Yes",
 	base_scale_x: 0.8,

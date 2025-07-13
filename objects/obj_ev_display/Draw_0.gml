@@ -44,7 +44,7 @@ function draw() {
 		draw_text_ext(1 * 16, 9 * 16 + 1, "VO", 0, -1)
 		draw_text_ext(2 * 16, 9 * 16 + 1, "ID", 0, -1)
 
-		draw_sprite(asset_get_index("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
+		draw_sprite(agi("spr_locust_idol"), 0, 5 * 16 - 8, 8 * 16 + 8)
 		draw_text(5 * 16, 9 * 16 + 1, "00")
 
 	
@@ -77,13 +77,13 @@ function draw() {
 		var rodsprite = (lvl.burdens[burden_stackrod]) ? stackrod_sprite : voidrod_sprite
 		draw_sprite(rodsprite, 1, 16 * 6, 8 * 16)
 		if (lvl.burdens[burden_swapper]) 
-			draw_sprite(asset_get_index("spr_ev_swapper"), 0, 16 * 6 + 16, 8 * 16) //I'm bad at math.
+			draw_sprite(agi("spr_ev_swapper"), 0, 16 * 6 + 16, 8 * 16) //I'm bad at math.
 		for (var i = 0; i < array_length(lvl.burdens) - 1; i++) {
 			if lvl.burdens[i] {
 				switch i {
 					case 2:
 						if global.blade_style != 2 burdens_sprite = ev_get_burden_sprite(global.blade_style)
-						else burdens_sprite = asset_get_index("spr_ev_items_lev")   	
+						else burdens_sprite = agi("spr_ev_items_lev")   	
 						break
 					case 1:
 						burdens_sprite = ev_get_burden_sprite(global.wings_style)
@@ -92,7 +92,7 @@ function draw() {
 						burdens_sprite = ev_get_burden_sprite(global.memory_style)
 						break
 					default:
-						burdens_sprite = asset_get_index("spr_ev_items_lev") //Avoid displaying the diamond thing
+						burdens_sprite = agi("spr_ev_items_lev") //Avoid displaying the diamond thing
 						break
 				}
 				if (i != 4) 
@@ -293,11 +293,11 @@ if name != "" {
 }
 
 if draw_beaten == 1 {
-	draw_sprite(asset_get_index("spr_ev_checkmark"), 0, x + sprite_width - 9, y + sprite_height)
+	draw_sprite(agi("spr_ev_checkmark"), 0, x + sprite_width - 9, y + sprite_height)
 }
 else if draw_beaten == 2 {
 	var time = (global.editor_time / 2) % 80
-	var spr = asset_get_index("spr_ev_memory_collected")
+	var spr = agi("spr_ev_memory_collected")
 	if time > sprite_get_number(spr) - 1
 		time = 0;
 	draw_sprite(spr, time, x + sprite_width - 9, y + sprite_height)

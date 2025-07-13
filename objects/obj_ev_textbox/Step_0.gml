@@ -172,7 +172,7 @@ else {
 				|| (opened_x != xstart) || (opened_y != ystart))
 				
 			if (should_make_closing_sound)
-				audio_play_sound(asset_get_index("snd_ev_textbox_click"), 10, false, 1, 0, 1.2)	
+				audio_play_sound(agi("snd_ev_textbox_click"), 10, false, 1, 0, 1.2)	
 		}
 	}
 }

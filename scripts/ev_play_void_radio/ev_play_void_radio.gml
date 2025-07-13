@@ -30,7 +30,7 @@ function ev_play_void_radio() {
 		var previous_index = index;
 		while (index == previous_index)
 			index = irandom_range(1, array_length(global.music_names) - 1)
-		track = asset_get_index(global.music_names[index]);
+		track = agi(global.music_names[index]);
 		if (ev_is_music_elysium(track)) {
 			// swap to a variation
 			track = global.elysium_tracks[irandom_range(0, 3)]

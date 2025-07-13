@@ -46,7 +46,7 @@ post_level_verify_id = noone
 verifying_key = ""
 if ds_map_exists(global.level_key_map, lvl.save_name) {
 	state = 4
-	var updateb = instance_create_layer(112 - 60, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var updateb = instance_create_layer(112 - 60, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : "Update",
 		base_scale_x : 1.6,
 		base_scale_y : 0.6,
@@ -56,7 +56,7 @@ if ds_map_exists(global.level_key_map, lvl.save_name) {
 		}
 	})
 
-	var deleteb = instance_create_layer(112, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var deleteb = instance_create_layer(112, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : "Delete",
 		base_scale_x : 1.3,
 		base_scale_y : 0.6,
@@ -66,7 +66,7 @@ if ds_map_exists(global.level_key_map, lvl.save_name) {
 		}
 	})
 	
-	var nothing = instance_create_layer(112 + 60, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var nothing = instance_create_layer(112 + 60, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : "Nothing",
 		base_scale_x : 1.6,
 		base_scale_y : 0.6,
@@ -83,7 +83,7 @@ if ds_map_exists(global.level_key_map, lvl.save_name) {
 }
 else {
 	state = 0
-	var no = instance_create_layer(112 + 30, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var no = instance_create_layer(112 + 30, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : "No",
 		base_scale_x : 0.8,
 		base_scale_y : 0.6,
@@ -93,7 +93,7 @@ else {
 		}
 	})
 
-	var yes = instance_create_layer(112 - 30, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var yes = instance_create_layer(112 - 30, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : "Yes",
 		base_scale_x : 0.8,
 		base_scale_y : 0.6,
@@ -154,7 +154,7 @@ function start_updating() {
 function ask_deleting() {
 	state = 5;
 	reset_window()
-	var no = instance_create_layer(112 + 30, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var no = instance_create_layer(112 + 30, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : "No",
 		base_scale_x : 0.8,
 		base_scale_y : 0.6,
@@ -164,7 +164,7 @@ function ask_deleting() {
 		}
 	})
 
-	var yes = instance_create_layer(112 - 30, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var yes = instance_create_layer(112 - 30, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : "Yes",
 		base_scale_x : 0.8,
 		base_scale_y : 0.6,
@@ -194,7 +194,7 @@ function start_deleting() {
 
 
 function create_finish_buttons(ok_text) {
-	var ok = instance_create_layer(112, 72 + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+	var ok = instance_create_layer(112, 72 + 30, "WindowElements", agi("obj_ev_executing_button"), {
 		txt : ok_text,
 		base_scale_x : 2.6,
 		base_scale_y : 0.6,
@@ -214,7 +214,7 @@ function on_fail(error_str = "") {
 	upload_timeout = 0;
 	state = 3
 	
-	error_textbox = instance_create_layer(112, 80, "WindowElements", asset_get_index("obj_ev_textbox"), 
+	error_textbox = instance_create_layer(112, 80, "WindowElements", agi("obj_ev_textbox"), 
 	{
 		txt : error_str,
 		base_scale_x : 6,

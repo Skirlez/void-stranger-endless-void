@@ -1,7 +1,7 @@
 if state == selector_states.displaying {
 	if ev_is_mouse_on_me() && ev_mouse_pressed() {
 		global.mouse_layer++;
-		audio_play_sound(asset_get_index("snd_ev_selector_click"), 10, false)
+		audio_play_sound(agi("snd_ev_selector_click"), 10, false)
 		var angle = 0;
 		var angle_increase = 360 / array_length(elements)
 
@@ -11,7 +11,7 @@ if state == selector_states.displaying {
 			var _depth = layer_get_depth(layer_get_id("WindowElements2"))
 			if i == selected_element
 				_depth--;
-			var element = instance_create_depth(xstart, ystart, _depth, asset_get_index("obj_ev_selector_element"), {
+			var element = instance_create_depth(xstart, ystart, _depth, agi("obj_ev_selector_element"), {
 				txt : elements[i],
 				index : i,
 				selector : id,

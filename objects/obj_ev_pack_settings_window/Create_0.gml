@@ -1,7 +1,7 @@
 event_inherited()
 
 function on_press_save_button() {
-	with (asset_get_index("obj_ev_pack_settings_window")) {
+	with (agi("obj_ev_pack_settings_window")) {
 		global.pack.name = name_textbox.txt
 		global.pack.description = description_textbox.txt
 	}
@@ -20,14 +20,14 @@ function on_press_save_button() {
 }
 
 
-save_button = instance_create_layer(112 - 30, 72 - 34, "WindowElements", asset_get_index("obj_ev_executing_button"), 
+save_button = instance_create_layer(112 - 30, 72 - 34, "WindowElements", agi("obj_ev_executing_button"), 
 {
 	func : on_press_save_button,
 	txt : "Save",
 	base_scale_y : 0.7
 })
 
-quit_button = instance_create_layer(112 + 30, 72 - 34, "WindowElements", asset_get_index("obj_ev_main_menu_button"), 
+quit_button = instance_create_layer(112 + 30, 72 - 34, "WindowElements", agi("obj_ev_main_menu_button"), 
 {
 	txt : "Quit",
 	base_scale_x : 1.2,
@@ -36,7 +36,7 @@ quit_button = instance_create_layer(112 + 30, 72 - 34, "WindowElements", asset_g
 })
 add_child(quit_button)
 
-name_textbox = instance_create_layer(112, 72 - 10, "WindowElements", asset_get_index("obj_ev_textbox"), 
+name_textbox = instance_create_layer(112, 72 - 10, "WindowElements", agi("obj_ev_textbox"), 
 {
 	txt : global.pack.name,
 	empty_text : "Pack Name",
@@ -46,7 +46,7 @@ name_textbox = instance_create_layer(112, 72 - 10, "WindowElements", asset_get_i
 	char_limit : 30,
 	//exceptions: "~`!@#$%^&()_=-+{} [],.;'"
 })
-description_textbox = instance_create_layer(112, 72 + 10, "WindowElements", asset_get_index("obj_ev_textbox"), 
+description_textbox = instance_create_layer(112, 72 + 10, "WindowElements", agi("obj_ev_textbox"), 
 {
 	txt : global.pack.description,
 	empty_text : "Pack Description",

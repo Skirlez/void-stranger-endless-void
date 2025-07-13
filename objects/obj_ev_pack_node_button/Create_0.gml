@@ -1,7 +1,7 @@
 event_inherited()
 base_scale_x_start = base_scale_x
 base_scale_y_start = base_scale_y
-window_sprite = asset_get_index("spr_ev_window")
+window_sprite = agi("spr_ev_window")
 
 window_size = 0;
 

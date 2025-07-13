@@ -38,7 +38,7 @@ if grube_mode {
 	draw_text_transformed(112, gy, txt, size, size, 0)
 
 
-	draw_sprite(asset_get_index("spr_ev_tools"), 0, mouse_x, mouse_y)
+	draw_sprite(agi("spr_ev_tools"), 0, mouse_x, mouse_y)
 
 	exit
 }

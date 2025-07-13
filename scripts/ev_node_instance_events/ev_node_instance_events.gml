@@ -101,15 +101,15 @@ function play_pickup_sound(pitch) {
 	audio_play_sound(sounds[irandom_range(0, array_length(sounds) - 1)], 10, false, global.pack_zoom_gain, 0, pitch)
 }
 function node_instance_step() {
-	static root_node_obj = asset_get_index("obj_ev_pack_root")
-	static not_possible_sound = asset_get_index("snd_lorddamage")
+	static root_node_obj = agi("obj_ev_pack_root")
+	static not_possible_sound = agi("snd_lorddamage")
 	
 	if (ev_is_mouse_on_me()) {
 		if unselectable
 			return;
 		if in_menu && global.pack_editor.selected_thing == pack_things.selector {
 			if ev_mouse_pressed() {
-				static node_button = asset_get_index("obj_ev_pack_node_button")
+				static node_button = agi("obj_ev_pack_node_button")
 				node_button.pick(id);
 				global.pack_editor.select(pack_things.nothing)
 				in_menu = false;
@@ -148,12 +148,12 @@ function node_instance_step() {
 		}
 		else if global.pack_editor.selected_thing == pack_things.hammer {
 			if ev_mouse_pressed() {
-				static judgment_object = asset_get_index("obj_ev_pack_node_judgment");
+				static judgment_object = agi("obj_ev_pack_node_judgment");
 				
 				instance_destroy(judgment_object)
 				
 				if !(global.pack_editor.judging_node == id) {
-					static hammer_sound = asset_get_index("snd_ev_hammer_judge")
+					static hammer_sound = agi("snd_ev_hammer_judge")
 					audio_play_sound(hammer_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 					if !(node_type.flags & node_flags.unremovable) {
 						instance_create_layer(center_x, center_y, "NodeJudgments", judgment_object, {
@@ -187,7 +187,7 @@ function node_instance_step() {
 		}
 		else if global.pack_editor.selected_thing == pack_things.wrench {
 			if ev_mouse_pressed() {
-				static wrench_sound = asset_get_index("snd_ev_use_wrench");
+				static wrench_sound = agi("snd_ev_use_wrench");
 				node_type.on_config(id);	
 				
 				var properties_string = node_type.write_function(properties)
@@ -205,7 +205,7 @@ function node_instance_step() {
 		}
 		else if global.pack_editor.selected_thing == pack_things.placechanger {
 			if ev_mouse_pressed() {
-				static wrench_sound = asset_get_index("snd_ev_use_wrench");
+				static wrench_sound = agi("snd_ev_use_wrench");
 				if !instance_exists(global.pack_editor.node_instance_changing_places) {
 					global.pack_editor.node_instance_changing_places = id;
 					audio_play_sound(agi("snd_ev_mark_placechanger"), 10, false, global.pack_zoom_gain)
@@ -217,7 +217,7 @@ function node_instance_step() {
 					}
 					else {
 						function try_change_node_places(one, two, do_effects) {
-							static not_possible_sound = asset_get_index("snd_lorddamage")
+							static not_possible_sound = agi("snd_lorddamage")
 							// check if this is a valid swap
 							
 							var connected_to_one = get_nodes_connected_to_node(one)
@@ -374,7 +374,7 @@ function node_instance_step() {
 				else if (!ev_array_contains(exit_instances, node_inst)) {
 					// connection successful
 					array_push(exit_instances, node_inst)
-					var connect_sound = asset_get_index("snd_ev_node_connect")
+					var connect_sound = agi("snd_ev_node_connect")
 					audio_play_sound(connect_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 					
 					var old_bount = (node_inst.node_type == global.pack_editor.level_node)
@@ -440,7 +440,7 @@ function create_falling_arrow_and_number(node_instance, other_node_instance, ind
 		lerp(node_instance.center_x, other_node_instance.center_x, t),
 		lerp(node_instance.center_y, other_node_instance.center_y, t),
 		"ConnectingLines",
-		asset_get_index("obj_ev_falling_pack_arrow"))
+		agi("obj_ev_falling_pack_arrow"))
 	var more_than_one_exit = (total_exits > 1)
 	var number = (index + 1) * more_than_one_exit
 	if number == 0
@@ -450,7 +450,7 @@ function create_falling_arrow_and_number(node_instance, other_node_instance, ind
 		lerp(node_instance.center_x, other_node_instance.center_x, t2),
 		lerp(node_instance.center_y, other_node_instance.center_y, t2),
 		"ConnectingLines",
-		asset_get_index("obj_ev_falling_pack_number"), {
+		agi("obj_ev_falling_pack_number"), {
 			number : number	
 		})
 }

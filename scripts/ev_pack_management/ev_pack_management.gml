@@ -46,7 +46,7 @@ function place_pack_into_room(pack) {
 function convert_room_nodes_to_structs() {
 	var starting_node_states = []
 	
-	static root = asset_get_index("obj_ev_pack_root")
+	static root = agi("obj_ev_pack_root")
 	
 	// creates and returns a node state struct for this node instance
 	// any nodes this node connects to will also have state structs created and linked.

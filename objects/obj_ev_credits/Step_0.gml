@@ -36,7 +36,7 @@ grube_button.y = ypos + 30
 var cache = ds_map_create();
 
 function find_grubes_above(grube, cache) {
-	static grube_object = asset_get_index("obj_ev_grube")
+	static grube_object = agi("obj_ev_grube")
 	
 	if !ds_map_exists(cache, grube) {
 		var above_grube = noone

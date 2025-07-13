@@ -4,13 +4,13 @@ event_inherited()
 var camera_y = camera_get_view_y(view_camera[0]);
 
 grube_mode = false
-grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset_get_index("obj_ev_executing_button"), {
+grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", agi("obj_ev_executing_button"), {
 	txt : "Grube",
 	base_scale_x : 1.2,
 	base_scale_y : 0.9,
 	count : 0,
 	func : function () {
-		static grube_obj = asset_get_index("obj_ev_grube");
+		static grube_obj = agi("obj_ev_grube");
 		var type;
 		if count < 5
 			type = ev_grube_types.player_cube;
@@ -29,7 +29,7 @@ grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset
 				remove_child(scroll_button_down)
 				instance_destroy(scroll_button_up)
 				instance_destroy(scroll_button_down)
-				var t = instance_create_layer(200, camera_get_view_y(view_camera[0]) + 72, "Textbox", asset_get_index("obj_ev_textbox"), {
+				var t = instance_create_layer(200, camera_get_view_y(view_camera[0]) + 72, "Textbox", agi("obj_ev_textbox"), {
 					opened_x : 112,
 					opened_y : 72 + camera_get_view_y(view_camera[0]),
 					txt : "Stack the grubes!\nLeft click to grab, right click to destroy. " 
@@ -48,10 +48,10 @@ grube_button = instance_create_layer(200, camera_y + 30, "WindowElements", asset
 			
 			audio_sound_gain(global.music_inst, 0, 1000)
 			global.music_inst = noone
-			ev_play_music(asset_get_index("msc_stg_extraboss"), true, true)
+			ev_play_music(agi("msc_stg_extraboss"), true, true)
 			audio_sound_gain(global.music_inst, 0, 0)
 			audio_sound_gain(global.music_inst, 1, 1000)
-			instance_create_layer(mouse_x, mouse_y, "Plucker", asset_get_index("obj_ev_plucker"))
+			instance_create_layer(mouse_x, mouse_y, "Plucker", agi("obj_ev_plucker"))
 		}
 		
 

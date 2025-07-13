@@ -43,6 +43,6 @@ global.wings_get = 0
 global.blade_get = 0
 	
 if (global.is_merged)
-	asset_get_index("scr_menueyecatch")(0)
+	agi("scr_menueyecatch")(0)
 
 sprite_index = ev_get_stranger_down_sprite(global.stranger)

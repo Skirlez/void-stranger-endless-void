@@ -6,9 +6,9 @@ if ds_map_find_value(async_load, "id") == get_levels
 	else
 		global.online_levels = []
 
-	with (asset_get_index("obj_ev_level_select"))
+	with (agi("obj_ev_level_select"))
 		on_level_update();
-	with (asset_get_index("obj_ev_refresh_window"))
+	with (agi("obj_ev_refresh_window"))
 		on_level_update();	
 		
 	

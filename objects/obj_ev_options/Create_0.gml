@@ -21,50 +21,50 @@ function commit() {
 
 save_server_ip_and_port = $"{global.server_ip}:{global.server_port}";
 
-instance_create_layer(200, 16, "Instances", asset_get_index("obj_ev_executing_button"), {
+instance_create_layer(200, 16, "Instances", agi("obj_ev_executing_button"), {
 	base_scale_x : 1,
 	base_scale_y : 0.7,
 	txt : "Back",
 	room_name : "rm_ev_menu",
 	func : function () {
-		var options = asset_get_index("obj_ev_options");
+		var options = agi("obj_ev_options");
 		with (options) {
 			if (can_commit()) {
 				commit();
 				if save_server_ip_and_port != $"{global.server_ip}:{global.server_port}"
-					room_goto(asset_get_index("rm_ev_startup"))
+					room_goto(agi("rm_ev_startup"))
 				else
-					room_goto(asset_get_index("rm_ev_menu"))
+					room_goto(agi("rm_ev_menu"))
 			}
 		}
 	}
 });
 
-instance_create_layer(112 + 30, 72 + 50, "Instances", asset_get_index("obj_ev_executing_button"), {
+instance_create_layer(112 + 30, 72 + 50, "Instances", agi("obj_ev_executing_button"), {
 	base_scale_x : 1.7,
 	base_scale_y : 0.7,
 	txt : "Random",
 	func : function () {
-		asset_get_index("obj_ev_make_brand").brand = int64(irandom_range(0, $FFFFFFFFF))
+		agi("obj_ev_make_brand").brand = int64(irandom_range(0, $FFFFFFFFF))
 	}
 });
-author_brand = instance_create_layer(112 + 30, 72 + 10, "Instances", asset_get_index("obj_ev_make_brand"), {
+author_brand = instance_create_layer(112 + 30, 72 + 10, "Instances", agi("obj_ev_make_brand"), {
 	brand : global.author.brand
 })
 add_child(author_brand)
 
-change_character = instance_create_layer(112 - 30, 72 + 10, "Instances", asset_get_index("obj_ev_change_character"));
+change_character = instance_create_layer(112 - 30, 72 + 10, "Instances", agi("obj_ev_change_character"));
 add_child(change_character)
 /* Maybe one day, but today ain't the day
-change_memory = instance_create_layer(112 - 46, 72 + 30, "Instances", asset_get_index("obj_ev_change_memory"));
+change_memory = instance_create_layer(112 - 46, 72 + 30, "Instances", agi("obj_ev_change_memory"));
 add_child(change_memory)
-change_wings = instance_create_layer(112 - 30, 72 + 30, "Instances", asset_get_index("obj_ev_change_wings"));
+change_wings = instance_create_layer(112 - 30, 72 + 30, "Instances", agi("obj_ev_change_wings"));
 add_child(change_wings)
-change_blade = instance_create_layer(112 - 14, 72 + 30, "Instances", asset_get_index("obj_ev_change_blade"));
+change_blade = instance_create_layer(112 - 14, 72 + 30, "Instances", agi("obj_ev_change_blade"));
 add_child(change_blade)
 */
 
-author_textbox = instance_create_layer(112, 72 - 20, "Instances", asset_get_index("obj_ev_textbox"), 
+author_textbox = instance_create_layer(112, 72 - 20, "Instances", agi("obj_ev_textbox"), 
 {
 	empty_text : "Username",
 	allow_newlines : false,
@@ -76,7 +76,7 @@ author_textbox = instance_create_layer(112, 72 - 20, "Instances", asset_get_inde
 add_child(author_textbox)
 
 
-server_textbox = instance_create_layer(112 - 36, 72 - 40, "Instances", asset_get_index("obj_ev_textbox"), 
+server_textbox = instance_create_layer(112 - 36, 72 - 40, "Instances", agi("obj_ev_textbox"), 
 {
 	empty_text : "Server IP",
 	allow_newlines : false,
@@ -87,7 +87,7 @@ server_textbox = instance_create_layer(112 - 36, 72 - 40, "Instances", asset_get
 })
 add_child(server_textbox)
 
-port_textbox = instance_create_layer(112 + 36, 72 - 40, "Instances", asset_get_index("obj_ev_textbox"), 
+port_textbox = instance_create_layer(112 + 36, 72 - 40, "Instances", agi("obj_ev_textbox"), 
 {
 	empty_text : "Port",
 	allow_newlines : false,
@@ -103,12 +103,12 @@ add_child(server_textbox)
 
 
 
-cube_toggle = instance_create_layer(112, 144 + 40, "Instances", asset_get_index("obj_ev_toggle"), {
+cube_toggle = instance_create_layer(112, 144 + 40, "Instances", agi("obj_ev_toggle"), {
 	image_index : global.disable_3d_cube_bs	
 })
 add_child(cube_toggle)
 
-cube_toggle_explanation = instance_create_layer(112, 144 + 20, "Instances2", asset_get_index("obj_ev_textbox"), {
+cube_toggle_explanation = instance_create_layer(112, 144 + 20, "Instances2", agi("obj_ev_textbox"), {
 	allow_deletion : false,
 	char_limit : 0,
 	opened_x : 112,
@@ -118,7 +118,7 @@ cube_toggle_explanation = instance_create_layer(112, 144 + 20, "Instances2", ass
 add_child(cube_toggle_explanation)
 
 
-log_toggle_explanation = instance_create_layer(112, 144 + 80, "Instances2", asset_get_index("obj_ev_textbox"), {
+log_toggle_explanation = instance_create_layer(112, 144 + 80, "Instances2", agi("obj_ev_textbox"), {
 	allow_deletion : false,
 	char_limit : 0,
 	opened_x : 112,
@@ -127,13 +127,13 @@ log_toggle_explanation = instance_create_layer(112, 144 + 80, "Instances2", asse
 })
 add_child(log_toggle_explanation)
 
-log_toggle = instance_create_layer(112, 144 + 100, "Instances", asset_get_index("obj_ev_toggle"), {
+log_toggle = instance_create_layer(112, 144 + 100, "Instances", agi("obj_ev_toggle"), {
 	image_index : global.should_log_udp	
 })
 add_child(log_toggle)
 
 
-log_ip_textbox = instance_create_layer(112 - 36, 144 + 120, "Instances", asset_get_index("obj_ev_textbox"), 
+log_ip_textbox = instance_create_layer(112 - 36, 144 + 120, "Instances", agi("obj_ev_textbox"), 
 {
 	empty_text : "Logging IP",
 	allow_newlines : false,
@@ -143,7 +143,7 @@ log_ip_textbox = instance_create_layer(112 - 36, 144 + 120, "Instances", asset_g
 	txt : global.logging_ip
 })
 add_child(server_textbox)
-log_port_textbox = instance_create_layer(112 + 36, 144 + 120, "Instances", asset_get_index("obj_ev_textbox"), 
+log_port_textbox = instance_create_layer(112 + 36, 144 + 120, "Instances", agi("obj_ev_textbox"), 
 {
 	empty_text : "Port",
 	allow_newlines : false,

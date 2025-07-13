@@ -4,7 +4,7 @@ Usually, the pit object does this, but it doesn't exist when there's a glass til
 So this object exists to do it in that specific case.
 */
 
-sprite_index = asset_get_index("spr_floor")
+sprite_index = agi("spr_floor")
 
 /* 
 These pits are drawn at nearly the lowest layer ("More_Pits"), so they'll be obstructed by anything 

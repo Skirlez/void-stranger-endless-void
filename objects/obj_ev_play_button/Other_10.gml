@@ -1,5 +1,5 @@
 if (global.is_merged) {
-	if (room == asset_get_index("rm_ev_editor"))
+	if (room == agi("rm_ev_editor"))
 		lvl = global.level;
 	event_inherited()
 	if (highlighter != noone)

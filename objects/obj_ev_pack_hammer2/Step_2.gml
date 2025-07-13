@@ -47,7 +47,7 @@ else if state == hammer_states.animation {
 				+ (t * t * t / 25) 
 
 			if judge_animation_timer == 15 {
-				audio_play_sound(asset_get_index("snd_ev_hammer_judge"), 10, false)	
+				audio_play_sound(agi("snd_ev_hammer_judge"), 10, false)	
 			}
 		}
 		else {

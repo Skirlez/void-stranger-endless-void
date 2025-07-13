@@ -18,7 +18,7 @@ function die() {
 	phy_active = false;
 	death_timer = 0
 	layer = layer_get_id("Explosion")
-	death_sound = audio_play_sound(asset_get_index("snd_ex_vacuumcomes"), 10, false, 1.3, 0, 1.2)
+	death_sound = audio_play_sound(agi("snd_ex_vacuumcomes"), 10, false, 1.3, 0, 1.2)
 }
 
 enum ev_grube_types {

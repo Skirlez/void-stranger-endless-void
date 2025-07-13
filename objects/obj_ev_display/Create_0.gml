@@ -12,12 +12,12 @@ dragging = false
 painting = false;
 
 held_tile_state = new tile_with_state(global.editor.object_empty)
-place_sound = asset_get_index("snd_ev_place")
-drag_sound = asset_get_index("snd_ev_drag")
-erase_sound = asset_get_index("snd_ev_erase")
-zed_sound = asset_get_index("snd_ev_zed")
-pluck_sound = asset_get_index("snd_ev_pluck")
-pick_sound = asset_get_index("snd_ev_pick")
+place_sound = agi("snd_ev_place")
+drag_sound = agi("snd_ev_drag")
+erase_sound = agi("snd_ev_erase")
+zed_sound = agi("snd_ev_zed")
+pluck_sound = agi("snd_ev_pluck")
+pick_sound = agi("snd_ev_pick")
 
 
 function switch_held_tile(tile_state) {
@@ -228,14 +228,14 @@ function handle_click_after(tile_i, tile_j) {
 scale_x_start = image_xscale
 scale_y_start = image_yscale
 
-base_ui = asset_get_index("spr_ev_base_ui")
+base_ui = agi("spr_ev_base_ui")
 
 ind = 0
 
-voidrod_sprite = asset_get_index("spr_voidrod_icon")
-stackrod_sprite = asset_get_index("spr_voidrod_icon2")
-burdens_sprite = asset_get_index("spr_items")
-border_sprite = asset_get_index("spr_ev_display_border")
+voidrod_sprite = agi("spr_voidrod_icon")
+stackrod_sprite = agi("spr_voidrod_icon2")
+burdens_sprite = agi("spr_items")
+border_sprite = agi("spr_ev_display_border")
 
 enum display_contexts {
 	level_editor,
@@ -258,11 +258,11 @@ mouse_moving = false;
 
 function destroy() {
 	var gain = (room == global.pack_editor_room) ? global.pack_zoom_gain : 1
-	audio_play_sound(asset_get_index("snd_stainedglass_break"), 10, false, gain, 0, random_range(0.9, 1));
+	audio_play_sound(agi("snd_stainedglass_break"), 10, false, gain, 0, random_range(0.9, 1));
 	
-	static shard_sprite = asset_get_index("spr_ev_display_shards");
-	static shard_object = asset_get_index("obj_ev_display_shard");
-	static shard_manager = asset_get_index("obj_ev_display_shard_manager");
+	static shard_sprite = agi("spr_ev_display_shards");
+	static shard_object = agi("obj_ev_display_shard");
+	static shard_manager = agi("obj_ev_display_shard_manager");
 	
 	new_game_surface = surface_create(224, 144);
 	surface_copy(new_game_surface, 0, 0, game_surface);
