@@ -58,7 +58,7 @@ function get_all_level_node_instances() {
 	var node_instances = get_all_node_instances();
 	var level_node_instances = []
 	for (var i = 0; i < array_length(node_instances); i++) {
-		if node_instances[i].node_type == global.pack_editor_instance.level_node
+		if node_instances[i].node_type == global.pack_editor.level_node
 			array_push(level_node_instances, node_instances[i])	
 	}
 	return level_node_instances

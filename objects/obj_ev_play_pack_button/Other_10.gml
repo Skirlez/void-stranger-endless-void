@@ -3,7 +3,7 @@ if (global.is_merged) {
 	if (highlighter != noone)
 		highlighter.hide_textbox();
 	if (nodeless_pack != noone && display_instance != noone) {
-		global.editor_instance.play_pack_transition(nodeless_pack, display_instance)
+		global.editor.play_pack_transition(nodeless_pack, display_instance)
 	}
 }
 else

@@ -178,6 +178,7 @@
     {"name":"spr_ev_bee_attack_u","order":3,"path":"sprites/spr_ev_bee_attack_u/spr_ev_bee_attack_u.yy",},
     {"name":"spr_ev_swap_tool","order":64,"path":"sprites/spr_ev_swap_tool/spr_ev_swap_tool.yy",},
     {"name":"obj_ev_pack_add_level_button","order":59,"path":"objects/obj_ev_pack_add_level_button/obj_ev_pack_add_level_button.yy",},
+    {"name":"ev_on_chest_collected","order":46,"path":"scripts/ev_on_chest_collected/ev_on_chest_collected.yy",},
     {"name":"spr_ev_upload","order":29,"path":"sprites/spr_ev_upload/spr_ev_upload.yy",},
     {"name":"ac_unhover_curve","order":1,"path":"animcurves/ac_unhover_curve/ac_unhover_curve.yy",},
     {"name":"spr_ct_right","order":25,"path":"sprites/spr_ct_right/spr_ct_right.yy",},

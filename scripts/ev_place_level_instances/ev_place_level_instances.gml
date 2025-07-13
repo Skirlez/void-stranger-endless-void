@@ -1,4 +1,4 @@
-function ev_place_level_instances(level) {
+function ev_place_level_instances(level, should_create_memory = true) {
 	global.wall_tilemaps = array_create(wall_types.size)
 	global.edge_tilemaps = array_create(edge_types.size)
 	
@@ -20,6 +20,7 @@ function ev_place_level_instances(level) {
 		lvl : level,
 		wall_tilemaps : global.wall_tilemaps,
 		edge_tilemaps : global.edge_tilemaps,
+		should_create_memory : should_create_memory,
 		current_exit_number : 0,
 	}
 	for (var i = 0; i < 9; i++) {

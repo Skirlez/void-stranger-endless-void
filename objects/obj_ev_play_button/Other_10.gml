@@ -5,7 +5,7 @@ if (global.is_merged) {
 	if (highlighter != noone)
 		highlighter.hide_textbox();
 	if (lvl != noone && display_instance != noone) {
-		global.editor_instance.play_level_transition(lvl, lvl_sha, display_instance)
+		global.editor.play_level_transition(lvl, lvl_sha, display_instance)
 	}
 }
 else

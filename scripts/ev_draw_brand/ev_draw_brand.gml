@@ -3,8 +3,9 @@ function ev_draw_brand(pos_x, pos_y, brand){
 		brand = 68719476735
 	var i = 0;
 	while (brand > 0) {
+		show_debug_message(brand)
 		var bit = brand % 2
-		brand /= 2;
+		brand = brand >> 1
 		if (bit == 1)
 			ev_draw_pixel(pos_x + (i % 6), pos_y + (i div 6)) 
 		i++;

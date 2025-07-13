@@ -14,7 +14,7 @@ switch (judgment_type) {
 			exit_node_ids[i] = node_inst.exit_instances[i].node_id
 		
 		
-		global.pack_editor_instance.add_undo_action(function (args) {
+		global.pack_editor.add_undo_action(function (args) {
 			var state = new node_with_state(args.node_type,
 				args.pos_x,
 				args.pos_y,
@@ -24,12 +24,12 @@ switch (judgment_type) {
 			instance.exit_instances = array_create(array_length(args.previous_exit_ids))
 			for (var i = 0; i < array_length(args.previous_exit_ids); i++) {
 				instance.exit_instances[i] = ds_map_find_value(
-					global.pack_editor_instance.node_id_to_instance_map, 
+					global.pack_editor.node_id_to_instance_map, 
 					args.previous_exit_ids[i])
 			}
 			for (var i = 0; i < array_length(args.previously_connected_ids); i++) {
 				var instance_previously_connected_to_me = ds_map_find_value(
-					global.pack_editor_instance.node_id_to_instance_map,
+					global.pack_editor.node_id_to_instance_map,
 					args.previously_connected_ids[i])
 				array_push(instance_previously_connected_to_me.exit_instances, instance)
 			}
@@ -60,9 +60,9 @@ switch (judgment_type) {
 				create_falling_arrow_and_number(node_inst, node_inst.exit_instances[i], 
 					i, array_length(node_inst.exit_instances));
 					
-				global.pack_editor_instance.add_undo_action(function (args) {
-					var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
-					var exit_instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.exit_id)
+				global.pack_editor.add_undo_action(function (args) {
+					var instance = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.node_id)
+					var exit_instance = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.exit_id)
 					array_push(instance.exit_instances, exit_instance)
 				}, {
 					node_id : node_inst.node_id,
@@ -76,7 +76,7 @@ switch (judgment_type) {
 		}
 		audio_play_sound(asset_get_index("snd_ev_node_disconnect"), 10, false, 1, 0, random_range(0.9, 1.1))
 		if instance_number(object_index) == 1 // i'm the last one left
-			global.pack_editor_instance.judging_node = noone;
+			global.pack_editor.judging_node = noone;
 		instance_destroy(id)
 
 		break;

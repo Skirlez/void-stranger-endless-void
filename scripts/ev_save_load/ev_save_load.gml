@@ -95,8 +95,22 @@ function delete_pack(save_name) {
 }
 
 
-function load_pack_progress() {
-	var file = file_text_open_read(global.packs_directory + global.pack.save_name + "." + pack_save_extension)
+
+
+function save_pack_progress(current_level_name) {
+	static inv = agi("obj_inventory")
+	var save = create_pack_save_struct(current_level_name)
+	var save_string = json_stringify(save, false)
+	var file = file_text_open_write(global.packs_directory + global.pack.save_name + "." + pack_save_extension)
+	if (file == -1)
+		return false;
+	file_text_write_string(file, save_string)
+	file_text_close(file)
+	return true;
+}
+
+function load_pack_progress(pack) {
+	var file = file_text_open_read(global.packs_directory + pack.save_name + "." + pack_save_extension)
 	if (file == -1)
 		return noone;
 	var save_string = file_text_read_string(file)
@@ -116,27 +130,75 @@ function load_pack_progress() {
 	}
 }
 
-function save_pack_progress(current_level_name) {
+function apply_pack_save(save) {
+	global.branefuck_persistent_memory = save.persistent_memory;
+	var track = agi(save.music);
+	if track != -1 {
+		ev_play_music(agi(save.music), true, false)
+	}
+	// TODO: remove these, temporary
+	if !variable_struct_exists(save, "locust_count")
+		save.locust_count = 0
+	if !variable_struct_exists(save, "collected_memories")
+		save.collected_memories = []
+	
+			
+	ds_grid_set(agi("obj_inventory").ds_player_info, 1, 1, save.locust_count)
+	ev_prepare_level_burdens(save.burdens);
+	for (var i = 0; i < array_length(save.collected_memories); i++) {
+		ds_map_set(global.pack_memories, save.collected_memories[i], 1)
+	}
+	
+	function find_level_node_state_with_name(node_state, name, explored_states_map) {
+		static level_node = global.pack_editor.level_node
+		if (ds_map_exists(explored_states_map, node_state))
+			return noone;
+		if node_state.node == level_node {
+			if node_state.properties.level.name == name
+				return node_state;
+		}
+		ds_map_set(explored_states_map, node_state, 0)
+		
+		for (var i = 0; i < array_length(node_state.exits); i++) {
+			var state = find_level_node_state_with_name(node_state.exits[i], name, explored_states_map)
+			if state != noone
+				return state;
+		}
+		return noone;
+	}
+	var map = ds_map_create();
+	var target_name = base64_decode(save.level_name)
+	var first_state = noone;
+	for (var i = 0; i < array_length(global.pack.starting_node_states); i++) {
+		var node_state = find_level_node_state_with_name(global.pack.starting_node_states[i], target_name, map)
+		if (node_state != noone) {
+			first_state = node_state
+			log_info($"Found level from save with name {target_name}")
+			break;	
+		}
+	}
+	ds_map_destroy(map)
+			
+	if first_state == noone {
+		log_error($"Save existed, but could not find node with name {save.level_name}."
+			+ "Sadly choosing root node.")
+		first_state = global.pack.starting_node_states[0];
+	}
+	return first_state;
+}
+
+function create_pack_save_struct(current_level_name) {
 	static inv = agi("obj_inventory")
-	var save = {
+	return {
 		level_name : base64_encode(current_level_name),
 		locust_count : ds_grid_get(inv.ds_player_info, 1, 1),
 		music : audio_get_name(global.music_file),
 		persistent_memory : global.branefuck_persistent_memory,
+		collected_memories : ds_map_keys_to_array(global.pack_memories),
 		burdens : [ds_grid_get(inv.ds_equipment, 0, 0) != 0,
 					ds_grid_get(inv.ds_equipment, 0, 1) != 0,
 					ds_grid_get(inv.ds_equipment, 0, 2) != 0,
 					ds_grid_get(inv.ds_player_info, 10, 2) != 4,
-					ds_grid_get(inv.ds_equipment, 0, 4) != 0]
+					ds_grid_get(inv.ds_equipment, 0, 4) != 0],
 	}
-	static inv = agi("obj_inventory")
-
-	
-	var save_string = json_stringify(save, false)
-	var file = file_text_open_write(global.packs_directory + global.pack.save_name + "." + pack_save_extension)
-	if (file == -1)
-		return false;
-	file_text_write_string(file, save_string)
-	file_text_close(file)
-	return true;
 }

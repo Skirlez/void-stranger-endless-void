@@ -9,9 +9,9 @@ if global.is_merged {
 	current_deaths = 0
 	current_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 5)
 	current_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
-	global.death_count = current_deaths - global.editor_instance.starting_deaths
+	global.death_count = current_deaths - global.editor.starting_deaths
 
-	if (global.death_count != global.editor_instance.last_death_count) {
+	if (global.death_count != global.editor.last_death_count) {
 		//Player has just died
 		current_death_x = asset_get_index("obj_player").x div 16
 		current_death_y = asset_get_index("obj_player").y div 16
@@ -28,7 +28,7 @@ if global.is_merged {
 		global.death_frames = 0
 	}
 
-	global.editor_instance.last_death_count = global.death_count
+	global.editor.last_death_count = global.death_count
 }
 
 

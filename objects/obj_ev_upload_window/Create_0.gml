@@ -6,7 +6,7 @@ if lvl == noone
 function level_contains_crystal_memory(level) {
 	for (var i = 0; i < 9; i++) {
 		for (var j = 0; j < 14; j++) {
-			if level.objects[i][j].tile == global.editor_instance.object_memory_crystal
+			if level.objects[i][j].tile == global.editor.object_memory_crystal
 				return true;
 		}
 	}
@@ -236,8 +236,8 @@ function on_finish_upload(key) {
 }
 function on_verify_upload() {
 	state = 2
-	global.editor_instance.try_update_online_levels();
-	global.editor_instance.add_level_key(verifying_key, lvl.save_name)
+	global.editor.try_update_online_levels();
+	global.editor.add_level_key(verifying_key, lvl.save_name)
 	
 	var keyfile = file_text_open_write(global.levels_directory + lvl.save_name + ".key")
 	file_text_write_string(keyfile, verifying_key)
@@ -252,13 +252,13 @@ function on_fail_verify() {
 function on_finish_update() {
 	state = 2
 	create_finish_buttons("Okay thanks") 
-	global.editor_instance.try_update_online_levels();
+	global.editor.try_update_online_levels();
 }
 function on_finish_delete() {
 	state = 2
 	create_finish_buttons("Okay thanks") 
-	global.editor_instance.try_update_online_levels();
-	global.editor_instance.remove_level_key(lvl.save_name)
+	global.editor.try_update_online_levels();
+	global.editor.remove_level_key(lvl.save_name)
 	
 	file_delete(global.levels_directory + lvl.save_name + ".key")
 }

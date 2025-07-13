@@ -1,7 +1,7 @@
 
 var ind = global.tile_mode ? tile_ind : object_ind
-var tile = global.editor_instance.current_list[ind]
-if (tile == global.editor_instance.object_player)
+var tile = global.editor.current_list[ind]
+if (tile == global.editor.object_player)
 	sprite_index = ev_get_stranger_down_sprite(global.stranger)
 else
 	sprite_index = tile.spr_ind

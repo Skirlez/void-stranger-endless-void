@@ -1,9 +1,9 @@
 for (var i = 0; i < array_length(nodes); i++) {
 	with (nodes[i]) {
-		if global.pack_editor_instance.node_instance_changing_places == id {
+		if global.pack_editor.node_instance_changing_places == id {
 			gpu_set_fog(true, c_black, 0, 1)
 			var increase = dsin(global.editor_time) / 8 + 0.25;
-			if node_type == global.pack_editor_instance.level_node {
+			if node_type == global.pack_editor.level_node {
 				var scale = (image_xscale + image_yscale) / 2 + increase / 5;
 				draw_sprite_ext(agi("spr_ev_display"), 0, center_x - 112 * scale, center_y - 72 * scale, scale, scale, 0, c_white, 1)
 			}

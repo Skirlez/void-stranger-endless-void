@@ -32,18 +32,9 @@ function update_chudlings_position() {
 		chudlings[i].x = left + i * (16 * window_size);
 		chudlings[i].y = top
 	}
-	/*
-	if instance_exists(locust_textbox) {
-		locust_textbox.x = left + 2 * (16 * window_size);
-		locust_textbox.y = top + 1 * (16 * window_size);
-	}
-	*/
 }
 
-//update_chudlings_position();
-
-
-global.pack_editor_instance.select_tool_happening.subscribe(function (struct) {
+global.pack_editor.select_tool_happening.subscribe(function (struct) {
 	selected = (struct.new_selected_thing == pack_things.play)
 
 	if (array_length(chudlings) != 0) {

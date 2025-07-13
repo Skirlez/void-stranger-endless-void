@@ -15,7 +15,7 @@
 // Both node states and instances have some form of id, position, and list of exits 
 // (outwards connections). There is one of each for each node a user creates in the editor.
 
-global.pack_editor_instance = id;
+global.pack_editor = id;
 
 previous_mouse_x = mouse_x;
 previous_mouse_y = mouse_y;
@@ -45,7 +45,7 @@ menu_remember_x = 0;
 menu_remember_y = 0;
 
 judging_node = noone; // node currently being judged
-
+save_timestamp = current_time
 
 function on_menu_create() {
 	menu_remember_x = camera_get_view_x(view_camera[0])
@@ -157,16 +157,16 @@ function node_struct(node_id, object_name, flags = 0, layer_name = "Nodes") cons
 	
 	self.layer_name = "Nodes";
 
-	self.properties_generator = global.editor_instance.return_noone;
+	self.properties_generator = global.editor.return_noone;
 	self.properties = {};
 	
-	self.read_function = global.pack_editor_instance.default_reader;
-	self.write_function = global.pack_editor_instance.default_writer;
+	self.read_function = global.pack_editor.default_reader;
+	self.write_function = global.pack_editor.default_writer;
 
 
 	// called when wrench is used
 	// params: (node_instance)
-	self.on_config = global.editor_instance.empty_function;
+	self.on_config = global.editor.empty_function;
 	
 	self.on_death = function (node_instance) {
 		audio_play_sound(agi("snd_ev_node_destroy"), 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
@@ -184,7 +184,7 @@ function node_struct(node_id, object_name, flags = 0, layer_name = "Nodes") cons
 	// used by nodes that can't immediately tell you where to go in the pack,
 	// like levels, since they have to wait for you to complete the level
 	// doesn't return anything
-	self.play_evaluate = global.editor_instance.empty_function;
+	self.play_evaluate = global.editor.empty_function;
 	
 	self.flags = flags;
 }
@@ -257,7 +257,8 @@ level_node.write_function = function (properties) {
 level_node.play_evaluate = function (node_state) {
 	global.level = node_state.properties.level;
 	ev_prepare_level_visuals(global.level)
-	ev_place_level_instances(global.level)
+	var should_create_memory = !ds_map_exists(global.pack_memories, global.level.name)
+	ev_place_level_instances(global.level, should_create_memory)
 	with (agi("obj_ev_pack_player")) {
 		if is_first_level {
 			instance_create_layer(x, y, "Effects", agi("obj_darkness_begins"))

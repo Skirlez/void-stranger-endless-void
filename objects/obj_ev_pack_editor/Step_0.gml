@@ -2,7 +2,7 @@ if room != global.pack_editor_room
 	exit;
 	
 	
-var gain = (1 - (global.pack_editor_instance.zoom + 10) / (global.pack_editor_instance.last_possible_zoom + 10)) * 2
+var gain = (1 - (global.pack_editor.zoom + 10) / (global.pack_editor.last_possible_zoom + 10)) * 2
 global.pack_zoom_gain = clamp(gain, 0.2, 1.6)
 
 if global.void_radio_on {
@@ -13,11 +13,11 @@ if global.void_radio_on {
 		ev_play_void_radio()
 	}
 }
-if ev_mouse_pressed() && global.instance_touching_mouse == noone 
+if	((ev_mouse_pressed() && global.instance_touching_mouse == noone) || mouse_check_button_pressed(mb_middle)) 
 		&& (global.mouse_layer == 0 || selected_thing == pack_things.wrench) {
 	dragging_camera = true;
 }
-else if ev_mouse_released()
+else if ev_mouse_released() || mouse_check_button_released(mb_middle)
 	dragging_camera = false;
 
 if dragging_camera {
@@ -70,33 +70,35 @@ if play_transition_time != -1 {
 		global.mouse_layer = 0;
 		global.playtesting = true;
 		global.pack.starting_node_states = convert_room_nodes_to_structs() 
-		global.pack_save = {
-			node_id : play_transition_target.node_id
-		}
+		
 		with (agi("obj_ev_pack_editor_play_button")) {
 			global.pack_playtest_parameters = get_playtest_parameters();
 		}
+		global.pack_playtest_parameters.node_id = play_transition_target.node_id;
+		
 		room_goto(global.pack_level_room)
 		play_transition_time = -1;
 	}
 }
 if global.mouse_layer == 0 {
-	if keyboard_check_pressed(ord("D")) && selected_thing != pack_things.nothing {
-		global.pack_editor_instance.select(pack_things.nothing)
-		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(0.75, 0.8))
+	var keys = ["W", "A", "S", "D", "E"]
+	var things = [pack_things.hammer, pack_things.selector, pack_things.wrench, pack_things.placechanger, pack_things.play]
+
+	for (var i = 0; i < array_length(keys); i++) {
+		var key = ord(keys[i]);
+		if keyboard_check_pressed(key) {
+			if selected_thing != things[i] {
+				audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(1.1, 1.2))
+				select(things[i])
+			}	
+			else {
+				audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(0.75, 0.8))
+				select(pack_things.nothing)
+			}
+		}
 	}
-	else if keyboard_check_pressed(ord("W")) && selected_thing != pack_things.wrench {
-		global.pack_editor_instance.select(pack_things.wrench)
-		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(1.1, 1.2))
-	}
-	else if keyboard_check_pressed(ord("S")) && selected_thing != pack_things.placechanger  {
-		global.pack_editor_instance.select(pack_things.placechanger)
-		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(1.1, 1.2))
-	}
-	else if mouse_check_button_pressed(mb_middle) && selected_thing != pack_things.hammer  {
-		global.pack_editor_instance.select(pack_things.hammer)
-		audio_play_sound(global.select_sound, 10, false, 1, 0, random_range(1.1, 1.2))
-	}
+
+	
 	
 	if keyboard_check(vk_control) && !instance_exists(agi("obj_ev_pack_node_judgment")) {
 		if keyboard_check_pressed(ord("Z")) {

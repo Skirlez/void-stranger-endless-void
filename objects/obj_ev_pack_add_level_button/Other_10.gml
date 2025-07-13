@@ -1,6 +1,6 @@
 event_inherited()
 global.mouse_layer++;
-with (global.pack_editor_instance)
+with (global.pack_editor)
 	on_menu_create();
 
 new_window(0, 0, asset_get_index("obj_ev_level_select"), {
@@ -9,4 +9,4 @@ new_window(0, 0, asset_get_index("obj_ev_level_select"), {
 	buttons_layer : "LevelSelectWindowElements"
 })
 
-global.pack_editor_instance.select(pack_things.nothing)
+global.pack_editor.select(pack_things.nothing)

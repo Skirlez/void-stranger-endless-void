@@ -22,8 +22,8 @@ function node_with_state(node, pos_x, pos_y, properties = node.properties_genera
 	
 	function create_instance(node_id = noone) {
 		if node_id == noone {
-			global.pack_editor_instance.last_nid++;
-			node_id = global.pack_editor_instance.last_nid;	
+			global.pack_editor.last_nid++;
+			node_id = global.pack_editor.last_nid;	
 		}
 		return instance_create_layer(pos_x, pos_y, 
 			"Nodes",

@@ -45,7 +45,7 @@ function pick(node_inst) {
 update_node_instances_positions()
 
 
-global.pack_editor_instance.select_tool_happening.subscribe(function (struct) {
+global.pack_editor.select_tool_happening.subscribe(function (struct) {
 	selected = (struct.new_selected_thing == pack_things.selector)
 	
 	if (array_length(node_instances) != 0) {
@@ -54,7 +54,7 @@ global.pack_editor_instance.select_tool_happening.subscribe(function (struct) {
 		node_instances = []
 	}
 	if selected {
-		var nodes = global.pack_editor_instance.nodes_list;
+		var nodes = global.pack_editor.nodes_list;
 		for (var i = 0; i < array_length(nodes); i++) {
 			var node_state = new node_with_state(nodes[i], x, y);
 			var instance = node_state.create_instance();

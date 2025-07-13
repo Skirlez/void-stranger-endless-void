@@ -11,8 +11,10 @@ function on_press_save_button() {
 	}
 	var starting_nodes = convert_room_nodes_to_structs()
 	global.pack.starting_node_states = starting_nodes;
-	if save_pack(global.pack)
+	if save_pack(global.pack) {
 		ev_notify("Pack saved!")
+		global.pack_editor.save_timestamp = current_time;	
+	}
 	else
 		ev_notify("Error saving pack!")
 }

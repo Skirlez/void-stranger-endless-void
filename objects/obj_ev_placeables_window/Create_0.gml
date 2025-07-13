@@ -19,7 +19,7 @@ for (var i = 0; i < 7; i++) {
 var amount_per_row = 9;
 
 var step = (image_xscale * 16 - 2 * margin_x) / amount_per_row
-var list = global.editor_instance.current_list
+var list = global.editor.current_list
 var i = 0, j = 0;
 repeat (array_length(list)) {
 	var inst = instance_create_layer(left_edge + i * step, top_edge + 35 + j * step, "WindowElements", asset_get_index("obj_ev_placeable_selection"), {

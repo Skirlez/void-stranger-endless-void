@@ -13,11 +13,11 @@ function level_struct() constructor {
 	theme = 0
 	bount = -1; // brane count
 	for (var i = 0; i < array_length(tiles) - 1; i++)
-		tiles[i] = array_create(14, new tile_with_state(global.editor_instance.tile_pit))	
-	tiles[8] = array_create(14, new tile_with_state(global.editor_instance.tile_unremovable))	
+		tiles[i] = array_create(14, new tile_with_state(global.editor.tile_pit))	
+	tiles[8] = array_create(14, new tile_with_state(global.editor.tile_unremovable))	
 	
 	for (var i = 0; i < array_length(objects); i++)
-		objects[i] = array_create(14, new tile_with_state(global.editor_instance.object_empty))	
+		objects[i] = array_create(14, new tile_with_state(global.editor.object_empty))	
 		
 	// This name will be used for when the file is saved.
 	save_name = generate_save_name()
@@ -26,11 +26,11 @@ function level_struct() constructor {
 	
 }
 function place_default_tiles(level) {
-	level.objects[@ 4][6] = new tile_with_state(global.editor_instance.object_player)
-	level.tiles[@ 2][6] = new tile_with_state(global.editor_instance.tile_exit)
+	level.objects[@ 4][6] = new tile_with_state(global.editor.object_player)
+	level.tiles[@ 2][6] = new tile_with_state(global.editor.tile_exit)
 	for (var i = 0; i < 3; i++) {
 		for (var j = 0; j < 3; j++)
-			level.tiles[@ 3 + i][5 + j] = new tile_with_state(global.editor_instance.tile_default)
+			level.tiles[@ 3 + i][5 + j] = new tile_with_state(global.editor.tile_default)
 	}	
 	return level;
 }
@@ -231,8 +231,8 @@ function import_level(level_string) {
 	var tile_string = strings[9]
 	var object_string = strings[10]
 
-	import_process_tiles(tile_string, level, 7, global.editor_instance.tile_pit, version)
-	import_process_tiles(object_string, level, 8, global.editor_instance.object_empty, version)
+	import_process_tiles(tile_string, level, 7, global.editor.tile_pit, version)
+	import_process_tiles(object_string, level, 8, global.editor.object_empty, version)
 	
 
 	if (version <= 2) {
@@ -304,8 +304,8 @@ function get_multiplier(str, pointer) {
 }
 
 function level_get_exit_count(lvl) {
-	static tile_exit = global.editor_instance.tile_exit;
-	static object_secret_exit = global.editor_instance.object_secret_exit; 
+	static tile_exit = global.editor.tile_exit;
+	static object_secret_exit = global.editor.object_secret_exit; 
 	var exits = 0;
 	for (var i = 0; i < 9; i++) {
 		for (var j = 0; j < 14; j++) {

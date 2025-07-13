@@ -67,7 +67,7 @@ if (!global.online_mode) {
 		image_alpha : 0,
 		func : function () {
 			highlighter.hide_textbox();
-			global.editor_instance.edit_level_pack_transition(nodeless_pack, display_instance);
+			global.editor.edit_level_pack_transition(nodeless_pack, display_instance);
 		}
 	})
 	

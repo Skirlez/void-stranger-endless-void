@@ -14,7 +14,7 @@ function draw() {
 		draw_clear_alpha(c_black, 0)
 	if lvl.theme == level_themes.universe {
 		if global.is_merged {
-			var universe_instance = global.editor_instance.get_universe_instance();
+			var universe_instance = global.editor.get_universe_instance();
 			with (universe_instance) {
 				if surface_exists(u_surf) {
 					shader_set(agi("shader_wavy"))
@@ -179,7 +179,7 @@ function draw() {
 		}
 	
 		else if global.selected_thing == thing_placeable 
-				&& held_tile_state.tile != global.editor_instance.object_empty {
+				&& held_tile_state.tile != global.editor.object_empty {
 			var alpha = ((dsin(global.editor_time * 3) / 4) + 0.75);
 		
 			if held_tile_state.tile.has_offset() {
@@ -203,7 +203,7 @@ function draw() {
 			for (var i = 0; i < array_length(held_tile_array); i++) {
 				for (var j = 0; j < array_length(held_tile_array[i]); j++) {
 					var tile_state = held_tile_array[i][j]
-					if (tile_state.tile == global.editor_instance.current_empty_tile)
+					if (tile_state.tile == global.editor.current_empty_tile)
 						continue;
 					var new_tile_i = tile_i + i;
 					if new_tile_i >= 9
@@ -229,7 +229,7 @@ if !surface_exists(game_surface) {
 if (display_context != display_contexts.pack_editor)
 	draw();
 else if global.is_merged {
-	var zoom = global.pack_editor_instance.zoom;
+	var zoom = global.pack_editor.zoom;
 	if !outside_view && zoom <= 1
 		draw();
 

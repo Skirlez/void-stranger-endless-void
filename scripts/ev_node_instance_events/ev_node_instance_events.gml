@@ -35,10 +35,10 @@ function node_instance_setup(max_exits = 999, can_connect_to_me = true, center_x
 	y_when_started_moving = y;
 	
 	if !variable_instance_exists(id, "node_id") {
-		global.pack_editor_instance.last_nid++;
-		node_id = global.pack_editor_instance.last_nid
+		global.pack_editor.last_nid++;
+		node_id = global.pack_editor.last_nid
 	}
-	ds_map_set(global.pack_editor_instance.node_id_to_instance_map, node_id, id)
+	ds_map_set(global.pack_editor.node_id_to_instance_map, node_id, id)
 
 }
 
@@ -63,7 +63,7 @@ function move_node_to_position(instance, new_x, new_y) {
 
 function expand_node_instance(node_instance) {
 	with (node_instance) {
-		var scale_factor = (node_type == global.pack_editor_instance.level_node) ? 1.2 : 1.3
+		var scale_factor = (node_type == global.pack_editor.level_node) ? 1.2 : 1.3
 		image_xscale = scale_x_start * scale_factor;
 		image_yscale = scale_y_start * scale_factor;
 		x -= (image_xscale - scale_x_start) * ((center_x - x) * 4)
@@ -107,18 +107,18 @@ function node_instance_step() {
 	if (ev_is_mouse_on_me()) {
 		if unselectable
 			return;
-		if in_menu && global.pack_editor_instance.selected_thing == pack_things.selector {
+		if in_menu && global.pack_editor.selected_thing == pack_things.selector {
 			if ev_mouse_pressed() {
 				static node_button = asset_get_index("obj_ev_pack_node_button")
 				node_button.pick(id);
-				global.pack_editor_instance.select(pack_things.nothing)
+				global.pack_editor.select(pack_things.nothing)
 				in_menu = false;
 				spawn_picked_up = true;
 				mouse_moving = true;
 				layer = layer_get_id("Nodes");
 				
-				global.pack_editor_instance.add_undo_action(function (args) {
-					var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
+				global.pack_editor.add_undo_action(function (args) {
+					var instance = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.node_id)
 					instance_destroy(instance)
 				}, {
 					node_id : node_id,
@@ -126,7 +126,7 @@ function node_instance_step() {
 				
 			}
 		}
-		if global.pack_editor_instance.selected_thing == pack_things.nothing {
+		if global.pack_editor.selected_thing == pack_things.nothing {
 			if ev_mouse_pressed() {
 				x_when_started_moving = x;
 				y_when_started_moving = y;
@@ -146,13 +146,13 @@ function node_instance_step() {
 				}
 			}
 		}
-		else if global.pack_editor_instance.selected_thing == pack_things.hammer {
+		else if global.pack_editor.selected_thing == pack_things.hammer {
 			if ev_mouse_pressed() {
 				static judgment_object = asset_get_index("obj_ev_pack_node_judgment");
 				
 				instance_destroy(judgment_object)
 				
-				if !(global.pack_editor_instance.judging_node == id) {
+				if !(global.pack_editor.judging_node == id) {
 					static hammer_sound = asset_get_index("snd_ev_hammer_judge")
 					audio_play_sound(hammer_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 					if !(node_type.flags & node_flags.unremovable) {
@@ -175,17 +175,17 @@ function node_instance_step() {
 						)
 					}
 					if (instance_exists(judgment_object)) // root node might not have anything to judge for example
-						global.pack_editor_instance.judging_node = id;
+						global.pack_editor.judging_node = id;
 					else {
 						shake_seconds = 0.5;
 						audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);
 					}
 				}
 				else
-					global.pack_editor_instance.judging_node = noone;
+					global.pack_editor.judging_node = noone;
 			}
 		}
-		else if global.pack_editor_instance.selected_thing == pack_things.wrench {
+		else if global.pack_editor.selected_thing == pack_things.wrench {
 			if ev_mouse_pressed() {
 				static wrench_sound = asset_get_index("snd_ev_use_wrench");
 				node_type.on_config(id);	
@@ -194,8 +194,8 @@ function node_instance_step() {
 				
 				audio_play_sound(wrench_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 				
-				global.pack_editor_instance.add_undo_action(function (args) {
-					var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
+				global.pack_editor.add_undo_action(function (args) {
+					var instance = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.node_id)
 					instance.properties = instance.node_type.read_function(args.old_properties)
 				}, {
 					node_id : node_id,
@@ -203,16 +203,16 @@ function node_instance_step() {
 				})
 			}
 		}
-		else if global.pack_editor_instance.selected_thing == pack_things.placechanger {
+		else if global.pack_editor.selected_thing == pack_things.placechanger {
 			if ev_mouse_pressed() {
 				static wrench_sound = asset_get_index("snd_ev_use_wrench");
-				if !instance_exists(global.pack_editor_instance.node_instance_changing_places) {
-					global.pack_editor_instance.node_instance_changing_places = id;
+				if !instance_exists(global.pack_editor.node_instance_changing_places) {
+					global.pack_editor.node_instance_changing_places = id;
 					audio_play_sound(agi("snd_ev_mark_placechanger"), 10, false, global.pack_zoom_gain)
 				}
 				else {
-					if global.pack_editor_instance.node_instance_changing_places == id {
-						global.pack_editor_instance.node_instance_changing_places = noone;
+					if global.pack_editor.node_instance_changing_places == id {
+						global.pack_editor.node_instance_changing_places = noone;
 						audio_play_sound(agi("snd_ev_mark_placechanger"), 10, false, global.pack_zoom_gain, 0, 0.8)	
 					}
 					else {
@@ -306,38 +306,38 @@ function node_instance_step() {
 								}
 							}
 						}
-						try_change_node_places(id, global.pack_editor_instance.node_instance_changing_places, true)
+						try_change_node_places(id, global.pack_editor.node_instance_changing_places, true)
 						
-						global.pack_editor_instance.add_undo_action(function (args) {
-							var one = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
-							var two = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.other_id)
+						global.pack_editor.add_undo_action(function (args) {
+							var one = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.node_id)
+							var two = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.other_id)
 							try_change_node_places(one, two, false)
 						}, {
 							node_id : node_id,
-							other_id : global.pack_editor_instance.node_instance_changing_places.node_id,
+							other_id : global.pack_editor.node_instance_changing_places.node_id,
 						})
 						
-						global.pack_editor_instance.node_instance_changing_places = noone;
+						global.pack_editor.node_instance_changing_places = noone;
 					}
 				}
 			}
 		}
-		else if global.pack_editor_instance.selected_thing == pack_things.play {
+		else if global.pack_editor.selected_thing == pack_things.play {
 			if ev_mouse_pressed() {
 				/*
-				if node_type != global.pack_editor_instance.level_node {
+				if node_type != global.pack_editor.level_node {
 					shake_seconds = 0.5;
 					audio_play_sound(not_possible_sound, 10, false, global.pack_zoom_gain);	
 				}
 				else { }
 				*/
-				global.pack_editor_instance.start_play_transition(id)
+				global.pack_editor.start_play_transition(id)
 				global.mouse_layer = 1;	
 			}
 		}
 	}
 	
-	if being_judged && global.pack_editor_instance.selected_thing != pack_things.hammer
+	if being_judged && global.pack_editor.selected_thing != pack_things.hammer
 		being_judged = false;
 	
 	if ev_mouse_released() && mouse_moving {
@@ -345,8 +345,8 @@ function node_instance_step() {
 		play_pickup_sound(0.8)
 		contract_node_instance(id)
 		if !spawn_picked_up {
-			global.pack_editor_instance.add_undo_action(function (args) {
-				var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
+			global.pack_editor.add_undo_action(function (args) {
+				var instance = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.node_id)
 				move_node_to_position(instance, args.old_x, args.old_y)
 			}, {
 				node_id : node_id,
@@ -357,7 +357,7 @@ function node_instance_step() {
 		}
 	}
 	if connecting_exit {
-		if ev_mouse_held() || global.pack_editor_instance.selected_thing != pack_things.nothing
+		if ev_mouse_held() || global.pack_editor.selected_thing != pack_things.nothing
 			connecting_exit = false;	
 		else if ev_mouse_right_released() {
 			connecting_exit = false
@@ -377,12 +377,12 @@ function node_instance_step() {
 					var connect_sound = asset_get_index("snd_ev_node_connect")
 					audio_play_sound(connect_sound, 10, false, global.pack_zoom_gain, 0, random_range(0.9, 1.1))
 					
-					var old_bount = (node_inst.node_type == global.pack_editor_instance.level_node)
+					var old_bount = (node_inst.node_type == global.pack_editor.level_node)
 						? node_inst.properties.level.bount
 						: noone
 					
-					global.pack_editor_instance.add_undo_action(function (args) {
-						var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
+					global.pack_editor.add_undo_action(function (args) {
+						var instance = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.node_id)
 						for (var i = 0; i < array_length(instance.exit_instances); i++) {
 							var exit_instance = instance.exit_instances[i]
 							if exit_instance.node_id == args.exit_id {
@@ -401,12 +401,12 @@ function node_instance_step() {
 					})
 					
 					// automatically give brane count to connected level nodes
-					if node_inst.node_type == global.pack_editor_instance.level_node && array_length(exit_instances) == 1 {
-						if node_type == global.pack_editor_instance.root_node {
+					if node_inst.node_type == global.pack_editor.level_node && array_length(exit_instances) == 1 {
+						if node_type == global.pack_editor.root_node {
 							node_inst.properties.level.bount = 1;
 							node_inst.display.delete_cached_game_surface();
 						}
-						else if node_type == global.pack_editor_instance.level_node {
+						else if node_type == global.pack_editor.level_node {
 							if properties.level.bount != -1 {
 								node_inst.properties.level.bount = properties.level.bount + 1;
 								node_inst.display.delete_cached_game_surface();	
@@ -431,7 +431,7 @@ function node_instance_step() {
 }
 
 function node_instance_destroy() {
-	ds_map_delete(global.pack_editor_instance.node_id_to_instance_map, node_id)	
+	ds_map_delete(global.pack_editor.node_id_to_instance_map, node_id)	
 }
 
 function create_falling_arrow_and_number(node_instance, other_node_instance, index, total_exits) {
@@ -458,7 +458,7 @@ function create_node_shards(node_inst) {
 	var manager;
 	var size;
 	var sprite;
-	if node_inst.node_type == global.pack_editor_instance.brand_node {
+	if node_inst.node_type == global.pack_editor.brand_node {
 		sprite = node_inst.brand_sprite
 		manager = instance_create_depth(0, 0, 0, agi("obj_ev_node_shard_manager"), {
 			sprite : sprite

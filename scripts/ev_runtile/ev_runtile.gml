@@ -22,8 +22,8 @@ ds_list_add(global.blobtable,
 		80, 20, 5);
 		  
 function get_empty(x, y, lvl) {
-	static walls = [global.editor_instance.tile_wall, global.editor_instance.tile_mon_wall,
-					global.editor_instance.tile_dis_wall, global.editor_instance.tile_ex_wall];
+	static walls = [global.editor.tile_wall, global.editor.tile_mon_wall,
+					global.editor.tile_dis_wall, global.editor.tile_ex_wall];
 	if x < 0 || x >= 14 || y < 0 || y >= 9
 		return true;
 	for (var i = 0; i < array_length(walls); i++) {

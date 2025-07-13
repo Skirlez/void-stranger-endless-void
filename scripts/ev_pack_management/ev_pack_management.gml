@@ -26,7 +26,7 @@ function place_pack_into_room(pack) {
 			return ds_map_find_value(explored_structs_map, node_state);
 				
 		// if node_id is undefined this still works out. don't worry about it
-		var node_id = ds_map_find_value(global.pack_editor_instance.node_state_to_id_map, node_state)
+		var node_id = ds_map_find_value(global.pack_editor.node_state_to_id_map, node_state)
 		var instance = node_state.create_instance(node_id);
 		ds_map_set(explored_structs_map, node_state, instance);
 		for (var i = 0; i < array_length(node_state.exits); i++) {
@@ -54,7 +54,7 @@ function convert_room_nodes_to_structs() {
 		if (ds_map_exists(explored_instances_map, node_inst))
 			return ds_map_find_value(explored_instances_map, node_inst);
 		
-		var node_state = global.pack_editor_instance.get_node_state_from_instance(node_inst);
+		var node_state = global.pack_editor.get_node_state_from_instance(node_inst);
 		
 		ds_map_set(explored_instances_map, node_inst, node_state)
 		
@@ -66,7 +66,7 @@ function convert_room_nodes_to_structs() {
 		}
 		node_state.exits = exits;
 		if global.playtesting {
-			ds_map_set(global.pack_editor_instance.node_state_to_id_map, node_state, node_inst.node_id)
+			ds_map_set(global.pack_editor.node_state_to_id_map, node_state, node_inst.node_id)
 		}
 		
 		return node_state;
@@ -107,9 +107,9 @@ function import_pack_nodeless(pack_string) {
 }
 
 function place_default_nodes(pack) {
-	var root_node_state = new node_with_state(global.pack_editor_instance.root_node, 270, 2160 / 2);
+	var root_node_state = new node_with_state(global.pack_editor.root_node, 270, 2160 / 2);
 	
-	var music_node_state = new node_with_state(global.pack_editor_instance.music_node, 330, 2160 / 2, {
+	var music_node_state = new node_with_state(global.pack_editor.music_node, 330, 2160 / 2, {
 		music : global.music_names[1]	
 	})
 	array_push(root_node_state.exits, music_node_state)
@@ -118,7 +118,7 @@ function place_default_nodes(pack) {
 	level.name = "Level!!"
 	level.bount = 1;
 	place_default_tiles(level);
-	var level_node_state = new node_with_state(global.pack_editor_instance.level_node, 
+	var level_node_state = new node_with_state(global.pack_editor.level_node, 
 	390 - global.level_node_display_scale * 224 / 2, 
 	2160 / 2 - global.level_node_display_scale * 144 / 2,
 	{
@@ -128,7 +128,7 @@ function place_default_nodes(pack) {
 
 	array_push(music_node_state.exits, level_node_state)
 	
-	var end_node_state = new node_with_state(global.pack_editor_instance.end_node, 450, 2160 / 2);
+	var end_node_state = new node_with_state(global.pack_editor.end_node, 450, 2160 / 2);
 	array_push(level_node_state.exits, end_node_state)
 	
 	array_push(pack.starting_node_states, root_node_state)
@@ -187,13 +187,13 @@ function import_pack(pack_string) {
 	// Find root node and put it in the first index
 	for (var i = 1; i < array_length(pack.starting_node_states); i++) {
 		var node_state = pack.starting_node_states[i]
-		if node_state.node == global.pack_editor_instance.root_node {
+		if node_state.node == global.pack_editor.root_node {
 			var temp = pack.starting_node_states[0];
 			pack.starting_node_states[0] = node_state;
 			pack.starting_node_states[i] = temp;
 		}
 	}
-	if pack.starting_node_states[0].node != global.pack_editor_instance.root_node {
+	if pack.starting_node_states[0].node != global.pack_editor.root_node {
 		log_error($"Tried to import invalid pack with no root node: {pack_string}")
 		pack.starting_node_states = []
 		place_default_nodes(pack);
@@ -330,7 +330,7 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 	var node_state_strings = ev_string_split_buffer(node_string, "$", 200);
 	for (var i = 0; i < array_length(node_state_strings); i++) {
 		var node = read_node_struct_from_state_string(node_state_strings[i]);
-		if (node != global.pack_editor_instance.thumbnail_node) 
+		if (node != global.pack_editor.thumbnail_node) 
 			continue;
 		var node_state = read_node_state(node_state_strings[i]);
 		if (array_length(node_state.intermediary_numbered_exits) != 1) 
@@ -338,7 +338,7 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 		var index = node_state.intermediary_numbered_exits[0];
 		
 		var level_node_string = node_state_strings[index];
-		if (read_node_struct_from_state_string(level_node_string) != global.pack_editor_instance.level_node)
+		if (read_node_struct_from_state_string(level_node_string) != global.pack_editor.level_node)
 			continue;
 			
 		var level_string = read_node_properties_from_state_string(level_node_string);
@@ -347,7 +347,7 @@ function get_thumbnail_level_string_from_pack_string(pack_string) {
 	// haven't got any thumbnail nodes connected to levels. just use any level we find
 	for (var i = 0; i < array_length(node_state_strings); i++) {
 		var node = read_node_struct_from_state_string(node_state_strings[i]);
-		if (node == global.pack_editor_instance.level_node) {
+		if (node == global.pack_editor.level_node) {
 			var level_string = read_node_properties_from_state_string(node_state_strings[i]);
 			return level_string;
 		}

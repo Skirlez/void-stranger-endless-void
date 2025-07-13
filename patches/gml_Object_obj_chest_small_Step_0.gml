@@ -935,6 +935,6 @@ else if (!instance_exists(active_textbox))
             global.swapper_get = true
             break			
     }
-
+    ev_on_chest_collected()
 }
 

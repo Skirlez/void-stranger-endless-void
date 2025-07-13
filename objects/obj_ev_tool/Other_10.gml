@@ -14,11 +14,11 @@ switch (image_index) {
 		break;
 	case 2: // tile mode on
 	case 3: // object mode on
-		global.editor_instance.switch_tile_mode(!global.tile_mode);
+		global.editor.switch_tile_mode(!global.tile_mode);
 
 		break;
 	case 4: // undo
-		global.editor_instance.undo();
+		global.editor.undo();
 		break;
 	case 5: // trash bin
 		global.erasing = 350;

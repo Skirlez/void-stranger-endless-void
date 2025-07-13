@@ -27,7 +27,7 @@ if mode != level_selector_modes.selecting_level_for_pack {
 			base_scale_y : 0.8,
 			txt : "NEW",
 			func : function () {
-				global.editor_instance.reset_global_level();
+				global.editor.reset_global_level();
 				ev_claim_level(global.level)
 				room_goto(asset_get_index("rm_ev_editor"))	
 			}
@@ -39,7 +39,7 @@ if mode != level_selector_modes.selecting_level_for_pack {
 			base_scale_y : 0.8,
 			txt : "NEW",
 			func : function () {
-				global.pack_editor_instance.reset_global_pack();
+				global.pack_editor.reset_global_pack();
 				ev_claim_pack(global.pack)
 				room_goto(asset_get_index("rm_ev_pack_editor"))	
 			}
@@ -80,9 +80,9 @@ function level_clicked(display_inst) {
 			highlighted = true;	
 		}
 		if (other.mode == level_selector_modes.packs)
-			global.editor_instance.preview_level_pack_transition(display_inst.nodeless_pack, display_inst)
+			global.editor.preview_level_pack_transition(display_inst.nodeless_pack, display_inst)
 		else
-			global.editor_instance.preview_level_transition(display_inst.lvl, display_inst.lvl_sha, display_inst)
+			global.editor.preview_level_transition(display_inst.lvl, display_inst.lvl_sha, display_inst)
 	}
 	else {
 		var lvl = display_inst.lvl;
@@ -104,7 +104,7 @@ function level_clicked(display_inst) {
 		var level_nodes = get_all_level_node_instances()
 		try_level_name_and_rename(lvl, level_nodes)
 
-		var node_state = new node_with_state(global.pack_editor_instance.level_node,
+		var node_state = new node_with_state(global.pack_editor.level_node,
 			mouse_x - 224 * global.level_node_display_scale / 2,
 			mouse_y - 144 * global.level_node_display_scale / 2,
 			{
@@ -116,8 +116,8 @@ function level_clicked(display_inst) {
 		play_pickup_sound(random_range(1, 1.05))
 		expand_node_instance(instance)
 		
-		global.pack_editor_instance.add_undo_action(function (args) {
-			var instance = ds_map_find_value(global.pack_editor_instance.node_id_to_instance_map, args.node_id)
+		global.pack_editor.add_undo_action(function (args) {
+			var instance = ds_map_find_value(global.pack_editor.node_id_to_instance_map, args.node_id)
 			instance_destroy(instance)
 		}, {
 			node_id : instance.node_id,

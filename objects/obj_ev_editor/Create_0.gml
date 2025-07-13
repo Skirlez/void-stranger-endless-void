@@ -63,8 +63,17 @@ window_set_cursor(cr_default)
 global.level = noone;
 global.level_sha = ""
 
+// tracks locusts collected in this level
+// is a map of positions (converted to integers by doing y * 14 + x)
+// used as a hashset (only checking if entries exist)
+global.locusts_collected_this_level = ds_map_create();
+
 global.pack = noone;
-global.pack_save = noone;
+
+// keeps track of memories collected in this pack
+// is a map of level names
+// used as a hashset (only checking if entries exist)
+global.pack_memories = ds_map_create();
 
 global.editor_time = int64(0)
 global.level_time = int64(0)
@@ -108,7 +117,7 @@ global.pack_editor_room = agi("rm_ev_pack_editor");
 global.level_room = agi("rm_ev_level");
 global.pack_level_room = agi("rm_ev_pack_level");
 
-global.editor_instance = id;
+global.editor = id;
 global.display_object = agi("obj_ev_display");
 global.node_object = agi("obj_ev_pack_node");
 
@@ -182,13 +191,13 @@ function editor_tile(display_name, spr_ind, tile_id, obj_name, obj_layer = "Floo
 	self.obj_name = obj_name
 	self.obj_layer = obj_layer
 	self.flags = flags
-	self.draw_function = global.editor_instance.default_draw_function
-	self.place_function = global.editor_instance.return_tile_state_function
+	self.draw_function = global.editor.default_draw_function
+	self.place_function = global.editor.return_tile_state_function
 	self.zed_function = noone
 	self.tile_id = tile_id;
-	self.properties_generator = global.editor_instance.return_noone
+	self.properties_generator = global.editor.return_noone
 	self.editor_type = editor_types.tile;
-	self.iostruct = global.editor_instance.default_tile_io;
+	self.iostruct = global.editor.default_tile_io;
 	self.cube_type = cube_types.uniform;
 	global.placeable_name_map[? tile_id] = self;
 	
@@ -249,7 +258,7 @@ function get_player_object_pos(lvl) {
 	// player position is cached using static variables
 	static player_i = 0;
 	static player_j = 0;
-	static player = global.editor_instance.object_player;
+	static player = global.editor.object_player;
 	
 	if lvl.objects[player_i][player_j].tile == player {
 		return { i : player_i, j : player_j }
@@ -292,11 +301,11 @@ tile_default.draw_function = function(tile_state, i, j, preview, lvl, no_spoiler
 function draw_pit(i, j, lvl, obscure_universe, no_spoilers) {
 	static pit_sprite = agi("spr_pit");
 	
-	if i != 0 && global.editor_instance.tile_state_has_edge(lvl.tiles[i - 1][j]) {
+	if i != 0 && global.editor.tile_state_has_edge(lvl.tiles[i - 1][j]) {
 		static default_floor_sprite = agi("spr_floor");
 		var spr;
 		var alpha = draw_get_alpha();
-		if lvl.tiles[i - 1][j].tile == global.editor_instance.tile_default {
+		if lvl.tiles[i - 1][j].tile == global.editor.tile_default {
 			if lvl.theme == level_themes.white_void {
 				// maybe we need to not draw because the tile itself also isn't drawing
 				var pos = get_player_object_pos(lvl)
@@ -332,7 +341,7 @@ tile_pit.iostruct = {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		if instance_exists(inst.pit_bg)
 				&& (i == 0 
-				|| !global.editor_instance.tile_state_has_edge(extra_data.lvl.tiles[i - 1][j]))
+				|| !global.editor.tile_state_has_edge(extra_data.lvl.tiles[i - 1][j]))
 			inst.pit_bg.no_edge = true;
 			
 	}
@@ -448,7 +457,7 @@ function make_edge_tile(name, tid, type) {
 		write : tilemap_tile_write,
 		place : function(tile_state, i, j, extra_data) {
 			tilemap_set(extra_data.edge_tilemaps[tile_state.tile.edge_type], tile_state.properties.ind, j, i)
-			var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, "Pit", agi(global.editor_instance.tile_pit.obj_name))
+			var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, "Pit", agi(global.editor.tile_pit.obj_name))
 			instance_destroy(inst.pit_bg)
 		}
 	}
@@ -491,7 +500,7 @@ function make_wall_tile(name, tid, type) {
 		write : tilemap_tile_write,
 		place : function(tile_state, i, j, extra_data) {
 			tilemap_set(extra_data.wall_tilemaps[tile_state.tile.wall_type], tile_state.properties.ind, j, i)
-			if global.editor_instance.tile_state_has_edge(tile_state)
+			if global.editor.tile_state_has_edge(tile_state)
 				instance_create_layer(j * 16 + 8, i * 16 + 8, "More_Pit", agi("obj_ev_pit_drawer"))
 		}
 	}
@@ -586,10 +595,16 @@ tile_chest.iostruct = {
 	write : function (tile_state) {
 		return tile_state.tile.tile_id + num_to_string(tile_state.properties.itm, 2);	
 	},
-	place : function (tile_state, i, j) {
+	place : function (tile_state, i, j, extra_data) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		inst.persistent = false;
-		inst.contents = global.editor_instance.chest_get_contents_num(tile_state.properties.itm)
+		
+		if room == global.pack_level_room 
+				&& tile_state.properties.itm == chest_items.locust 
+				&& ds_map_exists(global.locusts_collected_this_level, i * 14 + j) 
+			inst.contents = global.editor.chest_get_contents_num(chest_items.empty)
+		else
+			inst.contents = global.editor.chest_get_contents_num(tile_state.properties.itm)
 		
 		// For the edge to appear if a glass tile is below the chest, 
 		// we create a normal tile. This is consistent with the base game.
@@ -955,7 +970,7 @@ object_add.properties_generator = function() {
 object_add.iostruct = {
 	read : function(tile, lvl_str, pos, version) {
 		if (version == 1)
-			return global.editor_instance.default_reader(tile, lvl_str, pos)	
+			return global.editor.default_reader(tile, lvl_str, pos)	
 		var original_pos = pos;
 		if (version == 2) {
 			var read_mode = string_copy(lvl_str, pos, 1)
@@ -1283,13 +1298,15 @@ object_memory_crystal.iostruct = {
 			+ string(tile_state.properties.ofy) + PROPERTY_END_CHAR;
 	},
 	place : function (tile_state, i, j, extra_data) {
+		if !extra_data.should_create_memory
+			return;
 		i += tile_state.properties.ofy;
 		j += tile_state.properties.ofx;
 		instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 	}
 }
 object_memory_crystal.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
-	draw_sprite(global.editor_instance.crystal_sprite, 0, j * 16 + 8, i * 16 + 8)	
+	draw_sprite(global.editor.crystal_sprite, 0, j * 16 + 8, i * 16 + 8)	
 }
 object_memory_crystal.zed_function = function(tile_state) {
 	new_window(7, 7, agi("obj_ev_memory_crystal_window"), {
@@ -1344,9 +1361,9 @@ object_scaredeer.iostruct = {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		with (inst) {
 			ev_scaredeer = true;
-			spr_l = global.editor_instance.scaredeer_sprite_l
-			spr_r = global.editor_instance.scaredeer_sprite_r
-			e_fall_sprite = global.editor_instance.scaredeer_sprite_fall
+			spr_l = global.editor.scaredeer_sprite_l
+			spr_r = global.editor.scaredeer_sprite_r
+			e_fall_sprite = global.editor.scaredeer_sprite_fall
 			e_falling_sprite = agi("spr_fall");
 		}
 	},
@@ -1365,15 +1382,15 @@ object_hologram = new editor_object("Fake Egg", hologram_sprite, "ho", "obj_fake
 
 object_hologram.draw_function = function(tile_state, i, j, preview, lvl, no_spoilers) {
 	if no_spoilers {
-		draw_sprite(global.editor_instance.object_egg.spr_ind, 0, j * 16 + 8, i * 16 + 8)
+		draw_sprite(global.editor.object_egg.spr_ind, 0, j * 16 + 8, i * 16 + 8)
 		return;
 	}
 	default_draw_function(tile_state, i, j)
 }
 
 function mural_get_image_index(i, j, lvl) {
-	static mural_object = global.editor_instance.object_mural
-	static wall_tile = global.editor_instance.tile_wall
+	static mural_object = global.editor.object_mural
+	static wall_tile = global.editor.tile_wall
 	
 	var img;
 	if j > 0 && lvl.objects[i][j - 1].tile == mural_object
@@ -1403,14 +1420,14 @@ object_mural.iostruct = {
 	place : function(tile_state, i, j, extra_data) {
 		var inst = instance_create_layer(j * 16 + 8, i * 16 + 8, tile_state.tile.obj_layer, agi(tile_state.tile.obj_name));
 		inst.sprite_index = agi("spr_ev_mural")
-		inst.image_speed = global.editor_instance.mural_get_image_index(i, j, extra_data.lvl);
+		inst.image_speed = global.editor.mural_get_image_index(i, j, extra_data.lvl);
 		inst.inscription = 19;
 		inst.ev_mural_brand = tile_state.properties.brd;
 		inst.ev_mural_text = tile_state.properties.txt;
 	}
 }
 object_mural.draw_function = function(tile_state, i, j, preview, lvl) {
-	var img = global.editor_instance.mural_get_image_index(i, j, lvl)
+	var img = global.editor.mural_get_image_index(i, j, lvl)
 
 	draw_sprite(tile_state.tile.spr_ind, img, j * 16 + 8, i * 16 + 8)
 }

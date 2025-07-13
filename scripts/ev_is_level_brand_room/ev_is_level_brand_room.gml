@@ -1,7 +1,7 @@
 function is_solid(tile) {
-	static solids = [global.editor_instance.tile_wall, global.editor_instance.tile_mon_wall,
-					global.editor_instance.tile_dis_wall, global.editor_instance.tile_ex_wall,
-					global.editor_instance.tile_chest];
+	static solids = [global.editor.tile_wall, global.editor.tile_mon_wall,
+					global.editor.tile_dis_wall, global.editor.tile_ex_wall,
+					global.editor.tile_chest];
 	for (var i = 0; i < array_length(solids); i++) {
 		if tile == solids[i]
 			return true;

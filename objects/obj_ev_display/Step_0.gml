@@ -10,7 +10,7 @@ switch (display_context) {
 		
 					if painting = false {
 						if (global.selected_thing != thing_nothing && global.selected_thing != thing_picker) // these do not change level state
-							global.editor_instance.add_undo()
+							global.editor.add_undo()
 						painting = true;
 					}
 		
@@ -69,7 +69,7 @@ switch (display_context) {
 					function region_has_tiles(from_i, from_j, to_i, to_j) {
 						for (var i = from_i; i <= to_i; i++) {
 							for (var j = from_j; j <= to_j; j++) {
-								if (lvl.tiles[i][j].tile != global.editor_instance.tile_pit)
+								if (lvl.tiles[i][j].tile != global.editor.tile_pit)
 									return true;
 							}
 						}	
@@ -79,7 +79,7 @@ switch (display_context) {
 					function region_has_objects(from_i, from_j, to_i, to_j) {
 						for (var i = from_i; i <= to_i; i++) {
 							for (var j = from_j; j <= to_j; j++) {
-								if (lvl.objects[i][j].tile != global.editor_instance.object_empty)
+								if (lvl.objects[i][j].tile != global.editor.object_empty)
 									return true;
 							}
 						}	
@@ -92,11 +92,11 @@ switch (display_context) {
 							&& !region_has_objects(small_tile_i, small_tile_j, tile_i, tile_j)
 							&& region_has_tiles(small_tile_i, small_tile_j, tile_i, tile_j)) 
 					{
-						global.editor_instance.switch_tile_mode(true)
+						global.editor.switch_tile_mode(true)
 					}
 					
 					
-					global.editor_instance.add_undo()
+					global.editor.add_undo()
 					handle_click_before(tile_i, tile_j)
 			
 					for (var i = small_tile_i; i <= tile_i; i++) {

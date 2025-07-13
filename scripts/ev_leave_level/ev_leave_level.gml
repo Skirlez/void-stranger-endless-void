@@ -5,6 +5,8 @@ function ev_leave_level() {
 	else
 		room_goto(asset_get_index("rm_ev_level_select"))
 	global.playtesting = false;
+	global.editor.reset_branefuck_persistent_memory()
+	ds_map_clear(global.locusts_collected_this_level)
 }
 
 function ev_clear_level() {
@@ -26,7 +28,7 @@ function ev_clear_level() {
 			ds_map_set(global.beaten_levels_map, sha, 2)
 		else 
 			ds_map_set(global.beaten_levels_map, sha, 1)
-		global.editor_instance.save_beaten_levels();
+		global.editor.save_beaten_levels();
 	}
 	ev_leave_level();
 }

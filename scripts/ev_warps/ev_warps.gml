@@ -30,7 +30,7 @@ function ev_on_bee_warp() {
 			for (var i = 0; i < array_length(global.pack.starting_node_states); i++) {
 				state = find_node_state_statisfies_condition(global.pack.starting_node_states[i], 
 					function (state) {
-						static level_node = global.pack_editor_instance.level_node;
+						static level_node = global.pack_editor.level_node;
 						return state.node == level_node && state.properties.level.bount == w_locusts
 					}, map)
 			
@@ -43,7 +43,7 @@ function ev_on_bee_warp() {
 		if state == noone {
 			log_info($"Trying to find oob node")
 			for (var i = 0; i < array_length(global.pack.starting_node_states); i++) {
-				if global.pack.starting_node_states[i].node == global.pack_editor_instance.oob_node {
+				if global.pack.starting_node_states[i].node == global.pack_editor.oob_node {
 					state = global.pack.starting_node_states[i]
 					break;	
 				}
@@ -76,7 +76,7 @@ function ev_on_floor_warp() {
 			for (var i = 0; i < array_length(global.pack.starting_node_states); i++) {
 				state = find_node_state_statisfies_condition(global.pack.starting_node_states[i], 
 					function (state) {
-						static level_node = global.pack_editor_instance.level_node;
+						static level_node = global.pack_editor.level_node;
 						return state.node == level_node && state.properties.level.bount == brane_goto
 					}, map)
 			
@@ -88,7 +88,7 @@ function ev_on_floor_warp() {
 		if state == noone {
 			// didn't find brane, go to oob node
 			for (var i = 0; i < array_length(global.pack.starting_node_states); i++) {
-				if global.pack.starting_node_states[i].node == global.pack_editor_instance.oob_node {
+				if global.pack.starting_node_states[i].node == global.pack_editor.oob_node {
 					state = global.pack.starting_node_states[i]
 					break;	
 				}
