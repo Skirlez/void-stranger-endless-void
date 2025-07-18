@@ -233,6 +233,9 @@ global.branefuck_command_functions = ds_map_create();
 global.branefuck_command_functions[? "show"] = function(memory, pointer){
 	ev_notify($"Slot {pointer}: {memory[pointer]}");
 }
+global.branefuck_command_functions[? "log"] = function(memory, pointer){
+	log_info($"Slot {pointer}: {memory[pointer]}");
+}
 
 global.branefuck_command_functions[? "mul"] = function(memory, pointer) {
 	var params = get_command_parameters(memory, pointer, 2)
@@ -271,6 +274,11 @@ global.branefuck_command_functions[? "instance_position"] = function(memory, poi
 	array_insert(arr, 0, count)
 	
 	command_return(memory, pointer, arr)
+}
+global.branefuck_command_functions[? "instance_exists"] = function(memory, pointer) {
+	var params = get_command_parameters(memory, pointer, 0)
+	var object = params[0];
+	command_return(memory, pointer, instance_exists(object) ? int64(1) : int64(0))
 }
 
 // ds_grid_get(x, y)

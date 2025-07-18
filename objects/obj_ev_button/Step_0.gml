@@ -1,6 +1,14 @@
 
 var scale = 1;
 var mouse_on_me = pressable && ev_is_mouse_on_me();
+	
+if global.allow_moving_elements && mouse_check_button(mb_middle) && ev_is_mouse_on_me() {
+	x = mouse_x
+	y = mouse_y
+	mouse_on_me = false;
+	log_info($"{mouse_x}, {mouse_y}")
+}
+
 
 if (selected && hover_state != 1) {
 	hover_state = 1;	

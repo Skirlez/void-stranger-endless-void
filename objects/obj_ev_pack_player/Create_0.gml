@@ -1,11 +1,28 @@
 ev_set_play_variables()
 ev_prepare_level_burdens()
 
-
 current_node_state = noone;
 brand_node_states = noone;
 
+// keeps track of levels visited in this pack
+// is a map of level names
+// used as a hashset (only checking if entries exist)
+visited_levels = ds_map_create();
+
+// keeps track of memories collected in this pack
+// is a map of level names
+// used as a hashset (only checking if entries exist)
+pack_memories = ds_map_create();
+
 in_brand_room = false;
+
+// total amount of miliseconds in this pack
+play_time = 0
+
+// timestamp since the start of this session
+start_time = current_time
+
+total_locusts_collected = 0
 
 function move_to_root_state() {
 	move_to_node_state(global.pack.starting_node_states[0])
@@ -23,8 +40,10 @@ function move_to_node_state(state) {
 		ev_leave_pack()
 	}
 	else if potential_next_state == node_return_status.not_immediate {
-		if !global.playtesting && current_node_state.node == global.pack_editor.level_node {
-			save_pack_progress(current_node_state.properties.level.name)
+		if current_node_state.node == global.pack_editor.level_node {
+			ds_map_set(visited_levels, current_node_state.properties.level.name, 1)
+			if !global.playtesting && !is_first_level
+				save_pack_progress(current_node_state.properties.level.name)
 		}
 
 		room_restart();
@@ -59,7 +78,7 @@ function on_room_create() {
 			ds_grid_set(agi("obj_inventory").ds_player_info, 1, 1, global.pack_playtest_parameters.locust_count)
 			
 			var node_id = global.pack_playtest_parameters.node_id;
-			var node_states = ds_map_keys_to_array(global.pack_editor.node_state_to_id_map);
+			var node_states = ds_map_keys_to_array_fix(global.pack_editor.node_state_to_id_map);
 			for (var i = 0; i < array_length(node_states); i++) {
 				if (ds_map_find_value(global.pack_editor.node_state_to_id_map, node_states[i]) == node_id) {
 					move_to_node_state(node_states[i])

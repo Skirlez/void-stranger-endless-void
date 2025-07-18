@@ -16,8 +16,11 @@ function is_char_valid(char) {
 	return false
 		
 }
-pos_x = xstart
-pos_y = ystart
+start_x = xstart
+start_y = ystart
+
+pos_x = start_x
+pos_y = start_y
 offset_y_opened = 0;
 offset_y = 0;
 window = noone;
@@ -138,3 +141,4 @@ if !allow_edit
 	is_selectable = false
 
 first_expansion_frame = false;
+

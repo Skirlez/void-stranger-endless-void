@@ -240,18 +240,7 @@ function node_instance_step() {
 							two.exit_instances = one.exit_instances;
 							one.exit_instances = temp_exit_instances;
 							
-							// imagine a situation where a and b are connected to each other, and each other only.
-							// swapping them like how it is done above, where the outgoing nodes are just traded,
-							// will make them both connect to themselves... so we run this check to fix it
-							function swap_to_other_if_connected_to_self(me, other_node) {
-								for (var i = 0; i < array_length(me.exit_instances); i++) {
-									if me.exit_instances[i] == me
-										me.exit_instances[i] = other_node;
-								}
-							}
-							swap_to_other_if_connected_to_self(one, two)
-							swap_to_other_if_connected_to_self(two, one)
-						
+
 							// swap incoming connections
 							function swap_incoming_connection(node_instance, old_instance, new_instance) {
 								for (var i = 0; i < array_length(node_instance.exit_instances); i++) {
@@ -267,6 +256,19 @@ function node_instance_step() {
 							for (var i = 0; i < array_length(connected_to_two); i++) {
 								swap_incoming_connection(connected_to_two[i], two, one)
 							}
+							
+							// imagine a situation where a and b are connected to each other, and each other only.
+							// swapping them like how it is done above, where the outgoing nodes are just traded,
+							// will make them both connect to themselves... so we run this check to fix it
+							function swap_to_other_if_connected_to_self(me, other_node) {
+								for (var i = 0; i < array_length(me.exit_instances); i++) {
+									if me.exit_instances[i] == me
+										me.exit_instances[@ i] = other_node;
+								}
+							}
+							swap_to_other_if_connected_to_self(one, two)
+							swap_to_other_if_connected_to_self(two, one)
+						
 							
 							var keep_x = two.center_x
 							var keep_y = two.center_y

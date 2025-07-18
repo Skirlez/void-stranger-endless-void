@@ -159,3 +159,8 @@ function ds_list_to_array(list) {
 	}
 	return arr;
 }
+
+// I don't know why
+function ds_map_keys_to_array_fix(map) {
+	return ds_map_size(map) == 0 ? [] : ds_map_keys_to_array(map)
+}

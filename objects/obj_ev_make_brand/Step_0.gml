@@ -1,3 +1,13 @@
+if global.allow_moving_elements && mouse_check_button(mb_middle) && ev_is_mouse_on_me() {
+	x = mouse_x
+	y = mouse_y
+	mouse_on_me = false;
+	log_info($"{mouse_x}, {mouse_y}")
+	x -= scale * 3
+	y -= scale * 3
+}
+
+
 if ev_mouse_pressed() && ev_is_mouse_on_me() {
 	drawing = true
 }

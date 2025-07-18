@@ -10,7 +10,7 @@ function remove_child(obj) {
 }
 
 function add_x_button() {
-	var inst = instance_create_layer(x + image_xscale * 8 - 8, y - image_yscale * 8 + 8, "WindowElements", asset_get_index("obj_ev_close_window"))
+	var inst = instance_create_layer(x + image_xscale * 8 - 8, y - image_yscale * 8 + 8, "WindowElements", agi("obj_ev_close_window"))
 	add_child(inst)	
 }
 
@@ -22,7 +22,7 @@ if add_x {
 
 selected_element = noone
 
-element_object_index = asset_get_index("obj_ev_window_element")
+element_object_index = agi("obj_ev_window_element")
 
 function deselect(element) {
 	if object_is_ancestor(element.object_index, element_object_index) {

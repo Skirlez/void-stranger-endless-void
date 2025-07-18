@@ -1,0 +1,2 @@
+ds_map_destroy(visited_levels)
+ds_map_destroy(pack_memories)

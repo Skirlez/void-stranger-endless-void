@@ -102,7 +102,7 @@ function import_pack_nodeless(pack_string) {
 	pack.author_brand = int64_safe(arr[4], 0);
 	pack.upload_date = arr[5]
 	pack.last_edit_date = arr[6];
-	pack.password_brand = arr[7];
+	pack.password_brand = int64_safe(base64_decode(arr[7]), 0);
 	return pack;
 }
 
@@ -146,7 +146,7 @@ function import_pack(pack_string) {
 	pack.author_brand = int64_safe(arr[4], 0);
 	pack.upload_date = arr[5]
 	pack.last_edit_date = arr[6];
-	pack.password_brand = arr[7];
+	pack.password_brand = int64_safe(base64_decode(arr[7]), 0);
 	var node_string = arr[8];
 	
 	var all_node_states = [];
@@ -270,7 +270,7 @@ function export_pack_arr(pack) {
 	var author_brand_string = string(pack.author_brand)
 	var upload_date_string = "";
 	var last_edit_date_string = "";
-	var password_brand_string = string(pack.password_brand)
+	var password_brand_string = base64_encode(string(pack.password_brand))
 	var node_string = ""
 	
 	

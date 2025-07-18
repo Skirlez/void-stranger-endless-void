@@ -26,7 +26,7 @@ if room == global.level_room {
 }
 
 
-if (room == asset_get_index("rm_ev_startup")) {
+if (room == agi("rm_ev_startup")) {
 	if (startup_timeout != -1) {
 		startup_timeout--;
 		if (startup_timeout == -1 || startup_actions_count == 0)
@@ -49,7 +49,7 @@ if global.erasing != -1 {
 		ev_claim_level(global.level)
 		global.level.save_name = retain_save_name
 		audio_play_sound(global.goes_sound, 10, false)	
-		room_goto(asset_get_index("rm_ev_after_erase"))
+		room_goto(agi("rm_ev_after_erase"))
 	}
 }
 
@@ -71,10 +71,10 @@ if play_transition != -1 {
 		if (room == global.editor_room)
 			global.playtesting = true;
 
-		audio_play_sound(asset_get_index("snd_ev_start_level"), 10, false)
+		audio_play_sound(agi("snd_ev_start_level"), 10, false)
 		room_goto(global.level_room)
-		if (!ev_is_music_playing(asset_get_index(global.level.music)))
-			ev_play_music(asset_get_index(global.level.music))	
+		if (!ev_is_music_playing(agi(global.level.music)))
+			ev_play_music(agi(global.level.music))	
 	}
 }
 
@@ -105,7 +105,7 @@ else if preview_transition != -1 {
 			ystart = y
 			scale_x_start = image_xscale
 			scale_y_start = image_yscale
-			with (asset_get_index("obj_ev_level_select"))
+			with (agi("obj_ev_level_select"))
 				destroy_displays(display)
 		}
 		global.mouse_layer = 1
@@ -129,7 +129,7 @@ else if (edit_transition != -1) {
 	
 	if (edit_transition == -1) {
 		global.mouse_layer = 0;
-		room_goto(asset_get_index("rm_ev_editor"));
+		room_goto(agi("rm_ev_editor"));
 	}
 }
 else if (edit_pack_transition != -1) {
@@ -219,7 +219,7 @@ else if ev_is_room_gameplay(room) {
 	
 	global.locust_count = ds_grid_get(agi("obj_inventory").ds_player_info, 1, 1);
 	
-	with (asset_get_index(egg_statue_obj)) {
+	with (agi(egg_statue_obj)) {
 		switch (b_form) {
 			case 8:
 				global.add_count++;
@@ -255,6 +255,28 @@ else if ev_is_room_gameplay(room) {
 				break;
 		}
 	}
+	// I really don't want to mess with this... But this should *probably* go in the editor object...
+	var current_deaths = 0
+	current_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 5)
+	current_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 6)
+	if (current_deaths != last_deaths) {
+		global.death_count++;
+		
+		var current_death_x = agi("obj_player").x div 16
+		var current_death_y = agi("obj_player").y div 16
+	
+		if (global.death_x == current_death_x && global.death_y == current_death_y) {
+			global.annoyance_count += 1
+		}
+		else {
+			global.annoyance_count = 1
+		}
+	
+		global.death_x = current_death_x
+		global.death_y = current_death_y
+		global.death_frames = 0
+		last_deaths = current_deaths
+	}
 }
 function instance_number_string(object_string) {
 	return instance_number(agi(object_string))
@@ -287,7 +309,7 @@ else
 	global.mouse_right_released = false;
 
 if global.is_merged {
-	with (asset_get_index("obj_player")) {
+	with (agi("obj_player")) {
 		if (enemyturn_countdown <= 0 && enemy_cycle == 0) {
 			global.turn_frames += 1
 		} 

@@ -18,6 +18,8 @@ function ev_set_play_variables() {
 	
 	// stops the player from doing the blink animation when starting level
 	global.player_blink = 0
+	
+	global.death_count = 0
 }
 
 function ev_prepare_level_burdens(array = []) {

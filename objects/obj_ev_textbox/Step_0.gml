@@ -169,7 +169,7 @@ else {
 		
 		if size_time <= 0 {
 			var should_make_closing_sound = (xscale != base_scale_x || yscale != base_scale_y 
-				|| (opened_x != xstart) || (opened_y != ystart))
+				|| (opened_x != start_x) || (opened_y != start_y))
 				
 			if (should_make_closing_sound)
 				audio_play_sound(agi("snd_ev_textbox_click"), 10, false, 1, 0, 1.2)	
@@ -181,7 +181,19 @@ calculate_scale_and_offset()
 var t = animcurve_channel_evaluate(curve, size_time / 100)
 image_xscale = lerp(base_scale_x, xscale, t)
 image_yscale = lerp(base_scale_y, yscale, t)
-pos_x = lerp(xstart, opened_x, t)
-pos_y = lerp(ystart, opened_y, t)
+
+
+
+pos_x = lerp(start_x, opened_x, t)
+pos_y = lerp(start_y, opened_y, t)
 offset_y = lerp(0, offset_y_opened, t)
 update_position()
+
+// TODO REMOVE THIS
+if global.allow_moving_elements && mouse_check_button(mb_middle) && ev_is_mouse_on_me() {
+	start_x = mouse_x
+	start_y = mouse_y
+	pos_x = mouse_x
+	pos_y = mouse_y
+	log_info($"{mouse_x}, {mouse_y}")
+}

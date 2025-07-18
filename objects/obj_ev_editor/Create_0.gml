@@ -10,6 +10,9 @@ global.latest_pack_format = 1;
 global.ev_version = "0.99";
 global.ev_fall_down_next_level = false;
 
+// debug flag that allows you to move buttons and textboxes with middle mouse
+global.allow_moving_elements = true;
+
 global.is_merged = (agi("obj_game") != -1)
 if (!global.is_merged) {
 	var ratio = display_get_height() / 144	
@@ -45,7 +48,7 @@ else
 // This function is ran every set interval in alarm 0.
 global.struct_map_cleaner = ds_map_create()
 function clean_struct_maps() {
-	var keys = ds_map_keys_to_array(global.struct_map_cleaner)
+	var keys = ds_map_keys_to_array_fix(global.struct_map_cleaner)
 	for (var i = 0; i < array_length(keys); i++) {
 		if weak_ref_alive(keys[i])
 			continue;
@@ -69,11 +72,6 @@ global.level_sha = ""
 global.locusts_collected_this_level = ds_map_create();
 
 global.pack = noone;
-
-// keeps track of memories collected in this pack
-// is a map of level names
-// used as a hashset (only checking if entries exist)
-global.pack_memories = ds_map_create();
 
 global.editor_time = int64(0)
 global.level_time = int64(0)
@@ -377,6 +375,7 @@ tile_exit.iostruct = {
 		extra_data.current_exit_number++;
 	}
 }
+
 tile_exit.cube_type = cube_types.edge
 
 function can_tile_press_buttons(tile) {
@@ -401,8 +400,9 @@ function level_has_unpressed_button(lvl) {
 	return false;
 }
 
+
 tile_exit.draw_function = function(tile_state, i, j, preview, lvl) {
-	draw_sprite(tile_state.tile.spr_ind, level_has_unpressed_button(lvl) ? 4 : 0, j * 16 + 8, i * 16 + 8)	
+	draw_sprite(tile_state.tile.spr_ind, level_has_unpressed_button(lvl) ? 4 : 0, j * 16 + 8, i * 16 + 8)
 }
 
 tile_white = new editor_tile("Blank Tile", agi("spr_floor_white"), "wh", "obj_floor_blank")
@@ -1804,9 +1804,9 @@ spin_time_h = 0
 spin_time_v = 0;
 
 global.death_count = 0
-
 global.turn_frames = 0
 global.death_frames = -1
+global.pack_death_count = 0
 
 global.instance_touching_mouse = noone;
 global.happenings = ds_map_create();

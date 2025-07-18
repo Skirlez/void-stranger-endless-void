@@ -113,11 +113,11 @@ function start_play_transition(target_node) {
 	remember_zoom = zoom;
 	remember_camera_x = camera_get_view_x(view_camera[0])
 	remember_camera_y = camera_get_view_y(view_camera[0])	
-	var border = asset_get_index("obj_ev_pack_border")
+	var border = agi("obj_ev_pack_border")
 	if instance_exists(border) && border.visible {
 		border.toggle();
 	}
-	var border_hide_button = asset_get_index("obj_ev_pack_border_hide")
+	var border_hide_button = agi("obj_ev_pack_border_hide")
 	if instance_exists(border_hide_button)
 		border_hide_button.visible = false;
 }
@@ -216,7 +216,7 @@ root_node.write_function = function (properties) {
 }
 root_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 8, 4, asset_get_index("obj_ev_root_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 8, 4, agi("obj_ev_root_node_window"), {
 		node_instance : node_instance
 	});
 }
@@ -234,7 +234,7 @@ brand_node.write_function = function (properties) {
 }
 brand_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 5, 5, asset_get_index("obj_ev_brand_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 5, 5, agi("obj_ev_brand_node_window"), {
 		node_instance : node_instance
 	});
 }
@@ -257,9 +257,10 @@ level_node.write_function = function (properties) {
 level_node.play_evaluate = function (node_state) {
 	global.level = node_state.properties.level;
 	ev_prepare_level_visuals(global.level)
-	var should_create_memory = !ds_map_exists(global.pack_memories, global.level.name)
-	ev_place_level_instances(global.level, should_create_memory)
+
 	with (agi("obj_ev_pack_player")) {
+		var should_create_memory = !ds_map_exists(pack_memories, global.level.name)
+		ev_place_level_instances(global.level, should_create_memory)
 		if is_first_level {
 			instance_create_layer(x, y, "Effects", agi("obj_darkness_begins"))
 			is_first_level = false;
@@ -269,7 +270,7 @@ level_node.play_evaluate = function (node_state) {
 }
 level_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 10, 7, asset_get_index("obj_ev_level_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 10, 7, agi("obj_ev_level_node_window"), {
 		node_instance : node_instance
 	});
 }
@@ -299,7 +300,7 @@ music_node.write_struct_function = function (node_state, node_id) {
 }
 music_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 6, 6, asset_get_index("obj_ev_music_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 6, 6, agi("obj_ev_music_node_window"), {
 		node_instance : node_instance
 	});
 }
@@ -324,7 +325,7 @@ branefuck_node.write_struct_function = function (node_state, node_id) {
 }
 branefuck_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 10, 6, asset_get_index("obj_ev_branefuck_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 10, 6, agi("obj_ev_branefuck_node_window"), {
 		node_instance : node_instance
 	});
 }
@@ -363,7 +364,7 @@ comment_node.write_function = function (properties) {
 }
 comment_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 10, 6, asset_get_index("obj_ev_comment_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 10, 6, agi("obj_ev_comment_node_window"), {
 		node_instance : node_instance
 	});
 }
@@ -393,7 +394,7 @@ palette_node.write_function = function (properties) {
 }
 palette_node.on_config = function (node_instance) {
 	global.mouse_layer = 1;
-	new_window_with_pos(node_instance.x, node_instance.y, 8, 8, asset_get_index("obj_ev_palette_node_window"), {
+	new_window_with_pos(node_instance.x, node_instance.y, 8, 8, agi("obj_ev_palette_node_window"), {
 		node_instance : node_instance
 	});
 }

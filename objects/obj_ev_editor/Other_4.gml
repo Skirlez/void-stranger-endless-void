@@ -3,7 +3,7 @@ global.mouse_held = false;
 global.mouse_pressed = false;
 
 
-if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level_select") || room == asset_get_index("rm_ev_pack_select") {
+if room == agi("rm_ev_menu") || room == agi("rm_ev_level_select") || room == agi("rm_ev_pack_select") {
 	history = []
 	global.level_sha = "";
 	var music = global.menu_music;
@@ -14,7 +14,7 @@ if room == asset_get_index("rm_ev_menu") || room == asset_get_index("rm_ev_level
 	global.jukebox_song = 0;
 }
 
-if room == asset_get_index("rm_ev_editor") {
+if room == agi("rm_ev_editor") {
 	draw_set_circle_precision(48)
 	global.selected_thing = -1
 	switch_tile_mode(false)
@@ -23,11 +23,11 @@ if room == asset_get_index("rm_ev_editor") {
 	}
 }
 else {
-	var quill = asset_get_index("obj_quill")
+	var quill = agi("obj_quill")
 	if quill != -1
 		instance_destroy(quill)	
 }
-if (room == asset_get_index("rm_ev_startup")) {
+if (room == agi("rm_ev_startup")) {
 	read_beaten_levels()
 	
 	uploaded_levels = get_all_files(global.levels_directory, "key")
@@ -59,11 +59,9 @@ if (room == asset_get_index("rm_ev_startup")) {
 
 if (ev_is_room_gameplay(room)) {
 	global.level_time = 0;
-	starting_deaths = 0
-	starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 5)
-	starting_deaths += ds_list_find_value(asset_get_index("obj_inventory").ds_rcrds, 6)
-	last_death_count = 0
-	global.death_count = 0
+	last_deaths = 0
+	last_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 5)
+	last_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 6)
 	global.death_x = -1
 	global.death_y = -1
 	global.annoyance_count = 0

@@ -79,6 +79,7 @@
     {"id":{"name":"spr_ev_bee_up","path":"sprites/spr_ev_bee_up/spr_ev_bee_up.yy",},},
     {"id":{"name":"spr_ev_thumbnail_node","path":"sprites/spr_ev_thumbnail_node/spr_ev_thumbnail_node.yy",},},
     {"id":{"name":"snd_ev_music_judgment_jingle","path":"sounds/snd_ev_music_judgment_jingle/snd_ev_music_judgment_jingle.yy",},},
+    {"id":{"name":"obj_ev_pack_password_window","path":"objects/obj_ev_pack_password_window/obj_ev_pack_password_window.yy",},},
     {"id":{"name":"msc_themeofcif","path":"sounds/msc_themeofcif/msc_themeofcif.yy",},},
     {"id":{"name":"obj_ev_logo","path":"objects/obj_ev_logo/obj_ev_logo.yy",},},
     {"id":{"name":"obj_ev_claim_pack_window","path":"objects/obj_ev_claim_pack_window/obj_ev_claim_pack_window.yy",},},

@@ -23,7 +23,7 @@ function ev_is_mouse_on_me() {
 }
 function ev_is_action_pressed() {
 	if (global.is_merged) {
-		static func = asset_get_index("scr_input_check_pressed");
+		static func = agi("scr_input_check_pressed");
 		return func(4)
 	}
 	
@@ -31,7 +31,7 @@ function ev_is_action_pressed() {
 }
 function ev_is_action_held() {
 	if (global.is_merged) {
-		static func = asset_get_index("scr_input_check");
+		static func = agi("scr_input_check");
 		return func(4)
 	}
 	return keyboard_check(ord("Z"))

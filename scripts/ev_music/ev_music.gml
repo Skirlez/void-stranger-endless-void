@@ -10,10 +10,10 @@ function ev_play_music(track, looping = true, for_menu = false) {
 		if (!for_menu && audio_get_name(track) == "msc_test2") {
 			if room == global.editor_room || room == global.level_room || room == global.pack_level_room
 				track = ev_get_elysium_music(global.level)
-			asset_get_index("scr_play_music")(track, looping, 1)
+			agi("scr_play_music")(track, looping, 1)
 		}
 		else {
-			asset_get_index("scr_play_music")(track, looping)
+			agi("scr_play_music")(track, looping)
 		}
 	}
 	else { 
@@ -39,7 +39,7 @@ function ev_is_music_playing(track) {
 function ev_stop_music() {
 	if global.is_merged {
 		global.music_file = noone
-		asset_get_index("scr_stop_music")(0)
+		agi("scr_stop_music")(0)
 	}
 	else {
 		audio_stop_sound(global.music_inst)

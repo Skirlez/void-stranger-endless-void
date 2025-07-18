@@ -5,37 +5,13 @@ if global.is_merged {
 
 	global.add_current_x = add_inst.x div 16
 	global.add_current_y = add_inst.y div 16
-
-	current_deaths = 0
-	current_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 5)
-	current_deaths += ds_list_find_value(agi("obj_inventory").ds_rcrds, 6)
-	global.death_count = current_deaths - global.editor.starting_deaths
-
-	if (global.death_count != global.editor.last_death_count) {
-		//Player has just died
-		current_death_x = agi("obj_player").x div 16
-		current_death_y = agi("obj_player").y div 16
-	
-		if (global.death_x == current_death_x && global.death_y == current_death_y) {
-			global.annoyance_count += 1
-		}
-		else {
-			global.annoyance_count = 1
-		}
-	
-		global.death_x = current_death_x
-		global.death_y = current_death_y
-		global.death_frames = 0
-	}
-
-	global.editor.last_death_count = global.death_count
 }
 
 
 var destroy_value;
 if destroy_value_str == ""
 	destroy_value = "" // statue will never destroy
-if string_is_int(destroy_value_str)
+else if string_is_int(destroy_value_str)
 	destroy_value = int64(destroy_value_str)
 else
 	destroy_value = execute_branefuck($",g:{destroy_value_str},", 0)

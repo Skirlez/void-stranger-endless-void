@@ -54,6 +54,10 @@ function ev_on_bee_warp() {
 			log_info($"No oob node. Selecting root node")
 			state = global.pack.starting_node_states[0];
 		}
+		
+		// clear locusts
+		ds_grid_set(agi("obj_inventory").ds_player_info, 1, 1, 0)
+		ev_pack_on_clear_level()
 		agi("obj_ev_pack_player").move_to_node_state(state)
 	}
 	instance_destroy()
@@ -99,6 +103,7 @@ function ev_on_floor_warp() {
 				state = global.pack.starting_node_states[0];
 			}
 		}
+		ev_pack_on_clear_level()
 		agi("obj_ev_pack_player").move_to_node_state(state)
 	}
 }

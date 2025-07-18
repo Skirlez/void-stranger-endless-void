@@ -10,6 +10,7 @@ display = instance_create_layer(x, y, "PackLevels", global.display_object,
 	draw_beaten : false,
 	no_spoiling : false,
 	display_context : display_contexts.pack_editor,
+	owner_node : id,
 	mask_index : agi("spr_ev_nothing")
 })
 

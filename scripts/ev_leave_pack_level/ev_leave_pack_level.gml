@@ -1,13 +1,22 @@
 
 function ev_leave_pack() {
 	if (global.playtesting)
-		room_goto(asset_get_index("rm_ev_pack_editor"))
+		room_goto(agi("rm_ev_pack_editor"))
 	else
-		room_goto(asset_get_index("rm_ev_pack_select"))
+		room_goto(agi("rm_ev_pack_select"))
 	global.playtesting = false;
 	ds_map_clear(global.locusts_collected_this_level)
-	ds_map_clear(global.pack_memories)
 	global.editor.reset_branefuck_persistent_memory()
+}
+
+function ev_pack_on_clear_level() {
+	var asset = agi("obj_ev_pack_player")
+	with (asset) {
+		ds_map_clear(global.locusts_collected_this_level)
+		var gotten_crystal = (global.token_check != 0)
+		if gotten_crystal
+			ds_map_set(pack_memories, current_node_state.properties.level.name, 1)
+	}
 }
 
 function ev_clear_pack_level(exit_number = 0) {
@@ -24,10 +33,7 @@ function ev_clear_pack_level(exit_number = 0) {
 			return;
 		}
 		var new_state = current_node_state.exits[index]
-		ds_map_clear(global.locusts_collected_this_level)
-		var gotten_crystal = (global.token_check != 0)
-		if gotten_crystal
-			ds_map_set(global.pack_memories, current_node_state.properties.level.name, 1)
+		ev_pack_on_clear_level()
 		move_to_node_state(new_state);
 	}
 }

@@ -52,7 +52,7 @@ function ev_update_vars() {
 	global.levels_directory = game_save_id + folder + "/levels/"
 	global.packs_directory = game_save_id + folder + "/packs/"
 	if (global.is_merged)
-		asset_get_index("scr_menueyecatch")(0)
+		agi("scr_menueyecatch")(0)
 	
 	if global.logging_socket != noone {
 		network_destroy(global.logging_socket)
@@ -80,20 +80,39 @@ function delete_level(save_name) {
 }
 
 
-function save_pack(pack)
-{
+function save_pack(pack) {
 	var str = export_pack(pack)
 	var file = file_text_open_write(global.packs_directory + pack.save_name + "." + pack_extension)
 	if (file == -1)
 		return false;
 	file_text_write_string(file, str)
 	file_text_close(file)
+	if pack.password_brand != 0 {
+		save_pack_password(pack)
+	}
+	
 	return true;
 }
 function delete_pack(save_name) {
-	file_delete(global.packs_directory + save_name + "." + pack_extension)	
+	file_delete(global.packs_directory + save_name + "." + pack_extension)
+	file_delete(global.packs_directory + save_name + "." + pack_password_extension)	
 }
 
+function save_pack_password(pack) {
+	var file = file_text_open_write(global.packs_directory + pack.save_name + "." + pack_password_extension)
+	if (file == -1)
+		return false;
+	file_text_write_string(file, string(pack.password_brand))
+	file_text_close(file)
+}
+function load_pack_password(pack) {
+	var file = file_text_open_read(global.packs_directory + pack.save_name + "." + pack_password_extension)
+	if (file == -1)
+		return int64(0);
+	var brand_string = file_text_read_string(file)
+	file_text_close(file)
+	return int64_safe(brand_string, 0);
+}
 
 
 
@@ -131,23 +150,38 @@ function load_pack_progress(pack) {
 }
 
 function apply_pack_save(save) {
+	static inv = agi("obj_inventory")
+	static player = agi("obj_ev_pack_player")
 	global.branefuck_persistent_memory = save.persistent_memory;
 	var track = agi(save.music);
 	if track != -1 {
 		ev_play_music(agi(save.music), true, false)
 	}
 	// TODO: remove these, temporary
+	if !variable_struct_exists(save, "total_locusts_collected")
+		save.total_locusts_collected = 0
+	if !variable_struct_exists(save, "death_count")
+		save.death_count = 0
+	if !variable_struct_exists(save, "play_time")
+		save.play_time = 0
 	if !variable_struct_exists(save, "locust_count")
 		save.locust_count = 0
-	if !variable_struct_exists(save, "collected_memories")
-		save.collected_memories = []
+	if !variable_struct_exists(save, "pack_memories")
+		save.pack_memories = []
 	
-			
-	ds_grid_set(agi("obj_inventory").ds_player_info, 1, 1, save.locust_count)
+		
+	ds_grid_set(inv.ds_player_info, 1, 1, save.locust_count)
 	ev_prepare_level_burdens(save.burdens);
-	for (var i = 0; i < array_length(save.collected_memories); i++) {
-		ds_map_set(global.pack_memories, save.collected_memories[i], 1)
+	for (var i = 0; i < array_length(save.pack_memories); i++) {
+		ds_map_set(player.pack_memories, save.pack_memories[i], 1)
 	}
+	for (var i = 0; i < array_length(save.visited_levels); i++) {
+		ds_map_set(player.visited_levels, save.visited_levels[i], 1)
+	}
+	player.play_time = save.play_time
+	player.total_locusts_collected = total_locusts_collected;
+	
+	global.death_count = save.death_count
 	
 	function find_level_node_state_with_name(node_state, name, explored_states_map) {
 		static level_node = global.pack_editor.level_node
@@ -189,12 +223,17 @@ function apply_pack_save(save) {
 
 function create_pack_save_struct(current_level_name) {
 	static inv = agi("obj_inventory")
+	static player = agi("obj_ev_pack_player")
 	return {
 		level_name : base64_encode(current_level_name),
 		locust_count : ds_grid_get(inv.ds_player_info, 1, 1),
-		music : audio_get_name(global.music_file),
+		total_locusts_collected : player.total_locusts_collected,
+		music : audio_exists(global.music_file) ? audio_get_name(global.music_file) : "",
 		persistent_memory : global.branefuck_persistent_memory,
-		collected_memories : ds_map_keys_to_array(global.pack_memories),
+		death_count : global.death_count,
+		visited_levels : ds_map_keys_to_array_fix(player.visited_levels),
+		pack_memories : ds_map_keys_to_array_fix(player.pack_memories),
+		play_time : player.play_time + (current_time - player.start_time),
 		burdens : [ds_grid_get(inv.ds_equipment, 0, 0) != 0,
 					ds_grid_get(inv.ds_equipment, 0, 1) != 0,
 					ds_grid_get(inv.ds_equipment, 0, 2) != 0,

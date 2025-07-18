@@ -53,7 +53,6 @@ function format_date(date_str) {
 	return str;	
 }
 
-
 var textbox_offset;
 if (!global.online_mode) {
 	date_textbox = noone
@@ -65,9 +64,20 @@ if (!global.online_mode) {
 		highlighter : id,
 		sprite_index : agi("spr_ev_edit_level"),
 		image_alpha : 0,
-		func : function () {
-			highlighter.hide_textbox();
-			global.editor.edit_level_pack_transition(nodeless_pack, display_instance);
+		func : function () {				
+			if nodeless_pack.password_brand == 0 
+			|| load_pack_password(nodeless_pack) == nodeless_pack.password_brand {
+				highlighter.hide_textbox();
+				global.editor.edit_level_pack_transition(nodeless_pack, display_instance);
+			}
+			else {
+				global.mouse_layer++
+				new_window(8, 7, agi("obj_ev_pack_password_window"), { 
+					nodeless_pack : nodeless_pack,
+					layer_num : global.mouse_layer,
+				})
+				
+			}
 		}
 	})
 	

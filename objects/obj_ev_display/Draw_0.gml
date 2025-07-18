@@ -217,8 +217,61 @@ function draw() {
 			draw_set_alpha(1)
 		}
 	}
-		
 	surface_reset_target()
+}
+
+function draw_exit_numbers() {
+	if display_context == display_contexts.pack_editor {
+		if global.pack_editor.selected_thing = pack_things.hammer 
+		&& array_length(owner_node.exit_instances) > 0 {
+			var exit_number = 1;
+			draw_set_font(global.ev_font)
+			draw_set_halign(fa_center)
+			draw_set_valign(fa_middle)
+			
+			for (var i = 0; i < 9; i++)	{
+				for (var j = 0; j < 14; j++) {
+					var color;
+					if exit_number > array_length(owner_node.exit_instances)
+						color = c_ltgray
+					else
+						color = c_white
+					 
+					var is_tile_exit = (lvl.tiles[i][j].tile == global.editor.tile_exit)
+					var is_object_exit = (lvl.objects[i][j].tile == global.editor.object_secret_exit)
+					
+					var text;
+					if is_tile_exit && is_object_exit {
+						text = string(exit_number) + "+" + string(exit_number+1);
+					}
+					else if is_tile_exit || is_object_exit {
+						text = string(exit_number)
+					}
+					else
+						text = ""
+
+					if text != "" {
+						function draw_exit_number(pos_x, pos_y, text) {
+							draw_text_transformed(pos_x, pos_y, text, image_xscale, image_yscale, 0)
+						}
+						var pos_x = x + (j * 16 + 8) * image_xscale;
+						var pos_y = y + (i * 16 + 8) * image_yscale;
+						var unit_x = image_xscale;
+						var unit_y = image_yscale;
+						draw_set_color(c_black)
+						draw_exit_number(pos_x + unit_x, pos_y, text)
+						draw_exit_number(pos_x - unit_x, pos_y, text)
+						draw_exit_number(pos_x, pos_y + unit_y, text)
+						draw_exit_number(pos_x, pos_y - unit_y, text)
+						draw_set_color(color)
+						draw_exit_number(pos_x, pos_y, text)
+					}
+					exit_number += is_tile_exit + is_object_exit
+				}
+			}
+		}
+	}
+
 }
 
 if !surface_exists(game_surface) {
@@ -229,17 +282,19 @@ if !surface_exists(game_surface) {
 if (display_context != display_contexts.pack_editor)
 	draw();
 else if global.is_merged {
-	var zoom = global.pack_editor.zoom;
-	if !outside_view && zoom <= 1
+	if !outside_view && global.pack_editor.zoom <= 2 {
 		draw();
+	}
 
 }
+
 
 var draw_x = x;
 
 gpu_set_blendenable(false)
 draw_surface_ext(game_surface, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
 gpu_set_blendenable(true)
+draw_exit_numbers()
 draw_sprite_ext(border_sprite, 0, draw_x, y, image_xscale, image_yscale, 0, c_white, 1)
 
 
